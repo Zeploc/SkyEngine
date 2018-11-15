@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Landscape Environment", "Landscape Environment\Landscape Environment.vcxproj", "{5932B542-1ABF-4CFF-8FBE-5BE609C7667C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Graphics Combination", "Graphics Combination\Graphics Combination.vcxproj", "{5932B542-1ABF-4CFF-8FBE-5BE609C7667C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
