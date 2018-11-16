@@ -87,7 +87,9 @@ void Mesh::Render(Utils::Transform Newtransform)
 	}
 	if (bCullFace) glEnable(GL_CULL_FACE);
 	else glDisable(GL_CULL_FACE);
-
+	if (bDepthTest) glEnable(GL_DEPTH_TEST);
+	else glDisable(GL_DEPTH_TEST);
+	
 	//enable stencil and set stencil operation
 	if (bStencil)
 	{

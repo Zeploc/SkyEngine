@@ -178,11 +178,17 @@ void Cube::BindCube()
 	};
 
 	vao = Shader::CreateBuffer(TextureSource, texture, true, true);
+	glBindVertexArray(vao);
 	if (TextureSource != "")
 		glBufferData(GL_ARRAY_BUFFER, sizeof(Texturedvertices), Texturedvertices, GL_STATIC_DRAW);
 	else
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	
+	glBindVertexArray(0);
+
+	std::cout << "Cube vao: " << vao << std::endl;
 }
 
 /************************************************************

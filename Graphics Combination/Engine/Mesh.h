@@ -62,6 +62,7 @@ public:
 		return MeshCollisionBounds;
 	};
 
+	bool bDepthTest = true;
 	Utils::EMESHTYPE m_eShape;
 	float m_fWidth;
 	float m_fHeight;

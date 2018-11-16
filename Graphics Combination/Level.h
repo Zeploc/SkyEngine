@@ -35,5 +35,7 @@ public:
 	bool Wireframe = false;
 
 	std::shared_ptr<class FrameBuffer> NewFramy;
+
+	std::shared_ptr<class TransformationWidget> LocationBox;
 };
 

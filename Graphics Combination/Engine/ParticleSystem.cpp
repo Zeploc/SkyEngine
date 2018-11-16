@@ -226,7 +226,6 @@ void ParticleSystem::Update()
 		part.Update();
 	}
 
-	std::cout << glm::to_string(m_vParticles[0].position) << std::endl;
 }
 
 /************************************************************
@@ -268,6 +267,7 @@ void ParticleSystem::DrawEntity()
 
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
 	glDepthMask(GL_FALSE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

@@ -79,14 +79,8 @@ void Scene::DeleteScene()
 void Scene::RenderScene()
 {
 	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_CULL_FACE);
 	for (unsigned int i = 0; i < Entities.size(); i++)
 	{
-		//if (it->transform.Scale.x < 0)	// || it->transform.Scale.y < 0 || it->transform.Scale.z < 0)
-		//{
-		//	glCullFace(GL_FRONT);		// Switches to front culling if scale is negative
-		//}
-		//else glCullFace(GL_BACK);		// Cull the Back faces as per normal
 		Entities[i]->DrawEntity();
 	}
 	glDisable(GL_DEPTH_TEST);

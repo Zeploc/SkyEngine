@@ -31,6 +31,7 @@
 #include "Engine\GeometryObject.h"
 #include "Engine/ParticleSystem.h"
 #include "Engine/ParticleSystemGPU.h"
+#include "Engine/Button3DEntity.h"
 
 // Local Includes //
 #include "Player.h"
@@ -39,6 +40,7 @@
 #include "Engine/FrameBuffer.h"
 #include "ssAnimatedModel.h"
 #include "Engine/AnimatedModel.h"
+#include "TransformationWidget.h"
 
 // Library Includes //
 #include <iostream>
@@ -46,6 +48,8 @@
 // Prototypes
 
 void QuitCall();
+
+void ButtonBoiFuncorness();
 
 Level::Level(std::string sSceneName) : Scene(sSceneName)
 {
@@ -57,7 +61,7 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 	std::shared_ptr<UIText> TipText(new UIText({ Camera::GetInstance()->SCR_WIDTH - 20, Camera::GetInstance()->SCR_HEIGHT - 30.0f }, 0, { 0.3, 0.3, 0.3, 1.0f }, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 26, Utils::BOTTOM_RIGHT));
 	AddUIElement(TipText);
 
-	InitInfo TerrainInfo;
+	/*InitInfo TerrainInfo;
 	TerrainInfo.HeightmapFilename = "Resources/Images/TerrainMap2.raw";
 	TerrainInfo.HeightScale = 1;
 	TerrainInfo.HeightOffset = 0;
@@ -65,25 +69,25 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 	TerrainInfo.NumRows = 256;
 	TerrainInfo.CellSpacing = 1.0f;
 	LevelTerrain = std::make_shared<Terrain>(Terrain({ { 0, 0, 0 } ,{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER, TerrainInfo));
-	AddEntity(LevelTerrain, true);
+	AddEntity(LevelTerrain, true);*/
 
-	Lighting::m_v3LightPosition = { 10, 10, 10 };
+	Lighting::m_v3LightPosition = { 0, 7, 0 };
 	Lighting::m_v3SunDirection = { 3, -1, 5 };
 
-	std::shared_ptr<Entity> DynamicBoxEntity = std::make_shared<Entity>(Entity({ { 0, -10, 0 } ,{ 90, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER));
-	glm::vec3 Points[4] = { {-10, 10, 1}, {10, 10, -1 }, { 10, -10, 0 }, { -10, -10, -3 } };
-	std::shared_ptr<Plane> TestImage = std::make_shared<Plane>(Plane(Points, { 0.9f, 0.3f, 0.1f, 1.0f }));
-	DynamicBoxEntity->AddMesh(TestImage);
-	TestImage->bCullFace = false;
-	AddEntity(DynamicBoxEntity, true);
-
-	std::shared_ptr<Entity> GeomPlatform = std::make_shared<Entity>(Entity({ { 10, 11, 13 } ,{ 90, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER));
+	std::shared_ptr<Entity> GeomPlatform = std::make_shared<Entity>(Entity({ { 10, 5, 13 } ,{ 90, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER));
 	std::shared_ptr<Plane> GoemPlatformMesh = std::make_shared<Plane>(Plane(1, 1, { 0.4f, 0.5f, 0.7f, 1.0f }));
 	GeomPlatform->AddMesh(GoemPlatformMesh);
 	GoemPlatformMesh->SetLit(true, true);
 	GoemPlatformMesh->LightProperties.fAmbientStrength = 1.0f;
 	GoemPlatformMesh->bCullFace = false;
 	AddEntity(GeomPlatform, true);
+	std::shared_ptr<Entity> DynamicBoxEntity = std::make_shared<Entity>(Entity({ { 0, 0, 0 } ,{ 90, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER));
+	//glm::vec3 Points[4] = { {-10, 10, 1}, {10, 10, -1 }, { 10, -10, 0 }, { -10, -10, -3 } };
+	std::shared_ptr<Plane> TestImage = std::make_shared<Plane>(Plane(50, 50, { 0.9f, 0.3f, 0.1f, 1.0f }));
+	DynamicBoxEntity->AddMesh(TestImage);
+	TestImage->bCullFace = false;
+	AddEntity(DynamicBoxEntity, true);
+
 
 	//std::shared_ptr<Entity> AnimBoyo = std::shared_ptr<Entity>(new Entity({ { 0, 5, 0 } ,{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER));
 	//std::shared_ptr<AnimatedModel> NewAnimModel = std::shared_ptr<AnimatedModel>(new AnimatedModel("Resources/Models/theDude_idle_run.DAE", "Resources/Images/theDude.png"));
@@ -94,12 +98,12 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 	//OriginalAnimatedModel = std::shared_ptr<ssAnimatedModel>(new ssAnimatedModel("Resources/Models/theDude_idle_run.DAE", "Resources/Images/theDude.png"));
 
 
-	NewPlayer = std::make_shared<Player>(Player({ 3, 0, 3 }));
+	/*NewPlayer = std::make_shared<Player>(Player({ 3, 0, 3 }));
 	NewPlayer->TerrainRef = LevelTerrain;
-	AddEntity(NewPlayer, true);
+	AddEntity(NewPlayer, true);*/
 
 
-	std::shared_ptr<Entity> GeomEnt = std::make_shared<Entity>(Entity({ { 10, 13, 10 } ,{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER));
+	std::shared_ptr<Entity> GeomEnt = std::make_shared<Entity>(Entity({ { 10, 6, 10 } ,{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER));
 	std::shared_ptr<GeometryObject> GeomShape = std::make_shared<GeometryObject>(GeometryObject({0.0, 0.9f, 0.3f, 1.0f}));
 	GeomEnt->AddMesh(GeomShape);
 	AddEntity(GeomEnt, true);
@@ -109,11 +113,11 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 	TessBoy->AddMesh(TessShapo);
 	AddEntity(TessBoy, true);*/
 	
-	std::shared_ptr<ParticleSystem> ParticleBoy = std::make_shared<ParticleSystem>(ParticleSystem({ {  128, 30, 128  } ,{ 0, 0, 0 },{ 1, 1, 1 } }));
-	ParticleBoy->SetPositionRange({ -128, 128 }, { 0, 0 }, { -128, 128 });
+	std::shared_ptr<ParticleSystem> ParticleBoy = std::make_shared<ParticleSystem>(ParticleSystem({ {  0, 20, 0  } ,{ 0, 0, 0 },{ 1, 1, 1 } }));
+	ParticleBoy->SetPositionRange({ -110, 110 }, { 0, 0 }, { -110, 110 });
 	ParticleBoy->SetDirectionRange({ 0, 0 }, { -1, -1 }, { 0, 0 });
 	ParticleBoy->SetFalloffTime({ 100.0f, 100.0f });
-	ParticleBoy->SetFalloffRange({ 20, 30 });
+	ParticleBoy->SetFalloffRange({ 30, 40 });
 	ParticleBoy->SetSpeedRange({ 10, 30 });
 	ParticleBoy->ParticleSize = 0.8f;
 	ParticleBoy->Init(1000, "Resources/Images/raindrop.png");
@@ -124,7 +128,7 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 	//AddEntity(GParticleBoy, true);
 
 
-	std::shared_ptr<ParticleSystem> ParticleBoy2 = std::make_shared<ParticleSystem>(ParticleSystem({ { 20, 10, 20 } ,{ 0, 0, 0 },{ 1, 1, 1 } }));
+	std::shared_ptr<ParticleSystem> ParticleBoy2 = std::make_shared<ParticleSystem>(ParticleSystem({ { 20, 1, 20 } ,{ 0, 0, 0 },{ 1, 1, 1 } }));
 	ParticleBoy2->Init(1000, "Resources/Images/Box.png");
 	AddEntity(ParticleBoy2, true);
 
@@ -132,7 +136,7 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 	//float FullValue = (float)(RandValue) / 1000.0f;
 
 	Camera::GetInstance()->EnableSpectatorControls(true);
-	Camera::GetInstance()->bSpectatorMovement = false;
+	//Camera::GetInstance()->bSpectatorMovement = false;
 	Input::GetInstance()->SetCursorVisible(false);
 
 	Camera::GetInstance()->SetCameraPos({ -10, 10, 0 });
@@ -140,6 +144,32 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 
 	NewFramy = std::make_shared<FrameBuffer>();
 
+
+
+	std::shared_ptr<Entity> SphereRaycastTest = std::make_shared<Entity>(Entity(Utils::Transform{ { 18.0f, 2.0f, 0.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER));
+	std::shared_ptr<Sphere> SphereMesh = std::make_shared<Sphere>(Sphere(2.0f, 2.0f, 2.0f, { 0.1f, 0.8f, 0.3f, 1.0f }, "Resources/Images/SmoothCliff_1024.jpg"));
+	SphereRaycastTest->AddMesh(SphereMesh);
+	SphereMesh->SetLit(true);
+	SphereMesh->SetReflection(true);
+	AddEntity(SphereRaycastTest, true);
+
+
+	std::shared_ptr<Button3DEntity> FowardCubeButton = std::make_shared<Button3DEntity>(Button3DEntity(Utils::Transform{ { 4.0f, 7.0f, 0.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER, 6.0f, 2.0f, 1.0f, glm::vec4(0.7, 0.5, 0.7, 1.0f), glm::vec4(0.4, 0.5, 0.3, 1.0f), "Resources/Images/StoneWall_2x2.jpg", ButtonBoiFuncorness));
+	AddEntity(FowardCubeButton, true);
+
+	std::shared_ptr<Entity> CubeEnty = std::make_shared<Entity>(Entity(Utils::Transform{ { 25.0f, 4.0f, 4.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER));
+	std::shared_ptr<Cube> CubyMesh = std::make_shared<Cube>(Cube(3.0f, 3.0f, 3.0f, { 0.5f, 0.3f, 0.3f, 1.0f }, "Resources/Images/StoneWall_2x2.jpg"));
+	CubeEnty->AddMesh(CubyMesh);
+	CubyMesh->SetLit(true);
+	CubyMesh->SetReflection(true);
+	AddEntity(CubeEnty, true);
+
+	LocationBox = std::make_shared<TransformationWidget>(TransformationWidget(Utils::Transform{ { 0.0f, 0.0f, 0.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, this));
+	//std::shared_ptr<Cube> BoxMesh = std::make_shared<Cube>(Cube(0.4f, 0.4f, 0.4f, { 0.9, 0.1, 0.1, 1.0f }));
+	//LocationBox->AddMesh(BoxMesh);
+	AddEntity(LocationBox, true);
+	LocationBox->SetVisible(false, true);
+	LocationBox->bRayCast = false;
 }
 
 Level::~Level()
@@ -169,9 +199,50 @@ void Level::Update()
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 	}
+
+	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_HOLD)
+	{
+		glm::vec3 rayStart = Camera::GetInstance()->GetCameraPosition();
+		glm::vec3 rayDirection = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos);
+		glm::vec3 HitPos;
+		std::vector<std::shared_ptr<Entity>> HitEntities;
+		std::vector<glm::vec3> HitPosition;
+		for (auto& Ent : Entities)
+		{
+			if (!Ent->bRayCast || !Ent->EntityMesh || !Ent->IsVisible()) continue; // Don't check for raycast
+			if (Utils::CheckHit(rayStart, rayDirection, Ent, HitPos))
+			{
+				HitEntities.push_back(Ent);
+				HitPosition.push_back(HitPos);
+			}
+		}
+		if (HitEntities.size() > 0)
+		{
+			int ClosestHitID = 0;
+			for (int i = 0; i < HitEntities.size(); i++)
+			{
+				// If new hit is closer
+				if (glm::length(rayStart - HitPosition[i]) < glm::length(rayStart - HitPosition[ClosestHitID]))
+				{
+					ClosestHitID = i;
+				}
+			}
+			std::shared_ptr<Entity> HitEntity = HitEntities[ClosestHitID]; // Hit ent
+			HitPos = HitPosition[ClosestHitID];
+
+			if (LocationBox)
+			{
+				LocationBox->transform.Position = HitEntity->transform.Position;
+				LocationBox->SelectedEntity = HitEntity;
+				if (!LocationBox->IsVisible()) LocationBox->SetVisible(true);
+			}
+		}
+	}
+
+
 	
 
-	Camera::GetInstance()->SetCameraPos(NewPlayer->transform.Position + (-Camera::GetInstance()->GetCameraForwardVector() * 7.0f) +  glm::vec3(0, 2, 0));
+	//Camera::GetInstance()->SetCameraPos(NewPlayer->transform.Position + (-Camera::GetInstance()->GetCameraForwardVector() * 7.0f) +  glm::vec3(0, 2, 0));
 
 }
 
@@ -199,4 +270,9 @@ void Level::RenderScene()
 void QuitCall()
 {
 	glutLeaveMainLoop();
+}
+
+void ButtonBoiFuncorness()
+{
+	std::cout << "BUTTON THINGIE BOI\n";
 }

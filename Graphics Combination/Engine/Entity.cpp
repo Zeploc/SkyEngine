@@ -216,6 +216,17 @@ void Entity::SetScale(glm::vec3 _NewScale)
 	transform.Scale = _NewScale;
 }
 
+glm::mat4 Entity::GetModel()
+{
+	glm::mat4 translate = glm::translate(glm::mat4(), transform.Position);
+	glm::mat4 scale = glm::scale(glm::mat4(), transform.Scale);
+	glm::mat4 rotation = glm::rotate(glm::mat4(), glm::radians(transform.Rotation.x), glm::vec3(1, 0, 0));
+	rotation = glm::rotate(rotation, glm::radians(transform.Rotation.y), glm::vec3(0, 1, 0));
+	rotation = glm::rotate(rotation, glm::radians(transform.Rotation.z), glm::vec3(0, 0, 1));
+
+	return translate * rotation * scale;
+}
+
 void Entity::SetupB2BoxBody(b2World & Box2DWorld, b2BodyType BodyType, bool bCanRotate, bool bHasFixture, float Density, float Friction, bool IsBullet)
 {
 	if (EntityMesh)

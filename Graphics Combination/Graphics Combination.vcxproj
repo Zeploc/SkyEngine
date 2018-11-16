@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Engine\AnimatedModel.cpp" />
+    <ClCompile Include="Engine\Button3DEntity.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="Engine\CollisionBounds.cpp" />
     <ClCompile Include="Engine\Cube.cpp" />
@@ -182,9 +183,11 @@
     <ClCompile Include="ssAnimatedModel.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TessMesh.cpp" />
+    <ClCompile Include="TransformationWidget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\AnimatedModel.h" />
+    <ClInclude Include="Engine\Button3DEntity.h" />
     <ClInclude Include="Engine\Camera.h" />
     <ClInclude Include="Engine\CollisionBounds.h" />
     <ClInclude Include="Engine\Cube.h" />
@@ -229,6 +232,7 @@
     <ClInclude Include="ssAnimatedModel.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TessMesh.h" />
+    <ClInclude Include="TransformationWidget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

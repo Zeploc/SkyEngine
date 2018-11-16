@@ -61,6 +61,8 @@ public:
 	void Rotate(glm::vec3 Rotate); 
 	void SetScale(glm::vec3 _NewScale);
 
+	glm::mat4 GetModel();
+
 
 	Utils::Transform transform;
 	Utils::EANCHOR EntityAnchor;
@@ -77,6 +79,7 @@ public:
 
 	void SetBox2DTransform(glm::vec3 _Position, float _Rotation);
 
+	bool bRayCast = true;
 	
 protected:
 	bool bActive = true;

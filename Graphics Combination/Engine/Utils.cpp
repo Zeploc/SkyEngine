@@ -13,6 +13,7 @@
 //
 
 // Library Includes //
+#include <vector>
 
 // OpenGL Library Includes //
 #include <glew.h>
@@ -22,6 +23,9 @@
 #include "Entity.h"
 #include "Camera.h"
 #include "Plane.h"
+#include "Sphere.h"
+#include "Cube.h"
+#include "LogManager.h"
 
 // Local Includes //
 
@@ -294,8 +298,172 @@ glm::vec2 Utils::GetDifference2D(std::shared_ptr<Entity> Entity1, std::shared_pt
 	return fDistance;
 }
 
+
 int Utils::AddEntityID()
 {
 	iEntityNumber++;
 	return iEntityNumber;
+}
+
+
+bool Utils::CheckHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos)
+{
+	if (!EntityCheck->EntityMesh) return false;
+	if (EntityCheck->EntityMesh->m_eShape == EMESHTYPE::SPHERE && std::dynamic_pointer_cast<Sphere>(EntityCheck->EntityMesh))
+	{
+		return CheckSphereHit(RayStart, RayDirection, EntityCheck, HitPos);
+	}
+	else if (EntityCheck->EntityMesh->m_eShape == EMESHTYPE::CUBE && std::dynamic_pointer_cast<Cube>(EntityCheck->EntityMesh))
+	{
+		return CheckCubeHit(RayStart, RayDirection, EntityCheck, HitPos);
+	}
+	else if (EntityCheck->EntityMesh->m_eShape == EMESHTYPE::PLANE && std::dynamic_pointer_cast<Plane>(EntityCheck->EntityMesh))
+	{
+		return CheckPlaneHit(RayStart, RayDirection, EntityCheck, HitPos);
+	}
+	//LogManager::GetInstance()->DisplayLogMessage("Could not find mesh type to perform ray hit check!");
+	return false;
+}
+
+
+bool Utils::CheckSphereHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3 & HitPos)
+{
+	glm::vec3 v = EntityCheck->transform.Position - RayStart;
+
+	float a = glm::dot(RayDirection, RayDirection);
+	float b = 2.0f * glm::dot(v, RayDirection);
+	float c = glm::dot(v, v) - EntityCheck->EntityMesh->m_fWidth * EntityCheck->EntityMesh->m_fWidth;
+	float d = b * b - 4 * a * c;
+
+	if (d > 0)
+	{
+		float x1 = (-b - sqrt(d)) / 2;
+		float x2 = (-b + sqrt(d)) / 2;
+
+		float XPos = RayStart.x + RayDirection.x * -x2;
+		float YPos = RayStart.y + RayDirection.y * -x2;
+		float ZPos = RayStart.z + RayDirection.z * -x2;
+		HitPos = { XPos, YPos, ZPos };
+
+		return true;
+
+		//std::cout << "Position hit [" << XPos << ", " << YPos << ", " << ZPos << "]" << std::endl;
+		if (x1 >= 0 && x2 >= 0)
+		{
+			//std::cout << "Ray cast hit!\n";
+		}
+		else if ((x1 < 0 && x2 >= 0))
+		{
+			//std::cout << "Ray cast hit from inside!\n";
+		}
+		else if (abs(x1 - x2) <= 0.3f)
+		{
+			//std::cout << "Ray cast hitting edge!!\n";
+		}
+		else
+		{
+			//std::cout << "Ray cast hit!\n";
+		}
+	}
+	else if (d <= 0)
+	{
+		//std::cout << "Ray cast missed!\n";
+	}
+	return false;
+}
+
+bool Utils::CheckCubeHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3 & HitPos)
+{
+	glm::vec3 HalfDimensionvec = glm::vec3(EntityCheck->EntityMesh->m_fWidth / 2.0f, EntityCheck->EntityMesh->m_fHeight / 2.0f, EntityCheck->EntityMesh->m_fDepth / 2.0f);
+	std::vector<glm::vec3> HitPositions;
+	if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
+	{
+		HitPositions.push_back(HitPos);
+	}
+	if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, -HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
+	{
+		HitPositions.push_back(HitPos);
+	}
+	if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
+	{
+		HitPositions.push_back(HitPos);
+	}
+	if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
+	{
+		HitPositions.push_back(HitPos);
+	}
+	if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(-HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
+	{
+		HitPositions.push_back(HitPos);
+	}
+	if (CheckFaceHit(glm::vec3(HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
+	{
+		HitPositions.push_back(HitPos);
+	}
+
+	if (HitPositions.size() <= 0)
+		return false;
+	HitPos = HitPositions[0];
+
+	if (HitPositions.size() == 1)
+		return true;
+
+	for (int i = 0; i < HitPositions.size(); i++)
+	{
+		if (glm::length(RayStart - HitPositions[i]) < glm::length(RayStart - HitPos))
+		{
+			HitPos = HitPositions[i];
+		}
+	}
+	return true;
+}
+
+bool Utils::CheckPlaneHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3 & HitPos)
+{
+	glm::vec3 HalfDimensionvec = glm::vec3(EntityCheck->EntityMesh->m_fWidth / 2.0f, EntityCheck->EntityMesh->m_fHeight / 2.0f, EntityCheck->EntityMesh->m_fDepth / 2.0f);
+	if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Utils::CheckFaceHit(glm::vec3 BottomLeftOffset, glm::vec3 TopRightOffset, glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos)
+{
+	glm::vec3 AnchoredPosition = Utils::GetAncoredPosition(EntityCheck->transform.Position, glm::vec3(EntityCheck->EntityMesh->m_fWidth, EntityCheck->EntityMesh->m_fHeight, EntityCheck->EntityMesh->m_fDepth), EntityCheck->EntityAnchor);
+	glm::vec3 lb = BottomLeftOffset + AnchoredPosition;
+	glm::vec3 rt = TopRightOffset + AnchoredPosition;
+	lb = glm::vec4(lb, 1.0f) * EntityCheck->GetModel();
+	rt = glm::vec4(rt, 1.0f) * EntityCheck->GetModel();
+
+	glm::vec3 DirFrac = 1.0f / RayDirection;
+
+	float t1 = (lb.x - RayStart.x) * DirFrac.x;
+	float t2 = (rt.x - RayStart.x) * DirFrac.x;
+	float t3 = (lb.y - RayStart.y) * DirFrac.y;
+	float t4 = (rt.y - RayStart.y) * DirFrac.y;
+	float t5 = (lb.z - RayStart.z) * DirFrac.z;
+	float t6 = (rt.z - RayStart.z) * DirFrac.z;
+
+	float tmin = std::fmax(std::fmax(std::fmin(t1, t2), std::fmin(t3, t4)), std::fmin(t5, t6));
+	float tmax = std::fmin(std::fmin(std::fmax(t1, t2), std::fmax(t3, t4)), std::fmax(t5, t6));
+	float t;
+
+	// if tmax < 0, ray (line) is intersecting AABB, but the whole AABB is behind us
+	if (tmax < 0)
+	{
+		t = tmax;
+	}
+	// if tmin > tmax, ray doesn't intersect AABB
+	else if (tmin > tmax)
+	{
+		t = tmax;
+	}
+	else
+	{
+		t = tmin;
+		HitPos = RayStart + RayDirection * t;
+		return true;
+	}
+	return false;
 }
