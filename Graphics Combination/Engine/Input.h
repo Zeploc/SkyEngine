@@ -74,10 +74,17 @@ public:
 	static Input* GetInstance();
 	static void DestoryInstance();
 
+	// Prototypes //
+	static void LprocessNormalKeysDown(unsigned char key, int x, int y);
+	static void LprocessNormalKeysUp(unsigned char key, int x, int y);
+	static void LprocessSpecialKeys(int key, int x, int y);
+	static void LMouseInput(int x, int y);
+	static void LMouseButton(int button, int state, int x, int y);
+
+	Input();
 	
 private:
 	static Input* m_pInput;
-	Input();
 	~Input();
 	Input(Input const&);              // Don't Implement
 	void operator=(Input const&); // Don't implement

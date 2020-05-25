@@ -12,26 +12,34 @@ public:
 
 	int GetWindowID() { return WindowID; };
 	std::string GetWindowName() { return WindowName; };
+	glm::vec2 GetPosition() { return Position; };
+
+	void SetWindowPosition(glm::vec2 _position);
 
 
 	void MainWindowSizeChanged(int _w, int _h);
 	void UpdateWindow();
 	void RenderWindow();
 
+	bool IsPointInWindow(glm::vec2 _point);
+
 protected:
 
 
 public:
-	glm::vec2 Size = glm::vec2(100, 100);
-	glm::vec2 Position = glm::vec2(0, 0);
 
 	glm::vec3 ClearColour = glm::vec3(1, 1, 1);
+
+	class Input* WindowInput;
 
 protected:
 
 	std::string WindowName;
 	int WindowID = -1;
 
-};
+	glm::vec2 Size = glm::vec2(100, 100);
+	glm::vec2 Position = glm::vec2(0, 0);
 
-void EditorTestProcessNormalKeysDown(unsigned char key, int x, int y);
+	bool DraggingWindow = false;
+	glm::vec2 DragOffset;
+};

@@ -24,15 +24,12 @@
 #include "Input.h"
 #include "UIButton.h"
 
+#include "EditorWindowManager.h"
+#include "EditorWindow.h"
+
 // Static Variables //
 Input* Input::m_pInput = nullptr;
 
-// Prototypes //
-void LprocessNormalKeysDown(unsigned char key, int x, int y);
-void LprocessNormalKeysUp(unsigned char key, int x, int y);
-void LprocessSpecialKeys(int key, int x, int y);
-void LMouseInput(int x, int y);
-void LMouseButton(int button, int state, int x, int y);
 
 
 /************************************************************
@@ -43,7 +40,8 @@ void LMouseButton(int button, int state, int x, int y);
 ************************************************************/
 Input::Input()
 {
-
+	std::fill(KeyState, KeyState + 255, INPUT_RELEASED);
+	std::fill(MouseState, MouseState + 3, INPUT_RELEASED);
 }
 
 /************************************************************
@@ -67,8 +65,6 @@ Input * Input::GetInstance()
 	if (!m_pInput) // null or doesn't exist
 	{
 		m_pInput = new Input;
-		std::fill(m_pInput->KeyState, m_pInput->KeyState + 255, INPUT_RELEASED);
-		std::fill(m_pInput->MouseState, m_pInput->MouseState + 3, INPUT_RELEASED);
 	}
 	return m_pInput;
 }
@@ -94,18 +90,21 @@ void Input::DestoryInstance()
 ************************************************************/
 void Input::Init()
 {
-	glutKeyboardFunc(LprocessNormalKeysDown);
-	glutKeyboardUpFunc(LprocessNormalKeysUp);
-	glutSpecialFunc(LprocessSpecialKeys);
-	glutPassiveMotionFunc(LMouseInput);
-	glutMouseFunc(LMouseButton);
-	glutMotionFunc(LMouseInput);
+	glutKeyboardFunc(Input::LprocessNormalKeysDown);
+	glutKeyboardUpFunc(Input::LprocessNormalKeysUp);
+	glutSpecialFunc(Input::LprocessSpecialKeys);
+	glutPassiveMotionFunc(Input::LMouseInput);
+	glutMouseFunc(Input::LMouseButton);
+	glutMotionFunc(Input::LMouseInput);
 	//glutJoystickFunc(LJoystick, (float)GLUT_JOYSTICK_POLL_RATE / 100.0f);
 
-	Players.push_back(new XBOXController(1));
-	Players.push_back(new XBOXController(2));
-	Players.push_back(new XBOXController(3));
-	Players.push_back(new XBOXController(4));
+	if (Players.size() <= 0)
+	{
+		Players.push_back(new XBOXController(1));
+		Players.push_back(new XBOXController(2));
+		Players.push_back(new XBOXController(3));
+		Players.push_back(new XBOXController(4));
+	}
 }
 
 /************************************************************
@@ -276,9 +275,16 @@ void Input::ToggleCursorVisible()
 #--Parameters--#: 	Takes in key and mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void LprocessNormalKeysDown(unsigned char key, int x, int y)
+void Input::LprocessNormalKeysDown(unsigned char key, int x, int y)
 {
-	Input::GetInstance()->processNormalKeysDown(key, x, y);
+	EditorWindow* Current = EditorWindowManager::GetCurrentWindow();
+
+	if (Current)
+	{
+		Current->WindowInput->processNormalKeysDown(key, x, y);
+	}
+	else
+		Input::GetInstance()->processNormalKeysDown(key, x, y);
 }
 
 /************************************************************
@@ -287,9 +293,16 @@ void LprocessNormalKeysDown(unsigned char key, int x, int y)
 #--Parameters--#: 	Takes in key and mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void LprocessNormalKeysUp(unsigned char key, int x, int y)
+void Input::LprocessNormalKeysUp(unsigned char key, int x, int y)
 {
-	Input::GetInstance()->processNormalKeysUp(key, x, y);
+	EditorWindow* Current = EditorWindowManager::GetCurrentWindow();
+
+	if (Current)
+	{
+		Current->WindowInput->processNormalKeysUp(key, x, y);
+	}
+	else
+		Input::GetInstance()->processNormalKeysUp(key, x, y);
 }
 
 /************************************************************
@@ -298,9 +311,16 @@ void LprocessNormalKeysUp(unsigned char key, int x, int y)
 #--Parameters--#: 	Takes in key and mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void LprocessSpecialKeys(int key, int x, int y)
+void Input::LprocessSpecialKeys(int key, int x, int y)
 {
-	Input::GetInstance()->processSpecialKeys(key, x, y);
+	EditorWindow* Current = EditorWindowManager::GetCurrentWindow();
+
+	if (Current)
+	{
+		Current->WindowInput->processSpecialKeys(key, x, y);
+	}
+	else
+		Input::GetInstance()->processSpecialKeys(key, x, y);
 }
 
 /************************************************************
@@ -309,9 +329,16 @@ void LprocessSpecialKeys(int key, int x, int y)
 #--Parameters--#: 	Takes mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void LMouseInput(int x, int y)
+void Input::LMouseInput(int x, int y)
 {
-	Input::GetInstance()->MouseInput(x, y);
+	EditorWindow* Current = EditorWindowManager::GetCurrentWindow();
+
+	if (Current)
+	{
+		Current->WindowInput->MouseInput(x, y);
+	}
+	else
+		Input::GetInstance()->MouseInput(x, y);
 }
 
 /************************************************************
@@ -320,8 +347,15 @@ void LMouseInput(int x, int y)
 #--Parameters--#: 	Takes in mouse key and state and mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void LMouseButton(int button, int state, int x, int y)
+void Input::LMouseButton(int button, int state, int x, int y)
 {
-	Input::GetInstance()->MouseButton(button, state, x, y);
+	EditorWindow* Current = EditorWindowManager::GetCurrentWindow();
+
+	if (Current)
+	{
+		Current->WindowInput->MouseButton(button, state, x, y);
+	}
+	else
+		Input::GetInstance()->MouseButton(button, state, x, y);
 }
 

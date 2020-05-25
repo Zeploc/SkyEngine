@@ -100,8 +100,12 @@ int main(int argc, char **argv)
 	GameWindowID = glutCreateWindow("Game Window");
 	//glutFullScreen();
 
-	EditorWindow* NewWindow = new EditorWindow("Test", -1, glm::vec2(300, 300), glm::vec2(10, 10));
+	EditorWindow* NewWindow = new EditorWindow("Test", GameWindowID, glm::vec2(300, 300), glm::vec2(10, 10));
 	NewWindow->ClearColour = glm::vec3(0.4, 0.4, 0.4);
+
+	EditorWindow* SecondNewWindow = new EditorWindow("Hey", GameWindowID, glm::vec2(400, 200), glm::vec2(700, 500));
+	SecondNewWindow->ClearColour = glm::vec3(0.4, 0.4, 0.4);
+	
 
 
 	// OpenGL init
@@ -124,7 +128,6 @@ int main(int argc, char **argv)
 	// Window Resize Function
 	glutReshapeFunc(changeSize);
 	
-
 
 
 	// Enter GLUT event processing cycle
