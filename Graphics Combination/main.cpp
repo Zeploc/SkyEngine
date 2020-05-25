@@ -39,6 +39,8 @@
 #include "Engine\SoundManager.h"
 #include "Engine\Time.h"
 #include "Engine/LogManager.h"
+#include "Engine/EditorWindow.h"
+#include "Engine/EditorWindowManager.h"
 
 #include <Box2D.h>
 
@@ -71,6 +73,11 @@ float CurrentTimer = 0.0f;
 float TickRate = 60.0f;
 double dPrevTime = 0.0f;
 
+
+GLint GameWindowID, EditorWindowID;
+
+
+
 /************************************************************
 #--Description--#: 	The main function of the program
 #--Author--#: 		Alex Coultas
@@ -79,16 +86,23 @@ double dPrevTime = 0.0f;
 ************************************************************/
 int main(int argc, char **argv)
 {
+
 	srand(unsigned int(time(NULL)));
 	// init GLUT and create Window
 	CAM->Init(1280, 720, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
 	CAM->SwitchProjection(Camera::PERSPECTIVE);
 	glutInit(&argc, argv);
+	
+
 	//glutInitWindowPosition(0, 0);
 	glutInitWindowSize(CAM->SCR_WIDTH, CAM->SCR_HEIGHT);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-	glutCreateWindow("Game Window");
+	GameWindowID = glutCreateWindow("Game Window");
 	//glutFullScreen();
+
+	EditorWindow* NewWindow = new EditorWindow("Test", -1, glm::vec2(300, 300), glm::vec2(10, 10));
+	NewWindow->ClearColour = glm::vec3(0.4, 0.4, 0.4);
+
 
 	// OpenGL init
 	glewInit();		
@@ -109,6 +123,9 @@ int main(int argc, char **argv)
 
 	// Window Resize Function
 	glutReshapeFunc(changeSize);
+	
+
+
 
 	// Enter GLUT event processing cycle
 	glutMainLoop();
@@ -124,8 +141,10 @@ int main(int argc, char **argv)
 ************************************************************/
 void renderScene(void)
 {
+	//glutSetWindow(GameWindowID);
 	if (bLoading)
 	{
+		glClearColor(0.8f, 0.8f, 0.8f, 1.0); // clear grey
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		LogManager::GetInstance()->Render();
 	}
@@ -146,7 +165,10 @@ void changeSize(int w, int h)
 {
 	CAM->SCR_HEIGHT = h;
 	CAM->SCR_WIDTH = w;
+
+	EditorWindowManager::MainWindowSizeChanged(w, h);
 }
+
 
 /************************************************************
 #--Description--#: 	Update for every frame
@@ -156,6 +178,8 @@ void changeSize(int w, int h)
 ************************************************************/
 void Update()
 {
+
+	glutSetWindow(GameWindowID);
 	if (bLoading)
 	{
 		SoundManager::GetInstance()->InitFMod();
@@ -186,6 +210,8 @@ void Update()
 	}
 
 	glutPostRedisplay();
+
+	EditorWindowManager::UpdateWindows();
 }
 
 /************************************************************
@@ -229,7 +255,6 @@ void Init()
 
 	glutIgnoreKeyRepeat(1);
 
-	glClearColor(0.8f, 0.8f, 0.8f, 1.0); // clear grey
 	LogManager::GetInstance()->Init();
 
 }
@@ -249,5 +274,6 @@ void OnExit()
 	SoundManager::DestoryInstance();
 	Text::Fonts.~vector();
 }
+
 
 

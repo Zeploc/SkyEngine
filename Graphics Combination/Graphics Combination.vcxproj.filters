@@ -48,6 +48,9 @@
     <Filter Include="Game\Animation">
       <UniqueIdentifier>{c3453840-f57e-48f0-85b1-5b4fc724cfd6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Editor">
+      <UniqueIdentifier>{2f2d3934-e146-40d3-9329-6507e518e771}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -187,6 +190,15 @@
     </ClCompile>
     <ClCompile Include="TransformationWidget.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Widget.cpp">
+      <Filter>Engine\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorWindow.cpp">
+      <Filter>Engine\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorWindowManager.cpp">
+      <Filter>Engine\Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -330,6 +342,15 @@
     </ClInclude>
     <ClInclude Include="TransformationWidget.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Widget.h">
+      <Filter>Engine\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorWindow.h">
+      <Filter>Engine\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorWindowManager.h">
+      <Filter>Engine\Editor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

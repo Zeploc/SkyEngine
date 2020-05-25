@@ -138,6 +138,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\EditorWindowManager.cpp" />
+    <ClCompile Include="Engine\EditorWindow.cpp" />
     <ClCompile Include="Engine\AnimatedModel.cpp" />
     <ClCompile Include="Engine\Button3DEntity.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
@@ -184,8 +186,11 @@
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TessMesh.cpp" />
     <ClCompile Include="TransformationWidget.cpp" />
+    <ClCompile Include="Engine\Widget.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\EditorWindowManager.h" />
+    <ClInclude Include="Engine\EditorWindow.h" />
     <ClInclude Include="Engine\AnimatedModel.h" />
     <ClInclude Include="Engine\Button3DEntity.h" />
     <ClInclude Include="Engine\Camera.h" />
@@ -233,6 +238,7 @@
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TessMesh.h" />
     <ClInclude Include="TransformationWidget.h" />
+    <ClInclude Include="Engine\Widget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

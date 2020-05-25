@@ -35,6 +35,10 @@ UIElement::UIElement(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour)
 	: position(_Position), fRotation(_fRotation), Colour(_Colour)
 {
 }
+UIElement::UIElement()
+	: position(glm::vec2(0,0)), fRotation(0.0f), Colour(glm::vec4(1))
+{
+}
 
 /************************************************************
 #--Description--#:  Destructor function

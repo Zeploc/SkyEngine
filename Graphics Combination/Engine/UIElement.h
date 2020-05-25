@@ -23,6 +23,7 @@
 class UIElement : public std::enable_shared_from_this<UIElement>
 {
 public:
+	UIElement();
 	UIElement(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour);
 	~UIElement();
 	
