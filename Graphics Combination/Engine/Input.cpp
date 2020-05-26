@@ -29,6 +29,7 @@
 
 // Static Variables //
 Input* Input::m_pInput = nullptr;
+Input* Input::SingletonInput = nullptr;
 
 
 
@@ -54,6 +55,24 @@ Input::~Input()
 {
 }
 
+void Input::SetInstance(Input * _Input)
+{
+	// Create basic singleton first
+	if (!m_pInput)
+		GetInstance();
+	// Set current input
+	m_pInput = _Input;
+}
+
+void Input::SetInstanceToSingleton()
+{
+	// Create basic singleton first
+	if (!m_pInput)
+		GetInstance();
+	// Set singleton input
+	m_pInput = SingletonInput;
+}
+
 /************************************************************
 #--Description--#:  Retrieves static instance pointer to this class
 #--Author--#: 		Alex Coultas
@@ -65,6 +84,7 @@ Input * Input::GetInstance()
 	if (!m_pInput) // null or doesn't exist
 	{
 		m_pInput = new Input;
+		SingletonInput = m_pInput;
 	}
 	return m_pInput;
 }
@@ -284,7 +304,10 @@ void Input::LprocessNormalKeysDown(unsigned char key, int x, int y)
 		Current->WindowInput->processNormalKeysDown(key, x, y);
 	}
 	else
+	{
+		Input::SetInstanceToSingleton();
 		Input::GetInstance()->processNormalKeysDown(key, x, y);
+	}
 }
 
 /************************************************************
@@ -302,7 +325,10 @@ void Input::LprocessNormalKeysUp(unsigned char key, int x, int y)
 		Current->WindowInput->processNormalKeysUp(key, x, y);
 	}
 	else
+	{
+		Input::SetInstanceToSingleton();
 		Input::GetInstance()->processNormalKeysUp(key, x, y);
+	}
 }
 
 /************************************************************
@@ -320,7 +346,10 @@ void Input::LprocessSpecialKeys(int key, int x, int y)
 		Current->WindowInput->processSpecialKeys(key, x, y);
 	}
 	else
+	{
+		Input::SetInstanceToSingleton();
 		Input::GetInstance()->processSpecialKeys(key, x, y);
+	}
 }
 
 /************************************************************
@@ -338,7 +367,10 @@ void Input::LMouseInput(int x, int y)
 		Current->WindowInput->MouseInput(x, y);
 	}
 	else
+	{
+		Input::SetInstanceToSingleton();
 		Input::GetInstance()->MouseInput(x, y);
+	}
 }
 
 /************************************************************
@@ -356,6 +388,9 @@ void Input::LMouseButton(int button, int state, int x, int y)
 		Current->WindowInput->MouseButton(button, state, x, y);
 	}
 	else
+	{
+		Input::SetInstanceToSingleton();
 		Input::GetInstance()->MouseButton(button, state, x, y);
+	}
 }
 

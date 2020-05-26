@@ -70,6 +70,9 @@ private:
 
 
 public:
+
+	static void SetInstance(Input* _Input);
+	static void SetInstanceToSingleton();
 	// Singleton
 	static Input* GetInstance();
 	static void DestoryInstance();
@@ -85,6 +88,7 @@ public:
 	
 private:
 	static Input* m_pInput;
+	static Input* SingletonInput;
 	~Input();
 	Input(Input const&);              // Don't Implement
 	void operator=(Input const&); // Don't implement

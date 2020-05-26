@@ -76,7 +76,7 @@ double dPrevTime = 0.0f;
 
 GLint GameWindowID, EditorWindowID;
 
-
+glm::vec2 MainWindowSize = glm::vec2(1280, 720);
 
 /************************************************************
 #--Description--#: 	The main function of the program
@@ -89,7 +89,7 @@ int main(int argc, char **argv)
 
 	srand(unsigned int(time(NULL)));
 	// init GLUT and create Window
-	CAM->Init(1280, 720, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
+	CAM->Init(MainWindowSize.x, MainWindowSize.y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
 	CAM->SwitchProjection(Camera::PERSPECTIVE);
 	glutInit(&argc, argv);
 	
@@ -98,20 +98,26 @@ int main(int argc, char **argv)
 	glutInitWindowSize(CAM->SCR_WIDTH, CAM->SCR_HEIGHT);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	GameWindowID = glutCreateWindow("Game Window");
+	EditorWindowManager::iMainWindowID = GameWindowID;
 	//glutFullScreen();
+
+	// OpenGL init
+	glewInit();
+	// Settings Initialised
+	Init();
 
 	EditorWindow* NewWindow = new EditorWindow("Test", GameWindowID, glm::vec2(300, 300), glm::vec2(10, 10));
 	NewWindow->ClearColour = glm::vec3(0.4, 0.4, 0.4);
 
-	EditorWindow* SecondNewWindow = new EditorWindow("Hey", GameWindowID, glm::vec2(400, 200), glm::vec2(700, 500));
-	SecondNewWindow->ClearColour = glm::vec3(0.4, 0.4, 0.4);
+	glutSetWindow(NewWindow->GetWindowID());
+	Init();
+
+	//EditorWindow* SecondNewWindow = new EditorWindow("Hey", GameWindowID, glm::vec2(400, 200), glm::vec2(700, 500));
+	//SecondNewWindow->ClearColour = glm::vec3(0.4, 0.4, 0.4);
 	
 
-
-	// OpenGL init
-	glewInit();		
-	// Settings Initialised
-	Init();					
+	glutSetWindow(GameWindowID);
+				
 
 	// register callbacks
 	glutDisplayFunc(renderScene);
@@ -122,6 +128,7 @@ int main(int argc, char **argv)
 	// here is the idle func registration
 	glutIdleFunc(Update);
 
+	Input::SetInstanceToSingleton();
 	// The input function registration
 	SI->Init();
 
@@ -136,42 +143,6 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-/************************************************************
-#--Description--#: 	Renders the elements every frame
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
-void renderScene(void)
-{
-	//glutSetWindow(GameWindowID);
-	if (bLoading)
-	{
-		glClearColor(0.8f, 0.8f, 0.8f, 1.0); // clear grey
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		LogManager::GetInstance()->Render();
-	}
-	else
-	{
-		SM->RenderCurrentScene();
-	}
-	glutSwapBuffers();
-}
-
-/************************************************************
-#--Description--#: 	Updated when the window changes size
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	The width and height of the window
-#--Return--#: 		NA
-************************************************************/
-void changeSize(int w, int h)
-{
-	CAM->SCR_HEIGHT = h;
-	CAM->SCR_WIDTH = w;
-
-	EditorWindowManager::MainWindowSizeChanged(w, h);
-}
-
 
 /************************************************************
 #--Description--#: 	Update for every frame
@@ -181,8 +152,11 @@ void changeSize(int w, int h)
 ************************************************************/
 void Update()
 {
+	CAM->SCR_HEIGHT = MainWindowSize.y;
+	CAM->SCR_WIDTH = MainWindowSize.x;
 
 	glutSetWindow(GameWindowID);
+	Input::SetInstanceToSingleton();
 	if (bLoading)
 	{
 		SoundManager::GetInstance()->InitFMod();
@@ -216,6 +190,47 @@ void Update()
 
 	EditorWindowManager::UpdateWindows();
 }
+
+/************************************************************
+#--Description--#: 	Renders the elements every frame
+#--Author--#: 		Alex Coultas
+#--Parameters--#: 	NA
+#--Return--#: 		NA
+************************************************************/
+void renderScene(void)
+{
+	CAM->SCR_HEIGHT = MainWindowSize.y;
+	CAM->SCR_WIDTH = MainWindowSize.x;
+	//glutSetWindow(GameWindowID);
+	if (bLoading)
+	{
+		glClearColor(0.8f, 0.8f, 0.8f, 1.0); // clear grey
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		LogManager::GetInstance()->Render();
+	}
+	else
+	{
+		SM->RenderCurrentScene();
+	}
+	glutSwapBuffers();
+}
+
+/************************************************************
+#--Description--#: 	Updated when the window changes size
+#--Author--#: 		Alex Coultas
+#--Parameters--#: 	The width and height of the window
+#--Return--#: 		NA
+************************************************************/
+void changeSize(int w, int h)
+{
+	MainWindowSize = glm::vec2(w, h);
+	CAM->SCR_HEIGHT = h;
+	CAM->SCR_WIDTH = w;
+
+	EditorWindowManager::MainWindowSizeChanged(w, h);
+}
+
+
 
 /************************************************************
 #--Description--#: 	Initialises the program

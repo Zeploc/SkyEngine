@@ -8,8 +8,8 @@
 
 
 std::map<int, EditorWindow*> EditorWindowManager::EditorWindows;
-EditorWindow* EditorWindowManager::CurrentDraggingWindow;
-glm::vec2 EditorWindowManager::DragOffset;
+std::vector<int> EditorWindowManager::EditorWindowsToRemove;
+int EditorWindowManager::iMainWindowID = -1;
 
 EditorWindowManager::EditorWindowManager()
 {
@@ -62,6 +62,16 @@ EditorWindow* EditorWindowManager::GetCurrentWindow()
 	return nullptr;
 }
 
+bool EditorWindowManager::IsRemovedID(int _WindowID)
+{
+	for (int id : EditorWindowsToRemove)
+	{
+		if (id == _WindowID)
+			return true;
+	}
+	return false;
+}
+
 void EditorWindowManager::StaticRenderWindow()
 {
 	int CurrentWindow = glutGetWindow();
@@ -82,43 +92,26 @@ void EditorWindowManager::NewWindowCreated(EditorWindow * _window)
 	EditorWindows.insert(std::pair<int, EditorWindow*>(_window->GetWindowID(), _window));
 }
 
+void EditorWindowManager::WindowRemoved(int _WindowID)
+{
+	EditorWindowsToRemove.push_back(_WindowID);
+}
+
 
 void EditorWindowManager::UpdateWindows()
 {
-	//if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_PRESS)
-	//{
-	//	for (auto it : EditorWindows)
-	//	{
-	//		EditorWindow* CurrentWindow = it.second;
-	//		if (CurrentWindow->IsPointInWindow(Input::GetInstance()->MousePos))
-	//		{
-	//			CurrentDraggingWindow = CurrentWindow;
-	//			DragOffset = CurrentWindow->GetPosition() - Input::GetInstance()->MousePos;
-	//			break;
-	//		}
-	//	}
-	//}
-	//else if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_RELEASE)
-	//{
-	//	CurrentDraggingWindow = nullptr;
-	//}
-	//else
-	//{
-	//	if (CurrentDraggingWindow)
-	//	{
-	//		glm::vec2 NewPosition = Input::GetInstance()->MousePos + DragOffset;
-
-	//		//std::cout << "Mouse Pos x:" << Input::GetInstance()->MousePos.x << " y: " << Input::GetInstance()->MousePos .y << std::endl;
-	//		//CurrentDraggingWindow->SetWindowPosition(NewPosition);
-	//	}
-	//}
-
-
 	for (auto it : EditorWindows)
 	{
+		if (IsRemovedID(it.first))
+			continue;
 		EditorWindow* CurrentWindow = it.second;
 		if (CurrentWindow)
 			CurrentWindow->UpdateWindow();
+	}
+
+	for (int WindowID : EditorWindowsToRemove)
+	{
+		EditorWindows.erase(WindowID);
 	}
 }
 

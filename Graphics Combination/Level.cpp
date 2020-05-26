@@ -170,6 +170,9 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 	AddEntity(LocationBox, true);
 	LocationBox->SetVisible(false, true);
 	LocationBox->bRayCast = false;
+
+	//Input::GetInstance()->ToggleCursorVisible();
+	//Camera::GetInstance()->EnableSpectatorControls(!Input::GetInstance()->GetCursorVisible());
 }
 
 Level::~Level()

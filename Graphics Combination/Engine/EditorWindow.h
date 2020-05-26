@@ -2,11 +2,15 @@
 
 #include <glm/glm.hpp>
 #include <string>
+#include <vector>
 
 class EditorWindow
 {
 public:
 	EditorWindow(std::string _WindowName, int _ParentWindow = -1, glm::vec2 _Size = glm::vec2(100, 100), glm::vec2 _Position = glm::vec2(0, 0));
+
+	void SetupGlutBindings();
+	void SetupUI();
 	
 	~EditorWindow();
 
@@ -21,6 +25,8 @@ public:
 	void UpdateWindow();
 	void RenderWindow();
 
+	void PopOut();
+
 	bool IsPointInWindow(glm::vec2 _point);
 
 protected:
@@ -32,6 +38,7 @@ public:
 
 	class Input* WindowInput;
 
+
 protected:
 
 	std::string WindowName;
@@ -40,6 +47,9 @@ protected:
 	glm::vec2 Size = glm::vec2(100, 100);
 	glm::vec2 Position = glm::vec2(0, 0);
 
-	bool DraggingWindow = false;
 	glm::vec2 DragOffset;
+	glm::vec2 PrevMouse;
+
+	std::vector<std::shared_ptr<class UIElement>> UIElements;
+
 };
