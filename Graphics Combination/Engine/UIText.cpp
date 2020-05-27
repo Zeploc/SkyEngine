@@ -18,7 +18,7 @@
 // OpenGL Library Includes //
 #include <glm\gtx\string_cast.hpp>
 #include <glew.h>
-#include <freeglut.h>
+//#include <freeglut.h>
 
 // Engine Includes //
 #include "Camera.h"

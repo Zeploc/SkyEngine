@@ -16,7 +16,8 @@
 
 // OpenGL Library Includes //
 #include <glew.h>
-#include <freeglut.h>
+//#include <freeglut.h>
+#include <glfw3.h>
 
 // Engine Includes //
 
@@ -59,8 +60,8 @@ Time::~Time()
 ************************************************************/
 void Time::Update()
 {
-	dCurrentTime = glutGet(GLUT_ELAPSED_TIME);
-	dTimeDelta = (dCurrentTime - dPrevTime) / 1000;
-	dPrevTime = glutGet(GLUT_ELAPSED_TIME);
+	dCurrentTime = glfwGetTime();// glutGet(GLUT_ELAPSED_TIME);
+	dTimeDelta = (dCurrentTime - dPrevTime);// / 1000;
+	dPrevTime = glfwGetTime();// glutGet(GLUT_ELAPSED_TIME);
 	dFPS = 1.0 / dTimeDelta;
 }

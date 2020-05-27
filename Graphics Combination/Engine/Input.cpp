@@ -17,7 +17,7 @@
 
 // OpenGL Library Includes //
 #include <glew.h>
-#include <freeglut.h>
+#include <glfw3.h>
 
 // Engine Includes //
 #include "CXBOXController.h"
@@ -29,7 +29,7 @@
 
 // Static Variables //
 std::map<int, Input*> Input::m_pInputs;
-
+Input* Input::m_pInput = nullptr;
 
 
 /************************************************************
@@ -62,26 +62,26 @@ Input::~Input()
 ************************************************************/
 Input * Input::GetInstance()
 {
-	int currentWindow = glutGetWindow();
-	Input* CurrentFound = nullptr;
-	auto it = m_pInputs.find(currentWindow);
-	if (it == m_pInputs.end())// null or doesn't exist
-	{
-		Input* NewInput = new Input;
-		NewInput->Init();
-		m_pInputs.insert(std::pair<int, Input*>(currentWindow, NewInput));
-		CurrentFound = NewInput;
-	}
-	else
-		CurrentFound = (*it).second;
+	//int currentWindow = glutGetWindow();
+	//Input* CurrentFound = nullptr;
+	//auto it = m_pInputs.find(currentWindow);
+	//if (it == m_pInputs.end())// null or doesn't exist
+	//{
+	//	Input* NewInput = new Input;
+	//	NewInput->Init();
+	//	m_pInputs.insert(std::pair<int, Input*>(currentWindow, NewInput));
+	//	CurrentFound = NewInput;
+	//}
+	//else
+	//	CurrentFound = (*it).second;
 
-	return CurrentFound;
+	//return CurrentFound;
 
-	/*if (!m_pInput)
+	if (!m_pInput)
 	{
 		m_pInput = new Input;
 	}
-	return m_pInput;*/
+	return m_pInput;
 }
 
 /************************************************************
@@ -92,16 +92,16 @@ Input * Input::GetInstance()
 ************************************************************/
 void Input::DestoryInstance()
 {
-	int currentWindow = glutGetWindow();
-	auto it = m_pInputs.find(currentWindow);
-	if (it._Ptr)// exists
-	{
-		delete (*it).second;
-		m_pInputs.erase(currentWindow);
-	}
-	/*if (m_pInput)
+	//int currentWindow = glutGetWindow();
+	//auto it = m_pInputs.find(currentWindow);
+	//if (it._Ptr)// exists
+	//{
+	//	delete (*it).second;
+	//	m_pInputs.erase(currentWindow);
+	//}
+	if (m_pInput)
 		delete m_pInput;
-	m_pInput = nullptr;*/
+	m_pInput = nullptr;
 }
 
 /************************************************************
@@ -112,12 +112,11 @@ void Input::DestoryInstance()
 ************************************************************/
 void Input::Init()
 {
-	glutKeyboardFunc(Input::LprocessNormalKeysDown);
-	glutKeyboardUpFunc(Input::LprocessNormalKeysUp);
-	glutSpecialFunc(Input::LprocessSpecialKeys);
-	glutPassiveMotionFunc(Input::LMouseInput);
-	glutMouseFunc(Input::LMouseButton);
-	glutMotionFunc(Input::LMouseInput);
+	glfwSetKeyCallback(EditorWindowManager::MainWindow, Input::LprocessKeys);
+	glfwSetCursorPosCallback(EditorWindowManager::MainWindow, Input::LMouseInput);
+	glfwSetMouseButtonCallback(EditorWindowManager::MainWindow, Input::LMouseButton);
+	/*
+	glutSpecialFunc(Input::LprocessSpecialKeys);*/
 	//glutJoystickFunc(LJoystick, (float)GLUT_JOYSTICK_POLL_RATE / 100.0f);
 
 	if (Players.size() <= 0)
@@ -187,16 +186,16 @@ void Input::MouseInput(int x, int y)
 #--Parameters--#: 	Takes in the the button and the state and mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void Input::MouseButton(int button, int state, int x, int y)
+void Input::MouseButton(int button, int action, int mods)
 {
-	MousePos = glm::vec2(x, y);
+	//MousePos = glm::vec2(x, y);
 	if (button < 3)
 	{
-		if (state == GLUT_DOWN)
+		if (action == GLFW_PRESS)
 		{
 			MouseState[button] = INPUT_FIRST_PRESS;
 		}
-		else if (state == GLUT_UP)
+		else if (action == GLFW_RELEASE)
 		{
 			MouseState[button] = INPUT_FIRST_RELEASE;
 		}
@@ -206,6 +205,28 @@ void Input::MouseButton(int button, int state, int x, int y)
 		}
 		
 	}
+
+}
+
+void Input::processKeys(GLFWwindow * window, int key, int scancode, int action, int mods)
+{
+	bKBHit = true;
+	cLastKey = key;
+	if (action == GLFW_PRESS)
+	{
+		if (KeyState[key] == (INPUT_RELEASED | INPUT_FIRST_RELEASE))
+		{
+			KeyState[key] = INPUT_FIRST_PRESS;
+		}
+	}
+	else if (action == GLFW_RELEASE)
+	{
+		if (KeyState[key] == (INPUT_HOLD | INPUT_FIRST_PRESS))
+		{
+			KeyState[key] = INPUT_FIRST_RELEASE;
+		}
+	}
+
 
 }
 
@@ -276,11 +297,12 @@ void Input::SetCursorVisible(bool _bIsVisible)
 {
 	if (_bIsVisible)
 	{
-		glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+		glfwSetInputMode(EditorWindowManager::MainWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 	else
 	{
-		glutSetCursor(GLUT_CURSOR_NONE);
+		glfwSetInputMode(EditorWindowManager::MainWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		
 	}
 	bCursorVisible = _bIsVisible;
 }
@@ -333,7 +355,7 @@ void Input::LprocessSpecialKeys(int key, int x, int y)
 #--Parameters--#: 	Takes mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void Input::LMouseInput(int x, int y)
+void Input::LMouseInput(GLFWwindow* window, double x, double y)
 {
 	Input::GetInstance()->MouseInput(x, y);
 
@@ -345,9 +367,14 @@ void Input::LMouseInput(int x, int y)
 #--Parameters--#: 	Takes in mouse key and state and mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void Input::LMouseButton(int button, int state, int x, int y)
+void Input::LMouseButton(GLFWwindow* window, int button, int action, int mods)
 {
-	Input::GetInstance()->MouseButton(button, state, x, y);
+	Input::GetInstance()->MouseButton(button, action, mods);
 
+}
+
+void Input::LprocessKeys(GLFWwindow * window, int key, int scancode, int action, int mods)
+{
+	Input::GetInstance()->processKeys(window, key, scancode, action, mods);
 }
 

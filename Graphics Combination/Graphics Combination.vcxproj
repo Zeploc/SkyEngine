@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)\Engine\Dependencies\freeglut;$(ProjectDir)\Engine\Dependencies\glew;$(ProjectDir)\Engine\Dependencies\soil;$(ProjectDir)\Engine\Dependencies\freetype;$(ProjectDir)\Engine\Dependencies\assimp;$(ProjectDir)\Engine\Dependencies\FMOD;$(ProjectDir)\Engine\Dependencies\vld\include;$(ProjectDir)\Engine\Dependencies\;$(ProjectDir)\Engine\Dependencies\Box2D;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\Engine\Dependencies\freeglut;$(ProjectDir)\Engine\Dependencies\glew;$(ProjectDir)\Engine\Dependencies\soil;$(ProjectDir)\Engine\Dependencies\freetype;$(ProjectDir)\Engine\Dependencies\assimp;$(ProjectDir)\Engine\Dependencies\FMOD;$(ProjectDir)\Engine\Dependencies\vld\lib\Win32;$(ProjectDir)\Engine\Dependencies\Box2D;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\Engine\Dependencies\GLFW;$(ProjectDir)\Engine\Dependencies\freeglut;$(ProjectDir)\Engine\Dependencies\glew;$(ProjectDir)\Engine\Dependencies\soil;$(ProjectDir)\Engine\Dependencies\freetype;$(ProjectDir)\Engine\Dependencies\assimp;$(ProjectDir)\Engine\Dependencies\FMOD;$(ProjectDir)\Engine\Dependencies\vld\include;$(ProjectDir)\Engine\Dependencies\;$(ProjectDir)\Engine\Dependencies\Box2D;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\Engine\Dependencies\GLFW;$(ProjectDir)\Engine\Dependencies\freeglut;$(ProjectDir)\Engine\Dependencies\glew;$(ProjectDir)\Engine\Dependencies\soil;$(ProjectDir)\Engine\Dependencies\freetype;$(ProjectDir)\Engine\Dependencies\assimp;$(ProjectDir)\Engine\Dependencies\FMOD;$(ProjectDir)\Engine\Dependencies\vld\lib\Win32;$(ProjectDir)\Engine\Dependencies\Box2D;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(ProjectDir)\Engine\Dependencies\freeglut;$(ProjectDir)\Engine\Dependencies\glew;$(ProjectDir)\Engine\Dependencies\soil;$(ProjectDir)\Engine\Dependencies\freetype;$(ProjectDir)\Engine\Dependencies\assimp;$(ProjectDir)\Engine\Dependencies\FMOD;$(ProjectDir)\Engine\Dependencies\vld\include;$(ProjectDir)\Engine\Dependencies\;$(ProjectDir)\Engine\Dependencies\Box2D;$(IncludePath)</IncludePath>
@@ -91,9 +91,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;freeglut.lib;SOIL.lib;glew32.lib;vld.lib;freetype.lib;assimp-vc130-mtd.lib;fmod_vc.lib;Box2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;freeglut.lib;SOIL.lib;glew32.lib;vld.lib;freetype.lib;assimp-vc130-mtd.lib;fmod_vc.lib;Box2D.lib;glfw3.lib;glfw3dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>D:\Projects\OpenGL\Graphics Combination\Graphics Combination\Engine\Dependencies\boost;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

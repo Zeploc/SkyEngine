@@ -20,6 +20,7 @@
 #include <vector>
 #include <map>
 
+
 #pragma once
 class Input
 {
@@ -52,7 +53,8 @@ public:
 	void processNormalKeysUp(unsigned char key, int x, int y);
 	void processSpecialKeys(int key, int x, int y);
 	void MouseInput(int x, int y);
-	void MouseButton(int button, int state, int x, int y);
+	void MouseButton(int button, int action, int mods);
+	void processKeys(struct GLFWwindow* window, int key, int scancode, int action, int mods);
 	//void Joystick(unsigned int buttonMask, int x, int y, int z);
 	void Update();
 
@@ -80,12 +82,14 @@ public:
 	static void LprocessNormalKeysDown(unsigned char key, int x, int y);
 	static void LprocessNormalKeysUp(unsigned char key, int x, int y);
 	static void LprocessSpecialKeys(int key, int x, int y);
-	static void LMouseInput(int x, int y);
-	static void LMouseButton(int button, int state, int x, int y);
+	static void LMouseInput(GLFWwindow* window, double x, double y);
+	static void LMouseButton(GLFWwindow* window, int button, int action, int mods);
+	static void LprocessKeys(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 	Input();
 	
 private:
+	static Input* m_pInput;
 	static std::map<int, Input*> m_pInputs;
 	~Input();
 	Input(Input const&);              // Don't Implement

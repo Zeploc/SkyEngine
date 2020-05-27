@@ -36,7 +36,6 @@ public:
 
 	glm::vec3 ClearColour = glm::vec3(1, 1, 1);
 
-	//class Input* WindowInput;
 
 
 protected:

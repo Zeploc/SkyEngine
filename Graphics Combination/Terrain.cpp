@@ -199,7 +199,7 @@ void Terrain::ReadTerrainMap()
 
 	// Copy the array data into a float array, and scale and offset the heights.
 	Heightmap.resize(mInfo.NumRows * mInfo.NumCols, 0);
-	for (UINT i = 0; i < mInfo.NumRows * mInfo.NumCols; ++i)
+	for (int i = 0; i < mInfo.NumRows * mInfo.NumCols; ++i)
 	{
 		Heightmap[i] = static_cast<float>(in[i]) / 255.0f;//  *mInfo.HeightScale + mInfo.HeightOffset;
 	}
@@ -237,11 +237,11 @@ void Terrain::Smooth()
 {
 	std::vector<std::vector<float>> dest;
 
-	for (UINT i = 0; i < mInfo.NumRows; ++i)
+	for (int i = 0; i < mInfo.NumRows; ++i)
 	{
 		std::vector<float> NewVec(mInfo.NumRows);
 		dest.push_back(NewVec);
-		for (UINT j = 0; j < mInfo.NumCols; ++j)
+		for (int j = 0; j < mInfo.NumCols; ++j)
 		{
 			dest[i][j] = average(i, j);
 		}
@@ -256,9 +256,9 @@ float Terrain::average(int i, int j)
 	float avg = 0.0f;
 	float num = 0.0f;
 
-	for (UINT m = i - 1; m <= i + 1; ++m)
+	for (int m = i - 1; m <= i + 1; ++m)
 	{
-		for (UINT n = j - 1; n <= j + 1; ++n)
+		for (int n = j - 1; n <= j + 1; ++n)
 		{
 			if (m >= 0 && m < mInfo.NumRows && n >= 0 && n < mInfo.NumCols)
 			{

@@ -32,6 +32,7 @@
 #include "Engine/ParticleSystem.h"
 #include "Engine/ParticleSystemGPU.h"
 #include "Engine/Button3DEntity.h"
+#include "Engine/EditorWindowManager.h"
 
 // Local Includes //
 #include "Player.h"
@@ -45,6 +46,7 @@
 // Library Includes //
 #include <iostream>
 #include <glm\gtx\string_cast.hpp>
+#include <glfw3.h>
 // Prototypes
 
 void QuitCall();
@@ -185,12 +187,12 @@ void Level::Update()
 
 	Scene::Update();
 
-	if (Input::GetInstance()->KeyState[27] == Input::INPUT_FIRST_PRESS) // Escape
+	if (Input::GetInstance()->KeyState[GLFW_KEY_ESCAPE] == Input::INPUT_FIRST_PRESS) // Escape
 	{
 		Input::GetInstance()->ToggleCursorVisible();
 		Camera::GetInstance()->EnableSpectatorControls(!Input::GetInstance()->GetCursorVisible());
 	}
-	if (Input::GetInstance()->KeyState[(unsigned char) 'g'] == Input::INPUT_FIRST_PRESS) // Escape
+	if (Input::GetInstance()->KeyState[GLFW_KEY_G] == Input::INPUT_FIRST_PRESS) // Escape
 	{
 		Wireframe = !Wireframe;
 		if (Wireframe)
@@ -272,7 +274,7 @@ void Level::RenderScene()
 
 void QuitCall()
 {
-	glutLeaveMainLoop();
+	glfwSetWindowShouldClose(EditorWindowManager::MainWindow, true);
 }
 
 void ButtonBoiFuncorness()

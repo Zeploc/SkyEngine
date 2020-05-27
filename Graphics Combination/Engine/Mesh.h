@@ -19,7 +19,7 @@
 
 // OpenGL Library Includes //
 #include <glew.h>
-#include <freeglut.h>
+//#include <freeglut.h>
 #include <glm\glm.hpp>
 
 // Engine Includes //

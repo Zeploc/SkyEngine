@@ -17,7 +17,7 @@
 
 // OpenGL Library Includes //
 #include <glew.h>
-#include <freeglut.h>
+//#include <freeglut.h>
 
 // Engine Includes //
 #include "Entity.h"

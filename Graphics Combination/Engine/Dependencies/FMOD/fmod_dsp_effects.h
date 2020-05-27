@@ -82,7 +82,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_OSCILLATOR filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_OSCILLATOR filter.
 
     [REMARKS]
 
@@ -105,7 +105,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_LOWPASS filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_LOWPASS filter.
 
     [REMARKS]
     Deprecated and will be removed in a future release, to emulate with FMOD_DSP_TYPE_MULTIBAND_EQ:
@@ -135,7 +135,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_ITLOWPASS filter.<br>
+    FDelegateWrapper types for the FMOD_DSP_TYPE_ITLOWPASS filter.<br>
     This is different to the default FMOD_DSP_TYPE_ITLOWPASS filter in that it uses a different quality algorithm and is 
     the filter used to produce the correct sounding playback in .IT files.<br> 
     FMOD Studio's .IT playback uses this filter.<br>
@@ -163,7 +163,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_HIGHPASS filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_HIGHPASS filter.
 
     [REMARKS]
     Deprecated and will be removed in a future release, to emulate with FMOD_DSP_TYPE_MULTIBAND_EQ:
@@ -193,7 +193,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_ECHO filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_ECHO filter.
 
     [REMARKS]
     Note.  Every time the delay is changed, the plugin re-allocates the echo buffer.  This means the echo will dissapear at that time while it refills its new buffer.<br>
@@ -218,7 +218,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_FADER filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_FADER filter.
 
     [REMARKS]
 
@@ -238,7 +238,7 @@ typedef enum FMOD_DSP_FADER
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_FLANGE filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_FLANGE filter.
 
     [REMARKS]
     Flange is an effect where the signal is played twice at the same time, and one copy slides back and forth creating a whooshing or flanging effect.<br>
@@ -264,7 +264,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_DISTORTION filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_DISTORTION filter.
 
     [REMARKS]
 
@@ -284,7 +284,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_NORMALIZE filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_NORMALIZE filter.
 
     [REMARKS]
     Normalize amplifies the sound based on the maximum peaks within the signal.<br>
@@ -312,7 +312,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_LIMITER filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_LIMITER filter.
 
     [REMARKS]
 
@@ -335,7 +335,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_PARAMEQ filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_PARAMEQ filter.
 
     [REMARKS]
     Deprecated and will be removed in a future release, to emulate with FMOD_DSP_TYPE_MULTIBAND_EQ:
@@ -371,7 +371,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_MULTIBAND_EQ filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_MULTIBAND_EQ filter.
 
     [REMARKS]
     Flexible five band parametric equalizer.
@@ -443,7 +443,7 @@ typedef enum FMOD_DSP_MULTIBAND_EQ_FILTER_TYPE
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_PITCHSHIFT filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_PITCHSHIFT filter.
 
     [REMARKS]
     This pitch shifting unit can be used to change the pitch of a sound without speeding it up or slowing it down.<br>
@@ -483,7 +483,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_CHORUS filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_CHORUS filter.
 
     [REMARKS]
     Chorus is an effect where the sound is more 'spacious' due to 1 to 3 versions of the sound being played along side the original signal but with the pitch of each copy modulating on a sine wave.<br>
@@ -506,7 +506,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_ITECHO filter.<br>
+    FDelegateWrapper types for the FMOD_DSP_TYPE_ITECHO filter.<br>
     This is effectively a software based echo filter that emulates the DirectX DMO echo effect.  Impulse tracker files can support this, and FMOD will produce the effect on ANY platform, not just those that support DirectX effects!<br>
 
     [REMARKS]
@@ -536,7 +536,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_COMPRESSOR unit.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_COMPRESSOR unit.
     This is a multichannel software limiter that is uniform across the whole spectrum.
 
     [REMARKS]
@@ -571,7 +571,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_SFXREVERB unit.<br>
+    FDelegateWrapper types for the FMOD_DSP_TYPE_SFXREVERB unit.<br>
     
     [REMARKS]
     This is a high quality I3DL2 based reverb.<br>
@@ -607,7 +607,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_LOWPASS_SIMPLE filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_LOWPASS_SIMPLE filter.
 
     [REMARKS]
     Deprecated and will be removed in a future release, to emulate with FMOD_DSP_TYPE_MULTIBAND_EQ:
@@ -639,7 +639,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_DELAY filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_DELAY filter.
 
     [REMARKS]
     Note.  Every time MaxDelay is changed, the plugin re-allocates the delay buffer.  This means the delay will dissapear at that time while it refills its new buffer.<br>
@@ -680,7 +680,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_TREMOLO filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_TREMOLO filter.
 
     [REMARKS]
     The tremolo effect varies the amplitude of a sound. Depending on the settings, this unit can produce a tremolo, chopper or auto-pan effect.<br>
@@ -713,7 +713,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_SEND DSP.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_SEND DSP.
 
     [REMARKS]
 
@@ -736,7 +736,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_RETURN DSP.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_RETURN DSP.
 
     [REMARKS]
 
@@ -757,7 +757,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_HIGHPASS_SIMPLE filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_HIGHPASS_SIMPLE filter.
 
     [REMARKS]
     Deprecated and will be removed in a future release, to emulate with FMOD_DSP_TYPE_MULTIBAND_EQ:
@@ -789,7 +789,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter values for the FMOD_DSP_PAN_2D_STEREO_MODE parameter of the FMOD_DSP_TYPE_PAN DSP.
+    FDelegateWrapper values for the FMOD_DSP_PAN_2D_STEREO_MODE parameter of the FMOD_DSP_TYPE_PAN DSP.
 
     [REMARKS]
 
@@ -808,7 +808,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter values for the FMOD_DSP_PAN_MODE parameter of the FMOD_DSP_TYPE_PAN DSP.
+    FDelegateWrapper values for the FMOD_DSP_PAN_MODE parameter of the FMOD_DSP_TYPE_PAN DSP.
 
     [REMARKS]
 
@@ -828,7 +828,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter values for the FMOD_DSP_PAN_3D_ROLLOFF parameter of the FMOD_DSP_TYPE_PAN DSP.
+    FDelegateWrapper values for the FMOD_DSP_PAN_3D_ROLLOFF parameter of the FMOD_DSP_TYPE_PAN DSP.
 
     [REMARKS]
 
@@ -850,7 +850,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter values for the FMOD_DSP_PAN_3D_EXTENT_MODE parameter of the FMOD_DSP_TYPE_PAN DSP.
+    FDelegateWrapper values for the FMOD_DSP_PAN_3D_EXTENT_MODE parameter of the FMOD_DSP_TYPE_PAN DSP.
 
     [REMARKS]
 
@@ -870,7 +870,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_PAN DSP.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_PAN DSP.
 
     [REMARKS]
     FMOD_DSP_PAN_3D_PAN_BLEND controls the percentage of the effect supplied by FMOD_DSP_PAN_2D_DIRECTION and FMOD_DSP_PAN_2D_EXTENT.
@@ -926,7 +926,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter values for the FMOD_DSP_THREE_EQ_CROSSOVERSLOPE parameter of the FMOD_DSP_TYPE_THREE_EQ DSP.
+    FDelegateWrapper values for the FMOD_DSP_THREE_EQ_CROSSOVERSLOPE parameter of the FMOD_DSP_TYPE_THREE_EQ DSP.
 
     [REMARKS]
 
@@ -946,7 +946,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_THREE_EQ filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_THREE_EQ filter.
 
     [REMARKS]
 
@@ -1023,7 +1023,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_FFT dsp effect.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_FFT dsp effect.
 
     [REMARKS]
     Set the attributes for the spectrum analysis with FMOD_DSP_FFT_WINDOWSIZE and FMOD_DSP_FFT_WINDOWTYPE, and retrieve the results with FMOD_DSP_FFT_SPECTRUM and FMOD_DSP_FFT_DOMINANT_FREQ.
@@ -1055,7 +1055,7 @@ typedef enum
     [DESCRIPTION]
     Deprecated and will be removed in a future release.
 
-    Parameter types for the FMOD_DSP_TYPE_ENVELOPEFOLLOWER unit.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_ENVELOPEFOLLOWER unit.
     This is a simple envelope follower for tracking the signal level.<br>
 
     [REMARKS]
@@ -1084,7 +1084,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_CONVOLUTIONREVERB filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_CONVOLUTIONREVERB filter.
 
     [REMARKS]
     Convolution Reverb reverb IR.<br>
@@ -1109,7 +1109,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_CHANNELMIX_OUTPUTGROUPING parameter for FMOD_DSP_TYPE_CHANNELMIX effect.
+    FDelegateWrapper types for the FMOD_DSP_CHANNELMIX_OUTPUTGROUPING parameter for FMOD_DSP_TYPE_CHANNELMIX effect.
 
     [REMARKS]
 
@@ -1134,7 +1134,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_CHANNELMIX filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_CHANNELMIX filter.
 
     [REMARKS]
     For FMOD_DSP_CHANNELMIX_OUTPUTGROUPING, this value will set the output speaker format for the DSP, and also map the incoming channels to the 
@@ -1196,7 +1196,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TRANSCEIVER_SPEAKERMODE parameter for FMOD_DSP_TYPE_TRANSCEIVER effect.
+    FDelegateWrapper types for the FMOD_DSP_TRANSCEIVER_SPEAKERMODE parameter for FMOD_DSP_TYPE_TRANSCEIVER effect.
 
     [REMARKS]
     The speaker mode of a transceiver buffer (of which there are up to 32 of) is determined automatically depending on the signal flowing through the transceiver effect, or it can be forced.
@@ -1228,7 +1228,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_TRANSCEIVER filter.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_TRANSCEIVER filter.
 
     [REMARKS]
     The transceiver only transmits and receives to a global array of 32 channels.   The transceiver can be set to receiver mode (like a return) and can receive the signal at a variable gain (FMOD_DSP_TRANSCEIVER_GAIN).
@@ -1266,7 +1266,7 @@ typedef enum
 [ENUM]
 [
     [DESCRIPTION]
-    Parameter types for the FMOD_DSP_TYPE_OBJECTPAN DSP.  3D Object panners are meant for hardware 3d object systems like Dolby Atmos or Sony Morpheus.
+    FDelegateWrapper types for the FMOD_DSP_TYPE_OBJECTPAN DSP.  3D Object panners are meant for hardware 3d object systems like Dolby Atmos or Sony Morpheus.
     These object panners take input in, and send it to the 7.1 bed, but do not send the signal further down the DSP chain (the output of the dsp is silence).
 
     [REMARKS]

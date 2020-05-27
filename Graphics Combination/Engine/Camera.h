@@ -13,12 +13,12 @@
 //
 
 // OpenGL Library Includes //
-#include <glew.h>
-#include <glut.h>
 #include <glm/common.hpp>
 #include <glm/matrix.hpp>
 
 #include <map>
+
+#include <glew.h>
 
 // Engine Includes //
 #include "Utils.h"
@@ -74,6 +74,8 @@ public:
 	}
 
 	bool bSpectatorMovement = true;
+
+	struct GLFWwindow* MainWindow;
 private:
 	// FPS CONTROLLS
 	bool bUseSpectatorControls = false;
@@ -101,6 +103,7 @@ public:
 
 
 private:
+	static Camera* m_pCamera;
 	static std::map<int, Camera*> m_pCameras;
 	Camera();
 	~Camera();

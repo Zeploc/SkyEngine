@@ -15,7 +15,7 @@
 // OpenGL Library //
 #include <glm\common.hpp>
 #include <glew.h>
-#include <freeglut.h>
+//#include <freeglut.h>
 
 // Local Libraries //
 #include "Utils.h"

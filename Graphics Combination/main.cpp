@@ -19,7 +19,8 @@
 
 // OpenGL Library Includes //
 #include <glew.h>
-#include <freeglut.h>
+#include <GLFW/glfw3.h>
+//#include <freeglut.h>
 #include <fmod.hpp>
 #include <soil\SOIL.h>
 #include <glm/common.hpp>
@@ -42,6 +43,8 @@
 #include "Engine/EditorWindow.h"
 #include "Engine/EditorWindowManager.h"
 
+#include <windows.h>
+
 #include <Box2D.h>
 
 // Local Includes //
@@ -60,12 +63,18 @@ using namespace std;
 #define CAM Camera::GetInstance() 
 #define SM SceneManager::GetInstance()
 
-// Prototypes //
+// GLUT //
 void renderScene(void);
 void changeSize(int w, int h);
 void Update();
+void SetupGLUT(int &argc, char ** argv);
 void Init();
 void OnExit();
+
+void glfw_onError(int error, const char * description);
+
+// GLFW
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 bool bLoading = true;
 
@@ -86,63 +95,122 @@ glm::vec2 MainWindowSize = glm::vec2(1280, 720);
 ************************************************************/
 int main(int argc, char **argv)
 {
-
 	srand(unsigned int(time(NULL)));
-	// init GLUT and create Window
-	glutInit(&argc, argv);
-	
 
-	//glutInitWindowPosition(0, 0);
-	glutInitWindowSize(MainWindowSize.x, MainWindowSize.y);
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-	GameWindowID = glutCreateWindow("Game Window");
-	EditorWindowManager::iMainWindowID = GameWindowID;
-	//glutFullScreen();
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+
+	GLFWwindow* window = glfwCreateWindow(1280, 720, "Editor", NULL, NULL);
+	EditorWindowManager::MainWindow = window;
+	if (window == NULL)
+	{
+		std::cout << "Failed to create GLFW window" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
 
 	CAM->Init(MainWindowSize.x, MainWindowSize.y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
 	CAM->SwitchProjection(Camera::PERSPECTIVE);
+	CAM->MainWindow = window;
+
+	glViewport(0, 0, 1280, 720);
+
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+	glfwSetErrorCallback(glfw_onError);
 
 	// OpenGL init
 	glewInit();
+
 	// Settings Initialised
 	Init();
 
-	EditorWindow* NewWindow = new EditorWindow("Test", GameWindowID, glm::vec2(300, 300), glm::vec2(10, 10));
-	NewWindow->ClearColour = glm::vec3(0.4, 0.4, 0.4);
-
-	glutSetWindow(NewWindow->GetWindowID());
-	Init();
-
-	//EditorWindow* SecondNewWindow = new EditorWindow("Hey", GameWindowID, glm::vec2(400, 200), glm::vec2(700, 500));
-	//SecondNewWindow->ClearColour = glm::vec3(0.4, 0.4, 0.4);
-	
-
-	glutSetWindow(GameWindowID);
-				
-
-	// register callbacks
-	glutDisplayFunc(renderScene);
-
-	// Set close function if window is closed
-	glutCloseFunc(OnExit); 
-
-	// here is the idle func registration
-	glutIdleFunc(Update);
-
-	//Input::SetInstanceToSingleton();
 	// The input function registration
-	//SI->Init();
+	SI->Init();
 
-	// Window Resize Function
-	glutReshapeFunc(changeSize);
-	
+	//SetupGLUT(argc, argv);
 
+	while (!glfwWindowShouldClose(window))
+	{
+		Update();
 
-	// Enter GLUT event processing cycle
-	glutMainLoop();
+		renderScene();
+
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
+	glfwTerminate();
+	OnExit();
 
 	return 0;
 }
+
+void glfw_onError(int error, const char* description)
+{
+	// print message in Windows popup dialog box
+	MessageBox(NULL, description, "GLFW error", MB_OK);
+}
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+}
+
+//void SetupGLUT(int &argc, char ** argv)
+//{
+//	// init GLUT and create Window
+//	glutInit(&argc, argv);
+//
+//
+//	//glutInitWindowPosition(0, 0);
+//	glutInitWindowSize(MainWindowSize.x, MainWindowSize.y);
+//	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+//	GameWindowID = glutCreateWindow("Game Window");
+//	EditorWindowManager::iMainWindowID = GameWindowID;
+//	//glutFullScreen();
+//
+//	CAM->Init(MainWindowSize.x, MainWindowSize.y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
+//	CAM->SwitchProjection(Camera::PERSPECTIVE);
+//
+//	// Settings Initialised
+//	Init();
+//
+//	EditorWindow* NewWindow = new EditorWindow("Test", GameWindowID, glm::vec2(300, 300), glm::vec2(10, 10));
+//	NewWindow->ClearColour = glm::vec3(0.4, 0.4, 0.4);
+//
+//	glutSetWindow(NewWindow->GetWindowID());
+//	Init();
+//
+//	//EditorWindow* SecondNewWindow = new EditorWindow("Hey", GameWindowID, glm::vec2(400, 200), glm::vec2(700, 500));
+//	//SecondNewWindow->ClearColour = glm::vec3(0.4, 0.4, 0.4);
+//
+//
+//	glutSetWindow(GameWindowID);
+//
+//
+//	// register callbacks
+//	glutDisplayFunc(renderScene);
+//
+//	// Set close function if window is closed
+//	glutCloseFunc(OnExit);
+//
+//	// here is the idle func registration
+//	glutIdleFunc(Update);
+//
+//	//Input::SetInstanceToSingleton();
+//	// The input function registration
+//	//SI->Init();
+//
+//	// Window Resize Function
+//	glutReshapeFunc(changeSize);
+//
+//
+//
+//	// Enter GLUT event processing cycle
+//	glutMainLoop();
+//}
 
 
 /************************************************************
@@ -153,8 +221,7 @@ int main(int argc, char **argv)
 ************************************************************/
 void Update()
 {
-	glutSetWindow(GameWindowID);
-	//Input::SetInstanceToSingleton();
+	//glutSetWindow(GameWindowID);
 	if (bLoading)
 	{
 		SoundManager::GetInstance()->InitFMod();
@@ -166,9 +233,9 @@ void Update()
 	else
 	{
 
-		double dCurrentTime = glutGet(GLUT_ELAPSED_TIME);
-		double TimeDelta = (dCurrentTime - dPrevTime) / 1000;
-		dPrevTime = glutGet(GLUT_ELAPSED_TIME);
+		double dCurrentTime = glfwGetTime();//glutGet(GLUT_ELAPSED_TIME);
+		double TimeDelta = (dCurrentTime - dPrevTime);// / 1000;
+		dPrevTime = glfwGetTime();//glutGet(GLUT_ELAPSED_TIME);
 		CurrentTimer += TimeDelta;
 		if (CurrentTimer > 1.0f / TickRate)
 		{
@@ -179,12 +246,9 @@ void Update()
 			CurrentTimer = 0.0f;
 		}
 
-		//SceneManager::GetInstance()->UpdateCurrentScene();
-		//Time::Update();
-		//SI->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 	}
 
-	glutPostRedisplay();
+	//glutPostRedisplay();
 
 	EditorWindowManager::UpdateWindows();
 }
@@ -195,9 +259,9 @@ void Update()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void renderScene(void)
+void renderScene()
 {
-	glutSetWindow(GameWindowID);
+	//glutSetWindow(GameWindowID);
 	if (bLoading)
 	{
 		glClearColor(0.8f, 0.8f, 0.8f, 1.0); // clear grey
@@ -208,7 +272,7 @@ void renderScene(void)
 	{
 		SM->RenderCurrentScene();
 	}
-	glutSwapBuffers();
+	//glutSwapBuffers();
 }
 
 /************************************************************
@@ -219,7 +283,7 @@ void renderScene(void)
 ************************************************************/
 void changeSize(int w, int h)
 {
-	glutSetWindow(GameWindowID);
+	//glutSetWindow(GameWindowID);
 	CAM->SCR_HEIGHT = h;
 	CAM->SCR_WIDTH = w;
 
@@ -267,7 +331,7 @@ void Init()
 
 	//glutSetCursor(GLUT_CURSOR_CROSSHAIR);
 
-	glutIgnoreKeyRepeat(1);
+	//glutIgnoreKeyRepeat(1);
 
 	LogManager::GetInstance()->Init();
 
@@ -284,7 +348,7 @@ void OnExit()
 	Shader::CleanUp();
 	SceneManager::DestoryInstance();
 	Camera::DestoryInstance();
-	Input::DestoryInstance();
+	//Input::DestoryInstance();
 	SoundManager::DestoryInstance();
 	Text::Fonts.~vector();
 }

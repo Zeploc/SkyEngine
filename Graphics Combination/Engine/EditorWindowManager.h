@@ -24,7 +24,7 @@ protected:
 	static bool IsRemovedID(int _WindowID);
 
 public:
-	static int iMainWindowID;
+	static struct GLFWwindow* MainWindow;
 
 protected:
 

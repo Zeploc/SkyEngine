@@ -28,6 +28,50 @@
 
 //class FDelegateWrapper
 //{
+//private:
+//	class ParameterBase {
+//	public:
+//		virtual ~ParameterBase() {}
+//		virtual ParameterBase* copy() = 0;
+//		virtual void foo() = 0;
+//	};
+//
+//	template <typename T>
+//	class ParameterModel : public ParameterBase {
+//	public:
+//		// take by value so we simply move twice, if movable
+//		ParameterModel(const T& t) : t(t) {}
+//		ParameterModel(T&& t) : t(t) {}
+//		void foo() { t.foo(); }
+//		ParameterModel* copy() { return new ParameterModel(*this); }
+//	private:
+//		T t;
+//	};
+//
+//public:
+//	template <typename T>
+//	FDelegateWrapper(T&& t)
+//		: pp(new ParameterModel< typename std::remove_reference<T>::type >(std::forward<T>(t))) {}
+//
+//	// Movable and Copyable only
+//	FDelegateWrapper(FDelegateWrapper&&) = default;
+//	FDelegateWrapper& operator=(FDelegateWrapper&&) = default;
+//
+//	FDelegateWrapper(const FDelegateWrapper& other) : pp(other.pp->copy()) {};
+//	FDelegateWrapper operator=(const FDelegateWrapper& other) {
+//		pp.reset(other.pp->copy());
+//		return *this;
+//	};
+//
+//	// members
+//
+//	void foo() { pp->foo(); }
+//private:
+//	std::unique_ptr<ParameterBase> pp;
+//};
+
+//class FDelegateWrapper
+//{
 	/*class DelegateBase
 	{
 	public:

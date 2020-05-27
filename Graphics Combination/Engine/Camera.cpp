@@ -27,11 +27,16 @@
 #include "Shader.h"
 #include "Time.h"
 
+#include <glfw3.h>
+
+#include "EditorWindowManager.h"
+
 // This Includes //
 #include "Camera.h"
 
 // Static Variables //
 std::map<int, Camera*> Camera::m_pCameras;
+Camera* Camera::m_pCamera;
 
 /************************************************************
 #--Description--#: 	Initialises the camera to the screen size and camera vectors
@@ -100,21 +105,21 @@ void Camera::SpectatorControls()
 
 	if (bSpectatorMovement)
 	{
-		if (Input::GetInstance()->KeyState[(unsigned char)'w'] == Input::INPUT_HOLD)
+		if (Input::GetInstance()->KeyState[GLFW_KEY_W] == Input::INPUT_HOLD)
 			cameraPos += cameraFront * cameraSpeed * 0.025f;
-		else if (Input::GetInstance()->KeyState[(unsigned char)'s'] == Input::INPUT_HOLD)
+		else if (Input::GetInstance()->KeyState[GLFW_KEY_S] == Input::INPUT_HOLD)
 			cameraPos -= cameraFront * cameraSpeed * 0.025f;
 
-		if (Input::GetInstance()->KeyState[(unsigned char)'a'] == Input::INPUT_HOLD)
+		if (Input::GetInstance()->KeyState[GLFW_KEY_A] == Input::INPUT_HOLD)
 			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * 0.025f;
-		else if (Input::GetInstance()->KeyState[(unsigned char)'d'] == Input::INPUT_HOLD)
+		else if (Input::GetInstance()->KeyState[GLFW_KEY_D] == Input::INPUT_HOLD)
 			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * 0.025f;
 
-		if (Input::GetInstance()->KeyState[(unsigned char)' '] == Input::INPUT_HOLD)
+		if (Input::GetInstance()->KeyState[GLFW_KEY_SPACE] == Input::INPUT_HOLD)
 			cameraPos += cameraUp * cameraSpeed * 0.025f;
 	}
-
-	glutWarpPointer((float)SCR_WIDTH * 0.5f, (float)SCR_HEIGHT * 0.5f);	
+	glfwSetCursorPos(MainWindow, (double)SCR_WIDTH * 0.5, (double)SCR_HEIGHT * 0.5);
+	//glutWarpPointer((float)SCR_WIDTH * 0.5f, (float)SCR_HEIGHT * 0.5f);	
 }
 
 /************************************************************
@@ -241,23 +246,23 @@ Camera::~Camera()
 ************************************************************/
 Camera * Camera::GetInstance()
 {
-	int currentWindow = glutGetWindow();
-	Camera* CurrentFound = nullptr;
-	auto it = m_pCameras.find(currentWindow);
-	if (it == m_pCameras.end())// null or doesn't exist
-	{
-		Camera* NewInput = new Camera;
-		m_pCameras.insert(std::pair<int, Camera*>(currentWindow, NewInput));
-		CurrentFound = NewInput;
-	}
-	else
-		CurrentFound = (*it).second;
+	//int currentWindow = glutGetWindow();
+	//Camera* CurrentFound = nullptr;
+	//auto it = m_pCameras.find(currentWindow);
+	//if (it == m_pCameras.end())// null or doesn't exist
+	//{
+	//	Camera* NewInput = new Camera;
+	//	m_pCameras.insert(std::pair<int, Camera*>(currentWindow, NewInput));
+	//	CurrentFound = NewInput;
+	//}
+	//else
+	//	CurrentFound = (*it).second;
 
-	return CurrentFound;
+	//return CurrentFound;
 
-	//if (!m_pCamera) // null or doesn't exist
-	//	m_pCamera = new Camera;
-	//return m_pCamera;
+	if (!m_pCamera) // null or doesn't exist
+		m_pCamera = new Camera;
+	return m_pCamera;
 }
 
 /************************************************************
@@ -268,15 +273,15 @@ Camera * Camera::GetInstance()
 ************************************************************/
 void Camera::DestoryInstance()
 {
-	int currentWindow = glutGetWindow();
-	auto it = m_pCameras.find(currentWindow);
-	if (it._Ptr)// exists
-	{
-		delete (*it).second;
-		m_pCameras.erase(currentWindow);
-	}
+	//int currentWindow = glutGetWindow();
+	//auto it = m_pCameras.find(currentWindow);
+	//if (it._Ptr)// exists
+	//{
+	//	delete (*it).second;
+	//	m_pCameras.erase(currentWindow);
+	//}
 
-	/*if (m_pCamera)
+	if (m_pCamera)
 		delete m_pCamera;
-	m_pCamera = nullptr;*/
+	m_pCamera = nullptr;
 }

@@ -3,16 +3,19 @@
 #include "EditorWindow.h"
 #include "Input.h"
 
-#include <freeglut.h>
+#include <glew.h>
+#include <GLFW/glfw3.h>
+//#include <freeglut.h>
 #include <iostream>
 
 
 std::map<int, EditorWindow*> EditorWindowManager::EditorWindows;
 std::vector<int> EditorWindowManager::EditorWindowsToRemove;
-int EditorWindowManager::iMainWindowID = -1;
+GLFWwindow* EditorWindowManager::MainWindow = nullptr;
 
 EditorWindowManager::EditorWindowManager()
 {
+
 }
 
 
@@ -22,40 +25,40 @@ EditorWindowManager::~EditorWindowManager()
 
 EditorWindow* EditorWindowManager::GetCurrentWindow()
 {
-	HWND ActiveWindow = GetActiveWindow();
-	char ActiveWindowName[101];
-	GetWindowText(ActiveWindow, ActiveWindowName, 100);
+	//HWND ActiveWindow = GetActiveWindow();
+	//char ActiveWindowName[101];
+	//GetWindowText(ActiveWindow, ActiveWindowName, 100);
 
-	// Check for sub windows
-	int CurrentWindowID = glutGetWindow();
-	auto Current = EditorWindows.find(CurrentWindowID);
-	//auto theEND = ;
-	if (Current != EditorWindows.end())
-	{
-		EditorWindow* CurrentWindow = Current->second;
-		if (CurrentWindow)
-		{
-			std::string CurrentName = CurrentWindow->GetWindowName();
-			//std::cout << CurrentName.c_str() << " Window Active" << std::endl;
-			return CurrentWindow;
-		}
+	//// Check for sub windows
+	//int CurrentWindowID = glutGetWindow();
+	//auto Current = EditorWindows.find(CurrentWindowID);
+	////auto theEND = ;
+	//if (Current != EditorWindows.end())
+	//{
+	//	EditorWindow* CurrentWindow = Current->second;
+	//	if (CurrentWindow)
+	//	{
+	//		std::string CurrentName = CurrentWindow->GetWindowName();
+	//		//std::cout << CurrentName.c_str() << " Window Active" << std::endl;
+	//		return CurrentWindow;
+	//	}
 
-	}
+	//}
 
-	// Check for external windows
-	for (auto it : EditorWindows)
-	{
-		EditorWindow* CurrentWindow = it.second;
-		if (CurrentWindow)
-		{
-			std::string CurrentName = CurrentWindow->GetWindowName();
-			if (CurrentName == ActiveWindowName)
-			{
-				//std::cout << CurrentName.c_str() << " Window Active" << std::endl;
-				return CurrentWindow;
-			}
-		}
-	}
+	//// Check for external windows
+	//for (auto it : EditorWindows)
+	//{
+	//	EditorWindow* CurrentWindow = it.second;
+	//	if (CurrentWindow)
+	//	{
+	//		std::string CurrentName = CurrentWindow->GetWindowName();
+	//		if (CurrentName == ActiveWindowName)
+	//		{
+	//			//std::cout << CurrentName.c_str() << " Window Active" << std::endl;
+	//			return CurrentWindow;
+	//		}
+	//	}
+	//}
 	
 	// No windows, so is main
 	//std::cout << "Main Window Active " << std::endl;
@@ -74,7 +77,8 @@ bool EditorWindowManager::IsRemovedID(int _WindowID)
 
 void EditorWindowManager::StaticRenderWindow()
 {
-	int CurrentWindow = glutGetWindow();
+	return;
+	int CurrentWindow;// = glutGetWindow();
 
 	// BAD ??
 	if (EditorWindows.find(CurrentWindow)._Ptr)
