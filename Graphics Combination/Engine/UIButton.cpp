@@ -169,14 +169,17 @@ void UIButton::DrawUIElement()
 void UIButton::Update()
 {
 	if (!bActive) return;
-	glm::vec2 TopLeft = glm::vec2(position.x - ImageComponent.GetWidth() / 2, position.y - ImageComponent.GetHeight() / 2);
-	glm::vec2 BottomRight = glm::vec2(position.x + ImageComponent.GetWidth() / 2, position.y + ImageComponent.GetHeight() / 2);
+	glm::vec2 MousePosViewport = Input::GetInstance()->MousePos;
+	glm::vec2 ViewportOffset = glm::vec2(Camera::GetInstance()->VIEWPORT_X, Camera::GetInstance()->VIEWPORT_Y);
+	//MousePosViewport += ViewportOffset;
+	glm::vec2 TopLeft = glm::vec2(position.x - ImageComponent.GetWidth() / 2, position.y - ImageComponent.GetHeight() / 2) + ViewportOffset;
+	glm::vec2 BottomRight = glm::vec2(position.x + ImageComponent.GetWidth() / 2, position.y + ImageComponent.GetHeight() / 2) + ViewportOffset;
 	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_RELEASE)
 	{
 		if (ReleaseFuncCall != nullptr) ReleaseFuncCall();
 		bPressed = false;
 	}
-	if (Input::GetInstance()->MousePos.x > TopLeft.x && Input::GetInstance()->MousePos.x < BottomRight.x && Input::GetInstance()->MousePos.y < BottomRight.y && Input::GetInstance()->MousePos.y > TopLeft.y)
+	if (MousePosViewport.x > TopLeft.x && MousePosViewport.x < BottomRight.x && MousePosViewport.y < BottomRight.y && MousePosViewport.y > TopLeft.y)
 	{
 		Hovered();
 		if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_HOLD && HoldFuncCall != nullptr)

@@ -9,8 +9,8 @@
 #include <iostream>
 
 
-std::map<int, EditorWindow*> EditorWindowManager::EditorWindows;
-std::vector<int> EditorWindowManager::EditorWindowsToRemove;
+std::vector<EditorWindow*> EditorWindowManager::EditorWindows;
+std::vector<EditorWindow*> EditorWindowManager::EditorWindowsToRemove;
 GLFWwindow* EditorWindowManager::MainWindow = nullptr;
 
 EditorWindowManager::EditorWindowManager()
@@ -65,40 +65,25 @@ EditorWindow* EditorWindowManager::GetCurrentWindow()
 	return nullptr;
 }
 
-bool EditorWindowManager::IsRemovedID(int _WindowID)
+bool EditorWindowManager::IsRemovedID(EditorWindow* _Window)
 {
-	for (int id : EditorWindowsToRemove)
+	for (EditorWindow* window : EditorWindowsToRemove)
 	{
-		if (id == _WindowID)
+		if (window == _Window)
 			return true;
 	}
 	return false;
 }
 
-void EditorWindowManager::StaticRenderWindow()
-{
-	return;
-	int CurrentWindow;// = glutGetWindow();
-
-	// BAD ??
-	if (EditorWindows.find(CurrentWindow)._Ptr)
-	{
-		EditorWindow* FoundWindow = EditorWindows.find(CurrentWindow)->second;
-		if (FoundWindow)
-		{
-			FoundWindow->RenderWindow();
-		}
-	}
-}
 
 void EditorWindowManager::NewWindowCreated(EditorWindow * _window)
 {
-	EditorWindows.insert(std::pair<int, EditorWindow*>(_window->GetWindowID(), _window));
+	EditorWindows.push_back(_window);
 }
 
-void EditorWindowManager::WindowRemoved(int _WindowID)
+void EditorWindowManager::WindowRemoved(EditorWindow* _Window)
 {
-	EditorWindowsToRemove.push_back(_WindowID);
+	EditorWindowsToRemove.push_back(_Window);
 }
 
 
@@ -106,16 +91,33 @@ void EditorWindowManager::UpdateWindows()
 {
 	for (auto it : EditorWindows)
 	{
-		if (IsRemovedID(it.first))
+		EditorWindow* CurrentWindow = it;
+		if (IsRemovedID(CurrentWindow))
 			continue;
-		EditorWindow* CurrentWindow = it.second;
 		if (CurrentWindow)
 			CurrentWindow->UpdateWindow();
 	}
 
-	for (int WindowID : EditorWindowsToRemove)
+	auto it = EditorWindows.begin();
+	while (it != EditorWindows.end())
 	{
-		EditorWindows.erase(WindowID);
+		if (IsRemovedID(*it))
+		{
+			it = EditorWindows.erase(it);
+		}
+		else
+			it++;
+	}
+
+}
+
+void EditorWindowManager::RenderWindows()
+{
+	for (auto it : EditorWindows)
+	{
+		EditorWindow* CurrentWindow = it;
+		if (CurrentWindow)
+			CurrentWindow->RenderWindow();
 	}
 }
 
@@ -123,7 +125,7 @@ void EditorWindowManager::MainWindowSizeChanged(int _w, int _h)
 {
 	for (auto it : EditorWindows)
 	{
-		EditorWindow* CurrentWindow = it.second;
+		EditorWindow* CurrentWindow = it;
 		if (CurrentWindow)
 			CurrentWindow->MainWindowSizeChanged(_w, _h);
 	}

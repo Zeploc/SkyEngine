@@ -83,8 +83,6 @@ float TickRate = 60.0f;
 double dPrevTime = 0.0f;
 
 
-GLint GameWindowID, EditorWindowID;
-
 glm::vec2 MainWindowSize = glm::vec2(1280, 720);
 
 /************************************************************
@@ -102,7 +100,7 @@ int main(int argc, char **argv)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(1280, 720, "Editor", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(MainWindowSize.x, MainWindowSize.y, "Editor", NULL, NULL);
 	EditorWindowManager::MainWindow = window;
 	if (window == NULL)
 	{
@@ -116,11 +114,12 @@ int main(int argc, char **argv)
 	CAM->SwitchProjection(Camera::PERSPECTIVE);
 	CAM->MainWindow = window;
 
-	glViewport(0, 0, 1280, 720);
+	glViewport(0, 0, MainWindowSize.x, MainWindowSize.y);
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	glfwSetErrorCallback(glfw_onError);
+
 
 	// OpenGL init
 	glewInit();
@@ -131,13 +130,30 @@ int main(int argc, char **argv)
 	// The input function registration
 	SI->Init();
 
+
+	EditorWindow* NewWindow = new EditorWindow("Test", window, glm::vec2(300, 300), glm::vec2(0, 0));
+	NewWindow->ClearColour = glm::vec3(0.4, 0.4, 0.4);
+
 	//SetupGLUT(argc, argv);
 
 	while (!glfwWindowShouldClose(window))
 	{
+		glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glViewport(0, 0, MainWindowSize.x, MainWindowSize.y);
+		CAM->SCR_WIDTH = MainWindowSize.x;
+		CAM->SCR_HEIGHT = MainWindowSize.y;
+		CAM->VIEWPORT_X = 0;
+		CAM->VIEWPORT_Y = 0;
+
 		Update();
+		CAM->SCR_WIDTH = MainWindowSize.x;
+		CAM->SCR_HEIGHT = MainWindowSize.y;
+		CAM->VIEWPORT_X = 0;
+		CAM->VIEWPORT_Y = 0;
 
 		renderScene();
+
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -241,6 +257,7 @@ void Update()
 		{
 			Camera::GetInstance()->Update();
 			SceneManager::GetInstance()->UpdateCurrentScene();
+			EditorWindowManager::UpdateWindows();
 			Time::Update();
 			SI->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 			CurrentTimer = 0.0f;
@@ -250,7 +267,6 @@ void Update()
 
 	//glutPostRedisplay();
 
-	EditorWindowManager::UpdateWindows();
 }
 
 /************************************************************
@@ -272,7 +288,9 @@ void renderScene()
 	{
 		SM->RenderCurrentScene();
 	}
-	//glutSwapBuffers();
+
+	EditorWindowManager::RenderWindows();
+
 }
 
 /************************************************************

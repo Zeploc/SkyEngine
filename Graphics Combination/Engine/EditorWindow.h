@@ -7,7 +7,7 @@
 class EditorWindow
 {
 public:
-	EditorWindow(std::string _WindowName, int _ParentWindow = -1, glm::vec2 _Size = glm::vec2(100, 100), glm::vec2 _Position = glm::vec2(0, 0));
+	EditorWindow(std::string _WindowName, struct GLFWwindow* _ParentWindow = nullptr, glm::vec2 _Size = glm::vec2(100, 100), glm::vec2 _Position = glm::vec2(0, 0));
 
 	void SetupGlutBindings();
 	void SetupUI();
@@ -42,12 +42,13 @@ protected:
 
 	std::string WindowName;
 	int WindowID = -1;
+	GLFWwindow* ParentWindow;
 
 	glm::vec2 Size = glm::vec2(100, 100);
 	glm::vec2 Position = glm::vec2(0, 0);
 
 	glm::vec2 DragOffset;
-	glm::vec2 PrevMouse;
+	bool DraggingWindow = false;
 
 	std::vector<std::shared_ptr<class UIElement>> UIElements;
 

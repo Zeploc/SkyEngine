@@ -36,6 +36,8 @@ public:
 
 	unsigned int SCR_WIDTH = 800;
 	unsigned int SCR_HEIGHT = 800;
+	unsigned int VIEWPORT_X = 0;
+	unsigned int VIEWPORT_Y = 0;
 
 	glm::mat4 view;
 	glm::mat4 projection;
