@@ -33,7 +33,7 @@ public:
 private:
 	using GMVoidFunc = void(*)();
 
-	GMVoidFunc FuncCall = nullptr;
+	GMVoidFunc PressFuncCall = nullptr;
 
 	bool CheckHit(glm::vec3 BottomLeftOffset, glm::vec3 TopRightOffset);
 

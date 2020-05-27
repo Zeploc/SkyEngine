@@ -31,7 +31,7 @@
 #include "Camera.h"
 
 // Static Variables //
-Camera* Camera::m_pCamera = nullptr;
+std::map<int, Camera*> Camera::m_pCameras;
 
 /************************************************************
 #--Description--#: 	Initialises the camera to the screen size and camera vectors
@@ -241,9 +241,23 @@ Camera::~Camera()
 ************************************************************/
 Camera * Camera::GetInstance()
 {
-	if (!m_pCamera) // null or doesn't exist
-		m_pCamera = new Camera;
-	return m_pCamera;
+	int currentWindow = glutGetWindow();
+	Camera* CurrentFound = nullptr;
+	auto it = m_pCameras.find(currentWindow);
+	if (it == m_pCameras.end())// null or doesn't exist
+	{
+		Camera* NewInput = new Camera;
+		m_pCameras.insert(std::pair<int, Camera*>(currentWindow, NewInput));
+		CurrentFound = NewInput;
+	}
+	else
+		CurrentFound = (*it).second;
+
+	return CurrentFound;
+
+	//if (!m_pCamera) // null or doesn't exist
+	//	m_pCamera = new Camera;
+	//return m_pCamera;
 }
 
 /************************************************************
@@ -254,7 +268,15 @@ Camera * Camera::GetInstance()
 ************************************************************/
 void Camera::DestoryInstance()
 {
-	if (m_pCamera)
+	int currentWindow = glutGetWindow();
+	auto it = m_pCameras.find(currentWindow);
+	if (it._Ptr)// exists
+	{
+		delete (*it).second;
+		m_pCameras.erase(currentWindow);
+	}
+
+	/*if (m_pCamera)
 		delete m_pCamera;
-	m_pCamera = nullptr;
+	m_pCamera = nullptr;*/
 }

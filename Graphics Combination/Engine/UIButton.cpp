@@ -36,7 +36,7 @@ bool UIButton::bButtonPressedThisFrame = false;
 #--Return--#: 		NA
 ************************************************************/
 UIButton::UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, glm::vec4 _HightlightColour, int iWidth, int iHeight, void(*func)())
-	: UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, _Colour), ImageComponent(_Position, _anchor, _fRotation, _Colour, iWidth, iHeight), FuncCall(func),
+	: UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, _Colour), ImageComponent(_Position, _anchor, _fRotation, _Colour, iWidth, iHeight), PressFuncCall(func),
 	TextComponent(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)), btnColour(_Colour), btnHighlightColour(_HightlightColour)
 {
 	SoundManager::GetInstance()->AddChannel("UIC");
@@ -49,7 +49,7 @@ UIButton::UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation
 #--Return--#: 		NA
 ************************************************************/
 UIButton::UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, const char * _ImagePath, glm::vec4 _HightlightColour, int iWidth, int iHeight, void(*func)())
-	: UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), ImageComponent(_Position, _anchor, _fRotation, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), iWidth, iHeight, _ImagePath, 1), FuncCall(func),
+	: UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), ImageComponent(_Position, _anchor, _fRotation, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), iWidth, iHeight, _ImagePath, 1), PressFuncCall(func),
 	TextComponent(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)), btnColour(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), btnHighlightColour(_HightlightColour)
 {
 	SoundManager::GetInstance()->AddChannel("UIC");
@@ -89,13 +89,22 @@ void UIButton::AddText(std::string sText, std::string sFont, int iPSize, glm::ve
 	bHasText = true;
 }
 
+//template <class T>
+//void UIButton::BindPress(FDelegate<T> callback)//FDelegate<T>* callback)//std::function<void()> f)
+//{
+//	//PressFunc = f;
+//
+//	callback();
+//	//PressFuncCall = func;
+//}
+
 /************************************************************
 #--Description--#:  Add hold function
 #--Author--#: 		Alex Coultas
 #--Parameters--#: 	Takes pointer to function
 #--Return--#: 		NA
 ************************************************************/
-void UIButton::AddHold(void(*func)())
+void UIButton::BindHold(void(*func)())
 {
 	HoldFuncCall = func;
 }
@@ -106,7 +115,7 @@ void UIButton::AddHold(void(*func)())
 #--Parameters--#: 	Takes pointer to function
 #--Return--#: 		NA
 ************************************************************/
-void UIButton::AddRelease(void(*func)())
+void UIButton::BindRelease(void(*func)())
 {
 	ReleaseFuncCall = func;
 }
@@ -209,7 +218,8 @@ void UIButton::Pressed()
 	}
 	bPressed = true;
 	bButtonPressedThisFrame = true;
-	if (FuncCall != nullptr) FuncCall();
+	if (PressFuncCall != nullptr) PressFuncCall();
+	//PressFunc();
 }
 
 void UIButton::Hovered()

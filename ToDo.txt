@@ -1,5 +1,2 @@
-Adjust UI to use current window size
 Give option to attach programs on other windows without repeating whole process?
-Change singletons (shader, camera etc) to like Input system (singleton changes based on current window)
-Or instead of above system, store map of inputs to each window and select based on current window?
 Change UI bindings (buttons) to be able to use member functions

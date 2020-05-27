@@ -94,6 +94,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;freeglut.lib;SOIL.lib;glew32.lib;vld.lib;freetype.lib;assimp-vc130-mtd.lib;fmod_vc.lib;Box2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\Projects\OpenGL\Graphics Combination\Graphics Combination\Engine\Dependencies\boost;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

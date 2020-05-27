@@ -28,8 +28,7 @@
 #include "EditorWindow.h"
 
 // Static Variables //
-Input* Input::m_pInput = nullptr;
-Input* Input::SingletonInput = nullptr;
+std::map<int, Input*> Input::m_pInputs;
 
 
 
@@ -55,24 +54,6 @@ Input::~Input()
 {
 }
 
-void Input::SetInstance(Input * _Input)
-{
-	// Create basic singleton first
-	if (!m_pInput)
-		GetInstance();
-	// Set current input
-	m_pInput = _Input;
-}
-
-void Input::SetInstanceToSingleton()
-{
-	// Create basic singleton first
-	if (!m_pInput)
-		GetInstance();
-	// Set singleton input
-	m_pInput = SingletonInput;
-}
-
 /************************************************************
 #--Description--#:  Retrieves static instance pointer to this class
 #--Author--#: 		Alex Coultas
@@ -81,12 +62,26 @@ void Input::SetInstanceToSingleton()
 ************************************************************/
 Input * Input::GetInstance()
 {
-	if (!m_pInput) // null or doesn't exist
+	int currentWindow = glutGetWindow();
+	Input* CurrentFound = nullptr;
+	auto it = m_pInputs.find(currentWindow);
+	if (it == m_pInputs.end())// null or doesn't exist
+	{
+		Input* NewInput = new Input;
+		NewInput->Init();
+		m_pInputs.insert(std::pair<int, Input*>(currentWindow, NewInput));
+		CurrentFound = NewInput;
+	}
+	else
+		CurrentFound = (*it).second;
+
+	return CurrentFound;
+
+	/*if (!m_pInput)
 	{
 		m_pInput = new Input;
-		SingletonInput = m_pInput;
 	}
-	return m_pInput;
+	return m_pInput;*/
 }
 
 /************************************************************
@@ -97,9 +92,16 @@ Input * Input::GetInstance()
 ************************************************************/
 void Input::DestoryInstance()
 {
-	if (m_pInput)
+	int currentWindow = glutGetWindow();
+	auto it = m_pInputs.find(currentWindow);
+	if (it._Ptr)// exists
+	{
+		delete (*it).second;
+		m_pInputs.erase(currentWindow);
+	}
+	/*if (m_pInput)
 		delete m_pInput;
-	m_pInput = nullptr;
+	m_pInput = nullptr;*/
 }
 
 /************************************************************
@@ -297,17 +299,8 @@ void Input::ToggleCursorVisible()
 ************************************************************/
 void Input::LprocessNormalKeysDown(unsigned char key, int x, int y)
 {
-	EditorWindow* Current = EditorWindowManager::GetCurrentWindow();
+	Input::GetInstance()->processNormalKeysDown(key, x, y);
 
-	if (Current)
-	{
-		Current->WindowInput->processNormalKeysDown(key, x, y);
-	}
-	else
-	{
-		Input::SetInstanceToSingleton();
-		Input::GetInstance()->processNormalKeysDown(key, x, y);
-	}
 }
 
 /************************************************************
@@ -318,17 +311,8 @@ void Input::LprocessNormalKeysDown(unsigned char key, int x, int y)
 ************************************************************/
 void Input::LprocessNormalKeysUp(unsigned char key, int x, int y)
 {
-	EditorWindow* Current = EditorWindowManager::GetCurrentWindow();
+	Input::GetInstance()->processNormalKeysUp(key, x, y);
 
-	if (Current)
-	{
-		Current->WindowInput->processNormalKeysUp(key, x, y);
-	}
-	else
-	{
-		Input::SetInstanceToSingleton();
-		Input::GetInstance()->processNormalKeysUp(key, x, y);
-	}
 }
 
 /************************************************************
@@ -339,17 +323,8 @@ void Input::LprocessNormalKeysUp(unsigned char key, int x, int y)
 ************************************************************/
 void Input::LprocessSpecialKeys(int key, int x, int y)
 {
-	EditorWindow* Current = EditorWindowManager::GetCurrentWindow();
+	Input::GetInstance()->processSpecialKeys(key, x, y);
 
-	if (Current)
-	{
-		Current->WindowInput->processSpecialKeys(key, x, y);
-	}
-	else
-	{
-		Input::SetInstanceToSingleton();
-		Input::GetInstance()->processSpecialKeys(key, x, y);
-	}
 }
 
 /************************************************************
@@ -360,17 +335,8 @@ void Input::LprocessSpecialKeys(int key, int x, int y)
 ************************************************************/
 void Input::LMouseInput(int x, int y)
 {
-	EditorWindow* Current = EditorWindowManager::GetCurrentWindow();
+	Input::GetInstance()->MouseInput(x, y);
 
-	if (Current)
-	{
-		Current->WindowInput->MouseInput(x, y);
-	}
-	else
-	{
-		Input::SetInstanceToSingleton();
-		Input::GetInstance()->MouseInput(x, y);
-	}
 }
 
 /************************************************************
@@ -381,16 +347,7 @@ void Input::LMouseInput(int x, int y)
 ************************************************************/
 void Input::LMouseButton(int button, int state, int x, int y)
 {
-	EditorWindow* Current = EditorWindowManager::GetCurrentWindow();
+	Input::GetInstance()->MouseButton(button, state, x, y);
 
-	if (Current)
-	{
-		Current->WindowInput->MouseButton(button, state, x, y);
-	}
-	else
-	{
-		Input::SetInstanceToSingleton();
-		Input::GetInstance()->MouseButton(button, state, x, y);
-	}
 }
 

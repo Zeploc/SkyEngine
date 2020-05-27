@@ -30,6 +30,9 @@ EditorWindow::EditorWindow(std::string _WindowName, int _ParentWindow, glm::vec2
 	EditorWindowManager::NewWindowCreated(this);
 	
 	SetupUI();
+
+	Camera::GetInstance()->Init(Size.x, Size.y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
+	Camera::GetInstance()->SwitchProjection(Camera::PERSPECTIVE);
 	
 	glutSetWindow(CurrentWindow);
 
@@ -41,14 +44,18 @@ void EditorWindow::SetupGlutBindings()
 	//glutDisplayFunc(boost::bind(&EditorWindow::RenderWindow, &this));
 	glutDisplayFunc(*EditorWindowManager::StaticRenderWindow);
 
-	WindowInput = new Input;
-	WindowInput->Init();
+	//WindowInput = new Input;
+	//WindowInput->Init();
 }
 
 void EditorWindow::SetupUI()
 {
 	std::shared_ptr<UIButton> TestBtn(new UIButton(glm::vec2(20, Size.y - 20.0f), Utils::BOTTOM_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 260, 50, nullptr));
-	//TestBtn->AddText("QUIT", "Resources/Fonts/Roboto-Thin.ttf", 30, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
+
+	//FDelegate<EditorWindow>* cbk = new FDelegate<EditorWindow>(*this, &EditorWindow::TestButtonPressed);
+	//(*cbk)();
+	TestBtn->BindPress(FDelegate<EditorWindow>(this, &EditorWindow::TestButtonPressed));// cbk);// std::bind(&EditorWindow::TestButtonPressed, this));
+	//TestBtn->AddText("Test", "Resources/Fonts/Roboto-Thin.ttf", 30, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 	UIElements.push_back(TestBtn);
 }
 
@@ -59,9 +66,6 @@ EditorWindow::~EditorWindow()
 
 void EditorWindow::RenderWindow()
 {
-	Camera::GetInstance()->SCR_HEIGHT = Size.y;
-	Camera::GetInstance()->SCR_WIDTH = Size.x;
-
 	glutSetWindow(WindowID);
 	glClearColor(ClearColour.r, ClearColour.g, ClearColour.b, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -110,29 +114,31 @@ bool EditorWindow::IsPointInWindow(glm::vec2 _point)
 	return true;
 }
 
+void EditorWindow::TestButtonPressed()
+{
+	PopOut();
+}
+
 void EditorWindow::UpdateWindow()
 {
-	Input::SetInstance(WindowInput);
+	glutSetWindow(WindowID);
+	
 
-	Camera::GetInstance()->SCR_HEIGHT = Size.y;
-	Camera::GetInstance()->SCR_WIDTH = Size.x;
-
-
-	if (WindowInput->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_PRESS)
+	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_PRESS)
 	{
-		DragOffset = WindowInput->MousePos;
-		PrevMouse = WindowInput->MousePos;
+		DragOffset = Input::GetInstance()->MousePos;
+		PrevMouse = Input::GetInstance()->MousePos;
 
 		//PopOut();
 	}
-	else if (WindowInput->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_RELEASE)
+	else if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_RELEASE)
 	{
-		glm::vec2 NewPosition = Position + WindowInput->MousePos - DragOffset;
+		glm::vec2 NewPosition = Position + Input::GetInstance()->MousePos - DragOffset;
 
 		//std::cout << "Mouse Pos x:" << WindowInput->MousePos.x << " y: " << WindowInput->MousePos.y << std::endl;
 		SetWindowPosition(NewPosition);
 	}
-	else if(WindowInput->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_HOLD)
+	else if(Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_HOLD)
 	{
 		/*glutSetWindow(WindowID);
 		int screen_pos_x = glutGet((GLenum)GLUT_WINDOW_X);
@@ -143,13 +149,13 @@ void EditorWindow::UpdateWindow()
 		CurrentWindowPos.x = screen_pos_x;
 		CurrentWindowPos.y = screen_pos_y;*/
 
-		glm::vec2 NewPosition = Position + WindowInput->MousePos - DragOffset;
+		glm::vec2 NewPosition = Position + Input::GetInstance()->MousePos - DragOffset;
 
 		//if (PrevMouse != WindowInput->MousePos)
 		//	std::cout << "Mouse Pos x:" << WindowInput->MousePos.x << " y: " << WindowInput->MousePos.y << std::endl;
 		//SetWindowPosition(NewPosition);
 		
-		PrevMouse = WindowInput->MousePos;
+		PrevMouse = Input::GetInstance()->MousePos;
 	}
 
 	glutSetWindow(WindowID);
@@ -160,7 +166,7 @@ void EditorWindow::UpdateWindow()
 		UIElement->BaseUpdate();
 	}
 
-	WindowInput->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
+	Input::GetInstance()->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 }
 
 void EditorWindow::SetWindowPosition(glm::vec2 _position)
@@ -174,6 +180,8 @@ void EditorWindow::MainWindowSizeChanged(int _w, int _h)
 {
 	glutSetWindow(WindowID);
 
+	//Camera::GetInstance()->SCR_HEIGHT = _h;
+	//Camera::GetInstance()->SCR_WIDTH = _w;
 
 	// resize and reposition the sub window
 	//glutPositionWindow(border, (h + border) / 2);

@@ -89,17 +89,18 @@ int main(int argc, char **argv)
 
 	srand(unsigned int(time(NULL)));
 	// init GLUT and create Window
-	CAM->Init(MainWindowSize.x, MainWindowSize.y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
-	CAM->SwitchProjection(Camera::PERSPECTIVE);
 	glutInit(&argc, argv);
 	
 
 	//glutInitWindowPosition(0, 0);
-	glutInitWindowSize(CAM->SCR_WIDTH, CAM->SCR_HEIGHT);
+	glutInitWindowSize(MainWindowSize.x, MainWindowSize.y);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	GameWindowID = glutCreateWindow("Game Window");
 	EditorWindowManager::iMainWindowID = GameWindowID;
 	//glutFullScreen();
+
+	CAM->Init(MainWindowSize.x, MainWindowSize.y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
+	CAM->SwitchProjection(Camera::PERSPECTIVE);
 
 	// OpenGL init
 	glewInit();
@@ -128,9 +129,9 @@ int main(int argc, char **argv)
 	// here is the idle func registration
 	glutIdleFunc(Update);
 
-	Input::SetInstanceToSingleton();
+	//Input::SetInstanceToSingleton();
 	// The input function registration
-	SI->Init();
+	//SI->Init();
 
 	// Window Resize Function
 	glutReshapeFunc(changeSize);
@@ -152,11 +153,8 @@ int main(int argc, char **argv)
 ************************************************************/
 void Update()
 {
-	CAM->SCR_HEIGHT = MainWindowSize.y;
-	CAM->SCR_WIDTH = MainWindowSize.x;
-
 	glutSetWindow(GameWindowID);
-	Input::SetInstanceToSingleton();
+	//Input::SetInstanceToSingleton();
 	if (bLoading)
 	{
 		SoundManager::GetInstance()->InitFMod();
@@ -199,9 +197,7 @@ void Update()
 ************************************************************/
 void renderScene(void)
 {
-	CAM->SCR_HEIGHT = MainWindowSize.y;
-	CAM->SCR_WIDTH = MainWindowSize.x;
-	//glutSetWindow(GameWindowID);
+	glutSetWindow(GameWindowID);
 	if (bLoading)
 	{
 		glClearColor(0.8f, 0.8f, 0.8f, 1.0); // clear grey
@@ -223,7 +219,7 @@ void renderScene(void)
 ************************************************************/
 void changeSize(int w, int h)
 {
-	MainWindowSize = glm::vec2(w, h);
+	glutSetWindow(GameWindowID);
 	CAM->SCR_HEIGHT = h;
 	CAM->SCR_WIDTH = w;
 

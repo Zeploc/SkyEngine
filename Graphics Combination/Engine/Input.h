@@ -18,6 +18,7 @@
 // Library Includes //
 #include <string>
 #include <vector>
+#include <map>
 
 #pragma once
 class Input
@@ -71,8 +72,6 @@ private:
 
 public:
 
-	static void SetInstance(Input* _Input);
-	static void SetInstanceToSingleton();
 	// Singleton
 	static Input* GetInstance();
 	static void DestoryInstance();
@@ -87,8 +86,7 @@ public:
 	Input();
 	
 private:
-	static Input* m_pInput;
-	static Input* SingletonInput;
+	static std::map<int, Input*> m_pInputs;
 	~Input();
 	Input(Input const&);              // Don't Implement
 	void operator=(Input const&); // Don't implement

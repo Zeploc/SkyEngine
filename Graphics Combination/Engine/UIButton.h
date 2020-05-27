@@ -16,6 +16,7 @@
 
 // Library Includes //
 #include <string>
+//#include <boost/function.hpp>
 
 // OpenGL Library Includes //
 #include <glm\common.hpp>
@@ -25,6 +26,54 @@
 #include "UIText.h"
 #include "UIImage.h"
 
+//class FDelegateWrapper
+//{
+	/*class DelegateBase
+	{
+	public:
+		virtual ~DelegateBase() {}
+		virtual DelegateBase* copy() = 0;
+	}*/
+
+	template <class T>
+	class FDelegate// : public DelegateBase
+	{
+	public:
+		typedef void (T::*fn)();
+
+		FDelegate(T* trg, fn op)
+			: m_rTarget(trg)
+			, m_Operation(op)
+		{
+		}
+
+		void operator()()
+		{
+			(m_rTarget->*m_Operation)();
+		}
+		/*void Execute()
+		{
+			(m_rTarget.*m_Operation)();
+		}*/
+
+	//private:
+		FDelegate(const FDelegate<T>& other);
+		/*{
+			m_rTarget = other.m_rTarget;
+			m_Operation = other.m_Operation;
+		}*/
+
+		T* m_rTarget;
+		fn m_Operation;
+
+	};
+
+	/*template <class T>
+	FDelegate<T> Bind(FDelegate<T>)
+	{
+
+	}*/
+//};
 
 
 class UIButton : public UIElement
@@ -36,8 +85,13 @@ public:
 
 	void AddText(std::string sText, std::string sFont, int iPSize, glm::vec4 TextColour, Utils::EANCHOR _Anchor);
 	void AddText(std::string sText, std::string sFont, int iPSize, glm::vec4 TextColour, Utils::EANCHOR _Anchor, glm::vec2 _v2Offset);
-	void AddHold(void(*func)());
-	void AddRelease(void(*func)());
+	template <class T>
+	void BindPress(FDelegate<T> callback)//FDelegate<T>* callback);//  std::function<void()> f);
+	{
+		//callback();
+	}
+	void BindHold(void(*func)());
+	void BindRelease(void(*func)());
 	void SetActive(bool _bIsActive);
 	void SetPressSound(const char* _SoundPath);
 
@@ -60,7 +114,9 @@ public:
 private:
 	using GMVoidFunc = void(*)();
 
-	GMVoidFunc FuncCall = nullptr;
+	//FDelegate<T>* PressFunc;
+	//std::function<void()> PressFunc;
+	GMVoidFunc PressFuncCall = nullptr;
 	GMVoidFunc HoldFuncCall = nullptr;
 	GMVoidFunc ReleaseFuncCall = nullptr;
 
@@ -73,4 +129,3 @@ private:
 	const char* m_PressSoundPath = "";
 
 };
-

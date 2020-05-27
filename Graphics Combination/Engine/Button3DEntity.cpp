@@ -25,7 +25,7 @@
 bool Button3DEntity::bButtonPressedThisFrame = false;
 
 Button3DEntity::Button3DEntity(Utils::Transform _Transform, Utils::EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, void(*func)())
-	: Entity(_Transform, _Anchor), FuncCall(func)
+	: Entity(_Transform, _Anchor), PressFuncCall(func)
 {
 	std::shared_ptr<Cube> ButtonCubeMesh = std::make_shared<Cube>(Cube(fWidth, fHeight, fDepth, _Colour));
 	EntityMesh = ButtonCubeMesh;
@@ -34,7 +34,7 @@ Button3DEntity::Button3DEntity(Utils::Transform _Transform, Utils::EANCHOR _Anch
 }
 
 Button3DEntity::Button3DEntity(Utils::Transform _Transform, Utils::EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, const char * Texturepath, void(*func)())
-	: Entity(_Transform, _Anchor), FuncCall(func)
+	: Entity(_Transform, _Anchor), PressFuncCall(func)
 {
 	std::shared_ptr<Cube> ButtonCubeMesh = std::make_shared<Cube>(Cube(fWidth, fHeight, fDepth, _Colour, Texturepath));
 	EntityMesh = ButtonCubeMesh;
@@ -65,7 +65,7 @@ void Button3DEntity::Update()
 		{
 			bPressed = true;
 			bButtonPressedThisFrame = true;
-			if (FuncCall != nullptr) FuncCall();
+			if (PressFuncCall != nullptr) PressFuncCall();
 		}
 		EntityMesh->Colour = btnHighlightColour;
 	}	

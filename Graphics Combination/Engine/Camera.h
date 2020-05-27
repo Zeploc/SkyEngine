@@ -18,6 +18,8 @@
 #include <glm/common.hpp>
 #include <glm/matrix.hpp>
 
+#include <map>
+
 // Engine Includes //
 #include "Utils.h"
 
@@ -99,7 +101,7 @@ public:
 
 
 private:
-	static Camera* m_pCamera;
+	static std::map<int, Camera*> m_pCameras;
 	Camera();
 	~Camera();
 	Camera(Camera const&);              // Don't Implement

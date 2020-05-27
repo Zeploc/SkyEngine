@@ -29,14 +29,14 @@ public:
 
 	bool IsPointInWindow(glm::vec2 _point);
 
+	void TestButtonPressed();
 protected:
-
 
 public:
 
 	glm::vec3 ClearColour = glm::vec3(1, 1, 1);
 
-	class Input* WindowInput;
+	//class Input* WindowInput;
 
 
 protected:
