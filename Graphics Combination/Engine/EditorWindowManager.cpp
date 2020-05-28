@@ -51,6 +51,22 @@ void EditorWindowManager::WindowRemoved(EditorWindow* _Window)
 
 void EditorWindowManager::UpdateWindows()
 {
+	/*if (CurrentFocused != MainWindow && CurrentFocused)
+	{
+		int x, y, width, height;
+		glfwGetWindowPos(CurrentFocused, &x, &y);
+		glfwGetWindowSize(CurrentFocused, &width, &height);
+		int MainX, MainY, MainWidth, MainHeight;
+		glfwGetWindowPos(MainWindow, &MainX, &MainY);
+		
+		glfwGetWindowSize(MainWindow, &MainWidth, &MainHeight);
+
+		if (x + width > MainX && x < MainX + MainWidth && y > MainY && y < MainY + MainHeight)
+		{
+			std::cout << "Window Pos: " << x << ", " << y << std::endl;
+		}
+	}*/
+
 	for (auto it : EditorWindows)
 	{
 		EditorWindow* CurrentWindow = it;

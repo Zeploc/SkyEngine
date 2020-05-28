@@ -15,7 +15,7 @@ public:
 	~EditorWindow();
 
 	std::string GetWindowName() { return WindowName; };
-	glm::vec2 GetPosition() { return Position; };
+	glm::vec2 GetPosition();
 
 	void SetWindowPosition(glm::vec2 _position);
 
@@ -26,6 +26,7 @@ public:
 	void RenderWindow();
 
 	void PopOut();
+	void PopIn();
 
 	void StartDrag();
 	void StopDrag();
@@ -56,4 +57,5 @@ protected:
 
 	std::vector<std::shared_ptr<class UIElement>> UIElements;
 
+	bool bCanPopIn = true;
 };

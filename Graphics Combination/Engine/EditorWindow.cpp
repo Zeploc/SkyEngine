@@ -149,6 +149,7 @@ void EditorWindow::PopOut()
 	int x, y;
 	glfwGetWindowPos(EditorWindowManager::MainWindow, &x, &y);
 
+	Position.y += 30;
 	glfwSetWindowPos(ParentWindow, x + Position.x, y + Position.y);
 
 
@@ -177,6 +178,7 @@ void EditorWindow::PopOut()
 
 	glfwMakeContextCurrent(EditorWindowManager::MainWindow);
 
+	bCanPopIn = false;
 
 	//glutSetWindow(EditorWindowManager::iMainWindowID);
 	//int screen_pos_x = glutGet((GLenum)GLUT_WINDOW_X);
@@ -196,6 +198,25 @@ void EditorWindow::PopOut()
 	//EditorWindowManager::NewWindowCreated(this);
 	//Camera::GetInstance()->Init(Size.x, Size.y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
 	//Camera::GetInstance()->SwitchProjection(Camera::PERSPECTIVE);
+}
+
+void EditorWindow::PopIn()
+{
+	if (!bCanPopIn)
+		return;
+	if (ParentWindow == EditorWindowManager::MainWindow) //Same window
+		return;
+
+	glfwDestroyWindow(ParentWindow);
+	ParentWindow = EditorWindowManager::MainWindow;
+
+	int MainX, MainY;
+	glfwGetWindowPos(ParentWindow, &MainX, &MainY);
+	Position -= glm::vec2(MainX, MainY);
+	Position.y -= 30;
+
+	SetupUI();
+	SetBackColour(BackColour);
 }
 
 void EditorWindow::StartDrag()
@@ -238,6 +259,23 @@ void EditorWindow::SetBackColour(glm::vec3 _Colour)
 
 void EditorWindow::UpdateWindow()
 {
+	if (ParentWindow != EditorWindowManager::MainWindow) //seperate window
+	{
+		int MainX, MainY, MainWidth, MainHeight;
+		glfwGetWindowPos(EditorWindowManager::MainWindow, &MainX, &MainY);
+		glfwGetWindowSize(EditorWindowManager::MainWindow, &MainWidth, &MainHeight);
+		// Update position
+		GetPosition();
+		
+		if (Position.x + Size.x > MainX && Position.x < MainX + MainWidth && Position.y > MainY && Position.y < MainY + MainHeight)
+		{
+			std::cout << "Window Pos: " << Position.x << ", " << Position.y << std::endl;
+			PopIn();
+		}
+		else
+			bCanPopIn = true;
+	}
+
 	glfwMakeContextCurrent(ParentWindow);
 
 	Camera::GetInstance()->SCR_WIDTH = Size.x;
@@ -288,13 +326,32 @@ void EditorWindow::UpdateWindow()
 	//Input::GetInstance()->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 }
 
+glm::vec2 EditorWindow::GetPosition()
+{
+	if (ParentWindow != EditorWindowManager::MainWindow)
+	{
+		int x, y;
+		glfwGetWindowPos(ParentWindow, &x, &y);
+		Position = glm::vec2(x, y);
+	}
+	return Position;
+}
+
 void EditorWindow::SetWindowPosition(glm::vec2 _position)
 {
+	if (ParentWindow != EditorWindowManager::MainWindow)
+	{
+		glfwSetWindowPos(ParentWindow, _position.x, _position.y);
+	}
 	Position = _position;
 }
 
 void EditorWindow::MainWindowSizeChanged(int _w, int _h)
 {
+	if (ParentWindow != EditorWindowManager::MainWindow) //seperate window
+	{
+		Size = glm::vec2(_w, _h);
+	}
 	//glutSetWindow(WindowID);
 
 	//Camera::GetInstance()->SCR_HEIGHT = _h;
