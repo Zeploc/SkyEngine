@@ -35,6 +35,9 @@ public:
 	~Shader();
 	static void CleanUp();
 
+
+	static void LoadAllDefaultShadersInCurrentContext();
+
 	static void AddProgram(std::string VertexShaderPath, std::string FragmentShaderPath, std::string ShaderName, std::string GeometryShaderPath = "");
 	static void AddTessProgram(std::string VertexShaderPath, std::string FragmentShaderPath, std::string TessControlShaderPath, std::string TessEvalShaderPath, std::string ShaderName);
 	static void AddComputeProgram(std::string ComputePath, std::string ShaderName);

@@ -12,6 +12,7 @@
 std::vector<EditorWindow*> EditorWindowManager::EditorWindows;
 std::vector<EditorWindow*> EditorWindowManager::EditorWindowsToRemove;
 GLFWwindow* EditorWindowManager::MainWindow = nullptr;
+GLFWwindow* EditorWindowManager::CurrentFocused = nullptr;
 
 EditorWindowManager::EditorWindowManager()
 {
@@ -23,47 +24,6 @@ EditorWindowManager::~EditorWindowManager()
 {
 }
 
-EditorWindow* EditorWindowManager::GetCurrentWindow()
-{
-	//HWND ActiveWindow = GetActiveWindow();
-	//char ActiveWindowName[101];
-	//GetWindowText(ActiveWindow, ActiveWindowName, 100);
-
-	//// Check for sub windows
-	//int CurrentWindowID = glutGetWindow();
-	//auto Current = EditorWindows.find(CurrentWindowID);
-	////auto theEND = ;
-	//if (Current != EditorWindows.end())
-	//{
-	//	EditorWindow* CurrentWindow = Current->second;
-	//	if (CurrentWindow)
-	//	{
-	//		std::string CurrentName = CurrentWindow->GetWindowName();
-	//		//std::cout << CurrentName.c_str() << " Window Active" << std::endl;
-	//		return CurrentWindow;
-	//	}
-
-	//}
-
-	//// Check for external windows
-	//for (auto it : EditorWindows)
-	//{
-	//	EditorWindow* CurrentWindow = it.second;
-	//	if (CurrentWindow)
-	//	{
-	//		std::string CurrentName = CurrentWindow->GetWindowName();
-	//		if (CurrentName == ActiveWindowName)
-	//		{
-	//			//std::cout << CurrentName.c_str() << " Window Active" << std::endl;
-	//			return CurrentWindow;
-	//		}
-	//	}
-	//}
-	
-	// No windows, so is main
-	//std::cout << "Main Window Active " << std::endl;
-	return nullptr;
-}
 
 bool EditorWindowManager::IsRemovedID(EditorWindow* _Window)
 {
@@ -79,6 +39,8 @@ bool EditorWindowManager::IsRemovedID(EditorWindow* _Window)
 void EditorWindowManager::NewWindowCreated(EditorWindow * _window)
 {
 	EditorWindows.push_back(_window);
+	if (_window->GetParentWindow() != MainWindow)
+		glfwSetWindowFocusCallback(_window->GetParentWindow(), EditorWindowManager::FocusChanged);
 }
 
 void EditorWindowManager::WindowRemoved(EditorWindow* _Window)
@@ -129,4 +91,10 @@ void EditorWindowManager::MainWindowSizeChanged(int _w, int _h)
 		if (CurrentWindow)
 			CurrentWindow->MainWindowSizeChanged(_w, _h);
 	}
+}
+
+void EditorWindowManager::FocusChanged(GLFWwindow * window, int focused)
+{
+	if (focused == GLFW_TRUE)
+		CurrentFocused = window;
 }

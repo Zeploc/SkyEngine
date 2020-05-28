@@ -17,7 +17,9 @@ public:
 	static void RenderWindows();
 	static void MainWindowSizeChanged(int _w, int _h);
 
-	static class EditorWindow * GetCurrentWindow();
+	static void FocusChanged(struct GLFWwindow* window, int focused);
+
+	static GLFWwindow * GetCurrentFocus() { return CurrentFocused; };
 
 	static std::vector<class EditorWindow*> GetWindows() { return EditorWindows; };
 protected:
@@ -27,6 +29,7 @@ public:
 	static struct GLFWwindow* MainWindow;
 
 protected:
+	static struct GLFWwindow* CurrentFocused;
 
 	static std::vector<EditorWindow*> EditorWindows;
 	static std::vector<EditorWindow*> EditorWindowsToRemove;

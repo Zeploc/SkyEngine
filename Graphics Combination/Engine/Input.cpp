@@ -110,11 +110,11 @@ void Input::DestoryInstance()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Input::Init()
+void Input::Init(GLFWwindow* Window)
 {
-	glfwSetKeyCallback(EditorWindowManager::MainWindow, Input::LprocessKeys);
-	glfwSetCursorPosCallback(EditorWindowManager::MainWindow, Input::LMouseInput);
-	glfwSetMouseButtonCallback(EditorWindowManager::MainWindow, Input::LMouseButton);
+	glfwSetKeyCallback(Window, Input::LprocessKeys);
+	glfwSetCursorPosCallback(Window, Input::LMouseInput);
+	glfwSetMouseButtonCallback(Window, Input::LMouseButton);
 	/*
 	glutSpecialFunc(Input::LprocessSpecialKeys);*/
 	//glutJoystickFunc(LJoystick, (float)GLUT_JOYSTICK_POLL_RATE / 100.0f);

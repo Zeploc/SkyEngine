@@ -48,7 +48,7 @@ public:
 
 	std::vector<class XBOXController*> Players;
 
-	void Init();
+	void Init(struct GLFWwindow* Window);
 	void processNormalKeysDown(unsigned char key, int x, int y);
 	void processNormalKeysUp(unsigned char key, int x, int y);
 	void processSpecialKeys(int key, int x, int y);

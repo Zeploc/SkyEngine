@@ -119,7 +119,8 @@ int main(int argc, char **argv)
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	glfwSetErrorCallback(glfw_onError);
-
+	
+	glfwSetWindowFocusCallback(window, EditorWindowManager::FocusChanged);
 
 	// OpenGL init
 	glewInit();
@@ -128,11 +129,18 @@ int main(int argc, char **argv)
 	Init();
 
 	// The input function registration
-	SI->Init();
+	SI->Init(window);
 
 
 	EditorWindow* NewWindow = new EditorWindow("Test", window, glm::vec2(300, 300), glm::vec2(0, 0));
-	NewWindow->ClearColour = glm::vec3(0.4, 0.4, 0.4);
+	NewWindow->SetBackColour(glm::vec3(0.2, 0.6, 0.8));
+
+	EditorWindow* ContentWindow = new EditorWindow("Content", window, glm::vec2(500, 150), glm::vec2(0, MainWindowSize.y - 150));
+	ContentWindow->SetBackColour(glm::vec3(0.4, 0.4, 0.4));
+
+
+	EditorWindow* ExternalWindow = new EditorWindow("External Test", nullptr, glm::vec2(500, 300), glm::vec2(100, 100));
+	ExternalWindow->SetBackColour(glm::vec3(0.6, 0.3, 0.4));
 
 	//SetupGLUT(argc, argv);
 
@@ -194,13 +202,13 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 //	Init();
 //
 //	EditorWindow* NewWindow = new EditorWindow("Test", GameWindowID, glm::vec2(300, 300), glm::vec2(10, 10));
-//	NewWindow->ClearColour = glm::vec3(0.4, 0.4, 0.4);
+//	NewWindow->BackColour = glm::vec3(0.4, 0.4, 0.4);
 //
 //	glutSetWindow(NewWindow->GetWindowID());
 //	Init();
 //
 //	//EditorWindow* SecondNewWindow = new EditorWindow("Hey", GameWindowID, glm::vec2(400, 200), glm::vec2(700, 500));
-//	//SecondNewWindow->ClearColour = glm::vec3(0.4, 0.4, 0.4);
+//	//SecondNewWindow->BackColour = glm::vec3(0.4, 0.4, 0.4);
 //
 //
 //	glutSetWindow(GameWindowID);
@@ -277,7 +285,7 @@ void Update()
 ************************************************************/
 void renderScene()
 {
-	//glutSetWindow(GameWindowID);
+	glfwMakeContextCurrent(EditorWindowManager::MainWindow);
 	if (bLoading)
 	{
 		glClearColor(0.8f, 0.8f, 0.8f, 1.0); // clear grey
@@ -318,25 +326,25 @@ void changeSize(int w, int h)
 ************************************************************/
 void Init()
 {
-	
-	//Shader::AddProgram("Resources/Shaders/VertexShader.vs", "Resources/Shaders/FragmentShader.fs", "BaseProgram");
-	Shader::AddProgram("Resources/Shaders/TextureVertexShader.vs", "Resources/Shaders/TextureFragmentShader.fs", "BaseProgram");
-	Shader::AddComputeProgram("Resources/Shaders/ComputeShader.comps", "ComputeProgram");
-	Shader::AddProgram("Resources/Shaders/ParticleShaderCompute.vs", "Resources/Shaders/ParticleShaderCompute.fs", "GPUParticlesProgram");
-	Shader::AddProgram("Resources/Shaders/ParticleShader.vs", "Resources/Shaders/ParticleShader.fs", "ParticleShader", "Resources/Shaders/ParticleShader.gs");
-	Shader::AddProgram("Resources/Shaders/LitVertexShader.vs", "Resources/Shaders/LitFragmentShader.fs", "LitTextureprogram");
-	Shader::AddProgram("Resources/Shaders/AnimatedModel.vs", "Resources/Shaders/AnimatedModel.fs", "AnimatedModel");
-	Shader::AddProgram("Resources/Shaders/Text.vs", "Resources/Shaders/Text.fs", "TextUIprogram");
-	Shader::AddProgram("Resources/Shaders/UI.vs", "Resources/Shaders/UI.fs", "UIprogram");
-	Shader::AddProgram("Resources/Shaders/CubeMapVertexShader.vs", "Resources/Shaders/CubeMapFragmentShader.fs", "CubeMapProgram");
-	Shader::AddProgram("Resources/Shaders/ModelVertexShader.vs", "Resources/Shaders/ModelFragmentShader.fs", "ModelProgram");
-	Shader::AddProgram("Resources/Shaders/ModelVertexShaderLit.vs", "Resources/Shaders/ModelFragmentShaderLit.fs",  "ModelProgramLit");
-	Shader::AddProgram("Resources/Shaders/ReflectionShader.vs", "Resources/Shaders/ReflectionShader.fs", "ReflectionProgram");
-	Shader::AddProgram("Resources/Shaders/FogShader.vs", "Resources/Shaders/FogShader.fs", "FogProgram");
-	Shader::AddProgram("Resources/Shaders/GeometryShader.vs", "Resources/Shaders/GeometryShader.fs", "GeometryShader", "Resources/Shaders/GeometryShader.gs");
-	Shader::AddProgram("Resources/Shaders/ParticleShader.vs", "Resources/Shaders/ParticleShader.fs", "ParticleShader", "Resources/Shaders/ParticleShader.gs");
-	Shader::AddTessProgram("Resources/Shaders/Tessellation.vs", "Resources/Shaders/Tessellation.fs", "Resources/Shaders/TessControl.tc", "Resources/Shaders/TessEval.te", "TessProgram");
-	Shader::AddProgram("Resources/Shaders/FrameBuffer.vs", "Resources/Shaders/FrameBuffer.fs", "FrameBuffer");
+	Shader::LoadAllDefaultShadersInCurrentContext();
+	////Shader::AddProgram("Resources/Shaders/VertexShader.vs", "Resources/Shaders/FragmentShader.fs", "BaseProgram");
+	//Shader::AddProgram("Resources/Shaders/TextureVertexShader.vs", "Resources/Shaders/TextureFragmentShader.fs", "BaseProgram");
+	//Shader::AddComputeProgram("Resources/Shaders/ComputeShader.comps", "ComputeProgram");
+	//Shader::AddProgram("Resources/Shaders/ParticleShaderCompute.vs", "Resources/Shaders/ParticleShaderCompute.fs", "GPUParticlesProgram");
+	//Shader::AddProgram("Resources/Shaders/ParticleShader.vs", "Resources/Shaders/ParticleShader.fs", "ParticleShader", "Resources/Shaders/ParticleShader.gs");
+	//Shader::AddProgram("Resources/Shaders/LitVertexShader.vs", "Resources/Shaders/LitFragmentShader.fs", "LitTextureprogram");
+	//Shader::AddProgram("Resources/Shaders/AnimatedModel.vs", "Resources/Shaders/AnimatedModel.fs", "AnimatedModel");
+	//Shader::AddProgram("Resources/Shaders/Text.vs", "Resources/Shaders/Text.fs", "TextUIprogram");
+	//Shader::AddProgram("Resources/Shaders/UI.vs", "Resources/Shaders/UI.fs", "UIprogram");
+	//Shader::AddProgram("Resources/Shaders/CubeMapVertexShader.vs", "Resources/Shaders/CubeMapFragmentShader.fs", "CubeMapProgram");
+	//Shader::AddProgram("Resources/Shaders/ModelVertexShader.vs", "Resources/Shaders/ModelFragmentShader.fs", "ModelProgram");
+	//Shader::AddProgram("Resources/Shaders/ModelVertexShaderLit.vs", "Resources/Shaders/ModelFragmentShaderLit.fs",  "ModelProgramLit");
+	//Shader::AddProgram("Resources/Shaders/ReflectionShader.vs", "Resources/Shaders/ReflectionShader.fs", "ReflectionProgram");
+	//Shader::AddProgram("Resources/Shaders/FogShader.vs", "Resources/Shaders/FogShader.fs", "FogProgram");
+	//Shader::AddProgram("Resources/Shaders/GeometryShader.vs", "Resources/Shaders/GeometryShader.fs", "GeometryShader", "Resources/Shaders/GeometryShader.gs");
+	//Shader::AddProgram("Resources/Shaders/ParticleShader.vs", "Resources/Shaders/ParticleShader.fs", "ParticleShader", "Resources/Shaders/ParticleShader.gs");
+	//Shader::AddTessProgram("Resources/Shaders/Tessellation.vs", "Resources/Shaders/Tessellation.fs", "Resources/Shaders/TessControl.tc", "Resources/Shaders/TessEval.te", "TessProgram");
+	//Shader::AddProgram("Resources/Shaders/FrameBuffer.vs", "Resources/Shaders/FrameBuffer.fs", "FrameBuffer");
 
 	glCullFace(GL_BACK); // Cull the Back faces
 	glFrontFace(GL_CW); // Front face is Clockwise order

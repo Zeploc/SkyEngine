@@ -5,6 +5,7 @@
 #include "UIButton.h"
 #include "EditorWindowManager.h"
 #include "Camera.h"
+#include "Shader.h"
 
 //#include <freeglut.h>
 #include <glfw3.h>
@@ -15,28 +16,46 @@ EditorWindow::EditorWindow(std::string _WindowName, GLFWwindow*  _ParentWindow, 
 {
 	if (!_ParentWindow)
 	{
-		// make new window
-		//glutInitWindowPosition(Position.x, Position.y);
-		//glutInitWindowSize(Size.x, Size.y);
-		//WindowID = glutCreateWindow(WindowName.c_str());
+		ParentWindow = glfwCreateWindow(Size.x, Size.y, WindowName.c_str(), NULL, NULL);
+		if (ParentWindow == NULL)
+		{
+			std::cout << "Failed to create GLFW window" << std::endl;
+			return;
+		}
+		glfwMakeContextCurrent(ParentWindow);
+
+		glfwSetWindowPos(ParentWindow, Position.x, Position.y);
+
+
+		glViewport(0, 0, Size.x, Size.y);
+
+		// OpenGL init
+		glewInit();
+
+		// Settings Initialised
+		Shader::LoadAllDefaultShadersInCurrentContext();
+
+		glCullFace(GL_BACK); // Cull the Back faces
+		glFrontFace(GL_CW); // Front face is Clockwise order
+		glEnable(GL_CULL_FACE); // Turn on the back face culling
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		// The input function registration
+		Input::GetInstance()->Init(ParentWindow);
 	}
 	else
 	{
 
 	}
-
 	
-	//SetupGlutBindings();
 	
 	EditorWindowManager::NewWindowCreated(this);
 	
 	SetupUI();
 
-	//Camera::GetInstance()->Init(Size.x, Size.y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
-	//Camera::GetInstance()->SwitchProjection(Camera::PERSPECTIVE);
-	
-	//glutSetWindow(CurrentWindow);
-
+	glfwMakeContextCurrent(EditorWindowManager::MainWindow);
 }
 
 void EditorWindow::SetupGlutBindings()
@@ -48,19 +67,31 @@ void EditorWindow::SetupGlutBindings()
 
 void EditorWindow::SetupUI()
 {
-	std::shared_ptr<UIImage> Back(new UIImage(glm::vec2(Size.x / 2.0f, Size.y / 2.0f), Utils::CENTER, 0.0f, glm::vec4(0.5f, 0.5f, 0.5f, 1.0f), Size.x, Size.y));
-	//TestBtn->AddText("Test", "Resources/Fonts/Roboto-Thin.ttf", 30, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
-	UIElements.push_back(Back);
+	if (ParentWindow == EditorWindowManager::MainWindow)
+	{
+		BackImage = std::make_shared<UIImage>(UIImage(glm::vec2(Size.x / 2.0f, Size.y / 2.0f), Utils::CENTER, 0.0f, glm::vec4(0.5f, 0.5f, 0.5f, 1.0f), Size.x, Size.y));
+		//TestBtn->AddText("Test", "Resources/Fonts/Roboto-Thin.ttf", 30, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
+		UIElements.push_back(BackImage);
 
 
-	//20, Size.y - 20.0f
-	std::shared_ptr<UIButton> TestBtn(new UIButton(glm::vec2(Size.x / 2.0f, 20.0f), Utils::TOP_CENTER, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 260, 50, nullptr));
+		//20, Size.y - 20.0f
+		std::shared_ptr<UIButton> TestBtn(new UIButton(glm::vec2(0.0f, 0.0f), Utils::TOP_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), Size.x - 35, 30, nullptr));
 
-	//FDelegate<EditorWindow>* cbk = new FDelegate<EditorWindow>(*this, &EditorWindow::TestButtonPressed);
-	//(*cbk)();
-	TestBtn->BindPress(FDelegate<EditorWindow>(this, &EditorWindow::TestButtonPressed));// cbk);// std::bind(&EditorWindow::TestButtonPressed, this));
-	//TestBtn->AddText("Test", "Resources/Fonts/Roboto-Thin.ttf", 30, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
-	UIElements.push_back(TestBtn);
+		FDelegate<EditorWindow>* PressDelegate = new FDelegate<EditorWindow>(this, &EditorWindow::StartDrag);
+		FDelegate<EditorWindow>* ReleaseDelegate = new FDelegate<EditorWindow>(this, &EditorWindow::StopDrag);
+
+		TestBtn->BindPress(PressDelegate);
+		TestBtn->BindRelease(ReleaseDelegate);
+
+		TestBtn->AddText(WindowName, "Resources/Fonts/Roboto-Thin.ttf", 20, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
+		UIElements.push_back(TestBtn);
+
+		std::shared_ptr<UIButton> PopoutButton(new UIButton(glm::vec2(Size.x, 0.0f), Utils::TOP_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 30, 30, nullptr));
+
+		FDelegate<EditorWindow>* PopoutPressDelegate = new FDelegate<EditorWindow>(this, &EditorWindow::PopOut);
+		PopoutButton->BindPress(PopoutPressDelegate);
+		UIElements.push_back(PopoutButton);
+	}
 
 }
 
@@ -71,9 +102,13 @@ EditorWindow::~EditorWindow()
 
 void EditorWindow::RenderWindow()
 {
-	//glClearColor(ClearColour.r, ClearColour.g, ClearColour.b, 1.0);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+	if (ParentWindow != EditorWindowManager::MainWindow) //seperate window
+	{
+		glfwMakeContextCurrent(ParentWindow);
+		glClearColor(BackColour.r, BackColour.g, BackColour.b, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+	//glfwMakeContextCurrent(ParentWindow);
 
 	int width, height;
 	glfwGetWindowSize(ParentWindow, &width, &height);
@@ -92,13 +127,57 @@ void EditorWindow::RenderWindow()
 	{
 		UIElement->DrawUIElement();
 	}
-
-
-	//glutSwapBuffers();
+	if (ParentWindow != EditorWindowManager::MainWindow) //seperate window
+	{
+		glfwSwapBuffers(ParentWindow);
+		glfwMakeContextCurrent(EditorWindowManager::MainWindow);
+	}
 }
 
 void EditorWindow::PopOut()
 {
+	//EditorWindowManager::WindowRemoved(this);
+
+	ParentWindow = glfwCreateWindow(Size.x, Size.y, WindowName.c_str(), NULL, NULL);
+	if (ParentWindow == NULL)
+	{
+		std::cout << "Failed to create GLFW window" << std::endl;
+		return;
+	}
+	glfwMakeContextCurrent(ParentWindow);
+
+	int x, y;
+	glfwGetWindowPos(EditorWindowManager::MainWindow, &x, &y);
+
+	glfwSetWindowPos(ParentWindow, x + Position.x, y + Position.y);
+
+
+	glViewport(0, 0, Size.x, Size.y);
+
+	// OpenGL init
+	glewInit();
+
+	// Settings Initialised
+	Shader::LoadAllDefaultShadersInCurrentContext();
+
+	glCullFace(GL_BACK); // Cull the Back faces
+	glFrontFace(GL_CW); // Front face is Clockwise order
+	glEnable(GL_CULL_FACE); // Turn on the back face culling
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	// The input function registration
+	Input::GetInstance()->Init(ParentWindow);
+
+	// FORCE SINCE RENDER DOESN'T WORK AFTER THIS LOL
+	UIElements.clear();
+
+	//EditorWindowManager::NewWindowCreated(this);
+
+	glfwMakeContextCurrent(EditorWindowManager::MainWindow);
+
+
 	//glutSetWindow(EditorWindowManager::iMainWindowID);
 	//int screen_pos_x = glutGet((GLenum)GLUT_WINDOW_X);
 	//int screen_pos_y = glutGet((GLenum)GLUT_WINDOW_Y);
@@ -119,6 +198,24 @@ void EditorWindow::PopOut()
 	//Camera::GetInstance()->SwitchProjection(Camera::PERSPECTIVE);
 }
 
+void EditorWindow::StartDrag()
+{
+
+	DragOffset = Input::GetInstance()->MousePos - Position;
+	DraggingWindow = true;
+}
+
+void EditorWindow::StopDrag()
+{
+	if (DraggingWindow)
+	{
+		glm::vec2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
+		SetWindowPosition(NewPosition);
+
+		DraggingWindow = false;
+	}
+}
+
 bool EditorWindow::IsPointInWindow(glm::vec2 _point)
 {
 	if (_point.x < Position.x || _point.y < Position.y)
@@ -131,46 +228,57 @@ bool EditorWindow::IsPointInWindow(glm::vec2 _point)
 	return true;
 }
 
-void EditorWindow::TestButtonPressed()
+void EditorWindow::SetBackColour(glm::vec3 _Colour)
 {
-	PopOut();
+	BackColour = _Colour;
+	if (BackImage)
+		BackImage->Colour = glm::vec4(BackColour, 1.0f);
 }
+
 
 void EditorWindow::UpdateWindow()
 {
+	glfwMakeContextCurrent(ParentWindow);
+
 	Camera::GetInstance()->SCR_WIDTH = Size.x;
 	Camera::GetInstance()->SCR_HEIGHT = Size.y;
 	Camera::GetInstance()->VIEWPORT_X = Position.x;
 	Camera::GetInstance()->VIEWPORT_Y = Position.y;
 
-	glm::vec2 MousePosViewport = Input::GetInstance()->MousePos;
-	//MousePosViewport += ViewportOffset;
-	glm::vec2 TopLeft = Position;
-	glm::vec2 BottomRight = Position + Size;
-	bool InWindow = (MousePosViewport.x > TopLeft.x && MousePosViewport.x < BottomRight.x && MousePosViewport.y < BottomRight.y && MousePosViewport.y > TopLeft.y);
-	
-	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_PRESS && InWindow)
-	{
-		DragOffset = Input::GetInstance()->MousePos - Position;
-		DraggingWindow = true;
-		//PopOut();
-	}
-	else if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_HOLD && DraggingWindow)
+	if (DraggingWindow)
 	{
 		glm::vec2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
 		SetWindowPosition(NewPosition);
 	}
-	else if(Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_RELEASE)
-	{
-		if (DraggingWindow)
-		{
-			glm::vec2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
-			SetWindowPosition(NewPosition);
 
-			DraggingWindow = false;
-		}
-		
-	}
+	//glm::vec2 MousePosViewport = Input::GetInstance()->MousePos;
+	////MousePosViewport += ViewportOffset;
+	//glm::vec2 TopLeft = Position;
+	//glm::vec2 BottomRight = Position + Size;
+	//bool InWindow = (MousePosViewport.x > TopLeft.x && MousePosViewport.x < BottomRight.x && MousePosViewport.y < BottomRight.y && MousePosViewport.y > TopLeft.y);
+	//
+	//if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_PRESS && InWindow)
+	//{
+	//	DragOffset = Input::GetInstance()->MousePos - Position;
+	//	DraggingWindow = true;
+	//	//PopOut();
+	//}
+	//else if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_HOLD && DraggingWindow)
+	//{
+	//	glm::vec2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
+	//	SetWindowPosition(NewPosition);
+	//}
+	//else if(Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_RELEASE)
+	//{
+	//	if (DraggingWindow)
+	//	{
+	//		glm::vec2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
+	//		SetWindowPosition(NewPosition);
+
+	//		DraggingWindow = false;
+	//	}
+	//	
+	//}
 	
 	for (std::shared_ptr<UIElement> UIElement : UIElements)
 	{
@@ -183,8 +291,6 @@ void EditorWindow::UpdateWindow()
 void EditorWindow::SetWindowPosition(glm::vec2 _position)
 {
 	Position = _position;
-	//glutSetWindow(WindowID);
-	//glutPositionWindow(Position.x, Position.y);
 }
 
 void EditorWindow::MainWindowSizeChanged(int _w, int _h)

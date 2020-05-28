@@ -63,6 +63,8 @@ UIButton::UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation
 ************************************************************/
 UIButton::~UIButton()
 {
+	delete PressFunc;
+	delete ReleaseFunc;
 }
 
 /************************************************************
@@ -115,10 +117,10 @@ void UIButton::BindHold(void(*func)())
 #--Parameters--#: 	Takes pointer to function
 #--Return--#: 		NA
 ************************************************************/
-void UIButton::BindRelease(void(*func)())
-{
-	ReleaseFuncCall = func;
-}
+//void UIButton::BindRelease(void(*func)())
+//{
+//	ReleaseFuncCall = func;
+//}
 
 /************************************************************
 #--Description--#:  Set UI button to active or not
@@ -177,6 +179,9 @@ void UIButton::Update()
 	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_RELEASE)
 	{
 		if (ReleaseFuncCall != nullptr) ReleaseFuncCall();
+		if (ReleaseFunc)
+			(*ReleaseFunc)();
+
 		bPressed = false;
 	}
 	if (MousePosViewport.x > TopLeft.x && MousePosViewport.x < BottomRight.x && MousePosViewport.y < BottomRight.y && MousePosViewport.y > TopLeft.y)
@@ -222,7 +227,8 @@ void UIButton::Pressed()
 	bPressed = true;
 	bButtonPressedThisFrame = true;
 	if (PressFuncCall != nullptr) PressFuncCall();
-	//PressFunc();
+	if (PressFunc)
+		(*PressFunc)();
 }
 
 void UIButton::Hovered()

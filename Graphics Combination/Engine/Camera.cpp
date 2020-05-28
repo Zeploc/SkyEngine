@@ -92,6 +92,10 @@ void Camera::MoveCamera(glm::vec3 _Movement)
 
 void Camera::SpectatorControls()
 {
+	// When main window not focus don't add movement
+	if (EditorWindowManager::GetCurrentFocus() != EditorWindowManager::MainWindow)
+		return;
+
 	glm::vec2 Offset = glm::vec2(Input::GetInstance()->MousePos - glm::vec2((float)SCR_WIDTH * 0.5f, (float)SCR_HEIGHT * 0.5f));
 	Offset *= MouseSensitivity;
 	Yaw -= Offset.x;

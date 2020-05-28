@@ -14,12 +14,12 @@ public:
 	
 	~EditorWindow();
 
-	int GetWindowID() { return WindowID; };
 	std::string GetWindowName() { return WindowName; };
 	glm::vec2 GetPosition() { return Position; };
 
 	void SetWindowPosition(glm::vec2 _position);
 
+	GLFWwindow* GetParentWindow() { return ParentWindow; }
 
 	void MainWindowSizeChanged(int _w, int _h);
 	void UpdateWindow();
@@ -27,22 +27,26 @@ public:
 
 	void PopOut();
 
+	void StartDrag();
+	void StopDrag();
+
 	bool IsPointInWindow(glm::vec2 _point);
 
-	void TestButtonPressed();
+	void SetBackColour(glm::vec3 _Colour);
 protected:
 
 public:
 
-	glm::vec3 ClearColour = glm::vec3(1, 1, 1);
 
 
 
 protected:
+	glm::vec3 BackColour = glm::vec3(1, 1, 1);
 
 	std::string WindowName;
-	int WindowID = -1;
 	GLFWwindow* ParentWindow;
+
+	std::shared_ptr<class UIImage> BackImage;
 
 	glm::vec2 Size = glm::vec2(100, 100);
 	glm::vec2 Position = glm::vec2(0, 0);

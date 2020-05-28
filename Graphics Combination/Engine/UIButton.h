@@ -72,15 +72,20 @@
 
 //class FDelegateWrapper
 //{
-	/*class DelegateBase
+	class DelegateBase
 	{
 	public:
-		virtual ~DelegateBase() {}
-		virtual DelegateBase* copy() = 0;
-	}*/
+		DelegateBase() {};
+		virtual ~DelegateBase() {};
+		//virtual DelegateBase* copy() {};
+		virtual void operator()()
+		{
+		}
+		DelegateBase(const DelegateBase& other) {};
+	};
 
 	template <class T>
-	class FDelegate// : public DelegateBase
+	class FDelegate : public DelegateBase
 	{
 	public:
 		typedef void (T::*fn)();
@@ -91,21 +96,13 @@
 		{
 		}
 
-		void operator()()
+		virtual void operator()() override
 		{
 			(m_rTarget->*m_Operation)();
 		}
-		/*void Execute()
-		{
-			(m_rTarget.*m_Operation)();
-		}*/
 
 	//private:
-		FDelegate(const FDelegate<T>& other);
-		/*{
-			m_rTarget = other.m_rTarget;
-			m_Operation = other.m_Operation;
-		}*/
+		FDelegate(const FDelegate<T>& other) {};
 
 		T* m_rTarget;
 		fn m_Operation;
@@ -130,12 +127,16 @@ public:
 	void AddText(std::string sText, std::string sFont, int iPSize, glm::vec4 TextColour, Utils::EANCHOR _Anchor);
 	void AddText(std::string sText, std::string sFont, int iPSize, glm::vec4 TextColour, Utils::EANCHOR _Anchor, glm::vec2 _v2Offset);
 	template <class T>
-	void BindPress(FDelegate<T> callback)//FDelegate<T>* callback);//  std::function<void()> f);
+	void BindPress(FDelegate<T>* callback)
 	{
-		//callback();
+		PressFunc = callback;
 	}
 	void BindHold(void(*func)());
-	void BindRelease(void(*func)());
+	template <class T>
+	void BindRelease(FDelegate<T>* callback)
+	{
+		ReleaseFunc = callback;
+	}
 	void SetActive(bool _bIsActive);
 	void SetPressSound(const char* _SoundPath);
 
@@ -158,8 +159,8 @@ public:
 private:
 	using GMVoidFunc = void(*)();
 
-	//FDelegate<T>* PressFunc;
-	//std::function<void()> PressFunc;
+	DelegateBase* PressFunc;
+	DelegateBase* ReleaseFunc;
 	GMVoidFunc PressFuncCall = nullptr;
 	GMVoidFunc HoldFuncCall = nullptr;
 	GMVoidFunc ReleaseFuncCall = nullptr;

@@ -42,4 +42,5 @@ class ShaderLoader
 			const char* TessEvalShaderFilename);
 
 		GLuint CreateComputeProgram(const char* ComputeShaderFilename);
+
 };
