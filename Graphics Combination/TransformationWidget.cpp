@@ -75,21 +75,35 @@ void TransformationWidget::Update()
 			ZMoveTransform->EntityMesh->bStencil = true;
 			HitPosition = HitPos;
 		}
+		PreviousMouse = Input::GetInstance()->MousePos;
 	}
 	else if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_RELEASE)
 	{
 		XMoveTransform->EntityMesh->bStencil = false;
 		YMoveTransform->EntityMesh->bStencil = false;
 		ZMoveTransform->EntityMesh->bStencil = false;
-		XHit = true;
-		YHit = true;
-		ZHit = true;
+		XHit = false;
+		YHit = false;
+		ZHit = false;
 	}
 
 	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_HOLD && SelectedEntity)
 	{
-		glm::vec3 offset = SelectedEntity->transform.Position - HitPosition;
-		//SelectedEntity->transform.Position = 
+		glm::vec2 Offset = Input::GetInstance()->MousePos - PreviousMouse;
+		if (XHit)
+		{
+			transform.Position.x += Offset.x * 0.1f;
+		}
+		else if (YHit)
+		{
+			transform.Position.y -= Offset.y * 0.1f;
+		}
+		else if (ZHit)
+		{
+			transform.Position.z += Offset.x * 0.1f;
+		}
+		SelectedEntity->transform.Position = transform.Position;
+		PreviousMouse = Input::GetInstance()->MousePos;
 	}
 }
 

@@ -19,6 +19,7 @@ public:
 	bool YHit = false;
 	bool ZHit = false;
 
+	glm::vec2 PreviousMouse;
 	glm::vec3 HitPosition;
 	std::shared_ptr<Entity> SelectedEntity;
 };

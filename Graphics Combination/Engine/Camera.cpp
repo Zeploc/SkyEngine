@@ -78,6 +78,11 @@ void Camera::Update()
 		cameraUp);	
 }
 
+glm::vec3 Camera::GetCameraRightVector()
+{
+	return glm::cross(cameraUp, cameraFront);
+}
+
 /************************************************************
 #--Description--#: 	Moves the camera
 #--Author--#: 		Alex Coultas
@@ -88,6 +93,12 @@ void Camera::MoveCamera(glm::vec3 _Movement)
 {
 	cameraPos += _Movement;
 	//SetMVP(Utils::Transform());
+}
+
+void Camera::EnableSpectatorControls(bool _bSpectatorControls)
+{
+	bUseSpectatorControls = _bSpectatorControls;
+	glfwSetCursorPos(MainWindow, (double)SCR_WIDTH * 0.5, (double)SCR_HEIGHT * 0.5);
 }
 
 void Camera::SpectatorControls()
@@ -121,9 +132,10 @@ void Camera::SpectatorControls()
 
 		if (Input::GetInstance()->KeyState[GLFW_KEY_SPACE] == Input::INPUT_HOLD)
 			cameraPos += cameraUp * cameraSpeed * 0.025f;
+		//else if (Input::GetInstance()->KeyState[GLFW_KEY_LEFT_CONTROL] == Input::INPUT_HOLD)
+		//	cameraPos -= cameraUp * cameraSpeed * 0.025f;
 	}
 	glfwSetCursorPos(MainWindow, (double)SCR_WIDTH * 0.5, (double)SCR_HEIGHT * 0.5);
-	//glutWarpPointer((float)SCR_WIDTH * 0.5f, (float)SCR_HEIGHT * 0.5f);	
 }
 
 /************************************************************

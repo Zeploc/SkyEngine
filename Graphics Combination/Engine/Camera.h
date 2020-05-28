@@ -61,15 +61,13 @@ public:
 	glm::vec3 GetCameraPosition() { return cameraPos; };
 	glm::vec3 GetCameraForwardVector() { return cameraFront; };
 	glm::vec3 GetCameraUpVector() { return cameraUp; };
+	glm::vec3 GetCameraRightVector();
 
 	void SetCameraPos(glm::vec3 NewPos) { cameraPos = NewPos; };
 
 	void MoveCamera(glm::vec3 _Movement);
 
-	void EnableSpectatorControls(bool _bSpectatorControls)
-	{
-		bUseSpectatorControls = _bSpectatorControls;
-	}
+	void EnableSpectatorControls(bool _bSpectatorControls);
 	void ToggleSpectatorControls()
 	{
 		bUseSpectatorControls = !bUseSpectatorControls;

@@ -189,8 +189,21 @@ void Level::Update()
 
 	if (Input::GetInstance()->KeyState[GLFW_KEY_ESCAPE] == Input::INPUT_FIRST_PRESS) // Escape
 	{
-		Input::GetInstance()->ToggleCursorVisible();
-		Camera::GetInstance()->EnableSpectatorControls(!Input::GetInstance()->GetCursorVisible());
+		//Input::GetInstance()->ToggleCursorVisible();
+		//Camera::GetInstance()->EnableSpectatorControls(!Input::GetInstance()->GetCursorVisible());
+
+		Input::GetInstance()->SetCursorVisible(true);
+		Camera::GetInstance()->EnableSpectatorControls(false);
+	}
+	if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_FIRST_PRESS)
+	{
+		Input::GetInstance()->SetCursorVisible(false);
+		Camera::GetInstance()->EnableSpectatorControls(true);
+	}
+	else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_FIRST_RELEASE)
+	{
+		Input::GetInstance()->SetCursorVisible(true);
+		Camera::GetInstance()->EnableSpectatorControls(false);
 	}
 	if (Input::GetInstance()->KeyState[GLFW_KEY_G] == Input::INPUT_FIRST_PRESS) // Escape
 	{
@@ -235,7 +248,7 @@ void Level::Update()
 			std::shared_ptr<Entity> HitEntity = HitEntities[ClosestHitID]; // Hit ent
 			HitPos = HitPosition[ClosestHitID];
 
-			if (LocationBox)
+			if (LocationBox && Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)
 			{
 				LocationBox->transform.Position = HitEntity->transform.Position;
 				LocationBox->SelectedEntity = HitEntity;

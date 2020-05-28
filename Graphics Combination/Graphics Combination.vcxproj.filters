@@ -188,9 +188,6 @@
     <ClCompile Include="Engine\Button3DEntity.cpp">
       <Filter>Engine\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="TransformationWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Widget.cpp">
       <Filter>Engine\UI</Filter>
     </ClCompile>
@@ -198,6 +195,9 @@
       <Filter>Engine\Editor</Filter>
     </ClCompile>
     <ClCompile Include="Engine\EditorWindowManager.cpp">
+      <Filter>Engine\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformationWidget.cpp">
       <Filter>Engine\Editor</Filter>
     </ClCompile>
   </ItemGroup>
@@ -340,9 +340,6 @@
     <ClInclude Include="Engine\Button3DEntity.h">
       <Filter>Engine\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="TransformationWidget.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Widget.h">
       <Filter>Engine\UI</Filter>
     </ClInclude>
@@ -350,6 +347,9 @@
       <Filter>Engine\Editor</Filter>
     </ClInclude>
     <ClInclude Include="Engine\EditorWindowManager.h">
+      <Filter>Engine\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformationWidget.h">
       <Filter>Engine\Editor</Filter>
     </ClInclude>
   </ItemGroup>

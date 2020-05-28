@@ -101,7 +101,7 @@ int main(int argc, char **argv)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
 	GLFWwindow* window = glfwCreateWindow(MainWindowSize.x, MainWindowSize.y, "Editor", NULL, NULL);
-	EditorWindowManager::MainWindow = window;
+	EditorWindowManager::SetMainWindow(window);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -139,8 +139,8 @@ int main(int argc, char **argv)
 	ContentWindow->SetBackColour(glm::vec3(0.4, 0.4, 0.4));
 
 
-	EditorWindow* ExternalWindow = new EditorWindow("External Test", nullptr, glm::vec2(500, 300), glm::vec2(100, 100));
-	ExternalWindow->SetBackColour(glm::vec3(0.6, 0.3, 0.4));
+	//EditorWindow* ExternalWindow = new EditorWindow("External Test", nullptr, glm::vec2(500, 300), glm::vec2(100, 100));
+	//ExternalWindow->SetBackColour(glm::vec3(0.6, 0.3, 0.4));
 
 	//SetupGLUT(argc, argv);
 

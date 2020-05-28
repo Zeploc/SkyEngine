@@ -114,3 +114,9 @@ void EditorWindowManager::FocusChanged(GLFWwindow * window, int focused)
 	if (focused == GLFW_TRUE)
 		CurrentFocused = window;
 }
+
+void EditorWindowManager::SetMainWindow(GLFWwindow * _MainWindow)
+{
+	MainWindow = _MainWindow;
+	CurrentFocused = MainWindow;
+}

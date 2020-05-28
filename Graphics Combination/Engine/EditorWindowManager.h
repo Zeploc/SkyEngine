@@ -22,6 +22,8 @@ public:
 	static GLFWwindow * GetCurrentFocus() { return CurrentFocused; };
 
 	static std::vector<class EditorWindow*> GetWindows() { return EditorWindows; };
+
+	static void SetMainWindow(GLFWwindow* _MainWindow);
 protected:
 	static bool IsRemovedID(EditorWindow* _Window);
 
