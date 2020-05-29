@@ -84,6 +84,7 @@ double dPrevTime = 0.0f;
 
 
 glm::vec2 MainWindowSize = glm::vec2(1280, 720);
+glm::vec3 SkyColour = glm::vec3(0.3f, 0.8f, 0.9f);
 
 /************************************************************
 #--Description--#: 	The main function of the program
@@ -99,6 +100,8 @@ int main(int argc, char **argv)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+
+	Lighting::m_v4FogColour = glm::vec4(SkyColour, 1.0f);
 
 	GLFWwindow* window = glfwCreateWindow(MainWindowSize.x, MainWindowSize.y, "Editor", NULL, NULL);
 	EditorWindowManager::SetMainWindow(window);
@@ -132,10 +135,10 @@ int main(int argc, char **argv)
 	SI->Init(window);
 
 
-	EditorWindow* NewWindow = new EditorWindow("Test", window, glm::vec2(300, 300), glm::vec2(0, 0));
+	EditorWindow* NewWindow = new EditorWindow("Outliner", window, glm::vec2(300, 400), glm::vec2(0, 0));
 	NewWindow->SetBackColour(glm::vec3(0.2, 0.6, 0.8));
 
-	EditorWindow* ContentWindow = new EditorWindow("Content", window, glm::vec2(500, 150), glm::vec2(0, MainWindowSize.y - 150));
+	EditorWindow* ContentWindow = new EditorWindow("Content", window, glm::vec2(600, 150), glm::vec2(0, MainWindowSize.y - 150));
 	ContentWindow->SetBackColour(glm::vec3(0.4, 0.4, 0.4));
 
 
@@ -146,7 +149,7 @@ int main(int argc, char **argv)
 
 	while (!glfwWindowShouldClose(window))
 	{
-		glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+		glClearColor(SkyColour.r, SkyColour.g, SkyColour.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, MainWindowSize.x, MainWindowSize.y);
 		CAM->SCR_WIDTH = MainWindowSize.x;

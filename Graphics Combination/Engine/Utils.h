@@ -89,6 +89,8 @@ public:
 		GEOMETRY
 	};
 
+	static glm::vec3 LinePlaneIntersect(glm::vec3 RayStart, glm::vec3 RayDirection, glm::vec3 PlanePos, glm::vec3 PlaneNormal);
+
 	static glm::vec3 GetAncoredPosition(glm::vec3 position, glm::vec3 Dimensions, EANCHOR _AnchorType);
 	static glm::vec3 GetAncoredPosition2D(glm::vec2 position, glm::vec2 Dimensions, EANCHOR _AnchorType);
 	static glm::vec3 GetTextAncoredPosition(glm::vec2 position, glm::vec2 Dimensions, EANCHOR _AnchorType);
@@ -111,12 +113,14 @@ public:
 
 	static std::shared_ptr<Entity> WorldCubeMap;
 
+
 private:
 	static int iEntityNumber;
 
-	static bool CheckSphereHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
-	static bool CheckCubeHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
-	static bool CheckPlaneHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
+	static bool CheckSphereEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
+	static bool CheckCubeEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
+	static bool CheckPlaneEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
+
 
 	static bool CheckFaceHit(glm::vec3 BottomLeftOffset, glm::vec3 TopRightOffset, glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
 };

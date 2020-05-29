@@ -70,58 +70,50 @@
 //	std::unique_ptr<ParameterBase> pp;
 //};
 
-//class FDelegateWrapper
-//{
-	class DelegateBase
+class DelegateBase
+{
+public:
+	DelegateBase() {};
+	virtual ~DelegateBase() {};
+	//virtual DelegateBase* copy() {};
+	virtual void operator()()
 	{
-	public:
-		DelegateBase() {};
-		virtual ~DelegateBase() {};
-		//virtual DelegateBase* copy() {};
-		virtual void operator()()
-		{
-		}
-		DelegateBase(const DelegateBase& other) {};
-	};
+	}
+	DelegateBase(const DelegateBase& other) {};
+};
 
-	template <class T>
-	class FDelegate : public DelegateBase
+template <class T>
+class FDelegate : public DelegateBase
+{
+public:
+	typedef void (T::*fn)();
+
+	FDelegate(T* trg, fn op)
+		: m_rTarget(trg)
+		, m_Operation(op)
 	{
-	public:
-		typedef void (T::*fn)();
+	}
 
-		FDelegate(T* trg, fn op)
-			: m_rTarget(trg)
-			, m_Operation(op)
-		{
-		}
-
-		virtual void operator()() override
-		{
-			(m_rTarget->*m_Operation)();
-		}
-
-	//private:
-		FDelegate(const FDelegate<T>& other) {};
-
-		T* m_rTarget;
-		fn m_Operation;
-
-	};
-
-	/*template <class T>
-	FDelegate<T> Bind(FDelegate<T>)
+	virtual void operator()() override
 	{
+		(m_rTarget->*m_Operation)();
+	}
 
-	}*/
-//};
+//private:
+	FDelegate(const FDelegate<T>& other) {};
+
+	T* m_rTarget;
+	fn m_Operation;
+
+};
+
 
 
 class UIButton : public UIElement
 {
 public:
-	UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, glm::vec4 _HightlightColour, int iWidth, int iHeight, void(*func)());
-	UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, const char* _ImagePath, glm::vec4 _HightlightColour, int iWidth, int iHeight, void(*func)());
+	UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, glm::vec4 _HightlightColour, int iWidth, int iHeight, void(*func)() = nullptr);
+	UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, const char* _ImagePath, glm::vec4 _HightlightColour, int iWidth, int iHeight, void(*func)() = nullptr);
 	~UIButton();
 
 	void AddText(std::string sText, std::string sFont, int iPSize, glm::vec4 TextColour, Utils::EANCHOR _Anchor);

@@ -41,8 +41,12 @@ public:
 	};
 	
 	glm::vec2 MousePos;
-	unsigned int KeyState[255];
+	unsigned int KeyState[350];//255
 	unsigned int MouseState[3];
+
+	unsigned int MouseSHIFT = INPUT_RELEASED;
+	unsigned int MouseCTRL = INPUT_RELEASED;
+	unsigned int MouseALT = INPUT_RELEASED;
 
 	glm::vec3 Axis = { 0, 0, 0 };
 

@@ -66,6 +66,8 @@ void Button3DEntity::Update()
 			bPressed = true;
 			bButtonPressedThisFrame = true;
 			if (PressFuncCall != nullptr) PressFuncCall();
+			if (PressFunc)
+				(*PressFunc)();
 		}
 		EntityMesh->Colour = btnHighlightColour;
 	}	

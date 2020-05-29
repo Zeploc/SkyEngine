@@ -4,6 +4,7 @@
 // Engine Includes //
 #include "Engine/Cube.h"
 #include "Engine/Scene.h"
+#include "Engine//SceneManager.h"
 #include "Engine/Input.h"
 
 TransformationWidget::TransformationWidget(Utils::Transform _Transform, Scene* OwningScene)
@@ -49,9 +50,6 @@ TransformationWidget::~TransformationWidget()
 void TransformationWidget::Update()
 {
 	Entity::Update();
-	XMoveTransform->transform.Position = transform.Position + glm::vec3(XMoveTransform->EntityMesh->m_fWidth / 2.0f, 0, 0);
-	YMoveTransform->transform.Position = transform.Position + glm::vec3(0, YMoveTransform->EntityMesh->m_fHeight / 2.0f, 0);
-	ZMoveTransform->transform.Position = transform.Position + glm::vec3(0, 0, ZMoveTransform->EntityMesh->m_fDepth / 2.0f);
 	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)
 	{
 		glm::vec3 rayStart = Camera::GetInstance()->GetCameraPosition();
@@ -75,7 +73,6 @@ void TransformationWidget::Update()
 			ZMoveTransform->EntityMesh->bStencil = true;
 			HitPosition = HitPos;
 		}
-		PreviousMouse = Input::GetInstance()->MousePos;
 	}
 	else if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_RELEASE)
 	{
@@ -89,22 +86,30 @@ void TransformationWidget::Update()
 
 	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_HOLD && SelectedEntity)
 	{
-		glm::vec2 Offset = Input::GetInstance()->MousePos - PreviousMouse;
+		glm::vec3 rayStart = Camera::GetInstance()->GetCameraPosition();
+		glm::vec3 rayDirection = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos);
+
 		if (XHit)
 		{
-			transform.Position.x += Offset.x * 0.1f;
+			glm::vec3 HitPoint = Utils::LinePlaneIntersect(rayStart, rayDirection, transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));			
+			transform.Position.x = HitPoint.x;
 		}
 		else if (YHit)
 		{
-			transform.Position.y -= Offset.y * 0.1f;
+			glm::vec3 HitPoint = Utils::LinePlaneIntersect(rayStart, rayDirection, transform.Position, glm::vec3(0.0f, 0.0f, 1.0f));
+			transform.Position.y = HitPoint.y;
 		}
 		else if (ZHit)
 		{
-			transform.Position.z += Offset.x * 0.1f;
+			glm::vec3 HitPoint = Utils::LinePlaneIntersect(rayStart, rayDirection, transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
+			transform.Position.z = HitPoint.z;
 		}
 		SelectedEntity->transform.Position = transform.Position;
-		PreviousMouse = Input::GetInstance()->MousePos;
+
 	}
+	XMoveTransform->transform.Position = transform.Position + glm::vec3(XMoveTransform->EntityMesh->m_fWidth / 2.0f, 0, 0);
+	YMoveTransform->transform.Position = transform.Position + glm::vec3(0, YMoveTransform->EntityMesh->m_fHeight / 2.0f, 0);
+	ZMoveTransform->transform.Position = transform.Position + glm::vec3(0, 0, ZMoveTransform->EntityMesh->m_fDepth / 2.0f);
 }
 
 void TransformationWidget::DrawEntity()
@@ -112,3 +117,4 @@ void TransformationWidget::DrawEntity()
 	//Entity::DrawEntity();
 	if (!bVisible) return;
 }
+

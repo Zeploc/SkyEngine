@@ -311,22 +311,22 @@ bool Utils::CheckHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr
 	if (!EntityCheck->EntityMesh) return false;
 	if (EntityCheck->EntityMesh->m_eShape == EMESHTYPE::SPHERE && std::dynamic_pointer_cast<Sphere>(EntityCheck->EntityMesh))
 	{
-		return CheckSphereHit(RayStart, RayDirection, EntityCheck, HitPos);
+		return CheckSphereEntityHit(RayStart, RayDirection, EntityCheck, HitPos);
 	}
 	else if (EntityCheck->EntityMesh->m_eShape == EMESHTYPE::CUBE && std::dynamic_pointer_cast<Cube>(EntityCheck->EntityMesh))
 	{
-		return CheckCubeHit(RayStart, RayDirection, EntityCheck, HitPos);
+		return CheckCubeEntityHit(RayStart, RayDirection, EntityCheck, HitPos);
 	}
 	else if (EntityCheck->EntityMesh->m_eShape == EMESHTYPE::PLANE && std::dynamic_pointer_cast<Plane>(EntityCheck->EntityMesh))
 	{
-		return CheckPlaneHit(RayStart, RayDirection, EntityCheck, HitPos);
+		return CheckPlaneEntityHit(RayStart, RayDirection, EntityCheck, HitPos);
 	}
 	//LogManager::GetInstance()->DisplayLogMessage("Could not find mesh type to perform ray hit check!");
 	return false;
 }
 
 
-bool Utils::CheckSphereHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3 & HitPos)
+bool Utils::CheckSphereEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3 & HitPos)
 {
 	glm::vec3 v = EntityCheck->transform.Position - RayStart;
 
@@ -372,7 +372,7 @@ bool Utils::CheckSphereHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shar
 	return false;
 }
 
-bool Utils::CheckCubeHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3 & HitPos)
+bool Utils::CheckCubeEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3 & HitPos)
 {
 	glm::vec3 HalfDimensionvec = glm::vec3(EntityCheck->EntityMesh->m_fWidth / 2.0f, EntityCheck->EntityMesh->m_fHeight / 2.0f, EntityCheck->EntityMesh->m_fDepth / 2.0f);
 	std::vector<glm::vec3> HitPositions;
@@ -418,7 +418,7 @@ bool Utils::CheckCubeHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared
 	return true;
 }
 
-bool Utils::CheckPlaneHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3 & HitPos)
+bool Utils::CheckPlaneEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3 & HitPos)
 {
 	glm::vec3 HalfDimensionvec = glm::vec3(EntityCheck->EntityMesh->m_fWidth / 2.0f, EntityCheck->EntityMesh->m_fHeight / 2.0f, EntityCheck->EntityMesh->m_fDepth / 2.0f);
 	if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
@@ -426,6 +426,15 @@ bool Utils::CheckPlaneHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::share
 		return true;
 	}
 	return false;
+}
+
+glm::vec3 Utils::LinePlaneIntersect(glm::vec3 RayStart, glm::vec3 RayDirection, glm::vec3 PlanePos, glm::vec3 PlaneNormal)
+{
+	glm::vec3 diff = RayStart - PlanePos;
+	double prod1 = glm::dot(diff, PlaneNormal);
+	double prod2 = glm::dot(RayDirection, PlaneNormal);
+	float prod3 = prod1 / prod2;
+	return RayStart - RayDirection * prod3;
 }
 
 bool Utils::CheckFaceHit(glm::vec3 BottomLeftOffset, glm::vec3 TopRightOffset, glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos)

@@ -206,6 +206,72 @@ void Input::MouseButton(int button, int action, int mods)
 		
 	}
 
+	if (mods & GLFW_MOD_SHIFT)
+	{
+		if (MouseSHIFT != INPUT_HOLD && MouseSHIFT != INPUT_FIRST_PRESS)
+		{
+			MouseSHIFT = INPUT_FIRST_PRESS;
+		}
+		else
+		{
+			MouseSHIFT = INPUT_HOLD;
+		}
+	}
+	else
+	{
+		if (MouseSHIFT == INPUT_HOLD)
+		{
+			MouseSHIFT = INPUT_FIRST_RELEASE;
+		}
+		else
+		{
+			MouseSHIFT = INPUT_RELEASED;
+		}
+	}
+	if (mods & GLFW_MOD_ALT)
+	{
+		if (MouseALT != INPUT_HOLD && MouseALT != INPUT_FIRST_PRESS)
+		{
+			MouseALT = INPUT_FIRST_PRESS;
+		}
+		else
+		{
+			MouseALT = INPUT_HOLD;
+		}
+	}
+	else
+	{
+		if (MouseALT == INPUT_HOLD)
+		{
+			MouseALT = INPUT_FIRST_RELEASE;
+		}
+		else
+		{
+			MouseALT = INPUT_RELEASED;
+		}
+	}
+	if (mods & GLFW_MOD_CONTROL)
+	{
+		if (MouseCTRL != INPUT_HOLD && MouseCTRL != INPUT_FIRST_PRESS)
+		{
+			MouseCTRL = INPUT_FIRST_PRESS;
+		}
+		else
+		{
+			MouseCTRL = INPUT_HOLD;
+		}
+	}
+	else
+	{
+		if (MouseCTRL == INPUT_HOLD)
+		{
+			MouseCTRL = INPUT_FIRST_RELEASE;
+		}
+		else
+		{
+			MouseCTRL = INPUT_RELEASED;
+		}
+	}
 }
 
 void Input::processKeys(GLFWwindow * window, int key, int scancode, int action, int mods)
@@ -227,6 +293,10 @@ void Input::processKeys(GLFWwindow * window, int key, int scancode, int action, 
 		}
 	}
 
+	if (mods & GLFW_MOD_SHIFT)
+	{
+		std::cout << "SHIFT DOWN\n";
+	}
 
 }
 
@@ -239,7 +309,7 @@ void Input::processKeys(GLFWwindow * window, int key, int scancode, int action, 
 ************************************************************/
 void Input::Update()
 {
-	for (int i = 0; i < 255; i++)
+	for (int i = 0; i < 350; i++)
 	{
 		if (KeyState[i] == INPUT_FIRST_RELEASE)
 		{

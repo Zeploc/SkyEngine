@@ -27,10 +27,17 @@ public:
 	virtual void OnLoadScene() override;
 	virtual void RenderScene() override;
 
+	void OpenFile();
+
+	void SaveCurrentLevel();
+
+	void QuitCall();
+	void ButtonBoiFuncorness();
 
 	std::shared_ptr<class Terrain> LevelTerrain;
 	std::shared_ptr<class Player> NewPlayer;
 	std::shared_ptr<class ssAnimatedModel> OriginalAnimatedModel;
+
 		
 	bool Wireframe = false;
 

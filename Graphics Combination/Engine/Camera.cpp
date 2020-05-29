@@ -106,7 +106,7 @@ void Camera::SpectatorControls()
 	// When main window not focus don't add movement
 	if (EditorWindowManager::GetCurrentFocus() != EditorWindowManager::MainWindow)
 		return;
-
+	
 	glm::vec2 Offset = glm::vec2(Input::GetInstance()->MousePos - glm::vec2((float)SCR_WIDTH * 0.5f, (float)SCR_HEIGHT * 0.5f));
 	Offset *= MouseSensitivity;
 	Yaw -= Offset.x;
@@ -132,8 +132,8 @@ void Camera::SpectatorControls()
 
 		if (Input::GetInstance()->KeyState[GLFW_KEY_SPACE] == Input::INPUT_HOLD)
 			cameraPos += cameraUp * cameraSpeed * 0.025f;
-		//else if (Input::GetInstance()->KeyState[GLFW_KEY_LEFT_CONTROL] == Input::INPUT_HOLD)
-		//	cameraPos -= cameraUp * cameraSpeed * 0.025f;
+		else if (Input::GetInstance()->KeyState[GLFW_KEY_LEFT_CONTROL] == Input::INPUT_HOLD)
+			cameraPos -= cameraUp * cameraSpeed * 0.025f;
 	}
 	glfwSetCursorPos(MainWindow, (double)SCR_WIDTH * 0.5, (double)SCR_HEIGHT * 0.5);
 }

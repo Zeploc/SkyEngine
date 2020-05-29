@@ -47,20 +47,31 @@
 #include <iostream>
 #include <glm\gtx\string_cast.hpp>
 #include <glfw3.h>
+#include <commdlg.h>
+#include <fstream>
+#include <filesystem>
 // Prototypes
 
-void QuitCall();
-
-void ButtonBoiFuncorness();
 
 Level::Level(std::string sSceneName) : Scene(sSceneName)
 {
 	// Pause Screen elements
-	std::shared_ptr<UIButton> QuitBtn(new UIButton(glm::vec2(20, Camera::GetInstance()->SCR_HEIGHT - 20.0f), Utils::BOTTOM_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 260, 50, QuitCall));
-	QuitBtn->AddText("QUIT", "Resources/Fonts/Roboto-Thin.ttf", 30, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
+	std::shared_ptr<UIButton> QuitBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 20, Camera::GetInstance()->SCR_HEIGHT - 10.0f), Utils::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
+	QuitBtn->AddText("Quit", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
+	QuitBtn->BindPress(new FDelegate<Level>(this, &Level::QuitCall));
 	AddUIElement(QuitBtn);
 
-	std::shared_ptr<UIText> TipText(new UIText({ Camera::GetInstance()->SCR_WIDTH - 20, Camera::GetInstance()->SCR_HEIGHT - 30.0f }, 0, { 0.3, 0.3, 0.3, 1.0f }, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 26, Utils::BOTTOM_RIGHT));
+	std::shared_ptr<UIButton> SaveBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 150, Camera::GetInstance()->SCR_HEIGHT - 10.0f), Utils::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
+	SaveBtn->AddText("Save", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
+	SaveBtn->BindPress(new FDelegate<Level>(this, &Level::SaveCurrentLevel));
+	AddUIElement(SaveBtn);
+
+	std::shared_ptr<UIButton> OpenBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 280, Camera::GetInstance()->SCR_HEIGHT - 10.0f), Utils::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
+	OpenBtn->AddText("Open", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
+	OpenBtn->BindPress(new FDelegate<Level>(this, &Level::OpenFile));
+	AddUIElement(OpenBtn);
+
+	std::shared_ptr<UIText> TipText(new UIText({ Camera::GetInstance()->SCR_WIDTH - 20, 15.0f }, 0, { 0.3, 0.3, 0.3, 1.0f }, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 22, Utils::TOP_RIGHT));
 	AddUIElement(TipText);
 
 	/*InitInfo TerrainInfo;
@@ -137,9 +148,8 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 	//int RandValue = rand() % 256000;
 	//float FullValue = (float)(RandValue) / 1000.0f;
 
-	Camera::GetInstance()->EnableSpectatorControls(true);
-	//Camera::GetInstance()->bSpectatorMovement = false;
-	Input::GetInstance()->SetCursorVisible(false);
+	//Camera::GetInstance()->EnableSpectatorControls(true);
+	//Input::GetInstance()->SetCursorVisible(false);
 
 	Camera::GetInstance()->SetCameraPos({ -10, 10, 0 });
 	Camera::GetInstance()->SetCameraForwardVector({ 0, -0.5, 1.0f });
@@ -156,7 +166,8 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 	AddEntity(SphereRaycastTest, true);
 
 
-	std::shared_ptr<Button3DEntity> FowardCubeButton = std::make_shared<Button3DEntity>(Button3DEntity(Utils::Transform{ { 4.0f, 7.0f, 0.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER, 6.0f, 2.0f, 1.0f, glm::vec4(0.7, 0.5, 0.7, 1.0f), glm::vec4(0.4, 0.5, 0.3, 1.0f), "Resources/Images/StoneWall_2x2.jpg", ButtonBoiFuncorness));
+	std::shared_ptr<Button3DEntity> FowardCubeButton = std::make_shared<Button3DEntity>(Button3DEntity(Utils::Transform{ { 4.0f, 7.0f, 0.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER, 6.0f, 2.0f, 1.0f, glm::vec4(0.7, 0.5, 0.7, 1.0f), glm::vec4(0.4, 0.5, 0.3, 1.0f), "Resources/Images/StoneWall_2x2.jpg"));
+	FowardCubeButton->BindPress(new FDelegate<Level>(this, &Level::ButtonBoiFuncorness));
 	AddEntity(FowardCubeButton, true);
 
 	std::shared_ptr<Entity> CubeEnty = std::make_shared<Entity>(Entity(Utils::Transform{ { 25.0f, 4.0f, 4.0f },{ 0, 0, 0 },{ 1, 1, 1 } }, Utils::CENTER));
@@ -184,7 +195,6 @@ Level::~Level()
 
 void Level::Update()
 {
-
 	Scene::Update();
 
 	if (Input::GetInstance()->KeyState[GLFW_KEY_ESCAPE] == Input::INPUT_FIRST_PRESS) // Escape
@@ -215,6 +225,24 @@ void Level::Update()
 		else
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
+	}
+	if (Input::GetInstance()->KeyState[GLFW_KEY_F] == Input::INPUT_FIRST_PRESS) // Escape
+	{
+		if (LocationBox && LocationBox->SelectedEntity)
+		{
+			Camera::GetInstance()->SetCameraPos(LocationBox->SelectedEntity->transform.Position + (-Camera::GetInstance()->GetCameraForwardVector() * 7.0f));
+		}
+	}
+	if (Input::GetInstance()->MouseALT == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseALT == Input::INPUT_HOLD)
+	{
+		Camera::GetInstance()->SetCameraPos(LocationBox->SelectedEntity->transform.Position + (-Camera::GetInstance()->GetCameraForwardVector() * 7.0f));
+	}
+	if (Input::GetInstance()->MouseSHIFT == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseSHIFT == Input::INPUT_HOLD)
+	{
+		if (LocationBox && LocationBox->SelectedEntity)
+		{
+			Camera::GetInstance()->SetCameraPos(LocationBox->SelectedEntity->transform.Position + (-Camera::GetInstance()->GetCameraForwardVector() * 7.0f));
 		}
 	}
 
@@ -257,11 +285,6 @@ void Level::Update()
 		}
 	}
 
-
-	
-
-	//Camera::GetInstance()->SetCameraPos(NewPlayer->transform.Position + (-Camera::GetInstance()->GetCameraForwardVector() * 7.0f) +  glm::vec3(0, 2, 0));
-
 }
 
 void Level::OnLoadScene()
@@ -272,25 +295,69 @@ void Level::OnLoadScene()
 
 void Level::RenderScene()
 {	
-	//glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	//glBindFramebuffer(GL_FRAMEBUFFER, NewFramy->framebuffer);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	Scene::RenderScene();
 
 	if (OriginalAnimatedModel) OriginalAnimatedModel->render(LevelTerrain);
 	//NewFramy->Render();
 
-
 }
 
-void QuitCall()
+void Level::OpenFile()
+{
+	OPENFILENAME ofn;
+	ZeroMemory(&ofn, sizeof(ofn));
+	char szFile[100];
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = NULL;
+	ofn.lpstrFile = szFile;
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = "Level (*.slvl)\0*.slvl\0Text\0*.TXT\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+	if (!GetOpenFileNameA(&ofn))
+	{
+		return;
+		//MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);
+	}
+
+	std::filesystem::path CurrentPath(szFile);
+	std::filesystem::path RootResources("D:\\Projects\\OpenGL\\Graphics Combination\\Graphics Combination\\");
+	std::filesystem::path relativePath = CurrentPath.lexically_relative(RootResources);
+	std::string relative = relativePath.string();
+	std::replace(relative.begin(), relative.end(), '\\', '/');
+
+	std::vector<std::string> Lines;
+	std::string line;
+	std::ifstream OpenedFile("Resources/Levels/Example.slvl"); //relative);// 
+	if (OpenedFile.is_open())
+	{
+		while (getline(OpenedFile, line))
+		{
+			Lines.push_back(line);
+			std::cout << line << '\n';
+		}
+		OpenedFile.close();
+	}
+}
+
+void Level::SaveCurrentLevel()
+{
+	std::ofstream myfile;
+	myfile.open("Resources/Levels/" + SceneName + ".slvl");
+	myfile << "Writing this to a file.\n";
+	myfile.close();
+}
+
+void Level::QuitCall()
 {
 	glfwSetWindowShouldClose(EditorWindowManager::MainWindow, true);
 }
 
-void ButtonBoiFuncorness()
+void Level::ButtonBoiFuncorness()
 {
 	std::cout << "BUTTON THINGIE BOI\n";
 }
