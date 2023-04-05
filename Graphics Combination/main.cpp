@@ -15,41 +15,26 @@
 // Library Includes //
 #include <iostream>
 #include <time.h>
+#include <windows.h>
+#include <Box2D.h>
 //#include <vld.h>
 
 // OpenGL Library Includes //
 #include <glew.h>
 #include <GLFW/glfw3.h>
-//#include <freeglut.h>
-#include <fmod.hpp>
-#include <soil\SOIL.h>
-#include <glm/common.hpp>
-#include <glm/gtc\type_ptr.hpp>
-#include <glm/gtc\type_ptr.hpp>
-#include <glm/gtc\matrix_transform.hpp>
 
 // Engine Includes //
-#include "Engine\Input.h"
-#include "Engine\Camera.h"
-#include "Engine\Shader.h"
-#include "Engine\ShaderLoader.h"
-#include "Engine\Entity.h"
-#include "Engine\UIText.h"
-#include "Engine\Scene.h"
-#include "Engine\SceneManager.h"
-#include "Engine\SoundManager.h"
-#include "Engine\Time.h"
-#include "Engine/LogManager.h"
-#include "Engine/EditorWindow.h"
-#include "Engine/EditorWindowManager.h"
-
-#include <windows.h>
-
-#include <Box2D.h>
-
-// Local Includes //
-#include "Level.h"
-#include "Engine/FrameBuffer.h"
+#include "Engine/Input/Input.h"
+#include "Engine/Scene/SceneManager.h"
+#include "Engine/Sound/SoundManager.h"
+#include "Engine/System/Time.h"
+#include "Engine/System/LogManager.h"
+#include "Engine/Editor/EditorWindowManager.h"
+#include "Engine/Camera/Camera.h"
+#include "Engine/Editor/EditorWindow.h"
+#include "Engine/Render/FrameBuffer.h"
+#include "Engine/Render/Shader.h"
+#include "Game/Scenes/Level.h"
 
 // make sure the winsock lib is included...
 #pragma comment(lib,"ws2_32.lib")
