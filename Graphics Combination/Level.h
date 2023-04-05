@@ -17,6 +17,7 @@
 // Engine Includes //
 #include "Engine\Scene.h"
 
+
 class Level : public Scene
 {
 public:
@@ -28,6 +29,7 @@ public:
 	virtual void RenderScene() override;
 
 	void OpenFile();
+	void LoadLevel(std::vector<std::string> Lines);
 
 	void SaveCurrentLevel();
 
@@ -37,7 +39,7 @@ public:
 	std::shared_ptr<class Terrain> LevelTerrain;
 	std::shared_ptr<class Player> NewPlayer;
 	std::shared_ptr<class ssAnimatedModel> OriginalAnimatedModel;
-
+	std::shared_ptr<class UIText> LevelNameText;
 		
 	bool Wireframe = false;
 

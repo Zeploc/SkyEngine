@@ -15,9 +15,12 @@
 // Library Includes //
 #include <string>
 #include <memory>
+#include <vector>
+#include <istream>
 
 // OpenGL Library Includes //
 #include <glm/common.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 // Forward Declarations //
 class Entity;
@@ -61,6 +64,46 @@ public:
 		glm::vec3 Position;
 		glm::vec3 Rotation;
 		glm::vec3 Scale;
+
+		std::string ToString()
+		{
+			std::string sTransform;
+			sTransform += glm::to_string(Position) + " ";
+			sTransform += glm::to_string(Rotation) + " ";
+			sTransform += glm::to_string(Scale);
+			return sTransform;
+		}
+
+		friend std::istream& operator>> (std::istream& is, Transform& transform)
+		{
+			int x, y, z, roll, yaw, pitch, sx, sy, sz;
+			std::string PosX, PosY, PosZ, Roll, Yaw, Pitch, ScaleX, ScaleY, ScaleZ;
+			is >> PosX >> PosY >> PosZ >> Roll >> Yaw >> Pitch >> ScaleX >> ScaleY >> ScaleZ;
+			x = std::stoi(PosX.substr(5));
+			y = std::stoi(PosY);
+			z = std::stoi(PosZ);
+			roll = std::stoi(Roll.substr(5));
+			yaw = std::stoi(Yaw);
+			pitch = std::stoi(Pitch);
+			sx = std::stoi(ScaleX.substr(5));
+			sy = std::stoi(ScaleY);
+			sz = std::stoi(ScaleZ);
+			transform.Position = glm::vec3(x, y, z);
+			transform.Rotation = glm::vec3(roll, yaw, pitch);
+			transform.Scale = glm::vec3(sx, sy, sz);
+			return is;
+		}
+
+		void FromString(std::string sTransform)
+		{
+			std::vector<std::string> Seperated = SeparateString(sTransform, ' ');
+			if (Seperated.size() >= 3)
+			{
+				Position = StringToVec3(Seperated[0]);
+				Rotation = StringToVec3(Seperated[1]);
+				Scale = StringToVec3(Seperated[2]);
+			}
+		}
 	};
 
 	enum EANCHOR
@@ -110,6 +153,9 @@ public:
 	static bool CheckHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
 
 	static int AddEntityID();
+
+	static std::vector<std::string> SeparateString(std::string _string, char _seperator);
+	static glm::vec3 StringToVec3(std::string _string);
 
 	static std::shared_ptr<Entity> WorldCubeMap;
 

@@ -615,7 +615,8 @@ void ssAnimatedModel::CalcInterpolatedRotation(aiQuaternion & out, float Animati
 
 GLuint ssAnimatedModel::FindRotation(float AnimationTime, const aiNodeAnim * pNodeAnim) {
 
-	assert(pNodeAnim->mRotationKeys > 0);
+	// TODO: Confirm mTime > 0 is correct (Previously checked if keys was more than 0, indicating length more than zero for below)
+	assert(pNodeAnim->mRotationKeys->mTime > 0.0);
 
 	for (size_t i = 0; pNodeAnim->mNumRotationKeys - 1; i++) {
 		if (AnimationTime < (float)pNodeAnim->mRotationKeys[i + 1].mTime) {

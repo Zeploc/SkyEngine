@@ -14,6 +14,7 @@
 
 // Library Includes //
 #include <vector>
+#include <sstream>
 
 // OpenGL Library Includes //
 #include <glew.h>
@@ -303,6 +304,27 @@ int Utils::AddEntityID()
 {
 	iEntityNumber++;
 	return iEntityNumber;
+}
+
+std::vector<std::string> Utils::SeparateString(std::string _string, char _seperator)
+{
+	std::stringstream ss(_string);
+	std::vector<std::string> result;
+
+	while (ss.good())
+	{
+		std::string substr;
+		getline(ss, substr, _seperator);
+		result.push_back(substr);
+	}
+	return result;
+}
+
+glm::vec3 Utils::StringToVec3(std::string _string)
+{
+	float x = 0.0f, y = 0.0f, z = 0.0f;
+	_string = _string.substr(3, _string.length() - 3);
+	return glm::vec3(x, y, z);
 }
 
 

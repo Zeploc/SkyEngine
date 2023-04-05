@@ -46,7 +46,7 @@
 // Library Includes //
 #include <iostream>
 #include <glm\gtx\string_cast.hpp>
-#include <glfw3.h>
+#include <GLFW/glfw3.h>
 #include <commdlg.h>
 #include <fstream>
 #include <filesystem>
@@ -70,6 +70,9 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 	OpenBtn->AddText("Open", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 	OpenBtn->BindPress(new FDelegate<Level>(this, &Level::OpenFile));
 	AddUIElement(OpenBtn);
+
+	LevelNameText = std::make_shared< UIText>(UIText({ Camera::GetInstance()->SCR_WIDTH - 410, Camera::GetInstance()->SCR_HEIGHT - 15.0f }, 0, { 0.3, 0.3, 0.3, 1.0f }, "Level Name", "Resources/Fonts/Roboto-Regular.ttf", 20, Utils::BOTTOM_RIGHT));
+	AddUIElement(LevelNameText);
 
 	std::shared_ptr<UIText> TipText(new UIText({ Camera::GetInstance()->SCR_WIDTH - 20, 15.0f }, 0, { 0.3, 0.3, 0.3, 1.0f }, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 22, Utils::TOP_RIGHT));
 	AddUIElement(TipText);
@@ -183,9 +186,7 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 	AddEntity(LocationBox, true);
 	LocationBox->SetVisible(false, true);
 	LocationBox->bRayCast = false;
-
-	//Input::GetInstance()->ToggleCursorVisible();
-	//Camera::GetInstance()->EnableSpectatorControls(!Input::GetInstance()->GetCursorVisible());
+	
 }
 
 Level::~Level()
@@ -196,6 +197,8 @@ Level::~Level()
 void Level::Update()
 {
 	Scene::Update();
+
+	LevelNameText->sText = SceneName;
 
 	if (Input::GetInstance()->KeyState[GLFW_KEY_ESCAPE] == Input::INPUT_FIRST_PRESS) // Escape
 	{
@@ -304,35 +307,36 @@ void Level::RenderScene()
 
 void Level::OpenFile()
 {
-	OPENFILENAME ofn;
-	ZeroMemory(&ofn, sizeof(ofn));
-	char szFile[100];
-	ofn.lStructSize = sizeof(ofn);
-	ofn.hwndOwner = NULL;
-	ofn.lpstrFile = szFile;
-	ofn.lpstrFile[0] = '\0';
-	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter = "Level (*.slvl)\0*.slvl\0Text\0*.TXT\0";
-	ofn.nFilterIndex = 1;
-	ofn.lpstrFileTitle = NULL;
-	ofn.nMaxFileTitle = 0;
-	ofn.lpstrInitialDir = NULL;
-	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-	if (!GetOpenFileNameA(&ofn))
-	{
-		return;
-		//MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);
-	}
+	//OPENFILENAME ofn;
+	//ZeroMemory(&ofn, sizeof(ofn));
+	//char szFile[100];
+	//ofn.lStructSize = sizeof(ofn);
+	//ofn.hwndOwner = NULL;
+	//ofn.lpstrFile = szFile;
+	//ofn.lpstrFile[0] = '\0';
+	//ofn.nMaxFile = sizeof(szFile);
+	//ofn.lpstrFilter = "Level (*.slvl)\0*.slvl\0Text\0*.TXT\0";
+	//ofn.nFilterIndex = 1;
+	//ofn.lpstrFileTitle = NULL;
+	//ofn.nMaxFileTitle = 0;
+	//ofn.lpstrInitialDir = NULL;
+	//ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+	//if (!GetOpenFileNameA(&ofn))
+	//{
+	//	return;
+	//	//MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);
+	//}
+	
 
-	std::filesystem::path CurrentPath(szFile);
+	/*std::filesystem::path CurrentPath(szFile);
 	std::filesystem::path RootResources("D:\\Projects\\OpenGL\\Graphics Combination\\Graphics Combination\\");
 	std::filesystem::path relativePath = CurrentPath.lexically_relative(RootResources);
 	std::string relative = relativePath.string();
-	std::replace(relative.begin(), relative.end(), '\\', '/');
+	std::replace(relative.begin(), relative.end(), '\\', '/');*/
 
 	std::vector<std::string> Lines;
 	std::string line;
-	std::ifstream OpenedFile("Resources/Levels/Example.slvl"); //relative);// 
+	std::ifstream OpenedFile("Resources/Levels/Example.slvl"); //SceneName + ".slvl"); //relative);// 
 	if (OpenedFile.is_open())
 	{
 		while (getline(OpenedFile, line))
@@ -341,6 +345,33 @@ void Level::OpenFile()
 			std::cout << line << '\n';
 		}
 		OpenedFile.close();
+		LoadLevel(Lines);
+	}
+}
+
+void Level::LoadLevel(std::vector<std::string> Lines)
+{
+	std::string LevelName = Lines[0].substr(1, Lines[0].length() - 2);
+	SceneName = LevelName;
+
+	/*std::vector< std::shared_ptr<Entity>> EntitiesCopy = Entities;
+	for (std::shared_ptr<Entity> CurrentEnt : EntitiesCopy)
+	{
+		DestroyEntity(CurrentEnt);
+	}*/
+
+	for (std::string Line : Lines)
+	{
+		std::string IsEntity = Line.substr(0, 8);
+		if (IsEntity == "[Entity]")
+		{
+			std::shared_ptr<Entity> CubeEnty = std::make_shared<Entity>(Entity(Line));
+			//std::shared_ptr<Sphere> SphereMesh = std::make_shared<Sphere>(Sphere(2.0f, 2.0f, 2.0f, { 0.1f, 0.8f, 0.3f, 1.0f }));
+			std::shared_ptr<Cube> CubyMesh = std::make_shared<Cube>(Cube(3.0f, 3.0f, 3.0f, { 0.7f, 0.4f, 0.3f, 1.0f }));
+			CubeEnty->AddMesh(CubyMesh);
+			//CubyMesh->SetLit(true);
+			AddEntity(CubeEnty, true);
+		}
 	}
 }
 
@@ -348,7 +379,12 @@ void Level::SaveCurrentLevel()
 {
 	std::ofstream myfile;
 	myfile.open("Resources/Levels/" + SceneName + ".slvl");
-	myfile << "Writing this to a file.\n";
+	myfile << "[" + SceneName + "]\n";
+	for (std::shared_ptr<Entity> Entity : Entities)
+	{
+		myfile << Entity->EntityToString() << "\n";
+	}
+
 	myfile.close();
 }
 

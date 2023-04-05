@@ -17,6 +17,7 @@
 
 // Library Includes //
 #include <iostream>
+#include <sstream>
 
 // OpenGL Library Includes //
 #include <glm\gtx\string_cast.hpp>
@@ -32,6 +33,20 @@
 #include "Sphere.h"
 #include "CollisionBounds.h"
 #include "LogManager.h"
+
+Entity::Entity(std::string _FromString)
+{
+	std::stringstream ss(_FromString);
+	std::string Name;
+	ss >> Name;
+	if (Name != "[Entity]")
+		return;
+	ss >> iEntityID;
+	ss >> transform;
+	
+	EntityAnchor = Utils::CENTER;
+	   
+}
 
 //************************************************************
 //#--Description--#:	Constructor function with base position
@@ -181,6 +196,15 @@ void Entity::SetVisible(bool _bIsVisible, bool _bIsInitialState)
 	bVisible = _bIsVisible;
 	if (_bIsInitialState)
 		EntityInitialState.bVisible = bVisible;
+}
+
+std::string Entity::EntityToString()
+{
+	std::stringstream sEntity("");
+	sEntity << "[Entity] ";
+	sEntity << iEntityID << " ";
+	sEntity << transform.ToString();
+	return sEntity.str();
 }
 
 /************************************************************

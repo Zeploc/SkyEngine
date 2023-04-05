@@ -35,6 +35,7 @@
 class Entity : public std::enable_shared_from_this<Entity>
 {
 public:
+	Entity(std::string _FromString);
 	Entity(Utils::Transform _Transform, Utils::EANCHOR _Anchor);
 	//Entity() {};
 	/*Entity(Utils::Transform _Transform, float _fWidth, float _fHeight, Utils::EANCHOR _Anchor, glm::vec4 _Colour, Utils::ESHAPE _eShape);
@@ -56,6 +57,9 @@ public:
 	bool IsActive() { return bActive; };
 	virtual void SetVisible(bool _bIsVisible, bool _bIsInitialState = false);
 	bool IsVisible() { return bVisible; };
+
+	std::string EntityToString();
+
 	
 	void Translate(glm::vec3 _Movement);
 	void Rotate(glm::vec3 Rotate); 
