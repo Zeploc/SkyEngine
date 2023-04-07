@@ -1,19 +1,5 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    ParticleSystem.cpp
-// Description    	:    main implementation for ParticleSystem
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-
-// This Includes //
 #include "Particle.h"
 
 // Engine Includes //
@@ -38,7 +24,6 @@ Particle::Particle(float _fSpeed, glm::vec3 _v3Direction, float _fFalloffDistanc
 	InitialPosition = position;
 }
 
-
 /************************************************************
 #--Description--#:  Destructor function
 #--Author--#: 		Alex Coultas
@@ -49,16 +34,14 @@ Particle::~Particle()
 {
 }
 
-
 void Particle::Update()
 {
 	fElapsedTime += Time::dTimeDelta;
-	float Distance = glm::length(position - InitialPosition);
+	float Distance = length(position - InitialPosition);
 	if (fElapsedTime > fFallOffTime || Distance > fFalloffDistance)
 	{
 		position = InitialPosition;
 		fElapsedTime = 0.0f;
 	}
-	position += v3Direction * fSpeed * (float)Time::dTimeDelta;
+	position += v3Direction * fSpeed * static_cast<float>(Time::dTimeDelta);
 }
-

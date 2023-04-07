@@ -1,3 +1,5 @@
+// Copyright Skyward Studios, Inc. All Rights Reserved.
+
 #include "EditorWindowManager.h"
 
 #include "EditorWindow.h"
@@ -7,7 +9,6 @@
 //#include <freeglut.h>
 #include <iostream>
 
-
 std::vector<EditorWindow*> EditorWindowManager::EditorWindows;
 std::vector<EditorWindow*> EditorWindowManager::EditorWindowsToRemove;
 GLFWwindow* EditorWindowManager::MainWindow = nullptr;
@@ -15,38 +16,37 @@ GLFWwindow* EditorWindowManager::CurrentFocused = nullptr;
 
 EditorWindowManager::EditorWindowManager()
 {
-
 }
-
 
 EditorWindowManager::~EditorWindowManager()
 {
 }
-
 
 bool EditorWindowManager::IsRemovedID(EditorWindow* _Window)
 {
 	for (EditorWindow* window : EditorWindowsToRemove)
 	{
 		if (window == _Window)
+		{
 			return true;
+		}
 	}
 	return false;
 }
 
-
-void EditorWindowManager::NewWindowCreated(EditorWindow * _window)
+void EditorWindowManager::NewWindowCreated(EditorWindow* _window)
 {
 	EditorWindows.push_back(_window);
 	if (_window->GetParentWindow() != MainWindow)
-		glfwSetWindowFocusCallback(_window->GetParentWindow(), EditorWindowManager::FocusChanged);
+	{
+		glfwSetWindowFocusCallback(_window->GetParentWindow(), FocusChanged);
+	}
 }
 
 void EditorWindowManager::WindowRemoved(EditorWindow* _Window)
 {
 	EditorWindowsToRemove.push_back(_Window);
 }
-
 
 void EditorWindowManager::UpdateWindows()
 {
@@ -70,9 +70,13 @@ void EditorWindowManager::UpdateWindows()
 	{
 		EditorWindow* CurrentWindow = it;
 		if (IsRemovedID(CurrentWindow))
+		{
 			continue;
+		}
 		if (CurrentWindow)
+		{
 			CurrentWindow->UpdateWindow();
+		}
 	}
 
 	auto it = EditorWindows.begin();
@@ -83,9 +87,10 @@ void EditorWindowManager::UpdateWindows()
 			it = EditorWindows.erase(it);
 		}
 		else
-			it++;
+		{
+			++it;
+		}
 	}
-
 }
 
 void EditorWindowManager::RenderWindows()
@@ -94,7 +99,9 @@ void EditorWindowManager::RenderWindows()
 	{
 		EditorWindow* CurrentWindow = it;
 		if (CurrentWindow)
+		{
 			CurrentWindow->RenderWindow();
+		}
 	}
 }
 
@@ -104,17 +111,21 @@ void EditorWindowManager::MainWindowSizeChanged(int _w, int _h)
 	{
 		EditorWindow* CurrentWindow = it;
 		if (CurrentWindow)
+		{
 			CurrentWindow->MainWindowSizeChanged(_w, _h);
+		}
 	}
 }
 
-void EditorWindowManager::FocusChanged(GLFWwindow * window, int focused)
+void EditorWindowManager::FocusChanged(GLFWwindow* window, int focused)
 {
 	if (focused == GLFW_TRUE)
+	{
 		CurrentFocused = window;
+	}
 }
 
-void EditorWindowManager::SetMainWindow(GLFWwindow * _MainWindow)
+void EditorWindowManager::SetMainWindow(GLFWwindow* _MainWindow)
 {
 	MainWindow = _MainWindow;
 	CurrentFocused = MainWindow;

@@ -1,20 +1,5 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    Scene.cpp
-// Description    	:    main implementation for Scene
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// Library Includes //
-
-// OpenGL Library Includes //
 #include <glew.h>
 
 // Engine Includes //
@@ -33,10 +18,8 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Scene::Scene(std::string sSceneName)
-	: SceneName(sSceneName)
+Scene::Scene(std::string sSceneName) : SceneName(sSceneName)
 {
-
 }
 
 /************************************************************
@@ -108,14 +91,14 @@ void Scene::AddEntity(std::shared_ptr<Entity> _Entity, bool IsInitial)
 #--Return--#: 		NA
 ************************************************************/
 void Scene::DestroyEntity(std::shared_ptr<Entity> _Entity)
-{	
+{
 	if (_Entity->IsInitialEntity())
 	{
 		DestroyedEntities.push_back(_Entity);
 		_Entity->SetActive(false);
 	}
 	_Entity->OnDestroy();
-	
+
 	// Find entity in entities
 	for (auto it = Entities.begin(); it != Entities.end(); ++it)
 	{
@@ -173,7 +156,7 @@ void Scene::AddUITextElement(glm::vec2 _Position, float _fRotation, glm::vec4 _C
 void Scene::DestroyUIElement(std::shared_ptr<UIElement> _Element)
 {
 	UIElementsToBeDestroyed.push_back(_Element);
-	_Element->SetActive(false);		
+	_Element->SetActive(false);
 }
 
 /************************************************************
@@ -187,15 +170,19 @@ void Scene::Update()
 	for (int i = 0; i < Entities.size(); i++)
 	{
 		if (Entities[i])
+		{
 			Entities[i]->BaseUpdate();
+		}
 	}
 
 	for (int i = 0; i < UIElements.size(); i++)
 	{
 		if (UIElements[i])
+		{
 			UIElements[i]->BaseUpdate();
+		}
 	}
-		
+
 	for (auto& UIDestroy : UIElementsToBeDestroyed)
 	{
 		for (auto it = UIElements.begin(); it != UIElements.end(); ++it)
@@ -208,7 +195,10 @@ void Scene::Update()
 		}
 		UIDestroy.reset();
 	}
-	if (!UIElementsToBeDestroyed.empty()) UIElementsToBeDestroyed.clear();
+	if (!UIElementsToBeDestroyed.empty())
+	{
+		UIElementsToBeDestroyed.clear();
+	}
 }
 
 void Scene::OnLoadScene()
@@ -234,9 +224,12 @@ void Scene::OnLoadScene()
 #--Parameters--#: 	Comparing scene
 #--Return--#: 		NA
 ************************************************************/
-bool Scene::operator==(const Scene & rhs) const
+bool Scene::operator==(const Scene& rhs) const
 {
-	if (SceneName == rhs.SceneName) return true;
+	if (SceneName == rhs.SceneName)
+	{
+		return true;
+	}
 	return false;
 }
 
@@ -248,9 +241,12 @@ void Scene::DestroyAllNonInitialEntities()
 		if (!(*it)->IsInitialEntity())
 		{
 			b2Body* EntBody = (*it)->body;
-			if (EntBody) EntBody->GetWorld()->DestroyBody(EntBody);
+			if (EntBody)
+			{
+				EntBody->GetWorld()->DestroyBody(EntBody);
+			}
 			it = Entities.erase(it);
-			it--;
+			--it;
 			EndIt = Entities.end();
 		}
 	}

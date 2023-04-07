@@ -1,16 +1,4 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    Plane.h
-// Description    	:    Header file outlining the Class
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -21,12 +9,12 @@ class GeometryObject : public Mesh
 {
 public:
 	GeometryObject(glm::vec4 Colour);
+
 	~GeometryObject();
 
 	void BindGeometryObject();
-	void Rebind();
 
-	void Render(Utils::Transform Newtransform);
-	
+	void Rebind() override;
+
+	void Render(Utils::Transform Newtransform) override;
 };
-

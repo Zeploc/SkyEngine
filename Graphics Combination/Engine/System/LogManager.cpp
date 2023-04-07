@@ -1,25 +1,11 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    LogManager.cpp
-// Description    	:    Manages Log messages
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "LogManager.h"
 
 #include "Engine/UI/UIText.h"
 
 // Library Includes //
 #include <iostream>
-
 
 // Static Variables //
 std::shared_ptr<LogManager> LogManager::m_pLogManager;
@@ -59,7 +45,9 @@ void LogManager::DisplayLogMessage(std::string _Message)
 {
 	std::cout << _Message << std::endl;
 	if (LoadingMessage)
+	{
 		LoadingMessage->sText = _Message;
+	}
 	//glutPostRedisplay();
 }
 

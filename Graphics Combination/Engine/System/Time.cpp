@@ -1,20 +1,5 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    Time.cpp
-// Description    	:    main implementation for Time
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// Library Includes //
-
-// OpenGL Library Includes //
 #include <glew.h>
 //#include <freeglut.h>
 #include <glfw3.h>
@@ -60,8 +45,8 @@ Time::~Time()
 ************************************************************/
 void Time::Update()
 {
-	dCurrentTime = glfwGetTime();// glutGet(GLUT_ELAPSED_TIME);
-	dTimeDelta = (dCurrentTime - dPrevTime);// / 1000;
-	dPrevTime = glfwGetTime();// glutGet(GLUT_ELAPSED_TIME);
+	dCurrentTime = glfwGetTime(); // glutGet(GLUT_ELAPSED_TIME);
+	dTimeDelta = (dCurrentTime - dPrevTime); // / 1000;
+	dPrevTime = glfwGetTime(); // glutGet(GLUT_ELAPSED_TIME);
 	dFPS = 1.0 / dTimeDelta;
 }

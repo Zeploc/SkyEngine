@@ -1,27 +1,14 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    TessMesh.cpp
-// Description    	:    Tesselation Mesh
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "TessMesh.h"
 
 // Engine Includes //
-#include "Engine/Render/Shader.h"
 #include "Engine/Camera/Camera.h"
+#include "Engine/Render/Shader.h"
 
-#include <glm\gtc\type_ptr.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-TessMesh::TessMesh(float fWidth, float fHeight, glm::vec4  _Colour)
+TessMesh::TessMesh(float fWidth, float fHeight, glm::vec4 _Colour)
 {
 	m_fWidth = fWidth;
 	m_fHeight = fHeight;
@@ -35,10 +22,8 @@ TessMesh::TessMesh(float fWidth, float fHeight, glm::vec4  _Colour)
 	SetInitialStates();
 }
 
-
 TessMesh::~TessMesh()
 {
-
 }
 
 void TessMesh::Render(Utils::Transform Newtransform)
@@ -63,17 +48,22 @@ void TessMesh::Render(Utils::Transform Newtransform)
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
-
 	}
 	if (bFog)
 	{
-		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, glm::value_ptr(Camera::GetInstance()->GetCameraPosition()));
-		glUniform4fv(glGetUniformLocation(program, "vFogColor"), 1, glm::value_ptr(Lighting::m_v4FogColour));
+		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, value_ptr(Camera::GetInstance()->GetCameraPosition()));
+		glUniform4fv(glGetUniformLocation(program, "vFogColor"), 1, value_ptr(Lighting::m_v4FogColour));
 		glUniform1f(glGetUniformLocation(program, "StartFog"), Lighting::StartFogDistance);
 		glUniform1f(glGetUniformLocation(program, "EndFog"), Lighting::EndFogDistance);
 	}
-	if (bCullFace) glEnable(GL_CULL_FACE);
-	else glDisable(GL_CULL_FACE);
+	if (bCullFace)
+	{
+		glEnable(GL_CULL_FACE);
+	}
+	else
+	{
+		glDisable(GL_CULL_FACE);
+	}
 
 	//enable stencil and set stencil operation
 	if (bStencil)
@@ -82,17 +72,16 @@ void TessMesh::Render(Utils::Transform Newtransform)
 		//glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 		//glDepthMask(GL_FALSE);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); //stPass, dpFail, bothPass
-
 	}
 
 	//** 1st pass **
 	//set current stencil value
 	glStencilFunc(GL_ALWAYS, // test function
-		1,// current value to set
-		0xFF);//mask value,
+	              1, // current value to set
+	              0xFF); //mask value,
 
-	glStencilMask(0xFF);//enable writing to stencil buffer
-						//--> render regular sized cube // fills stencil buffer
+	glStencilMask(0xFF); //enable writing to stencil buffer
+	//--> render regular sized cube // fills stencil buffer
 
 	Camera::GetInstance()->SetMVP(Newtransform, program);
 	glBindVertexArray(vao);
@@ -101,15 +90,14 @@ void TessMesh::Render(Utils::Transform Newtransform)
 
 	if (bStencil)
 	{
-
 		// ** 2nd pass **
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 		glStencilMask(0x00); //disable writing to stencil buffer
-							 //--> render scaled up cube // write to areas where value is not equal to 1
+		//--> render scaled up cube // write to areas where value is not equal to 1
 
 		glUniform1i(glGetUniformLocation(program, "bIsTex"), false);
 		Camera::GetInstance()->SetMVP(ScaledUpTransform, program);
-		glDrawElements(GL_TRIANGLES, m_iIndicies, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, m_iIndicies, GL_UNSIGNED_INT, nullptr);
 
 		//disable writing to stencil mask
 		glStencilMask(0x00);
@@ -147,6 +135,6 @@ void TessMesh::BindTess()
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(points), &points, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), nullptr);
 	glBindVertexArray(0);
 }

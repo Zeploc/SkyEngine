@@ -1,28 +1,11 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    SoundManager.cpp
-// Description    	:    main implementation for SoundManager
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
-// Library Includes //
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// OpenGL Library Includes //
-
-// Engine Includes /
 #include "Engine/System/LogManager.h"
 
 // Local Includes //
 
 // This Includes //
 #include "SoundManager.h"
-
 
 // Static Variables //
 std::shared_ptr<SoundManager> SoundManager::m_pSoundManager;
@@ -45,7 +28,6 @@ SoundManager::SoundManager()
 ************************************************************/
 SoundManager::~SoundManager()
 {
-
 }
 
 /************************************************************
@@ -57,13 +39,17 @@ SoundManager::~SoundManager()
 bool SoundManager::InitFMod()
 {
 	FMOD_RESULT result;
-	result = FMOD::System_Create(&audioMgr);
+	result = System_Create(&audioMgr);
 	if (result != FMOD_OK)
+	{
 		return false;
+	}
 
-	result = audioMgr->init(50, FMOD_INIT_NORMAL, 0);
+	result = audioMgr->init(50, FMOD_INIT_NORMAL, nullptr);
 	if (result != FMOD_OK)
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -74,15 +60,20 @@ bool SoundManager::InitFMod()
 #--Parameters--#: 	Sound path, whether it loops and a name for the sound
 #--Return--#: 		returns false if sound already created
 ************************************************************/
-const bool SoundManager::AddAudio(const char * Path, bool bLoop, std::string sName)
+const bool SoundManager::AddAudio(const char* Path, bool bLoop, std::string sName)
 {
 	FMOD::Sound* CreatedSound;
 	FMOD_RESULT result;
-	result = audioMgr->createSound(Path, FMOD_DEFAULT, 0, &CreatedSound);
-	if (!CreatedSound) return false;
+	result = audioMgr->createSound(Path, FMOD_DEFAULT, nullptr, &CreatedSound);
+	if (!CreatedSound)
+	{
+		return false;
+	}
 	if (bLoop)
+	{
 		CreatedSound->setMode(FMOD_LOOP_NORMAL);
-	SoundObject NewSoundObj = { CreatedSound , sName };
+	}
+	SoundObject NewSoundObj = {CreatedSound, sName};
 	Sounds.push_back(NewSoundObj);
 	LogManager::GetInstance()->DisplayLogMessage("Loading audio file at \"" + std::string(Path) + "\"");
 	return true;
@@ -115,9 +106,11 @@ FMOD::Sound* SoundManager::GetAudio(std::string sName)
 void SoundManager::AddChannel(std::string sName)
 {
 	if (ChannelExists(sName))
+	{
 		return;
+	}
 	FMOD::Channel* NewChannel = nullptr;
-	ChannelObject newChannelObj = { NewChannel, sName };
+	ChannelObject newChannelObj = {NewChannel, sName};
 	Channels.push_back(newChannelObj);
 }
 
@@ -131,10 +124,14 @@ bool SoundManager::PlayAudio(std::string sName, std::string sChannel)
 {
 	FMOD::Channel* newChannel;
 	if (ChannelExists(sChannel))
+	{
 		newChannel = Channels[GetChannelID(sChannel)].channel;
+	}
 	if (GetAudio(sName) == nullptr)
+	{
 		return false;
-	audioMgr->playSound(GetAudio(sName), 0, false, &newChannel);
+	}
+	audioMgr->playSound(GetAudio(sName), nullptr, false, &newChannel);
 	Channels[GetChannelID(sChannel)].channel = newChannel;
 	return true;
 }
@@ -148,7 +145,9 @@ bool SoundManager::PlayAudio(std::string sName, std::string sChannel)
 bool SoundManager::PauseAudio(std::string sChannel)
 {
 	if (!ChannelExists(sChannel))
+	{
 		return false;
+	}
 	Channels[GetChannelID(sChannel)].channel->setPaused(true);
 	return true;
 }
@@ -162,7 +161,9 @@ bool SoundManager::PauseAudio(std::string sChannel)
 bool SoundManager::StopAudio(std::string sChannel)
 {
 	if (!ChannelExists(sChannel))
+	{
 		return false;
+	}
 	Channels[GetChannelID(sChannel)].channel->stop();
 	return true;
 }
@@ -176,7 +177,9 @@ bool SoundManager::StopAudio(std::string sChannel)
 bool SoundManager::SetChannelVolume(std::string sChannel, float _fVolume)
 {
 	if (!ChannelExists(sChannel))
+	{
 		return false;
+	}
 	Channels[GetChannelID(sChannel)].channel->setVolume(_fVolume);
 	return true;
 }
@@ -192,7 +195,9 @@ bool SoundManager::ChannelExists(std::string sName)
 	for (auto channelobj : Channels)
 	{
 		if (channelobj.sName == sName)
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -206,11 +211,15 @@ bool SoundManager::ChannelExists(std::string sName)
 int SoundManager::GetChannelID(std::string sName)
 {
 	if (!ChannelExists(sName))
+	{
 		AddChannel(sName);
+	}
 	for (unsigned int i = 0; i < Channels.size(); i++)
 	{
 		if (Channels[i].sName == sName)
+		{
 			return i;
+		}
 	}
 	return -1;
 }

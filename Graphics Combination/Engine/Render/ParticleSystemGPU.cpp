@@ -1,18 +1,5 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    ParticleSystem.cpp
-// Description    	:    main implementation for ParticleSystem
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "ParticleSystemGPU.h"
 
 // Engine Includes //
@@ -22,8 +9,8 @@
 
 // Library Includes //
 #include <random>
-#include <glm\gtc\type_ptr.hpp>
-#include <glm\gtx\string_cast.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -31,9 +18,8 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-ParticleSystemGPU::ParticleSystemGPU(Utils::Transform _Transform)
-	: Entity(_Transform, Utils::CENTER)
-{	
+ParticleSystemGPU::ParticleSystemGPU(Utils::Transform _Transform) : Entity(_Transform, Utils::CENTER)
+{
 	Colour = glm::vec4(123.0f / 255.0f, 173.0f / 255.0f, 203.0f / 255.0f, 2.0f);
 }
 
@@ -45,7 +31,6 @@ ParticleSystemGPU::ParticleSystemGPU(Utils::Transform _Transform)
 ************************************************************/
 ParticleSystemGPU::~ParticleSystemGPU()
 {
-
 }
 
 void ParticleSystemGPU::Init(int ParticleCount, const char* TexturePath)
@@ -64,7 +49,7 @@ void ParticleSystemGPU::Init(int ParticleCount, const char* TexturePath)
 		float PositionY = RandomBetweenRange(m_v2StartPositionRangeY.x, m_v2StartPositionRangeY.y);
 		float PositionZ = RandomBetweenRange(m_v2StartPositionRangeZ.x, m_v2StartPositionRangeZ.y);
 
-		Particle NewParticle = Particle(Speed, { DirectionX, DirectionY, DirectionZ }, Falloff, FalloffTime, Delay, transform.Position + glm::vec3(PositionX, PositionY, PositionZ));
+		Particle NewParticle = Particle(Speed, {DirectionX, DirectionY, DirectionZ}, Falloff, FalloffTime, Delay, transform.Position + glm::vec3(PositionX, PositionY, PositionZ));
 		//m_vParticles.push_back(NewParticle);
 		m_vPosition.push_back(glm::vec4(transform.Position + glm::vec3(PositionX, PositionY, PositionZ), FalloffTime));
 		m_vVelocity.push_back(glm::vec4(glm::vec3(DirectionX, DirectionY, DirectionZ) * Speed, 0.0f));
@@ -83,7 +68,6 @@ void ParticleSystemGPU::BindParticleSystemGPU(const char* TexturePath)
 	program = Shader::Programs["GPUParticlesProgram"];
 
 	texture = Shader::GetTexture(TexturePath, true);
-
 
 	// Position
 	glGenBuffers(1, &posVbo);
@@ -105,17 +89,14 @@ void ParticleSystemGPU::BindParticleSystemGPU(const char* TexturePath)
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
-
 	// bind pos buffer
 	glBindBuffer(GL_ARRAY_BUFFER, posVbo);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, NULL, 0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, NULL, nullptr);
 	glEnableVertexAttribArray(0);
-
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-
 }
 
 /************************************************************
@@ -223,11 +204,12 @@ void ParticleSystemGPU::SetLifeTime(float _fLifetime)
 ************************************************************/
 float ParticleSystemGPU::RandomBetweenRange(float _fMin, float _fMax)
 {
-	int fRandRangeSize = int(abs(_fMax - _fMin) * 100.0f);
+	int fRandRangeSize = static_cast<int>(abs(_fMax - _fMin) * 100.0f);
 	if (fRandRangeSize != 0)
-		return (float)(rand() % fRandRangeSize) / 100.0f + _fMin;
-	else
-		return _fMin;
+	{
+		return static_cast<float>(rand() % fRandRangeSize) / 100.0f + _fMin;
+	}
+	return _fMin;
 }
 
 /************************************************************
@@ -238,7 +220,6 @@ float ParticleSystemGPU::RandomBetweenRange(float _fMin, float _fMax)
 ************************************************************/
 void ParticleSystemGPU::Update()
 {
-
 	/*for (auto& part : m_vParticles)
 	{
 		part.Update();
@@ -279,7 +260,7 @@ void ParticleSystemGPU::DrawEntity()
 	//glUniform3f(glGetUniformLocation(program, "vQuad2"), vQuad2.x, vQuad2.y,
 	//	vQuad2.z);*/
 
-	glUniformMatrix4fv(glGetUniformLocation(program, "vp"), 1, GL_FALSE, glm::value_ptr(Camera::GetInstance()->projection * Camera::GetInstance()->view));
+	glUniformMatrix4fv(glGetUniformLocation(program, "vp"), 1, GL_FALSE, value_ptr(Camera::GetInstance()->projection * Camera::GetInstance()->view));
 	////glUniform4f(glGetUniformLocation(program, "Colour"), Colour.r, Colour.g, Colour.b, Colour.a);
 	////glUniform1f(glGetUniformLocation(program, "Size"), ParticleSize);
 
@@ -293,20 +274,16 @@ void ParticleSystemGPU::DrawEntity()
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glBindBuffer(GL_ARRAY_BUFFER, posVbo);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, NULL, 0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, NULL, nullptr);
 	glEnableVertexAttribArray(0);
-
 
 	glDrawArrays(GL_POINTS, 0, NUM_PARTICLES);
 
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glUseProgram(0);
-	
 
 	////glDepthMask(GL_TRUE);
 	//glDisable(GL_BLEND);
 	//glDepthMask(GL_TRUE);
-
-
 }

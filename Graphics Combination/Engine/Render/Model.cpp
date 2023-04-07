@@ -1,27 +1,14 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    Cube.cpp
-// Description    	:    Cube Mesh
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "Model.h"
 
 // Engine Includes //
-#include "Shader.h"
 #include "Lighting.h"
+#include "Shader.h"
 
 // Library Includes //
 #include <map>
-#include <glm\gtc\type_ptr.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -29,11 +16,11 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Model::Model(glm::vec4 _Colour, const char *  ModelSource)
+Model::Model(glm::vec4 _Colour, const char* ModelSource)
 {
-	m_fWidth = 0;// fWidth;
-	m_fHeight = 0;// fHeight;
-	m_fDepth = 0;// fDepth;
+	m_fWidth = 0; // fWidth;
+	m_fHeight = 0; // fHeight;
+	m_fDepth = 0; // fDepth;
 	Colour = _Colour;
 	TextureSource = ModelSource;
 	bHasTexture = true;
@@ -116,7 +103,7 @@ void Model::Render(Utils::Transform Newtransform)
 		glUseProgram(program);
 		Lighting::PassLightingToShader(program, LightProperties, Newtransform);
 	}
-	glUniform4fv(glGetUniformLocation(program, "fragcolor"), 1, glm::value_ptr(Colour));
+	glUniform4fv(glGetUniformLocation(program, "fragcolor"), 1, value_ptr(Colour));
 	pModelObject->Render(Newtransform);
 }
 
@@ -128,5 +115,4 @@ void Model::Render(Utils::Transform Newtransform)
 ************************************************************/
 void Model::Update()
 {
-
 }

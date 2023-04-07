@@ -1,18 +1,5 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    Entity.cpp
-// Description    	:    main implementation for Entity
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "Button3DEntity.h"
 
 // Engine Includes //
@@ -23,8 +10,7 @@
 // Static Variables //
 bool Button3DEntity::bButtonPressedThisFrame = false;
 
-Button3DEntity::Button3DEntity(Utils::Transform _Transform, Utils::EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, void(*func)())
-	: Entity(_Transform, _Anchor), PressFuncCall(func)
+Button3DEntity::Button3DEntity(Utils::Transform _Transform, Utils::EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, void (*func)()) : Entity(_Transform, _Anchor), PressFuncCall(func)
 {
 	std::shared_ptr<Cube> ButtonCubeMesh = std::make_shared<Cube>(Cube(fWidth, fHeight, fDepth, _Colour));
 	EntityMesh = ButtonCubeMesh;
@@ -32,8 +18,7 @@ Button3DEntity::Button3DEntity(Utils::Transform _Transform, Utils::EANCHOR _Anch
 	btnHighlightColour = _HightlightColour;
 }
 
-Button3DEntity::Button3DEntity(Utils::Transform _Transform, Utils::EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, const char * Texturepath, void(*func)())
-	: Entity(_Transform, _Anchor), PressFuncCall(func)
+Button3DEntity::Button3DEntity(Utils::Transform _Transform, Utils::EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, const char* Texturepath, void (*func)()) : Entity(_Transform, _Anchor), PressFuncCall(func)
 {
 	std::shared_ptr<Cube> ButtonCubeMesh = std::make_shared<Cube>(Cube(fWidth, fHeight, fDepth, _Colour, Texturepath));
 	EntityMesh = ButtonCubeMesh;
@@ -41,14 +26,16 @@ Button3DEntity::Button3DEntity(Utils::Transform _Transform, Utils::EANCHOR _Anch
 	btnHighlightColour = _HightlightColour;
 }
 
-
 Button3DEntity::~Button3DEntity()
 {
 }
 
 void Button3DEntity::Update()
 {
-	if (!bActive) return;
+	if (!bActive)
+	{
+		return;
+	}
 	glm::vec3 HalfDimensionvec = glm::vec3(EntityMesh->m_fWidth / 2.0f, EntityMesh->m_fHeight / 2.0f, EntityMesh->m_fDepth / 2.0f);
 	bool bHit = CheckHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z))
 		|| CheckHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, -HalfDimensionvec.z))
@@ -56,7 +43,7 @@ void Button3DEntity::Update()
 		|| CheckHit(glm::vec3(-HalfDimensionvec.x, HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z))
 		|| CheckHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(-HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z))
 		|| CheckHit(glm::vec3(HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z));
-	
+
 	if (bHit)
 	{
 		EntityMesh->bStencil = true;
@@ -64,12 +51,17 @@ void Button3DEntity::Update()
 		{
 			bPressed = true;
 			bButtonPressedThisFrame = true;
-			if (PressFuncCall != nullptr) PressFuncCall();
+			if (PressFuncCall != nullptr)
+			{
+				PressFuncCall();
+			}
 			if (PressFunc)
+			{
 				(*PressFunc)();
+			}
 		}
 		EntityMesh->Colour = btnHighlightColour;
-	}	
+	}
 	else
 	{
 		EntityMesh->Colour = btnColour;

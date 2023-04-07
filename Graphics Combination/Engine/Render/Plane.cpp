@@ -1,18 +1,5 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    Level.cpp
-// Description    	:    Plane Mesh
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "Plane.h"
 
 // OpenGL Library //
@@ -28,16 +15,16 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Plane::Plane(float fWidth, float fHeight, glm::vec4  _Colour)
+Plane::Plane(float fWidth, float fHeight, glm::vec4 _Colour)
 {
 	m_fWidth = fWidth;
 	m_fHeight = fHeight;
 	float fHalfWidth = m_fWidth / 2;
 	float fHalfHeight = m_fHeight / 2;
-	Points[0] = { -fHalfWidth, fHalfHeight, 0 };
-	Points[1] = { fHalfWidth, fHalfHeight, 0 };
-	Points[2] = { fHalfWidth, -fHalfHeight, 0 };
-	Points[3] = { -fHalfWidth, -fHalfHeight, 0 };
+	Points[0] = {-fHalfWidth, fHalfHeight, 0};
+	Points[1] = {fHalfWidth, fHalfHeight, 0};
+	Points[2] = {fHalfWidth, -fHalfHeight, 0};
+	Points[3] = {-fHalfWidth, -fHalfHeight, 0};
 	m_iIndicies = 6;
 	Colour = _Colour;
 	TextureSource = "";
@@ -55,16 +42,16 @@ Plane::Plane(float fWidth, float fHeight, glm::vec4  _Colour)
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Plane::Plane(float fWidth, float fHeight, glm::vec4 _Colour, const char * _TextureSource, glm::vec4 _UVCoords)
+Plane::Plane(float fWidth, float fHeight, glm::vec4 _Colour, const char* _TextureSource, glm::vec4 _UVCoords)
 {
 	m_fWidth = fWidth;
 	m_fHeight = fHeight;
 	float fHalfWidth = m_fWidth / 2;
 	float fHalfHeight = m_fHeight / 2;
-	Points[0] = { -fHalfWidth, fHalfHeight, 0 };
-	Points[1] = { fHalfWidth, fHalfHeight, 0 };
-	Points[2] = { fHalfWidth, -fHalfHeight, 0 };
-	Points[3] = { -fHalfWidth, -fHalfHeight, 0 };
+	Points[0] = {-fHalfWidth, fHalfHeight, 0};
+	Points[1] = {fHalfWidth, fHalfHeight, 0};
+	Points[2] = {fHalfWidth, -fHalfHeight, 0};
+	Points[3] = {-fHalfWidth, -fHalfHeight, 0};
 	m_iIndicies = 6;
 	Colour = _Colour;
 	TextureSource = _TextureSource;
@@ -83,16 +70,16 @@ Plane::Plane(float fWidth, float fHeight, glm::vec4 _Colour, const char * _Textu
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char * _TextureSource, glm::vec2 v2FrameCounts, int _iFPS)
+Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char* _TextureSource, glm::vec2 v2FrameCounts, int _iFPS)
 {
 	m_fWidth = _fWidth;
 	m_fHeight = _fHeight;
 	float fHalfWidth = m_fWidth / 2;
 	float fHalfHeight = m_fHeight / 2;
-	Points[0] = { -fHalfWidth, fHalfHeight, 0 };
-	Points[1] = { fHalfWidth, fHalfHeight, 0 };
-	Points[2] = { fHalfWidth, -fHalfHeight, 0 };
-	Points[3] = { -fHalfWidth, -fHalfHeight, 0 };
+	Points[0] = {-fHalfWidth, fHalfHeight, 0};
+	Points[1] = {fHalfWidth, fHalfHeight, 0};
+	Points[2] = {fHalfWidth, -fHalfHeight, 0};
+	Points[3] = {-fHalfWidth, -fHalfHeight, 0};
 	m_iIndicies = 6;
 	Colour = _Colour;
 	TextureSource = _TextureSource;
@@ -105,11 +92,11 @@ Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char * _Tex
 
 	// Get Image Dimensions
 	int width, height;
-	unsigned char* image = SOIL_load_image(_TextureSource, &width, &height, 0, SOIL_LOAD_RGBA);
+	unsigned char* image = SOIL_load_image(_TextureSource, &width, &height, nullptr, SOIL_LOAD_RGBA);
 	SOIL_free_image_data(image);
 	AnimationInfo.v2FrameCount = v2FrameCounts;
 	AnimationInfo.v2EndFrame = v2FrameCounts;
-	AnimationInfo.v2FrameSize = { (width / v2FrameCounts.x) / width, (height / v2FrameCounts.y) / height };
+	AnimationInfo.v2FrameSize = {(width / v2FrameCounts.x) / width, (height / v2FrameCounts.y) / height};
 
 	UVCoords = glm::vec4(0, AnimationInfo.v2FrameSize.x, 0, AnimationInfo.v2FrameSize.y);
 
@@ -125,16 +112,16 @@ Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char * _Tex
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char * _TextureSource, int iCount, bool bHorizontal)
+Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char* _TextureSource, int iCount, bool bHorizontal)
 {
 	m_fWidth = _fWidth;
 	m_fHeight = _fHeight;
 	float fHalfWidth = m_fWidth / 2;
 	float fHalfHeight = m_fHeight / 2;
-	Points[0] = { -fHalfWidth, fHalfHeight, 0 };
-	Points[1] = { fHalfWidth, fHalfHeight, 0 };
-	Points[2] = { fHalfWidth, -fHalfHeight, 0 };
-	Points[3] = { -fHalfWidth, -fHalfHeight, 0 };
+	Points[0] = {-fHalfWidth, fHalfHeight, 0};
+	Points[1] = {fHalfWidth, fHalfHeight, 0};
+	Points[2] = {fHalfWidth, -fHalfHeight, 0};
+	Points[3] = {-fHalfWidth, -fHalfHeight, 0};
 	m_iIndicies = 6;
 	Colour = _Colour;
 	TextureSource = _TextureSource;
@@ -144,12 +131,12 @@ Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char * _Tex
 	m_eShape = Utils::PLANE;
 
 	int width, height;
-	unsigned char* image = SOIL_load_image(_TextureSource, &width, &height, 0, SOIL_LOAD_RGBA);
+	unsigned char* image = SOIL_load_image(_TextureSource, &width, &height, nullptr, SOIL_LOAD_RGBA);
 	SOIL_free_image_data(image);
-	float fImageRatio = (float)width / (float)height;
+	float fImageRatio = static_cast<float>(width) / static_cast<float>(height);
 	float fObjectRatio = _fHeight / _fWidth;
-	float hSize = (float)(iCount);
-	float vSize = (float)(iCount);
+	float hSize = static_cast<float>(iCount);
+	float vSize = static_cast<float>(iCount);
 	if (bHorizontal)
 	{
 		vSize = iCount * fObjectRatio * fImageRatio;
@@ -173,7 +160,6 @@ Plane::Plane(glm::vec3 _Points[4], glm::vec4 _Colour)
 		Points[i] = _Points[i];
 	}
 
-
 	m_fWidth = abs(Points[0].x - Points[2].x);
 	m_fHeight = abs(Points[1].y - Points[3].y);
 	m_iIndicies = 6;
@@ -187,13 +173,12 @@ Plane::Plane(glm::vec3 _Points[4], glm::vec4 _Colour)
 	SetInitialStates();
 }
 
-Plane::Plane(glm::vec3 _Points[4], glm::vec4 _Colour, const char * _TextureSource, glm::vec4 _UVCoords)
+Plane::Plane(glm::vec3 _Points[4], glm::vec4 _Colour, const char* _TextureSource, glm::vec4 _UVCoords)
 {
 	for (int i = 0; i < 4; i++)
 	{
 		Points[i] = _Points[i];
 	}
-		
 
 	m_fWidth = abs(Points[0].x - Points[2].x);
 	m_fHeight = abs(Points[1].y - Points[3].y);
@@ -209,13 +194,12 @@ Plane::Plane(glm::vec3 _Points[4], glm::vec4 _Colour, const char * _TextureSourc
 	SetInitialStates();
 }
 
-Plane::Plane(glm::vec3 _Points[4], glm::vec4 _Colour, const char * _TextureSource, int iCount, bool bHorizontal)
+Plane::Plane(glm::vec3 _Points[4], glm::vec4 _Colour, const char* _TextureSource, int iCount, bool bHorizontal)
 {
 	for (int i = 0; i < 4; i++)
 	{
 		Points[i] = _Points[i];
 	}
-
 
 	m_fWidth = abs(Points[0].x - Points[2].x);
 	m_fHeight = abs(Points[1].y - Points[3].y);
@@ -230,12 +214,12 @@ Plane::Plane(glm::vec3 _Points[4], glm::vec4 _Colour, const char * _TextureSourc
 	m_eShape = Utils::PLANE;
 
 	int width, height;
-	unsigned char* image = SOIL_load_image(_TextureSource, &width, &height, 0, SOIL_LOAD_RGBA);
+	unsigned char* image = SOIL_load_image(_TextureSource, &width, &height, nullptr, SOIL_LOAD_RGBA);
 	SOIL_free_image_data(image);
-	float fImageRatio = (float)width / (float)height;
+	float fImageRatio = static_cast<float>(width) / static_cast<float>(height);
 	float fObjectRatio = m_fHeight / m_fWidth;
-	float hSize = (float)(iCount);
-	float vSize = (float)(iCount);
+	float hSize = static_cast<float>(iCount);
+	float vSize = static_cast<float>(iCount);
 	if (bHorizontal)
 	{
 		vSize = iCount * fObjectRatio * fImageRatio;
@@ -272,21 +256,21 @@ void Plane::BindPlane()
 {
 	float fHalfWidth = m_fWidth / 2;
 	float fHalfHeight = m_fHeight / 2;
-	
+
 	GLfloat vertices[] = {
 		// Positions						// Colors									// Tex Coords
-		Points[0].x, Points[0].y, Points[0].z,		Colour.r, Colour.g, Colour.b, Colour.a,		// Top Left
-		Points[1].x, Points[1].y, Points[1].z,		Colour.r, Colour.g, Colour.b, Colour.a,		// Top Right
-		Points[2].x, Points[2].y, Points[2].z,		Colour.r, Colour.g, Colour.b, Colour.a,		// Bottom Right
-		Points[3].x, Points[3].y, Points[3].z,		Colour.r, Colour.g, Colour.b, Colour.a,		// Bottom Left
+		Points[0].x, Points[0].y, Points[0].z, Colour.r, Colour.g, Colour.b, Colour.a, // Top Left
+		Points[1].x, Points[1].y, Points[1].z, Colour.r, Colour.g, Colour.b, Colour.a, // Top Right
+		Points[2].x, Points[2].y, Points[2].z, Colour.r, Colour.g, Colour.b, Colour.a, // Bottom Right
+		Points[3].x, Points[3].y, Points[3].z, Colour.r, Colour.g, Colour.b, Colour.a, // Bottom Left
 	};
 
 	GLfloat Texturedvertices[] = {
 		// Positions						// Colors									// Tex Coords
-		Points[0].x, Points[0].y, Points[0].z,		Colour.r, Colour.g, Colour.b, Colour.a,		UVCoords.x, UVCoords.z,	// Top Left
-		Points[1].x, Points[1].y, Points[1].z,		Colour.r, Colour.g, Colour.b, Colour.a,		UVCoords.y, UVCoords.z, // Top Right
-		Points[2].x, Points[2].y, Points[2].z,		Colour.r, Colour.g, Colour.b, Colour.a,		UVCoords.y, UVCoords.w, // Bottom Right
-		Points[3].x, Points[3].y, Points[3].z,		Colour.r, Colour.g, Colour.b, Colour.a,		UVCoords.x, UVCoords.w, // Bottom Left
+		Points[0].x, Points[0].y, Points[0].z, Colour.r, Colour.g, Colour.b, Colour.a, UVCoords.x, UVCoords.z, // Top Left
+		Points[1].x, Points[1].y, Points[1].z, Colour.r, Colour.g, Colour.b, Colour.a, UVCoords.y, UVCoords.z, // Top Right
+		Points[2].x, Points[2].y, Points[2].z, Colour.r, Colour.g, Colour.b, Colour.a, UVCoords.y, UVCoords.w, // Bottom Right
+		Points[3].x, Points[3].y, Points[3].z, Colour.r, Colour.g, Colour.b, Colour.a, UVCoords.x, UVCoords.w, // Bottom Left
 	};
 
 	GLuint indices[] = {
@@ -296,13 +280,16 @@ void Plane::BindPlane()
 	// If no texture, texture source is equal to ""
 	vao = Shader::CreateBuffer(TextureSource, texture, true);
 	if (TextureSource != "")
+	{
 		glBufferData(GL_ARRAY_BUFFER, sizeof(Texturedvertices), Texturedvertices, GL_STATIC_DRAW);
+	}
 	else
+	{
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	}
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
-
 }
 
 /************************************************************
@@ -349,7 +336,7 @@ void Plane::Render(Utils::Transform Newtransform)
 		m_dFPSCounter += Time::dTimeDelta;
 		if (m_dFPSCounter > m_fFrameCheck)
 		{
-			m_dFPSCounter = 0;// m_dFPSCounter - m_fFrameCheck;
+			m_dFPSCounter = 0; // m_dFPSCounter - m_fFrameCheck;
 			AnimationInfo.Advance();
 		}
 	}
@@ -382,7 +369,7 @@ void Plane::Update()
 		m_dFPSCounter += Time::dTimeDelta;
 		if (m_dFPSCounter > m_fFrameCheck)
 		{
-			m_dFPSCounter = 0;// m_dFPSCounter - m_fFrameCheck;
+			m_dFPSCounter = 0; // m_dFPSCounter - m_fFrameCheck;
 			AnimationInfo.Advance();
 		}
 	}

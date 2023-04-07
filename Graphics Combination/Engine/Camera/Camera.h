@@ -1,16 +1,5 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name		:    Camera.h
-// Description		:    Header file outlining the Class
-// Author			:    Alex Coultas
-// Mail				:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
+
 #pragma once
 
 // Library Includes //
@@ -25,7 +14,6 @@
 class Camera
 {
 public:
-
 	enum PROJECTIONMODE
 	{
 		ORTHAGRAPHIC = 1,
@@ -41,24 +29,33 @@ public:
 	glm::mat4 projection;
 
 	void Init(int ScreenWidth, int ScreenWidthheight, glm::vec3 CamPos, glm::vec3 ForwardVec, glm::vec3 UpVec);
+
 	void Update();
 
 	void SetMVP(Utils::Transform _transform, GLuint program);
+
 	void SwitchProjection(PROJECTIONMODE _Mode);
+
 	PROJECTIONMODE ReturnDimensionMode() { return m_ProjectionMode; };
 
 	void SetWindowScale(float _fNewScale);
+
 	float GetWindowScale() { return fWindowScale; }
-	void SetCameraForwardVector(glm::vec3 _Forward) {
-		cameraFront = _Forward;	};
+
+	void SetCameraForwardVector(glm::vec3 _Forward)
+	{
+		cameraFront = _Forward;
+	};
 
 	glm::vec3 ScreenToWorldDirection(glm::vec2 _ScreenPosition);
+
 	glm::vec3 ScreenToWorldPosition2D(glm::vec2 _ScreenPosition);
 
 	// Getters
 	glm::vec3 GetCameraPosition() { return cameraPos; };
 	glm::vec3 GetCameraForwardVector() { return cameraFront; };
 	glm::vec3 GetCameraUpVector() { return cameraUp; };
+
 	glm::vec3 GetCameraRightVector();
 
 	void SetCameraPos(glm::vec3 NewPos) { cameraPos = NewPos; };
@@ -66,6 +63,7 @@ public:
 	void MoveCamera(glm::vec3 _Movement);
 
 	void EnableSpectatorControls(bool _bSpectatorControls);
+
 	void ToggleSpectatorControls()
 	{
 		bUseSpectatorControls = !bUseSpectatorControls;
@@ -79,6 +77,7 @@ private:
 	bool bUseSpectatorControls = false;
 
 	void SpectatorControls();
+
 	float MouseSensitivity = 0.15f;
 	float cameraSpeed = 5.0f;
 	GLfloat Yaw = 0.0f;
@@ -88,7 +87,6 @@ private:
 	glm::vec3 cameraFront;
 	glm::vec3 cameraUp;
 
-
 	PROJECTIONMODE m_ProjectionMode = ORTHAGRAPHIC;
 
 	float fWindowScale = 200;
@@ -97,17 +95,17 @@ private:
 	// Singleton
 public:
 	static Camera* GetInstance();
-	static void DestoryInstance();
 
+	static void DestoryInstance();
 
 private:
 	static Camera* m_pCamera;
 	static std::map<int, Camera*> m_pCameras;
+
 	Camera();
+
 	~Camera();
-	Camera(Camera const&);              // Don't Implement
-	void operator=(Camera const&); // Don't implement
 
-
+	Camera(const Camera&); // Don't Implement
+	void operator=(const Camera&); // Don't implement
 };
-

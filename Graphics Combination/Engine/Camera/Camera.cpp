@@ -1,28 +1,15 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    Camera.cpp
-// Description    	:    main implementation for Camera
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "Camera.h"
 
 // Library Includes //
 #include <algorithm>    // std::max
 
 // OpenGL Library Includes //
-#include <glm\gtc\type_ptr.hpp>
-#include <glm\gtc/matrix_transform.hpp>
-#include <glm\gtx\rotate_vector.hpp>
 #include <glfw3.h>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 // Engine Includes //
 #include "Engine/Editor/EditorWindowManager.h"
@@ -45,15 +32,15 @@ void Camera::Init(int ScreenWidth, int ScreenWidthheight, glm::vec3 CamPos, glm:
 	cameraPos = CamPos;
 	cameraFront = ForwardVec;
 	cameraUp = UpVec;
-	
+
 	//projection = glm::perspective(90.0f, (float)SCR_WIDTH /	(float)SCR_HEIGHT, 0.1f, 100.0f);
 
-	float HalfWidth = (float)SCR_WIDTH / fWindowScale;
-	float HalfHeight = (float)SCR_HEIGHT / fWindowScale;
+	float HalfWidth = static_cast<float>(SCR_WIDTH) / fWindowScale;
+	float HalfHeight = static_cast<float>(SCR_HEIGHT) / fWindowScale;
 	projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, 100.0f);
-	view = glm::lookAt(cameraPos,
-		cameraPos + cameraFront,
-		cameraUp);
+	view = lookAt(cameraPos,
+	              cameraPos + cameraFront,
+	              cameraUp);
 }
 
 /************************************************************
@@ -66,15 +53,18 @@ void Camera::Update()
 {
 	/*if (m_ProjectionMode == PERSPECTIVE && m_bFPS)
 		FPSControls();*/
-	if (bUseSpectatorControls) SpectatorControls();
-	view = glm::lookAt(cameraPos,
-		cameraPos + cameraFront,
-		cameraUp);	
+	if (bUseSpectatorControls)
+	{
+		SpectatorControls();
+	}
+	view = lookAt(cameraPos,
+	              cameraPos + cameraFront,
+	              cameraUp);
 }
 
 glm::vec3 Camera::GetCameraRightVector()
 {
-	return glm::cross(cameraUp, cameraFront);
+	return cross(cameraUp, cameraFront);
 }
 
 /************************************************************
@@ -92,44 +82,58 @@ void Camera::MoveCamera(glm::vec3 _Movement)
 void Camera::EnableSpectatorControls(bool _bSpectatorControls)
 {
 	bUseSpectatorControls = _bSpectatorControls;
-	glfwSetCursorPos(MainWindow, (double)SCR_WIDTH * 0.5, (double)SCR_HEIGHT * 0.5);
+	glfwSetCursorPos(MainWindow, static_cast<double>(SCR_WIDTH) * 0.5, static_cast<double>(SCR_HEIGHT) * 0.5);
 }
 
 void Camera::SpectatorControls()
 {
 	// When main window not focus don't add movement
 	if (EditorWindowManager::GetCurrentFocus() != EditorWindowManager::MainWindow)
+	{
 		return;
-	
-	glm::vec2 Offset = glm::vec2(Input::GetInstance()->MousePos - glm::vec2((float)SCR_WIDTH * 0.5f, (float)SCR_HEIGHT * 0.5f));
+	}
+
+	glm::vec2 Offset = glm::vec2(Input::GetInstance()->MousePos - glm::vec2(static_cast<float>(SCR_WIDTH) * 0.5f, static_cast<float>(SCR_HEIGHT) * 0.5f));
 	Offset *= MouseSensitivity;
 	Yaw -= Offset.x;
 	Pitch -= Offset.y;
 
-	glm::clamp((float)Pitch, 89.0f, -89.0f);
-	glm::vec3 frontVector(-cos(glm::radians(Pitch))*sin(glm::radians(Yaw)),
-		sin(glm::radians(Pitch)),
-		-cos(glm::radians(Pitch)) * cos(glm::radians(Yaw)));
-	cameraFront = glm::normalize(frontVector);
+	glm::clamp(Pitch, 89.0f, -89.0f);
+	glm::vec3 frontVector(-cos(glm::radians(Pitch)) * sin(glm::radians(Yaw)),
+	                      sin(glm::radians(Pitch)),
+	                      -cos(glm::radians(Pitch)) * cos(glm::radians(Yaw)));
+	cameraFront = normalize(frontVector);
 
 	if (bSpectatorMovement)
 	{
 		if (Input::GetInstance()->KeyState[GLFW_KEY_W] == Input::INPUT_HOLD)
+		{
 			cameraPos += cameraFront * cameraSpeed * 0.025f;
+		}
 		else if (Input::GetInstance()->KeyState[GLFW_KEY_S] == Input::INPUT_HOLD)
+		{
 			cameraPos -= cameraFront * cameraSpeed * 0.025f;
+		}
 
 		if (Input::GetInstance()->KeyState[GLFW_KEY_A] == Input::INPUT_HOLD)
-			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * 0.025f;
+		{
+			cameraPos -= normalize(cross(cameraFront, cameraUp)) * cameraSpeed * 0.025f;
+		}
 		else if (Input::GetInstance()->KeyState[GLFW_KEY_D] == Input::INPUT_HOLD)
-			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * 0.025f;
+		{
+			cameraPos += normalize(cross(cameraFront, cameraUp)) * cameraSpeed * 0.025f;
+		}
 
 		if (Input::GetInstance()->KeyState[GLFW_KEY_SPACE] == Input::INPUT_HOLD)
+		{
 			cameraPos += cameraUp * cameraSpeed * 0.025f;
+		}
 		else if (Input::GetInstance()->KeyState[GLFW_KEY_LEFT_CONTROL] == Input::INPUT_HOLD)
+		{
 			cameraPos -= cameraUp * cameraSpeed * 0.025f;
+		}
 	}
-	glfwSetCursorPos(MainWindow, (double)SCR_WIDTH * 0.5, (double)SCR_HEIGHT * 0.5);
+	glfwSetCursorPos(MainWindow, static_cast<double>(SCR_WIDTH) * 0.5, static_cast<double>(SCR_HEIGHT) * 0.5);
 }
 
 /************************************************************
@@ -141,8 +145,8 @@ void Camera::SpectatorControls()
 void Camera::SetWindowScale(float _fNewScale)
 {
 	fWindowScale = _fNewScale;
-	float HalfWidth = (float)SCR_WIDTH / fWindowScale;
-	float HalfHeight = (float)SCR_HEIGHT / fWindowScale;
+	float HalfWidth = static_cast<float>(SCR_WIDTH) / fWindowScale;
+	float HalfHeight = static_cast<float>(SCR_HEIGHT) / fWindowScale;
 	projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, fMaxViewClipping);
 }
 
@@ -150,16 +154,16 @@ glm::vec3 Camera::ScreenToWorldDirection(glm::vec2 _ScreenPosition)
 {
 	float x = (2.0f * _ScreenPosition.x) / SCR_WIDTH - 1.0f;
 	float y = 1.0f - (2.0f * _ScreenPosition.y) / SCR_HEIGHT;
-	glm::vec2 ray_nds = { x, y};
+	glm::vec2 ray_nds = {x, y};
 
 	glm::vec4 ray_clip = glm::vec4(ray_nds.x, ray_nds.y, -1.0f, 1.0f);
 
-	glm::vec4 ray_eye = glm::inverse(projection) * ray_clip;
+	glm::vec4 ray_eye = inverse(projection) * ray_clip;
 	ray_eye = glm::vec4(ray_eye.x, ray_eye.y, -1.0f, 0.0f);
 
-	glm::vec3 ray_wor = glm::inverse(view) * ray_eye;
+	glm::vec3 ray_wor = inverse(view) * ray_eye;
 
-	ray_wor = glm::normalize(ray_wor);
+	ray_wor = normalize(ray_wor);
 	return ray_wor;
 }
 
@@ -167,11 +171,10 @@ glm::vec3 Camera::ScreenToWorldPosition2D(glm::vec2 _ScreenPosition)
 {
 	glm::vec3 PlaneNormal = -cameraFront;
 	glm::vec3 MouseDirection = ScreenToWorldDirection(_ScreenPosition);
-	float t = -(glm::dot(cameraPos, PlaneNormal)) / (glm::dot(MouseDirection, PlaneNormal));
+	float t = -(dot(cameraPos, PlaneNormal)) / (dot(MouseDirection, PlaneNormal));
 	t /= abs(cameraPos.z);
 	return MouseDirection * t + cameraPos;
 }
-
 
 /************************************************************
 #--Description--#: 	Passes in the new mvp to the current program shader
@@ -183,20 +186,19 @@ void Camera::SetMVP(Utils::Transform _transform, GLuint program)
 {
 	glm::mat4 translate = glm::translate(glm::mat4(), _transform.Position);
 	glm::mat4 scale = glm::scale(glm::mat4(), _transform.Scale);
-	glm::mat4 rotation = glm::rotate(glm::mat4(), glm::radians(_transform.Rotation.x), glm::vec3(1, 0, 0));
-	rotation = glm::rotate(rotation, glm::radians(_transform.Rotation.y), glm::vec3(0, 1, 0));
-	rotation = glm::rotate(rotation, glm::radians(_transform.Rotation.z), glm::vec3(0, 0, 1));
+	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(_transform.Rotation.x), glm::vec3(1, 0, 0));
+	rotation = rotate(rotation, glm::radians(_transform.Rotation.y), glm::vec3(0, 1, 0));
+	rotation = rotate(rotation, glm::radians(_transform.Rotation.z), glm::vec3(0, 0, 1));
 
 	glm::mat4 model = translate * rotation * scale;
-	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_FALSE, glm::value_ptr(projection));
+	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, value_ptr(model));
+	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, value_ptr(view));
+	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_FALSE, value_ptr(projection));
 
 	glm::mat4 MVP = projection * view * model;
 	GLint MVPLoc = glGetUniformLocation(program, "MVP");
-	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, glm::value_ptr(MVP));
+	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, value_ptr(MVP));
 }
-
 
 /************************************************************
 #--Description--#:  Change projection type
@@ -209,22 +211,22 @@ void Camera::SwitchProjection(PROJECTIONMODE _Mode)
 	m_ProjectionMode = _Mode;
 	switch (m_ProjectionMode)
 	{
-	case 1:
-	{
-		float HalfWidth = (float)SCR_WIDTH / 200;
-		float HalfHeight = (float)SCR_HEIGHT / 200;
-		projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, fMaxViewClipping);
-		break;
-	}
-	case 2:
-	{
-		float HalfWidth = (float)SCR_WIDTH / 200;
-		float HalfHeight = (float)SCR_HEIGHT / 200;
-		projection = glm::perspective(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, fMaxViewClipping);
-		break;
-	}
-	default:
-		break;
+		case 1:
+			{
+				float HalfWidth = static_cast<float>(SCR_WIDTH) / 200;
+				float HalfHeight = static_cast<float>(SCR_HEIGHT) / 200;
+				projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, fMaxViewClipping);
+				break;
+			}
+		case 2:
+			{
+				float HalfWidth = static_cast<float>(SCR_WIDTH) / 200;
+				float HalfHeight = static_cast<float>(SCR_HEIGHT) / 200;
+				projection = glm::perspective(45.0f, static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, fMaxViewClipping);
+				break;
+			}
+		default:
+			break;
 	}
 }
 
@@ -254,7 +256,7 @@ Camera::~Camera()
 #--Parameters--#:	NA
 #--Return--#: 		Returns static pointer to self
 ************************************************************/
-Camera * Camera::GetInstance()
+Camera* Camera::GetInstance()
 {
 	//int currentWindow = glutGetWindow();
 	//Camera* CurrentFound = nullptr;
@@ -271,7 +273,9 @@ Camera * Camera::GetInstance()
 	//return CurrentFound;
 
 	if (!m_pCamera) // null or doesn't exist
+	{
 		m_pCamera = new Camera;
+	}
 	return m_pCamera;
 }
 
@@ -292,6 +296,8 @@ void Camera::DestoryInstance()
 	//}
 
 	if (m_pCamera)
+	{
 		delete m_pCamera;
+	}
 	m_pCamera = nullptr;
 }

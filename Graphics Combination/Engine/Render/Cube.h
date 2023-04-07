@@ -1,16 +1,4 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    Cube.h
-// Description    	:    Header file outlining the Class
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -21,14 +9,18 @@ class Cube : public Mesh
 {
 public:
 	Cube(float fWidth, float fHeight, float fDepth, glm::vec4 Colour);
-	Cube(float fWidth, float fHeight, float fDepth, glm::vec4 Colour, const char *  TextureSource, glm::vec4 UVCoords = glm::vec4(0, 1, 0, 1));
+
+	Cube(float fWidth, float fHeight, float fDepth, glm::vec4 Colour, const char* TextureSource, glm::vec4 UVCoords = glm::vec4(0, 1, 0, 1));
+
 	~Cube();
 
 	void BindCube();
-	void Rebind();
+
+	void Rebind() override;
+
 	void SetLit(bool _bIsLit);
 
-	void Render(Utils::Transform Newtransform);
-	void Update();	
-};
+	void Render(Utils::Transform Newtransform) override;
 
+	void Update() override;
+};

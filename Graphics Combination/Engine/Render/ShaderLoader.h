@@ -1,16 +1,4 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name		:    ShaderLoader.h
-// Description		:    Header file outlining the Class
-// Author			:    Alex Coultas
-// Mail				:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -22,23 +10,24 @@
 
 class ShaderLoader
 {
-	private:
+private:
+	std::string ReadShader(const char* filename);
 
-		std::string ReadShader(const char *filename);
-		GLuint CreateShader(GLenum shaderType,
-			std::string source,
-			const char* shaderName);
+	GLuint CreateShader(GLenum shaderType,
+	                    std::string source,
+	                    const char* shaderName);
 
-	public:
-		ShaderLoader(void);
-		~ShaderLoader(void);
-		GLuint CreateProgram(const char* VertexShaderFilename,
-			const char* FragmentShaderFilename, const char* GeometryShaderFilename);
+public:
+	ShaderLoader(void);
 
-		GLuint CreateTessProgram(const char* VertexShaderFilename,
-			const char* FragmentShaderFilename, const char* TessControlShaderFilename,
-			const char* TessEvalShaderFilename);
+	~ShaderLoader(void);
 
-		GLuint CreateComputeProgram(const char* ComputeShaderFilename);
+	GLuint CreateProgram(const char* VertexShaderFilename,
+	                     const char* FragmentShaderFilename, const char* GeometryShaderFilename);
 
+	GLuint CreateTessProgram(const char* VertexShaderFilename,
+	                         const char* FragmentShaderFilename, const char* TessControlShaderFilename,
+	                         const char* TessEvalShaderFilename);
+
+	GLuint CreateComputeProgram(const char* ComputeShaderFilename);
 };

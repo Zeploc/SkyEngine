@@ -1,3 +1,5 @@
+// Copyright Skyward Studios, Inc. All Rights Reserved.
+
 #pragma once
 
 // This Includes //
@@ -27,18 +29,19 @@ struct InitInfo
 	float CellSpacing;
 };
 
-class Terrain :	public Entity
+class Terrain : public Entity
 {
 public:
-
 	Terrain(Utils::Transform _Transform, Utils::EANCHOR _Anchor, InitInfo& _InitInfo);
+
 	~Terrain();
 
-
-	virtual void DrawEntity() override;
+	void DrawEntity() override;
 
 	void ReadTerrainMap();
+
 	void Smooth();
+
 	float average(int i, int j);
 
 	GLuint program;
@@ -55,7 +58,5 @@ public:
 	LightInfo LightProperties;
 
 private:
-
 	std::vector<std::vector<glm::vec3>> Points;
 };
-

@@ -1,16 +1,4 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name		:    UIButton.h
-// Description		:    Header file outlining the Class
-// Author			:    Alex Coultas
-// Mail				:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -21,8 +9,8 @@
 
 // Engine Includes //
 #include "UIElement.h"
-#include "UIText.h"
 #include "UIImage.h"
+#include "UIText.h"
 
 //class FDelegateWrapper
 //{
@@ -71,13 +59,21 @@
 class DelegateBase
 {
 public:
-	DelegateBase() {};
-	virtual ~DelegateBase() {};
+	DelegateBase()
+	{
+	};
+
+	virtual ~DelegateBase()
+	{
+	};
 	//virtual DelegateBase* copy() {};
 	virtual void operator()()
 	{
 	}
-	DelegateBase(const DelegateBase& other) {};
+
+	DelegateBase(const DelegateBase& other)
+	{
+	};
 };
 
 // TODO: Move out of UI
@@ -85,60 +81,69 @@ template <class T>
 class FDelegate : public DelegateBase
 {
 public:
-	typedef void (T::*fn)();
+	using fn = void(T::*)();
 
-	FDelegate(T* trg, fn op)
-		: m_rTarget(trg)
-		, m_Operation(op)
+	FDelegate(T* trg, fn op) : m_rTarget(trg)
+	                           , m_Operation(op)
 	{
 	}
 
-	virtual void operator()() override
+	void operator()() override
 	{
 		(m_rTarget->*m_Operation)();
 	}
 
-//private:
-	FDelegate(const FDelegate<T>& other) {};
+	//private:
+	FDelegate(const FDelegate<T>& other)
+	{
+	};
 
 	T* m_rTarget;
 	fn m_Operation;
-
 };
-
-
 
 class UIButton : public UIElement
 {
 public:
-	UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, glm::vec4 _HightlightColour, int iWidth, int iHeight, void(*func)() = nullptr);
-	UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, const char* _ImagePath, glm::vec4 _HightlightColour, int iWidth, int iHeight, void(*func)() = nullptr);
+	UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, glm::vec4 _HightlightColour, int iWidth, int iHeight, void (*func)() = nullptr);
+
+	UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, const char* _ImagePath, glm::vec4 _HightlightColour, int iWidth, int iHeight, void (*func)() = nullptr);
+
 	~UIButton();
 
 	void AddText(std::string sText, std::string sFont, int iPSize, glm::vec4 TextColour, Utils::EANCHOR _Anchor);
+
 	void AddText(std::string sText, std::string sFont, int iPSize, glm::vec4 TextColour, Utils::EANCHOR _Anchor, glm::vec2 _v2Offset);
+
 	template <class T>
 	void BindPress(FDelegate<T>* callback)
 	{
 		PressFunc = callback;
 	}
-	void BindHold(void(*func)());
+
+	void BindHold(void (*func)());
+
 	template <class T>
 	void BindRelease(FDelegate<T>* callback)
 	{
 		ReleaseFunc = callback;
 	}
-	void SetActive(bool _bIsActive);
+
+	void SetActive(bool _bIsActive) override;
+
 	void SetPressSound(const char* _SoundPath);
 
 	UIText TextComponent;
 	UIImage ImageComponent;
 
-	void DrawUIElement();
-	void Update();
-	void SetPosition(glm::vec2 _NewPosition);
+	void DrawUIElement() override;
+
+	void Update() override;
+
+	void SetPosition(glm::vec2 _NewPosition) override;
 
 	void Pressed();
+
 	void Hovered();
 
 	bool HoverOverride = false;
@@ -158,10 +163,8 @@ private:
 
 	bool bHasText = false;
 
-
 	glm::vec4 btnColour;
 	glm::vec4 btnHighlightColour;
 
 	const char* m_PressSoundPath = "";
-
 };

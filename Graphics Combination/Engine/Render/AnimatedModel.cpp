@@ -1,18 +1,5 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    AnimatedModel.cpp
-// Description    	:    A model with animations using Assmip
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "AnimatedModel.h"
 
 // Engine Includes //
@@ -28,14 +15,14 @@
 #define TEX_COORD_LOCATION	  1
 #define NORMAL_LOCATION		  2
 #define BONE_ID_LOCATION	  3
-#define BONE_WEIGHT_LOCATION  4 
+#define BONE_WEIGHT_LOCATION  4
 
-
-
-void AnimatedModel::VertexBoneData::addBoneData(int BoneID, float Weight) {
-
-	for (int i = 0; i < ARRAY_SIZE_IN_ELEMENTS(IDs); i++) {
-		if (Weights[i] == 0.0) {
+void AnimatedModel::VertexBoneData::addBoneData(int BoneID, float Weight)
+{
+	for (int i = 0; i < ARRAY_SIZE_IN_ELEMENTS(IDs); i++)
+	{
+		if (Weights[i] == 0.0)
+		{
 			IDs[i] = BoneID;
 			Weights[i] = Weight;
 			return;
@@ -47,18 +34,16 @@ void AnimatedModel::VertexBoneData::addBoneData(int BoneID, float Weight) {
 
 AnimatedModel::AnimatedModel(std::string modelFilename, std::string texFilename)
 {
-	program = Shader::Programs["AnimatedModel"];// _program;
+	program = Shader::Programs["AnimatedModel"]; // _program;
 
 	vao = 0;
 	ZERO_MEM(m_Buffers);
 	m_NumBones = 0;
-	m_pScene = NULL;
+	m_pScene = nullptr;
 	TextureSource = texFilename.c_str();
 
 	BindMesh(modelFilename);
 }
-
-
 
 AnimatedModel::~AnimatedModel()
 {
@@ -73,13 +58,14 @@ void AnimatedModel::Render(Utils::Transform Newtransform)
 	glBindVertexArray(vao);
 	Camera::GetInstance()->SetMVP(Newtransform, program);
 
-	for (GLuint i = 0; i < m_Entries.size(); i++) {
-
+	for (GLuint i = 0; i < m_Entries.size(); i++)
+	{
 		GLuint MaterialIndex = m_Entries[i].MaterialIndex;
 
 		assert(MaterialIndex < m_Textures.size());
 
-		if (m_Textures[MaterialIndex]) {
+		if (m_Textures[MaterialIndex])
+		{
 			//m_Textures[MaterialIndex]->Bind(GL_TEXTURE0);
 			//glBindTexture(GL_TEXTURE_2D, m_Textures[MaterialIndex]);
 
@@ -94,7 +80,7 @@ void AnimatedModel::Render(Utils::Transform Newtransform)
 		//						(void*)(sizeof(GLuint) * m_Entries[i].BaseIndex),
 		//						m_Entries[i].BaseVertex);
 
-		glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, nullptr);
 	}
 
 	// Make sure the VAO is not changed from the outside    
@@ -109,7 +95,6 @@ void AnimatedModel::Rebind()
 {
 	//BindMesh(fileName);
 }
-
 
 void AnimatedModel::BindMesh(std::string fileName)
 {
@@ -133,37 +118,37 @@ void AnimatedModel::BindMesh(std::string fileName)
 	endFrame = 50;
 	animFps = m_pScene->mAnimations[0]->mChannels[0]->mNumPositionKeys / m_pScene->mAnimations[0]->mDuration;
 
-	animStartTime = startFrame / float(animFps);
-	animEndtime = endFrame / float(animFps);
+	animStartTime = startFrame / static_cast<float>(animFps);
+	animEndtime = endFrame / static_cast<float>(animFps);
 	animationTime = animStartTime;
 	animSpeed = 0.500f;
 
-	animTick = 1.0f / float(animFps)  * animSpeed;
+	animTick = 1.0f / static_cast<float>(animFps) * animSpeed;
 
-
-	if (m_pScene) {
-
-		m_GlobalInverseTransform = m_pScene->mRootNode->mTransformation;// scene space
+	if (m_pScene)
+	{
+		m_GlobalInverseTransform = m_pScene->mRootNode->mTransformation; // scene space
 		m_GlobalInverseTransform.Inverse(); //= glm::inverse(m_GlobalInverseTransform); //scene inverse space
 
 		InitFromScene(m_pScene, fileName);
 	}
-	else {
+	else
+	{
 		printf("Error parsing '%s': '%s'\n", fileName.c_str(), m_Importer.GetErrorString());
 	}
 
-
 	const aiAnimation* pAnimation = m_pScene->mAnimations[0];
 
-	for (size_t i = 0; i < pAnimation->mNumChannels; i++) {
-
+	for (size_t i = 0; i < pAnimation->mNumChannels; i++)
+	{
 		aiNodeAnim* pNodeAnim = pAnimation->mChannels[i];
 		std::string nodeName = pNodeAnim->mNodeName.data;
 
 		printf("ChannelName : %s \n", nodeName.c_str());
 
 		// stored in the m_boneinfo vector 
-		if (boneHierarchy.find(nodeName) == boneHierarchy.end()) {
+		if (boneHierarchy.find(nodeName) == boneHierarchy.end())
+		{
 			boneHierarchy[nodeName] = pNodeAnim;
 		}
 	}
@@ -174,7 +159,7 @@ void AnimatedModel::BindMesh(std::string fileName)
 	glBindVertexArray(0);
 }
 
-bool AnimatedModel::InitFromScene(const aiScene * pScene, const std::string Filename)
+bool AnimatedModel::InitFromScene(const aiScene* pScene, const std::string Filename)
 {
 	m_Entries.resize(pScene->mNumMeshes);
 	m_Textures.resize(pScene->mNumMaterials);
@@ -190,8 +175,8 @@ bool AnimatedModel::InitFromScene(const aiScene * pScene, const std::string File
 
 	//count number of vertices and indices
 
-	for (size_t i = 0; i < m_Entries.size(); i++) {
-
+	for (size_t i = 0; i < m_Entries.size(); i++)
+	{
 		m_Entries[i].MaterialIndex = pScene->mMeshes[i]->mMaterialIndex;
 		m_Entries[i].NumIndices = pScene->mMeshes[i]->mNumFaces * 3;
 		m_Entries[i].BaseVertex = numVertices;
@@ -209,36 +194,37 @@ bool AnimatedModel::InitFromScene(const aiScene * pScene, const std::string File
 	indices.reserve(numIndices);
 
 	// initialize the meshes in the scene one by one
-	for (size_t i = 0; i < m_Entries.size(); i++) {
+	for (size_t i = 0; i < m_Entries.size(); i++)
+	{
 		const aiMesh* paiMesh = pScene->mMeshes[i];
 		initMesh(i, paiMesh, positions, normals, texcoords, bones, indices);
 	}
 
-	if (!initMaterials(pScene, Filename)) {
+	if (!initMaterials(pScene, Filename))
+	{
 		return false;
 	}
-
 
 	//generate and populate the buffers with vertex attributes and indices
 	glBindBuffer(GL_ARRAY_BUFFER, m_Buffers[POS_VB]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(positions[0]) * positions.size(), &positions[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(POSITION_LOCATION);
-	glVertexAttribPointer(POSITION_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(POSITION_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_Buffers[TEXCOORD_VB]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(texcoords[0]) * texcoords.size(), &texcoords[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(TEX_COORD_LOCATION);
-	glVertexAttribPointer(TEX_COORD_LOCATION, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(TEX_COORD_LOCATION, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_Buffers[NORMAL_VB]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(normals[0]) * normals.size(), &normals[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(NORMAL_LOCATION);
-	glVertexAttribPointer(NORMAL_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(NORMAL_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_Buffers[BONE_VB]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(bones[0]) * bones.size(), &bones[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(BONE_ID_LOCATION);
-	glVertexAttribIPointer(BONE_ID_LOCATION, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
+	glVertexAttribIPointer(BONE_ID_LOCATION, 4, GL_INT, sizeof(VertexBoneData), static_cast<const GLvoid*>(0));
 	glEnableVertexAttribArray(BONE_WEIGHT_LOCATION);
 	glVertexAttribPointer(BONE_WEIGHT_LOCATION, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)16);
 
@@ -248,36 +234,44 @@ bool AnimatedModel::InitFromScene(const aiScene * pScene, const std::string File
 	return GLCheckError();
 }
 
-bool AnimatedModel::initMaterials(const aiScene * pScene, const std::string filename)
-{// Extract the directory part from the file name
+bool AnimatedModel::initMaterials(const aiScene* pScene, const std::string filename)
+{
+	// Extract the directory part from the file name
 	std::string::size_type SlashIndex = filename.find_last_of("/");
 	std::string Dir;
 
-	if (SlashIndex == std::string::npos) {
+	if (SlashIndex == std::string::npos)
+	{
 		Dir = ".";
 	}
-	else if (SlashIndex == 0) {
+	else if (SlashIndex == 0)
+	{
 		Dir = "/";
 	}
-	else {
+	else
+	{
 		Dir = filename.substr(0, SlashIndex);
 	}
 
 	bool Ret = true;
 
 	// Initialize the materials
-	for (GLuint i = 0; i < pScene->mNumMaterials; i++) {
+	for (GLuint i = 0; i < pScene->mNumMaterials; i++)
+	{
 		const aiMaterial* pMaterial = pScene->mMaterials[i];
 
 		m_Textures[i] = NULL;
 
-		if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
+		if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+		{
 			aiString Path;
 
-			if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
+			if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, nullptr, nullptr, nullptr, nullptr, nullptr) == AI_SUCCESS)
+			{
 				std::string p(Path.data);
 
-				if (p.substr(0, 2) == ".//") {
+				if (p.substr(0, 2) == ".//")
+				{
 					p = p.substr(2, p.size() - 2);
 				}
 
@@ -286,13 +280,14 @@ bool AnimatedModel::initMaterials(const aiScene * pScene, const std::string file
 				GLuint TextureID = loadTexture(FullPath.c_str());
 				m_Textures[i] = TextureID;
 
-				if (m_Textures[i] == 0) {
+				if (m_Textures[i] == 0)
+				{
 					printf("Error loading texture '%s'\n", FullPath.c_str());
 				}
-				else {
+				else
+				{
 					printf("[Animated Model] %d - loaded texture '%s'\n", i, FullPath.c_str());
 				}
-
 			}
 		}
 	}
@@ -319,7 +314,7 @@ GLuint AnimatedModel::loadTexture(std::string texFileName)
 	//** loadImage and create texture
 	// Load image, create texture and generate mipmaps
 	int width, height;
-	unsigned char* image = SOIL_load_image(texFileName.c_str(), &width, &height, 0, SOIL_LOAD_RGBA);
+	unsigned char* image = SOIL_load_image(texFileName.c_str(), &width, &height, nullptr, SOIL_LOAD_RGBA);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	SOIL_free_image_data(image);
@@ -329,13 +324,13 @@ GLuint AnimatedModel::loadTexture(std::string texFileName)
 	return mtexture;
 }
 
-void AnimatedModel::initMesh(GLuint meshIndex, const aiMesh * paiMesh, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<glm::vec2>& texcoords, std::vector<VertexBoneData>& bones, std::vector<GLuint>& indices)
+void AnimatedModel::initMesh(GLuint meshIndex, const aiMesh* paiMesh, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<glm::vec2>& texcoords, std::vector<VertexBoneData>& bones, std::vector<GLuint>& indices)
 {
 	const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
 
 	//populate the vertex attribute vectors
-	for (size_t i = 0; i < paiMesh->mNumVertices; i++) {
-
+	for (size_t i = 0; i < paiMesh->mNumVertices; i++)
+	{
 		const aiVector3D* pPos = &(paiMesh->mVertices[i]);
 		const aiVector3D* pNormals = &(paiMesh->mNormals[i]);
 		const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
@@ -345,13 +340,12 @@ void AnimatedModel::initMesh(GLuint meshIndex, const aiMesh * paiMesh, std::vect
 		texcoords.push_back(glm::vec2(pTexCoord->x, pTexCoord->y));
 	}
 
-
 	//load bones 
 	loadBones(meshIndex, paiMesh, bones);
 
 	// populate the index buffer
-	for (size_t i = 0; i < paiMesh->mNumFaces; i++) {
-
+	for (size_t i = 0; i < paiMesh->mNumFaces; i++)
+	{
 		const aiFace& face = paiMesh->mFaces[i];
 		assert(face.mNumIndices == 3);
 
@@ -361,30 +355,34 @@ void AnimatedModel::initMesh(GLuint meshIndex, const aiMesh * paiMesh, std::vect
 	}
 }
 
-void AnimatedModel::loadBones(int meshIndex, const aiMesh * pMesh, std::vector<VertexBoneData>& bones)
+void AnimatedModel::loadBones(int meshIndex, const aiMesh* pMesh, std::vector<VertexBoneData>& bones)
 {
-	for (int i = 0; i < pMesh->mNumBones; i++) {
+	for (int i = 0; i < pMesh->mNumBones; i++)
+	{
 		int BoneIndex = 0;
 		std::string BoneName(pMesh->mBones[i]->mName.data);
 
 		//gets the initial offset matrix for each bone
 		// stored in the m_boneinfo vector 
-		if (m_BoneMapping.find(BoneName) == m_BoneMapping.end()) {
+		if (m_BoneMapping.find(BoneName) == m_BoneMapping.end())
+		{
 			// Allocate an index for a new bone
 			BoneIndex = m_NumBones;
 			m_NumBones++;
 			BoneInfo bi;
 			m_BoneInfo.push_back(bi);
-			m_BoneInfo[BoneIndex].BoneOffset = pMesh->mBones[i]->mOffsetMatrix;// is the inverse bind pose matrix
+			m_BoneInfo[BoneIndex].BoneOffset = pMesh->mBones[i]->mOffsetMatrix; // is the inverse bind pose matrix
 			m_BoneMapping[BoneName] = BoneIndex;
 		}
-		else {
+		else
+		{
 			BoneIndex = m_BoneMapping[BoneName];
 		}
 
 		//gets the bone index and bone weight of each bone
 		// stored in bones vector
-		for (int j = 0; j < pMesh->mBones[i]->mNumWeights; j++) {
+		for (int j = 0; j < pMesh->mBones[i]->mNumWeights; j++)
+		{
 			int VertexID = m_Entries[meshIndex].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
 			float Weight = pMesh->mBones[i]->mWeights[j].mWeight;
 			bones[VertexID].addBoneData(BoneIndex, Weight);
@@ -392,16 +390,14 @@ void AnimatedModel::loadBones(int meshIndex, const aiMesh * pMesh, std::vector<V
 	}
 }
 
-
-void AnimatedModel::setShaderEffectVariables() {
-
+void AnimatedModel::setShaderEffectVariables()
+{
 	glUseProgram(program);
 
 	//if(bIsTextureSet)
 	//glActiveTexture(GL_TEXTURE0);
 	//glBindTexture(GL_TEXTURE_2D, textureID);
 	//glUniform1i(glGetUniformLocation(program, "Texture"), 0);
-
 
 	//glm::mat4 model;
 
@@ -433,7 +429,8 @@ void AnimatedModel::setShaderEffectVariables() {
 	//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
 	// get uniform location for transforms
-	for (unsigned int i = 0; i < ARRAY_SIZE(m_boneLocation); i++) {
+	for (unsigned int i = 0; i < ARRAY_SIZE(m_boneLocation); i++)
+	{
 		char name[128];
 		memset(name, 0, sizeof(name));
 		sprintf_s(name, "jointTransforms[%d]", i);
@@ -444,11 +441,11 @@ void AnimatedModel::setShaderEffectVariables() {
 
 	boneTransforms(transforms);
 
-	for (int i = 0; i < transforms.size(); i++) {
+	for (int i = 0; i < transforms.size(); i++)
+	{
 		Matrix4f Transform = transforms[i];
-		glUniformMatrix4fv(m_boneLocation[i], 1, GL_TRUE, (const GLfloat*)(Transform));
+		glUniformMatrix4fv(m_boneLocation[i], 1, GL_TRUE, static_cast<const GLfloat*>(Transform));
 	}
-
 
 	// lighting calculations
 	GLint colorLoc = glGetUniformLocation(program, "objectColor");
@@ -468,12 +465,10 @@ void AnimatedModel::setShaderEffectVariables() {
 
 	GLuint ambientStrengthLoc = glGetUniformLocation(program, "ambientStrength");
 	glUniform1f(ambientStrengthLoc, 0.5f);
-
-
 }
 
-
-void AnimatedModel::boneTransforms(std::vector<Matrix4f>& transforms) {
+void AnimatedModel::boneTransforms(std::vector<Matrix4f>& transforms)
+{
 	Matrix4f Identity;
 	Identity.InitIdentity();
 
@@ -483,7 +478,8 @@ void AnimatedModel::boneTransforms(std::vector<Matrix4f>& transforms) {
 	//float AnimationTime = fmod(TimeInTicks, animDuration);
 
 	animationTime += animTick;
-	if (animationTime >= animEndtime) {
+	if (animationTime >= animEndtime)
+	{
 		animationTime = animStartTime;
 	}
 
@@ -491,16 +487,16 @@ void AnimatedModel::boneTransforms(std::vector<Matrix4f>& transforms) {
 
 	transforms.resize(m_NumBones);
 
-	for (GLuint i = 0; i < m_NumBones; i++) {
+	for (GLuint i = 0; i < m_NumBones; i++)
+	{
 		transforms[i] = m_BoneInfo[i].FinalTransformation;
 	}
-
 }
 
-void AnimatedModel::setCurrentAnimation(int startFrameNum, int endFramNum) {
-
-	animStartTime = startFrameNum / float(animFps);
-	animEndtime = endFramNum / float(animFps);
+void AnimatedModel::setCurrentAnimation(int startFrameNum, int endFramNum)
+{
+	animStartTime = startFrameNum / static_cast<float>(animFps);
+	animEndtime = endFramNum / static_cast<float>(animFps);
 
 	animationTime = animStartTime;
 }
@@ -509,8 +505,8 @@ void AnimatedModel::setCurrentAnimation(int startFrameNum, int endFramNum) {
 // Helper functions
 //////////////////////////////////////////////
 
-void AnimatedModel::ReadNodeHeirarchy(float AnimationTime, const aiNode * pNode, const Matrix4f & ParentTransform) {
-
+void AnimatedModel::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const Matrix4f& ParentTransform)
+{
 	std::string NodeName(pNode->mName.data);
 
 	const aiAnimation* pAnimation = m_pScene->mAnimations[0];
@@ -520,8 +516,8 @@ void AnimatedModel::ReadNodeHeirarchy(float AnimationTime, const aiNode * pNode,
 
 	const aiNodeAnim* pNodeAnim = FindNodeAnim(pAnimation, NodeName);
 
-	if (pNodeAnim) {
-
+	if (pNodeAnim)
+	{
 		// Interpolate translation and generate translation transformation matrix
 		aiVector3D Translation;
 		CalcInterpolatedPosition(Translation, AnimationTime, pNodeAnim);
@@ -539,7 +535,8 @@ void AnimatedModel::ReadNodeHeirarchy(float AnimationTime, const aiNode * pNode,
 		// Interpolate scaling and generate scaling transformation matrix
 		aiVector3D Scaling;
 		CalcInterpolatedScaling(Scaling, AnimationTime, pNodeAnim);
-		Matrix4f ScalingM; ScalingM.InitIdentity();
+		Matrix4f ScalingM;
+		ScalingM.InitIdentity();
 		ScalingM.InitScaleTransform(Scaling.x, Scaling.y, Scaling.z);
 		//glm::mat4 ScalingM = glm::scale(glm::mat4(), glm::vec3(Scaling.x, Scaling.y, Scaling.z));
 
@@ -550,20 +547,22 @@ void AnimatedModel::ReadNodeHeirarchy(float AnimationTime, const aiNode * pNode,
 	Matrix4f modalAnimParentTransform = ParentTransform * //modalSpace parentBone animTransform
 		NodeTransformation; //boneSpace currentbone animTransform
 
-	if (m_BoneMapping.find(NodeName) != m_BoneMapping.end()) {
+	if (m_BoneMapping.find(NodeName) != m_BoneMapping.end())
+	{
 		size_t BoneIndex = m_BoneMapping[NodeName];
 		m_BoneInfo[BoneIndex].FinalTransformation = m_GlobalInverseTransform * // sceneSpace transform 
 			modalAnimParentTransform * // modelspace anim transform for current bone
 			m_BoneInfo[BoneIndex].BoneOffset; // modelSpace inverse pose transform for current bone
 	}
 
-	for (size_t i = 0; i < pNode->mNumChildren; i++) {
+	for (size_t i = 0; i < pNode->mNumChildren; i++)
+	{
 		ReadNodeHeirarchy(AnimationTime, pNode->mChildren[i], modalAnimParentTransform);
 	}
 }
 
-const aiNodeAnim * AnimatedModel::FindNodeAnim(const aiAnimation* pAnimation, std::string NodeName) {
-
+const aiNodeAnim* AnimatedModel::FindNodeAnim(const aiAnimation* pAnimation, std::string NodeName)
+{
 	/*
 	for (size_t i = 0; i < pAnimation->mNumChannels; i++) {
 		const aiNodeAnim* pNodeAnim = pAnimation->mChannels[i];// a channel is a bone with all tranformation information
@@ -574,17 +573,19 @@ const aiNodeAnim * AnimatedModel::FindNodeAnim(const aiAnimation* pAnimation, st
 	*/
 
 	//optimized implementation of above code
-	if (boneHierarchy.find(NodeName) != boneHierarchy.end()) {
+	if (boneHierarchy.find(NodeName) != boneHierarchy.end())
+	{
 		const aiNodeAnim* pNodeAnim = boneHierarchy[NodeName];
 		return pNodeAnim;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void AnimatedModel::CalcInterpolatedPosition(aiVector3D & out, float AnimationTime, const aiNodeAnim * pNodeAnim) {
-
-	if (pNodeAnim->mNumPositionKeys == 1) {
+void AnimatedModel::CalcInterpolatedPosition(aiVector3D& out, float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
+	if (pNodeAnim->mNumPositionKeys == 1)
+	{
 		out = pNodeAnim->mPositionKeys[0].mValue;
 		return;
 	}
@@ -593,8 +594,8 @@ void AnimatedModel::CalcInterpolatedPosition(aiVector3D & out, float AnimationTi
 	size_t NextPositionIndex = (positionIndex + 1);
 	assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
 
-	float deltaTime = (float)(pNodeAnim->mPositionKeys[NextPositionIndex].mTime - pNodeAnim->mPositionKeys[positionIndex].mTime);
-	float factor = (AnimationTime - (float)pNodeAnim->mPositionKeys[positionIndex].mTime) / deltaTime;
+	float deltaTime = static_cast<float>(pNodeAnim->mPositionKeys[NextPositionIndex].mTime - pNodeAnim->mPositionKeys[positionIndex].mTime);
+	float factor = (AnimationTime - static_cast<float>(pNodeAnim->mPositionKeys[positionIndex].mTime)) / deltaTime;
 
 	assert(factor >= 0.0f && factor <= 1.0f);
 
@@ -603,13 +604,14 @@ void AnimatedModel::CalcInterpolatedPosition(aiVector3D & out, float AnimationTi
 	aiVector3D delta = end - start;
 
 	out = start + factor * delta;
-
 }
 
-GLuint AnimatedModel::FindPosition(float AnimationTime, const aiNodeAnim * pNodeAnim) {
-
-	for (size_t i = 0; i < pNodeAnim->mNumPositionKeys - 1; i++) {
-		if (AnimationTime < (float)pNodeAnim->mPositionKeys[i + 1].mTime) {
+GLuint AnimatedModel::FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
+	for (size_t i = 0; i < pNodeAnim->mNumPositionKeys - 1; i++)
+	{
+		if (AnimationTime < static_cast<float>(pNodeAnim->mPositionKeys[i + 1].mTime))
+		{
 			return i;
 		}
 	}
@@ -618,10 +620,11 @@ GLuint AnimatedModel::FindPosition(float AnimationTime, const aiNodeAnim * pNode
 	return 0;
 }
 
-void AnimatedModel::CalcInterpolatedRotation(aiQuaternion & out, float AnimationTime, const aiNodeAnim * pNodeAnim) {
-
+void AnimatedModel::CalcInterpolatedRotation(aiQuaternion& out, float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
 	// we need at least two values to interpolate...
-	if (pNodeAnim->mNumRotationKeys == 1) {
+	if (pNodeAnim->mNumRotationKeys == 1)
+	{
 		out = pNodeAnim->mRotationKeys[0].mValue;
 		return;
 	}
@@ -629,8 +632,8 @@ void AnimatedModel::CalcInterpolatedRotation(aiQuaternion & out, float Animation
 	size_t RotationIndex = FindRotation(AnimationTime, pNodeAnim);
 	size_t NextRotationIndex = (RotationIndex + 1);
 	assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
-	float DeltaTime = (float)(pNodeAnim->mRotationKeys[NextRotationIndex].mTime - pNodeAnim->mRotationKeys[RotationIndex].mTime);
-	float Factor = (AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
+	float DeltaTime = static_cast<float>(pNodeAnim->mRotationKeys[NextRotationIndex].mTime - pNodeAnim->mRotationKeys[RotationIndex].mTime);
+	float Factor = (AnimationTime - static_cast<float>(pNodeAnim->mRotationKeys[RotationIndex].mTime)) / DeltaTime;
 	assert(Factor >= 0.0f && Factor <= 1.0f);
 	const aiQuaternion& StartRotationQ = pNodeAnim->mRotationKeys[RotationIndex].mValue;
 	const aiQuaternion& EndRotationQ = pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
@@ -638,14 +641,15 @@ void AnimatedModel::CalcInterpolatedRotation(aiQuaternion & out, float Animation
 	out = out.Normalize();
 }
 
-
-GLuint AnimatedModel::FindRotation(float AnimationTime, const aiNodeAnim * pNodeAnim) {
-
+GLuint AnimatedModel::FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
 	// TODO: Confirm mTime > 0 is correct (Previously checked if keys was more than 0, indicating length more than zero for below)
 	assert(pNodeAnim->mRotationKeys->mTime > 0.0);
 
-	for (size_t i = 0; pNodeAnim->mNumRotationKeys - 1; i++) {
-		if (AnimationTime < (float)pNodeAnim->mRotationKeys[i + 1].mTime) {
+	for (size_t i = 0; pNodeAnim->mNumRotationKeys - 1; i++)
+	{
+		if (AnimationTime < static_cast<float>(pNodeAnim->mRotationKeys[i + 1].mTime))
+		{
 			return i;
 		}
 	}
@@ -654,10 +658,11 @@ GLuint AnimatedModel::FindRotation(float AnimationTime, const aiNodeAnim * pNode
 	return 0;
 }
 
-void AnimatedModel::CalcInterpolatedScaling(aiVector3D & out, float AnimationTime, const aiNodeAnim * pNodeAnim)
+void AnimatedModel::CalcInterpolatedScaling(aiVector3D& out, float AnimationTime, const aiNodeAnim* pNodeAnim)
 {
 	{
-		if (pNodeAnim->mNumScalingKeys == 1) {
+		if (pNodeAnim->mNumScalingKeys == 1)
+		{
 			out = pNodeAnim->mScalingKeys[0].mValue;
 			return;
 		}
@@ -665,24 +670,24 @@ void AnimatedModel::CalcInterpolatedScaling(aiVector3D & out, float AnimationTim
 		size_t ScalingIndex = FindScaling(AnimationTime, pNodeAnim);
 		size_t NextScalingIndex = (ScalingIndex + 1);
 		assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
-		float DeltaTime = (float)(pNodeAnim->mScalingKeys[NextScalingIndex].mTime - pNodeAnim->mScalingKeys[ScalingIndex].mTime);
-		float Factor = (AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime) / DeltaTime;
+		float DeltaTime = static_cast<float>(pNodeAnim->mScalingKeys[NextScalingIndex].mTime - pNodeAnim->mScalingKeys[ScalingIndex].mTime);
+		float Factor = (AnimationTime - static_cast<float>(pNodeAnim->mScalingKeys[ScalingIndex].mTime)) / DeltaTime;
 		assert(Factor >= 0.0f && Factor <= 1.0f);
 		const aiVector3D& Start = pNodeAnim->mScalingKeys[ScalingIndex].mValue;
 		const aiVector3D& End = pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
 		aiVector3D Delta = End - Start;
 		out = Start + Factor * Delta;
-
 	}
 }
 
-
-GLuint AnimatedModel::FindScaling(float AnimationTime, const aiNodeAnim * pNodeAnim) {
-
+GLuint AnimatedModel::FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
 	assert(pNodeAnim->mNumScalingKeys > 0);
 
-	for (size_t i = 0; i < pNodeAnim->mNumScalingKeys - 1; i++) {
-		if (AnimationTime < (float)pNodeAnim->mScalingKeys[i + 1].mTime) {
+	for (size_t i = 0; i < pNodeAnim->mNumScalingKeys - 1; i++)
+	{
+		if (AnimationTime < static_cast<float>(pNodeAnim->mScalingKeys[i + 1].mTime))
+		{
 			return i;
 		}
 	}
@@ -691,21 +696,21 @@ GLuint AnimatedModel::FindScaling(float AnimationTime, const aiNodeAnim * pNodeA
 	return 0;
 }
 
-
-void AnimatedModel::Clear() {
-
-
-	for (size_t i = 0; i < m_Textures.size(); i++) {
+void AnimatedModel::Clear()
+{
+	for (size_t i = 0; i < m_Textures.size(); i++)
+	{
 		//SAFE_DELETE(m_Textures[i]);
 	}
 
-	if (m_Buffers[0] != 0) {
+	if (m_Buffers[0] != 0)
+	{
 		glDeleteBuffers(ARRAY_SIZE_IN_ELEMENTS(m_Buffers), m_Buffers);
 	}
 
-	if (vao != 0) {
+	if (vao != 0)
+	{
 		glDeleteVertexArrays(1, &vao);
 		vao = 0;
 	}
 }
-

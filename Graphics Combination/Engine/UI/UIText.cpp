@@ -1,25 +1,12 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    UIText.cpp
-// Description    	:    main implementation for UIText
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "UIText.h"
 
 // Library Includes //
 
 // OpenGL Library Includes //
-#include <glm\gtx\string_cast.hpp>
 #include <glew.h>
+#include <glm/gtx/string_cast.hpp>
 
 // Engine Includes //
 #include "Text.h"
@@ -27,9 +14,7 @@
 
 // Local Includes //
 
-
 // Static Variables //
-
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -37,8 +22,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-UIText::UIText(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string Font, int _iPSize, Utils::EANCHOR _Anchor)
-	: UIElement(_Position, _fRotation, _Colour), sText(_sText), sFont(Font), iPSize(_iPSize), Anchor(_Anchor)
+UIText::UIText(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string Font, int _iPSize, Utils::EANCHOR _Anchor) : UIElement(_Position, _fRotation, _Colour), sText(_sText), sFont(Font), iPSize(_iPSize), Anchor(_Anchor)
 {
 	Shader::AddFont(Font, iPSize);
 }
@@ -49,8 +33,7 @@ UIText::UIText(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::st
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-UIText::UIText(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour)
-	: UIElement(_Position, _fRotation, _Colour)
+UIText::UIText(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour) : UIElement(_Position, _fRotation, _Colour)
 {
 	sText = "";
 }
@@ -63,7 +46,6 @@ UIText::UIText(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour)
 ************************************************************/
 UIText::~UIText()
 {
-
 }
 
 /************************************************************
@@ -75,7 +57,9 @@ UIText::~UIText()
 void UIText::DrawUIElement()
 {
 	if (!bActive || sText == "")
+	{
 		return;
+	}
 	glUseProgram(Shader::Programs["TextUIprogram"]);
 	Text::Render(sText, sFont, iPSize, position, Colour, Anchor);
 }

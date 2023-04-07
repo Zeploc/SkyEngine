@@ -1,30 +1,17 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    Level.cpp
-// Description    	:    main implementation for Level
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "CubeMap.h"
 
 // Local Includes //
 
 // Engine Includes //
-#include "Shader.h"
 #include "Camera.h"
+#include "Shader.h"
 
 // OpenGL Includes //
 #include <SOIL.h>
-#include <glm\gtc\matrix_transform.hpp>
-#include <glm\gtc\type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Engine/Camera/Camera.h"
 
@@ -34,7 +21,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CubeMap::CubeMap(float fWidth, float fHeight, float fDepth, char *  _TextureSources[6])
+CubeMap::CubeMap(float fWidth, float fHeight, float fDepth, char* _TextureSources[6])
 {
 	TextureSources[0] = _TextureSources[0];
 	TextureSources[1] = _TextureSources[1];
@@ -51,7 +38,6 @@ CubeMap::CubeMap(float fWidth, float fHeight, float fDepth, char *  _TextureSour
 	BindCubeMap();
 	program = Shader::Programs["CubeMapProgram"];
 }
-
 
 /************************************************************
 #--Description--#:  Destructor function
@@ -78,35 +64,35 @@ void CubeMap::BindCubeMap()
 	GLfloat vertices[] = {
 		// Positions								// Colors			
 		// Front Face
-		-fHalfWidth, fHalfHeight, fHalfDepth,	
-		fHalfWidth, fHalfHeight, fHalfDepth,	
-		fHalfWidth, -fHalfHeight, fHalfDepth,	
-		-fHalfWidth, -fHalfHeight, fHalfDepth,	
+		-fHalfWidth, fHalfHeight, fHalfDepth,
+		fHalfWidth, fHalfHeight, fHalfDepth,
+		fHalfWidth, -fHalfHeight, fHalfDepth,
+		-fHalfWidth, -fHalfHeight, fHalfDepth,
 		// Right Face
-		fHalfWidth, fHalfHeight, fHalfDepth,	
-		fHalfWidth, fHalfHeight, -fHalfDepth,	
-		fHalfWidth, -fHalfHeight, -fHalfDepth,	
-		fHalfWidth, -fHalfHeight, fHalfDepth,	
+		fHalfWidth, fHalfHeight, fHalfDepth,
+		fHalfWidth, fHalfHeight, -fHalfDepth,
+		fHalfWidth, -fHalfHeight, -fHalfDepth,
+		fHalfWidth, -fHalfHeight, fHalfDepth,
 		// Back Face
-		fHalfWidth, fHalfHeight, -fHalfDepth,	
-		-fHalfWidth, fHalfHeight, -fHalfDepth,	
-		-fHalfWidth, -fHalfHeight, -fHalfDepth,	
-		fHalfWidth, -fHalfHeight, -fHalfDepth,	
+		fHalfWidth, fHalfHeight, -fHalfDepth,
+		-fHalfWidth, fHalfHeight, -fHalfDepth,
+		-fHalfWidth, -fHalfHeight, -fHalfDepth,
+		fHalfWidth, -fHalfHeight, -fHalfDepth,
 		// Left Face
-		-fHalfWidth, fHalfHeight, -fHalfDepth,	
-		-fHalfWidth, fHalfHeight, fHalfDepth,	
-		-fHalfWidth, -fHalfHeight, fHalfDepth,	
-		-fHalfWidth, -fHalfHeight, -fHalfDepth,	
+		-fHalfWidth, fHalfHeight, -fHalfDepth,
+		-fHalfWidth, fHalfHeight, fHalfDepth,
+		-fHalfWidth, -fHalfHeight, fHalfDepth,
+		-fHalfWidth, -fHalfHeight, -fHalfDepth,
 		// Top Face
-		-fHalfWidth, fHalfHeight, -fHalfDepth,	
-		fHalfWidth, fHalfHeight, -fHalfDepth,	
-		fHalfWidth, fHalfHeight, fHalfDepth,	
-		-fHalfWidth, fHalfHeight, fHalfDepth,	
+		-fHalfWidth, fHalfHeight, -fHalfDepth,
+		fHalfWidth, fHalfHeight, -fHalfDepth,
+		fHalfWidth, fHalfHeight, fHalfDepth,
+		-fHalfWidth, fHalfHeight, fHalfDepth,
 		// Bottom Face
-		-fHalfWidth, -fHalfHeight, fHalfDepth,	
-		fHalfWidth, -fHalfHeight, fHalfDepth,	
-		fHalfWidth, -fHalfHeight, -fHalfDepth,	
-		-fHalfWidth, -fHalfHeight, -fHalfDepth	
+		-fHalfWidth, -fHalfHeight, fHalfDepth,
+		fHalfWidth, -fHalfHeight, fHalfDepth,
+		fHalfWidth, -fHalfHeight, -fHalfDepth,
+		-fHalfWidth, -fHalfHeight, -fHalfDepth
 	};
 
 	GLuint indices[] = {
@@ -141,9 +127,9 @@ void CubeMap::BindCubeMap()
 	{
 		std::string fullPathName = "Resources/Textures/CubeMap/";
 		fullPathName.append(TextureSources[i]);
-		image = SOIL_load_image(fullPathName.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB,	width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-		SOIL_free_image_data(image);	
+		image = SOIL_load_image(fullPathName.c_str(), &width, &height, nullptr, SOIL_LOAD_RGB);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+		SOIL_free_image_data(image);
 	}
 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -162,7 +148,7 @@ void CubeMap::BindCubeMap()
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), static_cast<GLvoid*>(0));
 	glEnableVertexAttribArray(0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
@@ -199,13 +185,13 @@ void CubeMap::Render(Utils::Transform Newtransform)
 	glUniform1i(glGetUniformLocation(Shader::Programs["CubeMapProgram"], "cubeSampler"), 0);
 
 	Camera::GetInstance()->SetMVP(Newtransform, program);
-	
+
 	glActiveTexture(GL_TEXTURE1);
 	glUniform1i(glGetUniformLocation(program, "skybox"), 1);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
 
 	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, m_iIndicies, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, m_iIndicies, GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 	glDisable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 }

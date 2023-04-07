@@ -1,6 +1,4 @@
-
-// Credit File to
-// https://www.codeproject.com/Articles/26949/Xbox-Controller-Input-in-C-with-XInput
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #ifndef _XBOX_CONTROLLER_H_
 #define _XBOX_CONTROLLER_H_
@@ -43,11 +41,14 @@ private:
 
 public:
 	XBOXController(int playerNumber);
-	XINPUT_STATE GetState();
-	bool IsConnected();
-	void Vibrate(int leftVal = 0, int rightVal = 0);
-	void Update();
 
+	XINPUT_STATE GetState();
+
+	bool IsConnected();
+
+	void Vibrate(int leftVal = 0, int rightVal = 0);
+
+	void Update();
 
 	unsigned int ControllerButtons[14];
 };

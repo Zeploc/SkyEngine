@@ -1,23 +1,10 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    Pyramid.cpp
-// Description    	:    Pyramid Mesh
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "Sphere.h"
 
 // Engine Includes //
-#include "Shader.h"
 #include "Lighting.h"
+#include "Shader.h"
 
 // OpenGL Library //
 #include <SOIL.h>
@@ -56,7 +43,7 @@ Sphere::Sphere(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour)
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Sphere::Sphere(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, const char * _TextureSource, glm::vec4 _UVCoords)
+Sphere::Sphere(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, const char* _TextureSource, glm::vec4 _UVCoords)
 {
 	m_fWidth = fWidth;
 	m_fHeight = fHeight;
@@ -97,7 +84,7 @@ void Sphere::BindSphere()
 	double phi = 0;
 	double theta = 0;
 
-	float vertices[(sections) * (sections)* vertexAttrib];
+	float vertices[(sections) * (sections) * vertexAttrib];
 	int offset = 0;
 	for (int i = 0; i < sections; i++)
 	{
@@ -105,9 +92,9 @@ void Sphere::BindSphere()
 
 		for (int j = 0; j < sections; j++)
 		{
-			float x = (float)(cos(phi)) *(float)(sin(theta));
-			float y = (float)(cos(theta));
-			float z = (float)(sin(phi)) *  (float)(sin(theta));
+			float x = static_cast<float>(cos(phi)) * static_cast<float>(sin(theta));
+			float y = static_cast<float>(cos(theta));
+			float z = static_cast<float>(sin(phi)) * static_cast<float>(sin(theta));
 
 			vertices[offset++] = x * m_fWidth;
 			vertices[offset++] = y * m_fHeight;
@@ -118,8 +105,8 @@ void Sphere::BindSphere()
 			vertices[offset++] = Colour.z;
 			vertices[offset++] = Colour.a;
 
-			vertices[offset++] = (float)i / (sections - 1);
-			vertices[offset++] = (float)j / (sections - 1);
+			vertices[offset++] = static_cast<float>(i) / (sections - 1);
+			vertices[offset++] = static_cast<float>(j) / (sections - 1);
 
 			vertices[offset++] = x;
 			vertices[offset++] = y;
@@ -133,7 +120,7 @@ void Sphere::BindSphere()
 		phi += (2 * 3.14159265359) / (sections - 1);
 	}
 
-	GLuint indices[(sections) * (sections)* indexPerQuad];
+	GLuint indices[(sections) * (sections) * indexPerQuad];
 	offset = 0;
 	for (int i = 0; i < sections; i++)
 	{
@@ -162,7 +149,7 @@ void Sphere::BindSphere()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, vertexAttrib * sizeof(GLfloat), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, vertexAttrib * sizeof(GLfloat), static_cast<void*>(0));
 	glEnableVertexAttribArray(0);
 
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, vertexAttrib * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
@@ -187,13 +174,12 @@ void Sphere::BindSphere()
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		int width, height;
-		unsigned char* image = SOIL_load_image(TextureSource, &width, &height, 0, SOIL_LOAD_RGBA);
+		unsigned char* image = SOIL_load_image(TextureSource, &width, &height, nullptr, SOIL_LOAD_RGBA);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
 		glGenerateMipmap(GL_TEXTURE_2D);
 		SOIL_free_image_data(image);
 		glBindTexture(GL_TEXTURE_2D, 0);
-
 	}
 }
 
@@ -225,7 +211,7 @@ void Sphere::SetLit(bool _bIsLit)
 		{
 			program = Shader::Programs["BaseProgram"];
 		}
-	}	
+	}
 }
 
 /************************************************************

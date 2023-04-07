@@ -1,18 +1,5 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    Level.cpp
-// Description    	:    Plane Mesh
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "GeometryObject.h"
 
 // OpenGL Library //
@@ -27,7 +14,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-GeometryObject::GeometryObject(glm::vec4  _Colour)
+GeometryObject::GeometryObject(glm::vec4 _Colour)
 {
 	m_fWidth = 1;
 	m_fHeight = 1;
@@ -60,16 +47,14 @@ GeometryObject::~GeometryObject()
 ************************************************************/
 void GeometryObject::BindGeometryObject()
 {
-	
 	GLfloat vertices[] = {
 		// Position						// Color		
-		0.0f, 0.0f, 0.0f,				 Colour.r, Colour.g, Colour.b, Colour.a, //passing in 1 point
+		0.0f, 0.0f, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a, //passing in 1 point
 	};
 
 	// If no texture, texture source is equal to ""
 	vao = Shader::CreateBuffer("", texture, true);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
 }
 
 /************************************************************
@@ -82,7 +67,6 @@ void GeometryObject::Rebind()
 {
 	BindGeometryObject();
 }
-
 
 /************************************************************
 #--Description--#:	Render Current Mesh to the screen
@@ -111,4 +95,3 @@ void GeometryObject::Render(Utils::Transform Newtransform)
 	glDrawArrays(GL_POINTS, 0, 1);
 	glBindVertexArray(0);
 }
-

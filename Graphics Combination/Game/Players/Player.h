@@ -1,16 +1,4 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name		:    Player.h
-// Description		:    Header file outlining the Class
-// Author			:    Alex Coultas
-// Mail				:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -32,17 +20,19 @@ enum CurrentAnimState
 	JUMP
 };
 
-class Player :	public Entity
+class Player : public Entity
 {
 public:
-
 	Player(glm::vec3 StartPosition);
-	~Player();
-	
-	virtual void Update() override;
-	virtual void DrawEntity() override;
 
-	int GetID() {
+	~Player();
+
+	void Update() override;
+
+	void DrawEntity() override;
+
+	int GetID()
+	{
 		return m_iPlayerID;
 	};
 
@@ -50,9 +40,7 @@ public:
 
 	std::shared_ptr<class ssAnimatedModel> AnimatedModel;
 
-
 private:
-	
 	CurrentAnimState AnimState = IDLE;
 
 	float YOffset = 0;
@@ -61,5 +49,4 @@ private:
 	float JumpSize = 30.0f;
 
 	int m_iPlayerID = -1;
-
 };

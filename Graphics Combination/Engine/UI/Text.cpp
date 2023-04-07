@@ -1,34 +1,17 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    Text.cpp
-// Description    	:    main implementation for Text
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
+
+#include "Text.h"
 
 // Library Includes //
-#include <map>
-
-// OpenGL Library Includes //
-#include <glm\gtc\matrix_transform.hpp>
-#include <glm\gtc\type_ptr.hpp>
 #include <ft2build.h>
+#include <map>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include FT_FREETYPE_H
 
 // Engine Includes //
-#include "Camera.h"
-#include "Shader.h"
-
-// Local Includes //
-
-// This Includes //
-#include "Text.h"
+#include "Engine/Camera/Camera.h"
+#include "Engine/Render/Shader.h"
 
 // Static Variables //
 std::vector<Text::cFont> Text::Fonts;
@@ -62,8 +45,10 @@ void Text::Render(std::string Text, std::string Font, int iSize, glm::vec2 Posit
 	glm::vec2 NewPos = Utils::GetTextAncoredPosition(Position, glm::vec2(iTextWidth, iSize), _Anchor);
 	int YOffset = TextFont.Characters[0].Bearing.y / 2;
 	if (YOffset == 0)
-		YOffset = (int)((float)iSize * 0.35f);
-	glm::vec2 textPos = glm::vec2(NewPos.x, (GLfloat)Camera::GetInstance()->SCR_HEIGHT - NewPos.y - YOffset);// - TextFont.Characters[0].Size.y / 2);
+	{
+		YOffset = static_cast<int>((float)iSize * 0.35f);
+	}
+	glm::vec2 textPos = glm::vec2(NewPos.x, static_cast<GLfloat>(Camera::GetInstance()->SCR_HEIGHT) - NewPos.y - YOffset); // - TextFont.Characters[0].Size.y / 2);
 	// Enable blending
 	glCullFace(GL_BACK); // Cull the Back faces
 	glFrontFace(GL_CW); // Front face is Clockwise order
@@ -73,23 +58,23 @@ void Text::Render(std::string Text, std::string Font, int iSize, glm::vec2 Posit
 	// Activate corresponding render state
 	//glUseProgram(Shader::Textprogram);
 	glUniform3f(glGetUniformLocation(Shader::Programs["TextUIprogram"], "textColor"), colour.x, colour.y, colour.z);
-	glm::mat4 proj = glm::ortho(0.0f, (GLfloat)Camera::GetInstance()->SCR_WIDTH, 0.0f, (GLfloat)Camera::GetInstance()->SCR_HEIGHT);
-	glUniformMatrix4fv(glGetUniformLocation(Shader::Programs["TextUIprogram"], "proj"), 1, GL_FALSE, glm::value_ptr(proj));
+	glm::mat4 proj = glm::ortho(0.0f, static_cast<GLfloat>(Camera::GetInstance()->SCR_WIDTH), 0.0f, static_cast<GLfloat>(Camera::GetInstance()->SCR_HEIGHT));
+	glUniformMatrix4fv(glGetUniformLocation(Shader::Programs["TextUIprogram"], "proj"), 1, GL_FALSE, value_ptr(proj));
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(TextFont.VAO);
 
 	// Iterate through the Characters
-	for (std::string::const_iterator c = Text.begin(); c != Text.end(); c++)
+	for (std::string::const_iterator c = Text.begin(); c != Text.end(); ++c)
 	{
 		Character ch = TextFont.Characters[*c];
-		GLfloat xpos = textPos.x + ch.Bearing.x;// *scale;
-		GLfloat ypos = textPos.y - (ch.Size.y - ch.Bearing.y);// *scale;
-		GLfloat w = (GLfloat)ch.Size.x;// *scale;
-		GLfloat h = (GLfloat)ch.Size.y;// *scale;
+		GLfloat xpos = textPos.x + ch.Bearing.x; // *scale;
+		GLfloat ypos = textPos.y - (ch.Size.y - ch.Bearing.y); // *scale;
+		GLfloat w = static_cast<GLfloat>(ch.Size.x); // *scale;
+		GLfloat h = static_cast<GLfloat>(ch.Size.y); // *scale;
 		// Update VBO for each character
 		GLfloat vertices[6][4] = {
-			{ xpos, ypos + h, 0.0, 0.0 },{ xpos + w, ypos + h, 1.0, 0.0 },{ xpos + w, ypos, 1.0, 1.0 },
-			{ xpos, ypos + h, 0.0, 0.0 },{ xpos + w, ypos, 1.0, 1.0 },{ xpos, ypos, 0.0, 1.0 },
+			{xpos, ypos + h, 0.0, 0.0}, {xpos + w, ypos + h, 1.0, 0.0}, {xpos + w, ypos, 1.0, 1.0},
+			{xpos, ypos + h, 0.0, 0.0}, {xpos + w, ypos, 1.0, 1.0}, {xpos, ypos, 0.0, 1.0},
 		};
 		// Render the glyph texture over the quad
 		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
@@ -98,12 +83,10 @@ void Text::Render(std::string Text, std::string Font, int iSize, glm::vec2 Posit
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		// Now advance cursors for the next glyph
-		textPos.x += (ch.Advance >> 6);// *scale;
+		textPos.x += (ch.Advance >> 6); // *scale;
 	}
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 }
-
-

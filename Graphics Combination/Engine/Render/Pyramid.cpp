@@ -1,18 +1,5 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    Pyramid.cpp
-// Description    	:    Pyramid Mesh
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "Pyramid.h"
 
 // Engine Includes //
@@ -47,7 +34,7 @@ Pyramid::Pyramid(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour)
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Pyramid::Pyramid(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, const char * _TextureSource, glm::vec4 _UVCoords)
+Pyramid::Pyramid(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, const char* _TextureSource, glm::vec4 _UVCoords)
 {
 	m_fWidth = fWidth;
 	m_fHeight = fHeight;
@@ -85,25 +72,25 @@ void Pyramid::BindPyramid()
 	float fHalfWidth = m_fWidth / 2;
 	float fHalfHeight = m_fHeight / 2;
 	float fHalfDepth = m_fDepth / 2;
-	
+
 	GLfloat Texturedvertices[] = {
 		// Positions								// Colors			
-		-fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		UVCoords.x, UVCoords.z,
-		fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		UVCoords.y, UVCoords.z,
-		fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		UVCoords.y, UVCoords.w,
-		-fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		UVCoords.x, UVCoords.w,
+		-fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, UVCoords.x, UVCoords.z,
+		fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, UVCoords.y, UVCoords.z,
+		fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, UVCoords.y, UVCoords.w,
+		-fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, UVCoords.x, UVCoords.w,
 
-		0, fHalfHeight, 0,							Colour.r, Colour.g, Colour.b, Colour.a,		UVCoords.y / 2, UVCoords.w,// Top Point
+		0, fHalfHeight, 0, Colour.r, Colour.g, Colour.b, Colour.a, UVCoords.y / 2, UVCoords.w, // Top Point
 
 	};
 	GLfloat vertices[] = {
 		// Positions								// Colors			
-		-fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		
-		fHalfWidth, -fHalfHeight, -fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,		
-		fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,	
-		-fHalfWidth, -fHalfHeight, fHalfDepth,		Colour.r, Colour.g, Colour.b, Colour.a,	
+		-fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a,
+		fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a,
+		fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a,
+		-fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a,
 
-		0, fHalfHeight, 0,							Colour.r, Colour.g, Colour.b, Colour.a
+		0, fHalfHeight, 0, Colour.r, Colour.g, Colour.b, Colour.a
 
 	};
 
@@ -119,9 +106,13 @@ void Pyramid::BindPyramid()
 
 	vao = Shader::CreateBuffer(TextureSource, texture, true);
 	if (TextureSource != "")
+	{
 		glBufferData(GL_ARRAY_BUFFER, sizeof(Texturedvertices), Texturedvertices, GL_STATIC_DRAW);
+	}
 	else
+	{
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	}
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }
 

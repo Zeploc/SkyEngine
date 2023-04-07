@@ -1,18 +1,5 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    UIButton.cpp
-// Description    	:    main implementation for UIButton
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "UIButton.h"
 
 // Engine Includes //
@@ -36,9 +23,10 @@ bool UIButton::bButtonPressedThisFrame = false;
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-UIButton::UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, glm::vec4 _HightlightColour, int iWidth, int iHeight, void(*func)())
-	: UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, _Colour), ImageComponent(_Position, _anchor, _fRotation, _Colour, iWidth, iHeight), PressFuncCall(func),
-	TextComponent(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)), btnColour(_Colour), btnHighlightColour(_HightlightColour)
+UIButton::UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, glm::vec4 _HightlightColour, int iWidth, int iHeight, void (*func)()) : UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, _Colour),
+                                                                                                                                                                             TextComponent(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)),
+                                                                                                                                                                             ImageComponent(_Position, _anchor, _fRotation, _Colour, iWidth, iHeight),
+                                                                                                                                                                             PressFuncCall(func), btnColour(_Colour), btnHighlightColour(_HightlightColour)
 {
 	SoundManager::GetInstance()->AddChannel("UIC");
 }
@@ -49,9 +37,10 @@ UIButton::UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-UIButton::UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, const char * _ImagePath, glm::vec4 _HightlightColour, int iWidth, int iHeight, void(*func)())
-	: UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), ImageComponent(_Position, _anchor, _fRotation, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), iWidth, iHeight, _ImagePath, 1), PressFuncCall(func),
-	TextComponent(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)), btnColour(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), btnHighlightColour(_HightlightColour)
+UIButton::UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, const char* _ImagePath, glm::vec4 _HightlightColour, int iWidth, int iHeight, void (*func)()) : UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)),
+                                                                                                                                                                                  TextComponent(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)),
+                                                                                                                                                                                  ImageComponent(_Position, _anchor, _fRotation, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), iWidth, iHeight, _ImagePath, 1),
+                                                                                                                                                                                  PressFuncCall(func), btnColour(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), btnHighlightColour(_HightlightColour)
 {
 	SoundManager::GetInstance()->AddChannel("UIC");
 }
@@ -107,7 +96,7 @@ void UIButton::AddText(std::string sText, std::string sFont, int iPSize, glm::ve
 #--Parameters--#: 	Takes pointer to function
 #--Return--#: 		NA
 ************************************************************/
-void UIButton::BindHold(void(*func)())
+void UIButton::BindHold(void (*func)())
 {
 	HoldFuncCall = func;
 }
@@ -143,7 +132,7 @@ void UIButton::SetActive(bool _bIsActive)
 #--Parameters--#: 	Sound file path
 #--Return--#: 		NA
 ************************************************************/
-void UIButton::SetPressSound(const char * _SoundPath)
+void UIButton::SetPressSound(const char* _SoundPath)
 {
 	m_PressSoundPath = _SoundPath;
 	SoundManager::GetInstance()->AddAudio(_SoundPath, false, _SoundPath);
@@ -157,10 +146,16 @@ void UIButton::SetPressSound(const char * _SoundPath)
 ************************************************************/
 void UIButton::DrawUIElement()
 {
-	if (!bActive) return;
+	if (!bActive)
+	{
+		return;
+	}
 	glUseProgram(Shader::Programs["TextUIprogram"]);
 	ImageComponent.DrawUIElement();
-	if (bHasText) TextComponent.DrawUIElement();
+	if (bHasText)
+	{
+		TextComponent.DrawUIElement();
+	}
 }
 
 /************************************************************
@@ -171,7 +166,10 @@ void UIButton::DrawUIElement()
 ************************************************************/
 void UIButton::Update()
 {
-	if (!bActive) return;
+	if (!bActive)
+	{
+		return;
+	}
 	glm::vec2 MousePosViewport = Input::GetInstance()->MousePos;
 	glm::vec2 ViewportOffset = glm::vec2(Camera::GetInstance()->VIEWPORT_X, Camera::GetInstance()->VIEWPORT_Y);
 	//MousePosViewport += ViewportOffset;
@@ -179,9 +177,14 @@ void UIButton::Update()
 	glm::vec2 BottomRight = glm::vec2(position.x + ImageComponent.GetWidth() / 2, position.y + ImageComponent.GetHeight() / 2) + ViewportOffset;
 	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_RELEASE)
 	{
-		if (ReleaseFuncCall != nullptr) ReleaseFuncCall();
+		if (ReleaseFuncCall != nullptr)
+		{
+			ReleaseFuncCall();
+		}
 		if (ReleaseFunc)
+		{
 			(*ReleaseFunc)();
+		}
 
 		bPressed = false;
 	}
@@ -194,16 +197,17 @@ void UIButton::Update()
 		}
 		else if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
 		{
-			Pressed();			
+			Pressed();
 		}
-		 
 	}
 	else if (HoverOverride)
 	{
 		Hovered();
 	}
 	else
+	{
 		ImageComponent.Colour = btnColour;
+	}
 }
 
 /************************************************************
@@ -227,9 +231,14 @@ void UIButton::Pressed()
 	}
 	bPressed = true;
 	bButtonPressedThisFrame = true;
-	if (PressFuncCall != nullptr) PressFuncCall();
+	if (PressFuncCall != nullptr)
+	{
+		PressFuncCall();
+	}
 	if (PressFunc)
+	{
 		(*PressFunc)();
+	}
 }
 
 void UIButton::Hovered()

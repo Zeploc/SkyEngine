@@ -1,18 +1,5 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    SceneManager.cpp
-// Description    	:    main implementation for SceneManager
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "SceneManager.h"
 
 // Library Includes //
@@ -26,7 +13,6 @@
 
 // Local Includes //
 
-
 // Static Variables //
 std::shared_ptr<SceneManager> SceneManager::m_pSceneManager;
 
@@ -38,8 +24,8 @@ std::shared_ptr<SceneManager> SceneManager::m_pSceneManager;
 ************************************************************/
 SceneManager::SceneManager()
 {
-
 }
+
 /************************************************************
 #--Description--#:  Destructor function
 #--Author--#: 		Alex Coultas
@@ -71,7 +57,9 @@ void SceneManager::AddScene(std::shared_ptr<Scene> _Scene)
 		_Scene->OnLoadScene();
 	}
 	else
+	{
 		Scenes.insert(std::pair<std::string, std::shared_ptr<Scene>>(_Scene->SceneName, _Scene));
+	}
 }
 
 /************************************************************
@@ -109,7 +97,6 @@ void SceneManager::RemoveScene(std::shared_ptr<Scene> _Scene)
 			return;
 		}
 	}
-	
 }
 
 /************************************************************
@@ -134,8 +121,9 @@ void SceneManager::SwitchScene(std::string SceneName, bool _bInstant)
 		Scenes[CurrentScene]->OnLoadScene();
 	}
 	else
+	{
 		SceneToSwitch = SceneName;
-
+	}
 }
 
 /************************************************************
@@ -170,9 +158,10 @@ void SceneManager::RenderCurrentScene()
 std::shared_ptr<Scene> SceneManager::GetCurrentScene()
 {
 	if (Scenes.empty())
+	{
 		return nullptr;
-	else
-		return Scenes[CurrentScene];
+	}
+	return Scenes[CurrentScene];
 };
 
 /************************************************************
@@ -200,4 +189,3 @@ void SceneManager::DestoryInstance()
 {
 	m_pSceneManager = nullptr;
 }
-

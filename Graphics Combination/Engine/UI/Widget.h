@@ -1,3 +1,5 @@
+// Copyright Skyward Studios, Inc. All Rights Reserved.
+
 #pragma once
 
 // Local Includes //
@@ -7,15 +9,16 @@
 #include <string>
 #include <vector>
 
-class Widget :	public UIElement
+class Widget : public UIElement
 {
 public:
 	Widget();
+
 	~Widget();
 
 	void LoadFromText(std::string WidgetName);
+
 	void SaveText(std::string WidgetName);
 
 	std::vector<std::shared_ptr<UIElement>> UIElements;
 };
-

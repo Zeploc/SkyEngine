@@ -1,26 +1,28 @@
+// Copyright Skyward Studios, Inc. All Rights Reserved.
+
 #pragma once
 
 // Std. Includes
-#include <string>
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <string>
 #include <vector>
 
 #include "Engine/System/LogManager.h"
 using namespace std;
 // GL Includes
 
-#include "../Dependencies\glew\glew.h"
-#include "../Dependencies\freeglut\freeglut.h"
-#include "../Dependencies\soil\SOIL.h"
+#include "../Dependencies/freeglut/freeglut.h"
+#include "../Dependencies/glew/glew.h"
+#include "../Dependencies/soil/SOIL.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "assimp/Importer.hpp"
-#include "assimp/scene.h"
 #include "assimp/postprocess.h"
+#include "assimp/scene.h"
 
 #include "ModelMesh.h"
 #include "Shader.h"
@@ -28,9 +30,8 @@ using namespace std;
 class ModelObject
 {
 public:
-	
 	GLuint program;
-	
+
 	/*  Functions   */
 	// Constructor, expects a filepath to a 3D model.
 	ModelObject(std::string path)
@@ -38,20 +39,19 @@ public:
 		this->program = Shader::Programs["ModelProgram"];
 		this->loadModel(path);
 	}
-	
+
 	~ModelObject()
 	{
 		meshes.clear();
 		textures_loaded.clear();
 	}
 
-
 	// Draws the model, and thus all its meshes
 	void Render(Utils::Transform MeshTransform)
 	{
-		for (GLuint i = 0; i < this->meshes.size(); i++) {
-
-		//printf("mesh size: %d \n", meshes.size());
+		for (GLuint i = 0; i < this->meshes.size(); i++)
+		{
+			//printf("mesh size: %d \n", meshes.size());
 
 			this->meshes[i].Render(program, MeshTransform);
 		}
@@ -61,16 +61,16 @@ private:
 	/*  Model Data  */
 	vector<ModelMesh> meshes;
 	string directory;
-	vector<MeshTexture> textures_loaded;	// Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
+	vector<MeshTexture> textures_loaded; // Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
 
-										/*  Functions   */
-										// Loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
+	/*  Functions   */
+	// Loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
 	void loadModel(string path)
 	{
 		// Read file via ASSIMP
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
-		
+
 		// Check for errors
 		if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
 		{
@@ -79,7 +79,7 @@ private:
 		}
 		// Retrieve the directory path of the filepath
 		this->directory = path.substr(0, path.find_last_of('/'));
-		
+
 		// Process ASSIMP's root node recursively
 		this->processNode(scene->mRootNode, scene);
 	}
@@ -96,13 +96,11 @@ private:
 			this->meshes.push_back(this->processMesh(mesh, scene));
 		}
 
-
 		// After we've processed all of the meshes (if any) we then recursively process each of the children nodes
 		for (GLuint i = 0; i < node->mNumChildren; i++)
 		{
 			this->processNode(node->mChildren[i], scene);
 		}
-
 	}
 
 	ModelMesh processMesh(aiMesh* mesh, const aiScene* scene)
@@ -117,7 +115,7 @@ private:
 		{
 			Vertex vertex;
 			glm::vec3 vector; // We declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
-							  // Positions
+			// Positions
 			vector.x = mesh->mVertices[i].x;
 			vector.y = mesh->mVertices[i].y;
 			vector.z = mesh->mVertices[i].z;
@@ -138,7 +136,9 @@ private:
 				vertex.TexCoords = vec;
 			}
 			else
+			{
 				vertex.TexCoords = glm::vec2(0.0f, 0.0f);
+			}
 			vertices.push_back(vertex);
 		}
 		// Now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
@@ -147,7 +147,9 @@ private:
 			aiFace face = mesh->mFaces[i];
 			// Retrieve all indices of the face and store them in the indices vector
 			for (GLuint j = 0; j < face.mNumIndices; j++)
+			{
 				indices.push_back(face.mIndices[j]);
+			}
 		}
 		// Process materials
 		if (mesh->mMaterialIndex >= 0)
@@ -193,13 +195,14 @@ private:
 				}
 			}
 			if (!skip)
-			{   // If texture hasn't been loaded already, load it
+			{
+				// If texture hasn't been loaded already, load it
 				MeshTexture texture;
 				texture.id = TextureFromFile(str.C_Str(), this->directory);
 				texture.type = typeName;
 				texture.path = str;
 				textures.push_back(texture);
-				this->textures_loaded.push_back(texture);  // Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+				this->textures_loaded.push_back(texture); // Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
 			}
 		}
 		return textures;
@@ -216,7 +219,7 @@ private:
 		GLuint textureID;
 		glGenTextures(1, &textureID);
 		int width, height;
-		unsigned char* image = SOIL_load_image(filename.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+		unsigned char* image = SOIL_load_image(filename.c_str(), &width, &height, nullptr, SOIL_LOAD_RGB);
 		// Assign texture to ID
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
@@ -232,4 +235,3 @@ private:
 		return textureID;
 	}
 };
-

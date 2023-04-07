@@ -1,22 +1,10 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name		:    Text.h
-// Description		:    Header file outlining the Class
-// Author			:    Alex Coultas
-// Mail				:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
 
 // Library Includes //
-#include <string>
 #include <map>
+#include <string>
 #include <vector>
 
 // OpenGL Library Includes //
@@ -30,11 +18,12 @@ class Text
 public:
 	struct Character
 	{
-		GLuint TextureID;	//Texture ID
-		glm::ivec2 Size;	// Size of glyph
-		glm::ivec2 Bearing;	// Position of glyph
-		GLuint Advance;		// How far to move for the next character
+		GLuint TextureID; //Texture ID
+		glm::ivec2 Size; // Size of glyph
+		glm::ivec2 Bearing; // Position of glyph
+		GLuint Advance; // How far to move for the next character
 	};
+
 	struct cFont
 	{
 		std::map<GLchar, Character> Characters;
@@ -43,11 +32,8 @@ public:
 		GLuint VBO;
 		int fPSize;
 	};
-	
+
 	static std::vector<cFont> Fonts;
-	
+
 	static void Render(std::string Text, std::string Font, int iSize, glm::vec2 Position, glm::vec3 colour, Utils::EANCHOR _Anchor);
-
-
 };
-

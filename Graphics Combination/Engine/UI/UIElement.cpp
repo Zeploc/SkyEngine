@@ -1,26 +1,5 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    UIElement.cpp
-// Description    	:    main implementation for UIElement
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// Library Includes //
-
-// OpenGL Library Includes //
-
-// Engine Includes //
-
-// Local Includes //
-
-// This Includes //
 #include "UIElement.h"
 
 // Static Variables //
@@ -31,12 +10,11 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-UIElement::UIElement(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour)
-	: position(_Position), fRotation(_fRotation), Colour(_Colour)
+UIElement::UIElement(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour) : fRotation(_fRotation), Colour(_Colour), position(_Position)
 {
 }
-UIElement::UIElement()
-	: position(glm::vec2(0,0)), fRotation(0.0f), Colour(glm::vec4(1))
+
+UIElement::UIElement() : fRotation(0.0f), Colour(glm::vec4(1)), position(glm::vec2(0, 0))
 {
 }
 
@@ -58,7 +36,6 @@ UIElement::~UIElement()
 ************************************************************/
 void UIElement::DrawUIElement()
 {
-
 }
 
 /************************************************************
@@ -70,7 +47,9 @@ void UIElement::DrawUIElement()
 void UIElement::BaseUpdate()
 {
 	if (!bActive)
+	{
 		return;
+	}
 	Update();
 }
 
@@ -136,5 +115,5 @@ void UIElement::SetActive(bool _bIsActive)
 ************************************************************/
 glm::vec2 UIElement::GetPosition()
 {
-	return position;// +(glm::vec2)Camera::GetInstance()->GetCameraPosition();
+	return position; // +(glm::vec2)Camera::GetInstance()->GetCameraPosition();
 }

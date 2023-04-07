@@ -1,18 +1,5 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    CSprite.cpp
-// Description    	:    main implementation for CSprite
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// Library Includes //
 #include <iostream>
 
 // OpenGL Library Includes //
@@ -20,15 +7,14 @@
 #include <glfw3.h>
 
 // Engine Includes //
-#include "CXBOXController.h"
 #include "Input.h"
+#include "CXBOXController.h"
 #include "Engine/Editor/EditorWindowManager.h"
 #include "Engine/UI/UIButton.h"
 
 // Static Variables //
 std::map<int, Input*> Input::m_pInputs;
 Input* Input::m_pInput = nullptr;
-
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -58,7 +44,7 @@ Input::~Input()
 #--Parameters--#:	NA
 #--Return--#: 		Returns static pointer to self
 ************************************************************/
-Input * Input::GetInstance()
+Input* Input::GetInstance()
 {
 	//int currentWindow = glutGetWindow();
 	//Input* CurrentFound = nullptr;
@@ -98,7 +84,9 @@ void Input::DestoryInstance()
 	//	m_pInputs.erase(currentWindow);
 	//}
 	if (m_pInput)
+	{
 		delete m_pInput;
+	}
 	m_pInput = nullptr;
 }
 
@@ -110,9 +98,9 @@ void Input::DestoryInstance()
 ************************************************************/
 void Input::Init(GLFWwindow* Window)
 {
-	glfwSetKeyCallback(Window, Input::LprocessKeys);
-	glfwSetCursorPosCallback(Window, Input::LMouseInput);
-	glfwSetMouseButtonCallback(Window, Input::LMouseButton);
+	glfwSetKeyCallback(Window, LprocessKeys);
+	glfwSetCursorPosCallback(Window, LMouseInput);
+	glfwSetMouseButtonCallback(Window, LMouseButton);
 	/*
 	glutSpecialFunc(Input::LprocessSpecialKeys);*/
 	//glutJoystickFunc(LJoystick, (float)GLUT_JOYSTICK_POLL_RATE / 100.0f);
@@ -164,7 +152,6 @@ void Input::processNormalKeysUp(unsigned char key, int x, int y)
 ************************************************************/
 void Input::processSpecialKeys(int key, int x, int y)
 {
-
 }
 
 /************************************************************
@@ -201,7 +188,6 @@ void Input::MouseButton(int button, int action, int mods)
 		{
 			std::cout << "Unknown mouse state\n";
 		}
-		
 	}
 
 	if (mods & GLFW_MOD_SHIFT)
@@ -272,7 +258,7 @@ void Input::MouseButton(int button, int action, int mods)
 	}
 }
 
-void Input::processKeys(GLFWwindow * window, int key, int scancode, int action, int mods)
+void Input::processKeys(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	bKBHit = true;
 	cLastKey = key;
@@ -295,9 +281,7 @@ void Input::processKeys(GLFWwindow * window, int key, int scancode, int action, 
 	{
 		std::cout << "SHIFT DOWN\n";
 	}
-
 }
-
 
 /************************************************************
 #--Description--#: 	Updated every frame
@@ -333,7 +317,7 @@ void Input::Update()
 	{
 		player->Update();
 	}
-	
+
 	bKBHit = false;
 	UIButton::bButtonPressedThisFrame = false;
 }
@@ -348,13 +332,13 @@ std::string Input::InputStateString(unsigned int State)
 {
 	switch (State)
 	{
-		case Input::INPUT_FIRST_RELEASE:
+		case INPUT_FIRST_RELEASE:
 			return "INPUT_FIRST_RELEASE";
-		case Input::INPUT_RELEASED:
+		case INPUT_RELEASED:
 			return "INPUT_RELEASED";
-		case Input::INPUT_FIRST_PRESS:
+		case INPUT_FIRST_PRESS:
 			return "INPUT_FIRST_PRESS";
-		case Input::INPUT_HOLD:
+		case INPUT_HOLD:
 			return "INPUT_HOLD";
 		default:
 			return "ERROR";
@@ -370,7 +354,6 @@ void Input::SetCursorVisible(bool _bIsVisible)
 	else
 	{
 		glfwSetInputMode(EditorWindowManager::MainWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-		
 	}
 	bCursorVisible = _bIsVisible;
 }
@@ -389,8 +372,7 @@ void Input::ToggleCursorVisible()
 ************************************************************/
 void Input::LprocessNormalKeysDown(unsigned char key, int x, int y)
 {
-	Input::GetInstance()->processNormalKeysDown(key, x, y);
-
+	GetInstance()->processNormalKeysDown(key, x, y);
 }
 
 /************************************************************
@@ -401,8 +383,7 @@ void Input::LprocessNormalKeysDown(unsigned char key, int x, int y)
 ************************************************************/
 void Input::LprocessNormalKeysUp(unsigned char key, int x, int y)
 {
-	Input::GetInstance()->processNormalKeysUp(key, x, y);
-
+	GetInstance()->processNormalKeysUp(key, x, y);
 }
 
 /************************************************************
@@ -413,8 +394,7 @@ void Input::LprocessNormalKeysUp(unsigned char key, int x, int y)
 ************************************************************/
 void Input::LprocessSpecialKeys(int key, int x, int y)
 {
-	Input::GetInstance()->processSpecialKeys(key, x, y);
-
+	GetInstance()->processSpecialKeys(key, x, y);
 }
 
 /************************************************************
@@ -425,8 +405,7 @@ void Input::LprocessSpecialKeys(int key, int x, int y)
 ************************************************************/
 void Input::LMouseInput(GLFWwindow* window, double x, double y)
 {
-	Input::GetInstance()->MouseInput(x, y);
-
+	GetInstance()->MouseInput(x, y);
 }
 
 /************************************************************
@@ -437,12 +416,10 @@ void Input::LMouseInput(GLFWwindow* window, double x, double y)
 ************************************************************/
 void Input::LMouseButton(GLFWwindow* window, int button, int action, int mods)
 {
-	Input::GetInstance()->MouseButton(button, action, mods);
-
+	GetInstance()->MouseButton(button, action, mods);
 }
 
-void Input::LprocessKeys(GLFWwindow * window, int key, int scancode, int action, int mods)
+void Input::LprocessKeys(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	Input::GetInstance()->processKeys(window, key, scancode, action, mods);
+	GetInstance()->processKeys(window, key, scancode, action, mods);
 }
-

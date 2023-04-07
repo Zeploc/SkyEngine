@@ -1,18 +1,5 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    Entity.cpp
-// Description    	:    main implementation for Entity
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "Entity.h"
 
 // Library Includes //
@@ -20,8 +7,8 @@
 #include <sstream>
 
 // OpenGL Library Includes //
-#include <glm\gtc\type_ptr.hpp>
-#include <glm\gtc\matrix_transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 // Engine Includes //
 #include "CollisionBounds.h"
@@ -35,12 +22,13 @@ Entity::Entity(std::string _FromString)
 	std::string Name;
 	ss >> Name;
 	if (Name != "[Entity]")
+	{
 		return;
+	}
 	ss >> iEntityID;
 	ss >> transform;
-	
+
 	EntityAnchor = Utils::CENTER;
-	   
 }
 
 //************************************************************
@@ -49,8 +37,7 @@ Entity::Entity(std::string _FromString)
 //#--Parameters--#:		Takes contructor values
 //#--Return--#: 		NA
 //************************************************************/
-Entity::Entity(Utils::Transform _Transform, Utils::EANCHOR _Anchor)
-	: transform(_Transform), EntityAnchor(_Anchor)
+Entity::Entity(Utils::Transform _Transform, Utils::EANCHOR _Anchor) : transform(_Transform), EntityAnchor(_Anchor)
 {
 	iEntityID = Utils::AddEntityID();
 	LogManager::GetInstance()->DisplayLogMessage("New Entity created with ID #" + std::to_string(iEntityID));
@@ -72,7 +59,6 @@ Entity::~Entity()
 {
 	EntityMesh = nullptr;
 }
-
 
 void Entity::AddMesh(std::shared_ptr<Mesh> _NewMesh)
 {
@@ -108,12 +94,19 @@ void Entity::AddMesh(std::shared_ptr<Mesh> _NewMesh)
 ************************************************************/
 void Entity::DrawEntity()
 {
-	if (!EntityMesh || !bVisible) return;
+	if (!EntityMesh || !bVisible)
+	{
+		return;
+	}
 	Utils::Transform AnchoredTransform = transform;
 	if (EntityMesh->GetCollisionBounds())
+	{
 		AnchoredTransform.Position = Utils::GetAncoredPosition(transform.Position, EntityMesh->GetCollisionBounds()->GetDimensions(), EntityAnchor);
+	}
 	else
+	{
 		AnchoredTransform.Position = Utils::GetAncoredPosition(transform.Position, glm::vec3(EntityMesh->m_fWidth, EntityMesh->m_fHeight, EntityMesh->m_fDepth), EntityAnchor);
+	}
 	EntityMesh->Render(AnchoredTransform);
 }
 
@@ -126,9 +119,14 @@ void Entity::DrawEntity()
 void Entity::BaseUpdate()
 {
 	if (!bActive)
+	{
 		return;
+	}
 	Update();
-	if (EntityMesh) EntityMesh->Update();
+	if (EntityMesh)
+	{
+		EntityMesh->Update();
+	}
 }
 
 /************************************************************
@@ -156,7 +154,10 @@ void Entity::Update()
 void Entity::OnDestroy()
 {
 	LogManager::GetInstance()->DisplayLogMessage("Entity with ID #" + std::to_string(iEntityID) + " destroyed!");
-	if (body) body->SetActive(false);
+	if (body)
+	{
+		body->SetActive(false);
+	}
 }
 
 void Entity::Reset()
@@ -176,21 +177,28 @@ void Entity::Reset()
 		body->SetAngularVelocity(0.0f);
 	}
 	// Reset Entity Mesh
-	if (EntityMesh) EntityMesh->Reset();
+	if (EntityMesh)
+	{
+		EntityMesh->Reset();
+	}
 }
 
 void Entity::SetActive(bool _bIsActive, bool _bIsInitialState)
 {
 	bActive = _bIsActive;
 	if (_bIsInitialState)
+	{
 		EntityInitialState.bActive = bActive;
+	}
 }
 
 void Entity::SetVisible(bool _bIsVisible, bool _bIsInitialState)
 {
 	bVisible = _bIsVisible;
 	if (_bIsInitialState)
+	{
 		EntityInitialState.bVisible = bVisible;
+	}
 }
 
 std::string Entity::EntityToString()
@@ -239,14 +247,14 @@ glm::mat4 Entity::GetModel()
 {
 	glm::mat4 translate = glm::translate(glm::mat4(), transform.Position);
 	glm::mat4 scale = glm::scale(glm::mat4(), transform.Scale);
-	glm::mat4 rotation = glm::rotate(glm::mat4(), glm::radians(transform.Rotation.x), glm::vec3(1, 0, 0));
-	rotation = glm::rotate(rotation, glm::radians(transform.Rotation.y), glm::vec3(0, 1, 0));
-	rotation = glm::rotate(rotation, glm::radians(transform.Rotation.z), glm::vec3(0, 0, 1));
+	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(transform.Rotation.x), glm::vec3(1, 0, 0));
+	rotation = rotate(rotation, glm::radians(transform.Rotation.y), glm::vec3(0, 1, 0));
+	rotation = rotate(rotation, glm::radians(transform.Rotation.z), glm::vec3(0, 0, 1));
 
 	return translate * rotation * scale;
 }
 
-void Entity::SetupB2BoxBody(b2World & Box2DWorld, b2BodyType BodyType, bool bCanRotate, bool bHasFixture, float Density, float Friction, bool IsBullet)
+void Entity::SetupB2BoxBody(b2World& Box2DWorld, b2BodyType BodyType, bool bCanRotate, bool bHasFixture, float Density, float Friction, bool IsBullet)
 {
 	if (EntityMesh)
 	{
@@ -259,7 +267,7 @@ void Entity::SetupB2BoxBody(b2World & Box2DWorld, b2BodyType BodyType, bool bCan
 		body->SetTransform(bodyDef.position, (transform.Rotation.z / 180) * b2_pi);
 		body->SetFixedRotation(!bCanRotate);
 		bodyDef.bullet = true;
-		
+
 		// Define another box shape for our dynamic body.
 		b2PolygonShape dynamicBox;
 		dynamicBox.SetAsBox(EntityMesh->m_fWidth / 2.0f, EntityMesh->m_fHeight / 2.0f);
@@ -287,8 +295,7 @@ void Entity::SetupB2BoxBody(b2World & Box2DWorld, b2BodyType BodyType, bool bCan
 	}
 }
 
-
-void Entity::SetupB2CircleBody(b2World & Box2DWorld, b2BodyType BodyType, bool bCanRotate, bool bHasFixture, float Density, float Friction)
+void Entity::SetupB2CircleBody(b2World& Box2DWorld, b2BodyType BodyType, bool bCanRotate, bool bHasFixture, float Density, float Friction)
 {
 	if (EntityMesh)
 	{
@@ -330,8 +337,10 @@ void Entity::SetupB2CircleBody(b2World & Box2DWorld, b2BodyType BodyType, bool b
 	}
 }
 
-
 void Entity::SetBox2DTransform(glm::vec3 _Position, float _Rotation)
-{	
-	if (body) body->SetTransform(b2Vec2(_Position.x, _Position.y), (_Rotation / 180) * b2_pi);
+{
+	if (body)
+	{
+		body->SetTransform(b2Vec2(_Position.x, _Position.y), (_Rotation / 180) * b2_pi);
+	}
 }

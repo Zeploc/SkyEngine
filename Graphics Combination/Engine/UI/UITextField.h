@@ -1,16 +1,4 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    UITextField.h
-// Description    	:    Header file outlining the Class
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -18,22 +6,28 @@
 #include "UIElement.h"
 
 // Engine Includes //
-#include "UIText.h"
 #include "UIImage.h"
+#include "UIText.h"
 
 class UITextField : public UIElement
 {
 public:
 	UITextField(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, int iWidth, int iHeight, glm::vec4 _TextColour, std::string _DefaultValue, std::string _FontPath, int _iPSize, Utils::EANCHOR TextAnchor);
+
 	UITextField(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, const char* _ImagePath, int iWidth, int iHeight, glm::vec4 _TextColour, std::string _DefaultValue, std::string _FontPath, int _iPSize, Utils::EANCHOR TextAnchor);
+
 	~UITextField();
 
-	void SetActive(bool _bIsActive);
+	void SetActive(bool _bIsActive) override;
+
 	void ResetField();
-	
-	void DrawUIElement();
-	void Update();
+
+	void DrawUIElement() override;
+
+	void Update() override;
+
 	void SetFocussed(bool bNewFocus);
+
 	bool GetFocussed() { return bIsFocussed; };
 
 	UIText FieldText;
@@ -47,6 +41,4 @@ private:
 
 	double dSpamDelay = 0.0f;
 	float fSpamTime = 0.1f;
-
 };
-

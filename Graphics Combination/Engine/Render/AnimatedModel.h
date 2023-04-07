@@ -1,16 +1,4 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    AnimatedModel.h
-// Description    	:    Header file outlining the Class
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -28,7 +16,6 @@
 // Note: Used for ASSIMP_LOAD_FLAGS
 #include <assimp/postprocess.h>
 
-
 #define ZERO_MEM(a) memset(a, 0, sizeof(a))
 
 #define ARRAY_SIZE_IN_ELEMENTS(a) (sizeof(a)/sizeof(a[0]))
@@ -41,18 +28,21 @@ class AnimatedModel : public Mesh
 {
 public:
 	AnimatedModel(std::string modelFilename, std::string texFilename);
+
 	~AnimatedModel();
 
-	virtual void Render(Utils::Transform Newtransform) override;
-	virtual void Update() override;
-	virtual void Rebind() override;
+	void Render(Utils::Transform Newtransform) override;
+
+	void Update() override;
+
+	void Rebind() override;
 
 private:
+#define INVALID_MATERIAL 0xFFFFFFFF
+#define NUM_BONES_PER_VERTEX 4
 
-	#define INVALID_MATERIAL 0xFFFFFFFF
-	#define NUM_BONES_PER_VERTEX 4
-
-	enum VB_TYPES {
+	enum VB_TYPES
+	{
 		INDEX_BUFFER,
 		POS_VB,
 		NORMAL_VB,
@@ -61,10 +51,10 @@ private:
 		NUM_VBs
 	};
 
-	struct MeshEntry {
-
-		MeshEntry() {
-
+	struct MeshEntry
+	{
+		MeshEntry()
+		{
 			NumIndices = 0;
 			BaseVertex = 0;
 			BaseIndex = 0;
@@ -77,31 +67,37 @@ private:
 		GLuint MaterialIndex;
 	};
 
-	struct BoneInfo {
-
+	struct BoneInfo
+	{
 		Matrix4f BoneOffset;
 		Matrix4f FinalTransformation;
 
-		BoneInfo() {
-			BoneOffset.SetZero();// = glm::mat4(); //-->setzero
-			FinalTransformation.SetZero();  // = glm::mat4();  //--> setzero
+		BoneInfo()
+		{
+			BoneOffset.SetZero(); // = glm::mat4(); //-->setzero
+			FinalTransformation.SetZero(); // = glm::mat4();  //--> setzero
 		}
 	};
-	struct VertexBoneData {
 
+	struct VertexBoneData
+	{
 		int IDs[NUM_BONES_PER_VERTEX];
 		float Weights[NUM_BONES_PER_VERTEX];
 
-		VertexBoneData() {
+		VertexBoneData()
+		{
 			reset();
 		}
 
-		void reset() {
+		void reset()
+		{
 			ZERO_MEM(IDs);
 			ZERO_MEM(Weights);
 		}
 
-		int boneID; float weight;
+		int boneID;
+		float weight;
+
 		void addBoneData(int BoneID, float Weight);
 	};
 
@@ -110,16 +106,25 @@ private:
 
 	// Binding
 	void Clear();
+
 	void BindMesh(std::string fileName);
-	bool InitFromScene(const aiScene* pScene, const std::string Filename);
-	void initMesh(GLuint meshIndex,	const aiMesh*paiMesh, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals,
-		std::vector<glm::vec2>&texcoords,	std::vector<VertexBoneData>&bones, std::vector<GLuint>&indices);
+
+	bool InitFromScene(const aiScene* pScene, std::string Filename);
+
+	void initMesh(GLuint meshIndex, const aiMesh* paiMesh, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals,
+	              std::vector<glm::vec2>& texcoords, std::vector<VertexBoneData>& bones, std::vector<GLuint>& indices);
+
 	void loadBones(int meshIndex, const aiMesh* pMesh, std::vector<VertexBoneData>& bones);
+
 	void setShaderEffectVariables();
+
 	void boneTransforms(std::vector<Matrix4f>& transforms);
+
 	void setCurrentAnimation(int startFrameNum, int endFramNum);
-	bool initMaterials(const aiScene* pScene, const std::string filename);
-	GLuint loadTexture(std::string  texFileName);
+
+	bool initMaterials(const aiScene* pScene, std::string filename);
+
+	GLuint loadTexture(std::string texFileName);
 
 	// Bone
 	GLuint m_Buffers[NUM_VBs];
@@ -151,13 +156,19 @@ private:
 	float animationTime;
 
 	// Animation
-	void ReadNodeHeirarchy(float AnimationTime, const aiNode * pNode, const Matrix4f & ParentTransform);
-	const aiNodeAnim * FindNodeAnim(const aiAnimation * pAnimation, std::string NodeName);
-	void CalcInterpolatedPosition(aiVector3D & out, float AnimationTime, const aiNodeAnim * pNodeAnim);
-	GLuint FindPosition(float AnimationTime, const aiNodeAnim * pNodeAnim);
-	void CalcInterpolatedRotation(aiQuaternion & out, float AnimationTime, const aiNodeAnim * pNodeAnim);
-	GLuint FindRotation(float AnimationTime, const aiNodeAnim * pNodeAnim);
-	void CalcInterpolatedScaling(aiVector3D & out, float AnimationTime, const aiNodeAnim * pNodeAnim);
-	GLuint FindScaling(float AnimationTime, const aiNodeAnim * pNodeAnim);
-};
+	void ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const Matrix4f& ParentTransform);
 
+	const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, std::string NodeName);
+
+	void CalcInterpolatedPosition(aiVector3D& out, float AnimationTime, const aiNodeAnim* pNodeAnim);
+
+	GLuint FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);
+
+	void CalcInterpolatedRotation(aiQuaternion& out, float AnimationTime, const aiNodeAnim* pNodeAnim);
+
+	GLuint FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim);
+
+	void CalcInterpolatedScaling(aiVector3D& out, float AnimationTime, const aiNodeAnim* pNodeAnim);
+
+	GLuint FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim);
+};

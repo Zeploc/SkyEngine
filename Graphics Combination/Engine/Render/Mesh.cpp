@@ -1,24 +1,11 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    Entity.cpp
-// Description    	:    Mesh Component for entity
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "Mesh.h"
 
 // Engine Includes //
 #include "Shader.h"
 
-#include <glm\gtc\type_ptr.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Engine/Camera/Camera.h"
 #include "Engine/Entity/CollisionBounds.h"
@@ -70,7 +57,6 @@ void Mesh::Render(Utils::Transform Newtransform)
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
-
 	}
 	if (bReflection)
 	{
@@ -78,20 +64,31 @@ void Mesh::Render(Utils::Transform Newtransform)
 		glUniform1i(glGetUniformLocation(program, "skybox"), 1);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, Utils::WorldCubeMap->EntityMesh->texture);
 		glUniform1f(glGetUniformLocation(program, "ReflectionSize"), 0.1f);
-
 	}
 	if (bFog)
 	{
-		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, glm::value_ptr(Camera::GetInstance()->GetCameraPosition()));
-		glUniform4fv(glGetUniformLocation(program, "vFogColor"), 1, glm::value_ptr(Lighting::m_v4FogColour));
+		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, value_ptr(Camera::GetInstance()->GetCameraPosition()));
+		glUniform4fv(glGetUniformLocation(program, "vFogColor"), 1, value_ptr(Lighting::m_v4FogColour));
 		glUniform1f(glGetUniformLocation(program, "StartFog"), Lighting::StartFogDistance);
 		glUniform1f(glGetUniformLocation(program, "EndFog"), Lighting::EndFogDistance);
 	}
-	if (bCullFace) glEnable(GL_CULL_FACE);
-	else glDisable(GL_CULL_FACE);
-	if (bDepthTest) glEnable(GL_DEPTH_TEST);
-	else glDisable(GL_DEPTH_TEST);
-	
+	if (bCullFace)
+	{
+		glEnable(GL_CULL_FACE);
+	}
+	else
+	{
+		glDisable(GL_CULL_FACE);
+	}
+	if (bDepthTest)
+	{
+		glEnable(GL_DEPTH_TEST);
+	}
+	else
+	{
+		glDisable(GL_DEPTH_TEST);
+	}
+
 	//enable stencil and set stencil operation
 	if (bStencil)
 	{
@@ -99,33 +96,31 @@ void Mesh::Render(Utils::Transform Newtransform)
 		//glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 		//glDepthMask(GL_FALSE);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); //stPass, dpFail, bothPass
-
 	}
 
 	//** 1st pass **
 	//set current stencil value
 	glStencilFunc(GL_ALWAYS, // test function
-		1,// current value to set
-		0xFF);//mask value,
+	              1, // current value to set
+	              0xFF); //mask value,
 
-	glStencilMask(0xFF);//enable writing to stencil buffer
-						//--> render regular sized cube // fills stencil buffer
+	glStencilMask(0xFF); //enable writing to stencil buffer
+	//--> render regular sized cube // fills stencil buffer
 
 	Camera::GetInstance()->SetMVP(Newtransform, program);
 	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, m_iIndicies, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, m_iIndicies, GL_UNSIGNED_INT, nullptr);
 
 	if (bStencil)
 	{
-
 		// ** 2nd pass **
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 		glStencilMask(0x00); //disable writing to stencil buffer
-							 //--> render scaled up cube // write to areas where value is not equal to 1
+		//--> render scaled up cube // write to areas where value is not equal to 1
 
 		glUniform1i(glGetUniformLocation(program, "bIsTex"), false);
 		Camera::GetInstance()->SetMVP(ScaledUpTransform, program);
-		glDrawElements(GL_TRIANGLES, m_iIndicies, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, m_iIndicies, GL_UNSIGNED_INT, nullptr);
 
 		//disable writing to stencil mask
 		glStencilMask(0x00);
@@ -172,14 +167,18 @@ void Mesh::Reset()
 	Rebind();
 	// Reset Mesh Collision Bounds
 	if (MeshCollisionBounds)
+	{
 		MeshCollisionBounds->Reset();
+	}
 }
 
 void Mesh::SetReflection(bool _bReflecting, bool _bIsInitialState)
 {
 	bReflection = _bReflecting;
 	if (bReflection)
+	{
 		program = Shader::Programs["ReflectionProgram"];
+	}
 	else
 	{
 		if (bIsLit)
@@ -192,7 +191,9 @@ void Mesh::SetReflection(bool _bReflecting, bool _bIsInitialState)
 		}
 	}
 	if (_bIsInitialState)
+	{
 		MeshInitialState.bReflection = bReflection;
+	}
 }
 
 void Mesh::AddCollisionBounds(float fWidth, float fHeight, float fDepth, std::shared_ptr<Entity> _EntityRef)

@@ -1,18 +1,5 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    UITextField.cpp
-// Description    	:    A UI Text Entry field
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "UITextField.h"
 
 // Engine Includes //
@@ -22,18 +9,16 @@
 
 // Library Includes //
 
-
 /************************************************************
 #--Description--#:  Constructor function
 #--Author--#: 		Alex Coultas
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-UITextField::UITextField(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, int iWidth, int iHeight, glm::vec4 _TextColour, std::string _DefaultValue, std::string _FontPath, int _iPSize, Utils::EANCHOR TextAnchor)
-	: UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, _Colour), BackImage(_Position, _anchor, _fRotation, _Colour, iWidth, iHeight),
-	FieldText(_Position, _fRotation, _TextColour, _DefaultValue, _FontPath, _iPSize, TextAnchor), sHintText(_DefaultValue)
+UITextField::UITextField(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, int iWidth, int iHeight, glm::vec4 _TextColour, std::string _DefaultValue, std::string _FontPath, int _iPSize, Utils::EANCHOR TextAnchor) : UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, _Colour),
+	FieldText(_Position, _fRotation, _TextColour, _DefaultValue, _FontPath, _iPSize, TextAnchor),
+	BackImage(_Position, _anchor, _fRotation, _Colour, iWidth, iHeight), sHintText(_DefaultValue)
 {
-
 }
 
 /************************************************************
@@ -42,11 +27,10 @@ UITextField::UITextField(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRo
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-UITextField::UITextField(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, const char * _ImagePath, int iWidth, int iHeight, glm::vec4 _TextColour, std::string _DefaultValue, std::string _FontPath, int _iPSize, Utils::EANCHOR TextAnchor)
-	: UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), BackImage(_Position, _anchor, _fRotation, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), iWidth, iHeight, _ImagePath, 1),
-	FieldText(UIImage::GetPositionFromAnchor(_Position, TextAnchor, iWidth, iHeight), _fRotation, _TextColour, _DefaultValue, _FontPath, _iPSize, TextAnchor)
+UITextField::UITextField(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, const char* _ImagePath, int iWidth, int iHeight, glm::vec4 _TextColour, std::string _DefaultValue, std::string _FontPath, int _iPSize, Utils::EANCHOR TextAnchor) :
+	UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), FieldText(UIImage::GetPositionFromAnchor(_Position, TextAnchor, iWidth, iHeight), _fRotation, _TextColour, _DefaultValue, _FontPath, _iPSize, TextAnchor),
+	BackImage(_Position, _anchor, _fRotation, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), iWidth, iHeight, _ImagePath, 1)
 {
-
 }
 
 /************************************************************
@@ -79,7 +63,10 @@ void UITextField::ResetField()
 ************************************************************/
 void UITextField::DrawUIElement()
 {
-	if (!bActive) return;
+	if (!bActive)
+	{
+		return;
+	}
 	glUseProgram(Shader::Programs["TextUIprogram"]);
 	BackImage.DrawUIElement();
 	FieldText.DrawUIElement();
@@ -100,16 +87,16 @@ void UITextField::Update()
 		if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == (Input::InputState::INPUT_HOLD | Input::InputState::INPUT_FIRST_PRESS))
 		{
 			SetFocussed(true);
-			BackImage.Colour = { Colour.r/ 2, Colour.g / 2, Colour.b / 2, Colour.a };
+			BackImage.Colour = {Colour.r / 2, Colour.g / 2, Colour.b / 2, Colour.a};
 		}
 	}
 	else if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == (Input::InputState::INPUT_HOLD | Input::InputState::INPUT_FIRST_PRESS))
 	{
 		SetFocussed(false);
-		BackImage.Colour = { Colour.r, Colour.g, Colour.b, Colour.a };
+		BackImage.Colour = {Colour.r, Colour.g, Colour.b, Colour.a};
 	}
 	if (bIsFocussed && (Input::GetInstance()->bKBHit || Input::GetInstance()->KeyState[Input::GetInstance()->cLastKey] == Input::INPUT_HOLD))
-	{		
+	{
 		//FieldText.Colour.a = 1.0f;
 		std::string NewText = FieldText.sText;
 		char cNext = Input::GetInstance()->cLastKey;
@@ -131,12 +118,12 @@ void UITextField::Update()
 				NewText = FieldText.sText;
 				bHintTextActive = false;
 			}
-			if (!(int(cNext) < 32 || int(cNext) > 126))
+			if (!(static_cast<int>(cNext) < 32 || static_cast<int>(cNext) > 126))
 			{
 				NewText += cNext;
 			}
 		}
-		
+
 		FieldText.sText = NewText;
 	}
 
@@ -153,5 +140,4 @@ void UITextField::SetFocussed(bool bNewFocus)
 	bHintTextActive = true;
 	//if (!bIsFocussed) FieldText.sText = sHintText;
 	//if (!bIsFocussed) bHintTextActive = true;
-
 }

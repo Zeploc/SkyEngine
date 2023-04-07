@@ -1,19 +1,17 @@
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// This Includes //
 #include "Terrain.h"
 
 // Engine Includes //
-#include "Engine/Render/Plane.h"
 #include "Engine/Camera/Camera.h"
+#include "Engine/Render/Plane.h"
 #include "Engine/Render/Shader.h"
 
-#include <iostream>
 #include <fstream>
-#include <glm\gtc\type_ptr.hpp>
+#include <iostream>
+#include <glm/gtc/type_ptr.hpp>
 
-
-Terrain::Terrain(Utils::Transform _Transform, Utils::EANCHOR _Anchor, InitInfo& _InitInfo)
-	: Entity(_Transform, _Anchor)
+Terrain::Terrain(Utils::Transform _Transform, Utils::EANCHOR _Anchor, InitInfo& _InitInfo) : Entity(_Transform, _Anchor)
 {
 	mInfo = _InitInfo;
 	ReadTerrainMap();
@@ -21,7 +19,7 @@ Terrain::Terrain(Utils::Transform _Transform, Utils::EANCHOR _Anchor, InitInfo& 
 	LightProperties.fAmbientStrength = 0.4f;
 	LightProperties.fLightSpecStrength = 0.7f;
 	LightProperties.fShininess = 20.0f;
-	LightProperties.v3LightColour = { 5, 5, 5 };
+	LightProperties.v3LightColour = {5, 5, 5};
 
 	for (int i = 0; i < 256; i++)
 	{
@@ -32,7 +30,7 @@ Terrain::Terrain(Utils::Transform _Transform, Utils::EANCHOR _Anchor, InitInfo& 
 			glm::vec3 randomPoint;
 			randomPoint.x = i;
 			randomPoint.z = j;
-			randomPoint.y = mHeightmap[i][j];// (float)(rand() % 100 - 50) / 100;
+			randomPoint.y = mHeightmap[i][j]; // (float)(rand() % 100 - 50) / 100;
 			Points[i].push_back(randomPoint);
 		}
 	}
@@ -48,17 +46,15 @@ Terrain::Terrain(Utils::Transform _Transform, Utils::EANCHOR _Anchor, InitInfo& 
 			verticiesVec.push_back(Points[i][j].y);
 			verticiesVec.push_back(Points[i][j].z);
 
-
 			verticiesVec.push_back(0.1f);
 			verticiesVec.push_back(0.9f);
 			verticiesVec.push_back(0.4f);
 			verticiesVec.push_back(1.0f);
 
-
 			/*verticiesVec.push_back((float)j / 256.0f);
 			verticiesVec.push_back((float)i / 256.0f);*/
-			verticiesVec.push_back((float)1 / 256.0f);
-			verticiesVec.push_back((float)1 / 256.0f);
+			verticiesVec.push_back(static_cast<float>(1) / 256.0f);
+			verticiesVec.push_back(static_cast<float>(1) / 256.0f);
 
 			verticiesVec.push_back(0.0f);
 			verticiesVec.push_back(1.0f);
@@ -82,12 +78,12 @@ Terrain::Terrain(Utils::Transform _Transform, Utils::EANCHOR _Anchor, InitInfo& 
 	}
 
 	int CurrentVertexID = 0;
-	
+
 	/*for (int j = 1; j < 255; j++)
 	{
 		for (int i = 1; i < 255; i++)
 		{*/
-		
+
 	for (int i = 1; i < 255; i++)
 	{
 		for (int j = 1; j < 255; j++)
@@ -102,8 +98,8 @@ Terrain::Terrain(Utils::Transform _Transform, Utils::EANCHOR _Anchor, InitInfo& 
 
 			// 
 			glm::vec3 v3Normal;
-			v3Normal = glm::cross(v3TanZ, v3TanX);
-			v3Normal = glm::normalize(v3Normal);
+			v3Normal = cross(v3TanZ, v3TanX);
+			v3Normal = normalize(v3Normal);
 
 			CurrentVertexID += 12;
 			// Store the normal of the current vertex
@@ -113,11 +109,10 @@ Terrain::Terrain(Utils::Transform _Transform, Utils::EANCHOR _Anchor, InitInfo& 
 		}
 	}
 
-	
-	const char * TextureSource = "Resources/Images/TerrainMap2.png";
+	const char* TextureSource = "Resources/Images/TerrainMap2.png";
 	// If no texture, texture source is equal to ""
 	bHasTexture = true;
-	
+
 	vao = Shader::CreateBuffer(TextureSource, texture, true, true);
 	//if (TextureSource != "")
 	glBufferData(GL_ARRAY_BUFFER, verticiesVec.size() * sizeof(GLfloat), verticiesVec.data(), GL_STATIC_DRAW);
@@ -128,12 +123,9 @@ Terrain::Terrain(Utils::Transform _Transform, Utils::EANCHOR _Anchor, InitInfo& 
 	program = Shader::Programs["BaseProgram"];
 }
 
-
 Terrain::~Terrain()
 {
-
 }
-
 
 void Terrain::DrawEntity()
 {
@@ -157,8 +149,8 @@ void Terrain::DrawEntity()
 	}
 	if (bFog)
 	{
-		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, glm::value_ptr(Camera::GetInstance()->GetCameraPosition()));
-		glUniform4fv(glGetUniformLocation(program, "vFogColor"), 1, glm::value_ptr(Lighting::m_v4FogColour));
+		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, value_ptr(Camera::GetInstance()->GetCameraPosition()));
+		glUniform4fv(glGetUniformLocation(program, "vFogColor"), 1, value_ptr(Lighting::m_v4FogColour));
 		glUniform1f(glGetUniformLocation(program, "StartFog"), Lighting::StartFogDistance);
 		glUniform1f(glGetUniformLocation(program, "EndFog"), Lighting::EndFogDistance);
 	}
@@ -166,14 +158,13 @@ void Terrain::DrawEntity()
 	glDisable(GL_CULL_FACE);
 	Camera::GetInstance()->SetMVP(transform, program);
 	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, indiciesVec.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, indiciesVec.size(), GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Terrain::ReadTerrainMap()
 {
-
 	std::vector<float> Heightmap;
 
 	// A height for each vertex
@@ -188,7 +179,7 @@ void Terrain::ReadTerrainMap()
 	if (inFile)
 	{
 		// Read the RAW bytes.
-		inFile.read((char*)&in[0], (std::streamsize)in.size());
+		inFile.read((char*)&in[0], in.size());
 
 		// Done with file.
 		inFile.close();
@@ -200,7 +191,7 @@ void Terrain::ReadTerrainMap()
 	Heightmap.resize(mInfo.NumRows * mInfo.NumCols, 0);
 	for (int i = 0; i < mInfo.NumRows * mInfo.NumCols; ++i)
 	{
-		Heightmap[i] = static_cast<float>(in[i]) / 255.0f;//  *mInfo.HeightScale + mInfo.HeightOffset;
+		Heightmap[i] = static_cast<float>(in[i]) / 255.0f; //  *mInfo.HeightScale + mInfo.HeightOffset;
 	}
 
 	std::cout << "Heightmap generated" << std::endl;
@@ -273,29 +264,31 @@ float Terrain::average(int i, int j)
 float Terrain::GetYPosition(glm::vec2 CurrentPos)
 {
 	if (CurrentPos.x < 0 || CurrentPos.x >= (mInfo.NumCols - 1) || CurrentPos.y < 0 || CurrentPos.y >= (mInfo.NumRows - 1))
+	{
 		return 0.0f;
+	}
 
 	// Transform from terrain local space to "cell" space.
-	float c = (CurrentPos.y);// +0.5f*width()) / mInfo.CellSpacing;
-	float d = (CurrentPos.x);// -0.5f*depth()) / -mInfo.CellSpacing;
+	float c = (CurrentPos.y); // +0.5f*width()) / mInfo.CellSpacing;
+	float d = (CurrentPos.x); // -0.5f*depth()) / -mInfo.CellSpacing;
 
 	// Get the row and column we are in.
-	int row = (int)floorf(d);
-	int col = (int)floorf(c);
+	int row = static_cast<int>(floorf(d));
+	int col = static_cast<int>(floorf(c));
 
 	// Grab the heights of the cell we are in.
 	// A*--*B
 	//  | /|
 	//  |/ |
 	// C*--*D
-	float A = Points[row][col].y;// mHeightmap[row*mInfo.NumCols + col];
-	float B = Points[row][col + 1].y;// mHeightmap[row*mInfo.NumCols + col + 1];
-	float C = Points[row + 1][col].y;//mHeightmap[(row + 1)*mInfo.NumCols + col];
-	float D = Points[row + 1][col + 1].y;//mHeightmap[(row + 1)*mInfo.NumCols + col + 1];
+	float A = Points[row][col].y; // mHeightmap[row*mInfo.NumCols + col];
+	float B = Points[row][col + 1].y; // mHeightmap[row*mInfo.NumCols + col + 1];
+	float C = Points[row + 1][col].y; //mHeightmap[(row + 1)*mInfo.NumCols + col];
+	float D = Points[row + 1][col + 1].y; //mHeightmap[(row + 1)*mInfo.NumCols + col + 1];
 
 	// Where we are relative to the cell.
-	float s = c - (float)col;
-	float t = d - (float)row;
+	float s = c - static_cast<float>(col);
+	float t = d - static_cast<float>(row);
 
 	// If upper triangle ABC.
 	if (s + t <= 1.0f)
@@ -304,12 +297,10 @@ float Terrain::GetYPosition(glm::vec2 CurrentPos)
 		float vy = C - A;
 		return A + s * uy + t * vy;
 	}
-	else // lower triangle DCB.
-	{
-		float uy = C - D;
-		float vy = B - D;
-		return D + (1.0f - s)*uy + (1.0f - t)*vy;
-	}
+	// lower triangle DCB.
+	float uy = C - D;
+	float vy = B - D;
+	return D + (1.0f - s) * uy + (1.0f - t) * vy;
 
 	return 0.0f;
 }

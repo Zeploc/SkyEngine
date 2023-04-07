@@ -1,20 +1,7 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    ShaderLoader.cpp
-// Description    	:    main implementation for ShaderLoader
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// Library Includes //
-#include<iostream>
 #include<fstream>
+#include<iostream>
 #include<vector>
 
 // OpenGL Library Includes //
@@ -24,11 +11,16 @@
 // Local Includes //
 
 // This Includes //
-#include "ShaderLoader.h" 
+#include "ShaderLoader.h"
 
 // Static Variables //
-ShaderLoader::ShaderLoader(void){}
-ShaderLoader::~ShaderLoader(void){}
+ShaderLoader::ShaderLoader(void)
+{
+}
+
+ShaderLoader::~ShaderLoader(void)
+{
+}
 
 /************************************************************
 #--Description--#: 	Reads file and puts into string
@@ -36,18 +28,19 @@ ShaderLoader::~ShaderLoader(void){}
 #--Parameters--#: 	Takes shader path
 #--Return--#: 		Returns text file contents as string
 ************************************************************/
-std::string ShaderLoader::ReadShader(const char *filename)
+std::string ShaderLoader::ReadShader(const char* filename)
 {
 	std::string shaderCode;
 	std::ifstream file(filename, std::ios::in);
 
-	if (!file.good()){
+	if (!file.good())
+	{
 		std::cout << "Can't read file " << filename << std::endl;
 		std::terminate();
 	}
 
 	file.seekg(0, std::ios::end);
-	shaderCode.resize((unsigned int)file.tellg());
+	shaderCode.resize(file.tellg());
 	file.seekg(0, std::ios::beg);
 	file.read(&shaderCode[0], shaderCode.size());
 	file.close();
@@ -61,13 +54,12 @@ std::string ShaderLoader::ReadShader(const char *filename)
 #--Return--#: 		Returns the shader gluint
 ************************************************************/
 GLuint ShaderLoader::CreateShader(GLenum shaderType, std::string
-	source, const char* shaderName)
+                                  source, const char* shaderName)
 {
-
 	int compile_result = 0;
 
 	GLuint shader = glCreateShader(shaderType);
-	const char *shader_code_ptr = source.c_str();
+	const char* shader_code_ptr = source.c_str();
 	const int shader_code_size = source.size();
 
 	glShaderSource(shader, 1, &shader_code_ptr, &shader_code_size);
@@ -77,11 +69,10 @@ GLuint ShaderLoader::CreateShader(GLenum shaderType, std::string
 	//check for errors
 	if (compile_result == GL_FALSE)
 	{
-
 		int info_log_length = 0;
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &info_log_length);
 		std::vector<char> shader_log(info_log_length);
-		glGetShaderInfoLog(shader, info_log_length, NULL, &shader_log[0]);
+		glGetShaderInfoLog(shader, info_log_length, nullptr, &shader_log[0]);
 		std::cout << "ERROR compiling shader: " << shaderName << std::endl << &shader_log[0] << std::endl;
 		return 0;
 	}
@@ -95,9 +86,8 @@ GLuint ShaderLoader::CreateShader(GLenum shaderType, std::string
 #--Return--#: 		Returns the program gluint
 ************************************************************/
 GLuint ShaderLoader::CreateProgram(const char* vertexShaderFilename,
-	const char* fragmentShaderFilename, const char* geometryShaderFilename)
+                                   const char* fragmentShaderFilename, const char* geometryShaderFilename)
 {
-
 	//read the shader files and save the code
 	std::string vertex_shader_code = ReadShader(vertexShaderFilename);
 	std::string fragment_shader_code = ReadShader(fragmentShaderFilename);
@@ -111,31 +101,33 @@ GLuint ShaderLoader::CreateProgram(const char* vertexShaderFilename,
 		std::string geometry_shader_code = ReadShader(geometryShaderFilename);
 		geometry_shader = CreateShader(GL_GEOMETRY_SHADER, geometry_shader_code, "geometry shader");
 	}
-	
+
 	int link_result = 0;
 	//create the program handle, attatch the shaders and link it
 	GLuint program = glCreateProgram();
 	glAttachShader(program, vertex_shader);
 	glAttachShader(program, fragment_shader);
-	if (std::string(geometryShaderFilename) != "") glAttachShader(program, geometry_shader);
+	if (std::string(geometryShaderFilename) != "")
+	{
+		glAttachShader(program, geometry_shader);
+	}
 
 	glLinkProgram(program);
 	glGetProgramiv(program, GL_LINK_STATUS, &link_result);
 	//check for link errors
 	if (link_result == GL_FALSE)
 	{
-
 		int info_log_length = 0;
 		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &info_log_length);
 		std::vector<char> program_log(info_log_length);
-		glGetProgramInfoLog(program, info_log_length, NULL, &program_log[0]);
+		glGetProgramInfoLog(program, info_log_length, nullptr, &program_log[0]);
 		std::cout << "Shader Loader : LINK ERROR" << std::endl << &program_log[0] << std::endl;
 		return 0;
 	}
 	return program;
 }
 
-GLuint ShaderLoader::CreateTessProgram(const char * vertexShaderFilename, const char * fragmentShaderFilename, const char * TessControlShaderFilename, const char * TessEvalShaderFilename)
+GLuint ShaderLoader::CreateTessProgram(const char* vertexShaderFilename, const char* fragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename)
 {
 	//read the shader files and save the code
 	std::string vertex_shader_code = ReadShader(vertexShaderFilename);
@@ -147,7 +139,6 @@ GLuint ShaderLoader::CreateTessProgram(const char * vertexShaderFilename, const 
 	GLuint fragment_shader = CreateShader(GL_FRAGMENT_SHADER, fragment_shader_code, "fragment shader");
 	GLuint tess_control_shader = CreateShader(GL_TESS_CONTROL_SHADER, tess_control_shader_code, "tess control shader");
 	GLuint tess_eval_shader = CreateShader(GL_TESS_EVALUATION_SHADER, tess_eval_shader_code, "tess eval shader");
-
 
 	int link_result = 0;
 	//create the program handle, attatch the shaders and link it
@@ -162,25 +153,22 @@ GLuint ShaderLoader::CreateTessProgram(const char * vertexShaderFilename, const 
 	//check for link errors
 	if (link_result == GL_FALSE)
 	{
-
 		int info_log_length = 0;
 		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &info_log_length);
 		std::vector<char> program_log(info_log_length);
-		glGetProgramInfoLog(program, info_log_length, NULL, &program_log[0]);
+		glGetProgramInfoLog(program, info_log_length, nullptr, &program_log[0]);
 		std::cout << "Shader Loader : LINK ERROR" << std::endl << &program_log[0] << std::endl;
 		return 0;
 	}
 	return program;
 }
 
-GLuint ShaderLoader::CreateComputeProgram(const char * ComputeShaderFilename)
+GLuint ShaderLoader::CreateComputeProgram(const char* ComputeShaderFilename)
 {
-
 	//read the shader files and save the code
 	std::string compute_shader_code = ReadShader(ComputeShaderFilename);
 
 	GLuint compute_shader = CreateShader(GL_COMPUTE_SHADER, compute_shader_code, "compute shader");
-
 
 	int link_result = 0;
 	//create the program handle, attatch the shaders and link it
@@ -192,11 +180,10 @@ GLuint ShaderLoader::CreateComputeProgram(const char * ComputeShaderFilename)
 	//check for link errors
 	if (link_result == GL_FALSE)
 	{
-
 		int info_log_length = 0;
 		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &info_log_length);
 		std::vector<char> program_log(info_log_length);
-		glGetProgramInfoLog(program, info_log_length, NULL, &program_log[0]);
+		glGetProgramInfoLog(program, info_log_length, nullptr, &program_log[0]);
 		std::cout << "Shader Loader : LINK ERROR" << std::endl << &program_log[0] << std::endl;
 		return 0;
 	}

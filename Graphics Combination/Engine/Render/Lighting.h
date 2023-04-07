@@ -1,16 +1,4 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    Lighting.h
-// Description    	:    Header file outlining the Class
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -36,6 +24,7 @@ class Lighting
 {
 public:
 	Lighting();
+
 	~Lighting();
 
 	static glm::vec3 m_v3LightPosition;
@@ -46,4 +35,3 @@ public:
 
 	static void PassLightingToShader(GLuint program, LightInfo _LightInfo, Utils::Transform ModelTransform);
 };
-

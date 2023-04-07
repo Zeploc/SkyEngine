@@ -1,4 +1,5 @@
-// This Includes //
+// Copyright Skyward Studios, Inc. All Rights Reserved.
+
 #include "CXBOXController.h"
 
 // Engine Includes //
@@ -32,14 +33,11 @@ bool XBOXController::IsConnected()
 	// Get the state
 	DWORD Result = XInputGetState(_controllerNum, &_controllerState);
 
-	if(Result == ERROR_SUCCESS)
+	if (Result == ERROR_SUCCESS)
 	{
 		return true;
 	}
-	else
-	{
-		return false;
-	}
+	return false;
 }
 
 void XBOXController::Vibrate(int leftVal, int rightVal)

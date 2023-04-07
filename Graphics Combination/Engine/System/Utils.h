@@ -1,24 +1,12 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name		:    Utils.h
-// Description		:    Header file outlining the Class
-// Author			:    Alex Coultas
-// Mail				:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
 
 // Library Includes //
-#include <string>
-#include <memory>
-#include <vector>
 #include <istream>
+#include <memory>
+#include <string>
+#include <vector>
 
 // OpenGL Library Includes //
 #include <glm/gtx/string_cast.hpp>
@@ -33,10 +21,11 @@ public:
 	{
 		glm::vec2 v2FrameSize;
 		glm::vec2 v2FrameCount;
-		glm::vec2 v2CurrentFrame = { 0, 0 };
-		glm::vec2 v2StartFrame = { 0, 0 };
-		glm::vec2 v2EndFrame = { 0, 0 };
+		glm::vec2 v2CurrentFrame = {0, 0};
+		glm::vec2 v2StartFrame = {0, 0};
+		glm::vec2 v2EndFrame = {0, 0};
 		int iFPS = 30;
+
 		void Advance()
 		{
 			v2CurrentFrame.x++;
@@ -52,12 +41,12 @@ public:
 		}
 	};
 
-	typedef struct CollisionInfo2D
+	using Col2DI = struct CollisionInfo2D
 	{
 		float fHeight;
 		float fWidth;
 		glm::vec2 v2Offset = glm::vec2();
-	} Col2DI;
+	};
 
 	struct Transform
 	{
@@ -68,13 +57,13 @@ public:
 		std::string ToString()
 		{
 			std::string sTransform;
-			sTransform += glm::to_string(Position) + " ";
-			sTransform += glm::to_string(Rotation) + " ";
-			sTransform += glm::to_string(Scale);
+			sTransform += to_string(Position) + " ";
+			sTransform += to_string(Rotation) + " ";
+			sTransform += to_string(Scale);
 			return sTransform;
 		}
 
-		friend std::istream& operator>> (std::istream& is, Transform& transform)
+		friend std::istream& operator>>(std::istream& is, Transform& transform)
 		{
 			int x, y, z, roll, yaw, pitch, sx, sy, sz;
 			std::string PosX, PosY, PosZ, Roll, Yaw, Pitch, ScaleX, ScaleY, ScaleZ;
@@ -118,7 +107,7 @@ public:
 		BOTTOM_CENTER,
 		BOTTOM_RIGHT
 	};
-	
+
 	enum EMESHTYPE
 	{
 		NONE,
@@ -135,16 +124,21 @@ public:
 	static glm::vec3 LinePlaneIntersect(glm::vec3 RayStart, glm::vec3 RayDirection, glm::vec3 PlanePos, glm::vec3 PlaneNormal);
 
 	static glm::vec3 GetAncoredPosition(glm::vec3 position, glm::vec3 Dimensions, EANCHOR _AnchorType);
+
 	static glm::vec3 GetAncoredPosition2D(glm::vec2 position, glm::vec2 Dimensions, EANCHOR _AnchorType);
+
 	static glm::vec3 GetTextAncoredPosition(glm::vec2 position, glm::vec2 Dimensions, EANCHOR _AnchorType);
 
 	static bool isColliding2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2);
+
 	//static bool isColliding2D(Entity* Entity1, std::shared_ptr<Entity> Entity2);
 
 	static bool CheckCollision2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2, glm::vec2 Movement);
+
 	//static bool CheckCollision2D(Entity* Entity1, std::shared_ptr<Entity> Entity2, glm::vec2 Movement);
-		
+
 	static glm::vec2 GetDistance2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2);
+
 	//static glm::vec2 GetDistance2D(Entity* Entity1, std::shared_ptr<Entity> Entity2);
 	//static glm::vec2 FindTextDimenions(std::string text);
 
@@ -155,19 +149,19 @@ public:
 	static int AddEntityID();
 
 	static std::vector<std::string> SeparateString(std::string _string, char _seperator);
+
 	static glm::vec3 StringToVec3(std::string _string);
 
 	static std::shared_ptr<Entity> WorldCubeMap;
-
 
 private:
 	static int iEntityNumber;
 
 	static bool CheckSphereEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
-	static bool CheckCubeEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
-	static bool CheckPlaneEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
 
+	static bool CheckCubeEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
+
+	static bool CheckPlaneEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
 
 	static bool CheckFaceHit(glm::vec3 BottomLeftOffset, glm::vec3 TopRightOffset, glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
 };
-

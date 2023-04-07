@@ -1,18 +1,5 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    ParticleSystem.cpp
-// Description    	:    main implementation for ParticleSystem
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-// Library Includes //
 #include <random>
 
 // OpenGL Library Includes //
@@ -34,8 +21,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-ParticleSystem2D::ParticleSystem2D(Utils::Transform _Transform, const char* _CharName)
-	: Entity(_Transform, Utils::CENTER)
+ParticleSystem2D::ParticleSystem2D(Utils::Transform _Transform, const char* _CharName) : Entity(_Transform, Utils::CENTER)
 {
 	m_vParticlePaths.push_back(_CharName);
 }
@@ -48,7 +34,6 @@ ParticleSystem2D::ParticleSystem2D(Utils::Transform _Transform, const char* _Cha
 ************************************************************/
 ParticleSystem2D::~ParticleSystem2D()
 {
-
 }
 
 /************************************************************
@@ -57,7 +42,7 @@ ParticleSystem2D::~ParticleSystem2D()
 #--Parameters--#: 	Path
 #--Return--#: 		NA
 ************************************************************/
-void ParticleSystem2D::AddParticleType(const char * _Charname)
+void ParticleSystem2D::AddParticleType(const char* _Charname)
 {
 	m_vParticlePaths.push_back(_Charname);
 }
@@ -159,11 +144,12 @@ void ParticleSystem2D::SetLifeTime(float _fLifetime)
 ************************************************************/
 float ParticleSystem2D::RandomBetweenRange(float _fMin, float _fMax)
 {
-	int fRandRangeSize = int(abs(_fMax - _fMin) * 1000.0f);
+	int fRandRangeSize = static_cast<int>(abs(_fMax - _fMin) * 1000.0f);
 	if (fRandRangeSize != 0)
-		return (float)(rand() % fRandRangeSize) / 1000 + _fMin;
-	else
-		return _fMin;
+	{
+		return static_cast<float>(rand() % fRandRangeSize) / 1000 + _fMin;
+	}
+	return _fMin;
 }
 
 /************************************************************
@@ -175,8 +161,8 @@ float ParticleSystem2D::RandomBetweenRange(float _fMin, float _fMax)
 void ParticleSystem2D::Update()
 {
 	// Decrease timer
-	m_fCurrentDelay -= (float)Time::dTimeDelta;
-	m_fCurrentLifeTime += (float)Time::dTimeDelta;
+	m_fCurrentDelay -= static_cast<float>(Time::dTimeDelta);
+	m_fCurrentLifeTime += static_cast<float>(Time::dTimeDelta);
 	if (m_fCurrentDelay <= 0 && (m_fLifeTime == 0 || m_fCurrentLifeTime <= m_fLifeTime))
 	{
 		// Generate New Random Time
@@ -185,7 +171,7 @@ void ParticleSystem2D::Update()
 		// Random Speed
 		float fNewSpeed = RandomBetweenRange(m_v2SpeedRange.x, m_v2SpeedRange.y);
 		// Random Direction
-		glm::vec2 v2NewDirection = { RandomBetweenRange(m_v2DirectionRangeX.x, m_v2DirectionRangeX.y), RandomBetweenRange(m_v2DirectionRangeY.x, m_v2DirectionRangeY.y) };
+		glm::vec2 v2NewDirection = {RandomBetweenRange(m_v2DirectionRangeX.x, m_v2DirectionRangeX.y), RandomBetweenRange(m_v2DirectionRangeY.x, m_v2DirectionRangeY.y)};
 		// Random Size
 		float fNewSize = RandomBetweenRange(m_v2SizeRange.x, m_v2SizeRange.y);
 		// Random Falloff Distance
@@ -199,36 +185,38 @@ void ParticleSystem2D::Update()
 		std::shared_ptr<Plane> NewParticlePlaneMesh = std::make_shared<Plane>(fNewSize, fNewSize, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), m_vParticlePaths[iRandPath]);
 		NewParticleEntity->AddMesh(NewParticlePlaneMesh);
 
-		Particle2D NewParticle = { NewParticleEntity, fNewSpeed,  v2NewDirection, fNewFalloffDistance, fNewFalloffTime, 0.0f };
+		Particle2D NewParticle = {NewParticleEntity, fNewSpeed, v2NewDirection, fNewFalloffDistance, fNewFalloffTime, 0.0f};
 		m_vParticles.push_back(NewParticle);
 		SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewParticle.pEntity);
 	}
-	
+
 	if (m_vParticles.size() > 1)
 	{
 		for (auto iter = m_vParticles.begin(); iter != m_vParticles.end();)
 		{
-			(*iter).fTimeLength += (float)Time::dTimeDelta;
+			(*iter).fTimeLength += static_cast<float>(Time::dTimeDelta);
 			(*iter).pEntity->Translate(glm::vec3(0, -m_fGravity * Time::dTimeDelta, 0));
-			(*iter).pEntity->Translate(glm::vec3((*iter).v2Direction * (*iter).fSpeed * (float)Time::dTimeDelta, 0));
-			
+			(*iter).pEntity->Translate(glm::vec3((*iter).v2Direction * (*iter).fSpeed * static_cast<float>(Time::dTimeDelta), 0));
+
 			glm::vec2 v2Distance = Utils::GetDistance2D((*iter).pEntity, this->shared_from_this());
 			if (sqrt(pow(v2Distance.x, 2) + pow(v2Distance.y, 2)) >= (*iter).fFalloffDistance || (*iter).fTimeLength > (*iter).fFallOffTime)
-			{				
+			{
 				SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity((*iter).pEntity);
 				iter = m_vParticles.erase(iter);
 			}
 			else
+			{
 				++iter;
+			}
 		}
 	}
-	else if(!m_vParticles.empty())
+	else if (!m_vParticles.empty())
 	{
-		m_vParticles[0].fTimeLength += (float)Time::dTimeDelta;
-		m_vParticles[0].pEntity->Translate(glm::vec3(m_vParticles[0].v2Direction * m_vParticles[0].fSpeed * (float)Time::dTimeDelta, 0));
+		m_vParticles[0].fTimeLength += static_cast<float>(Time::dTimeDelta);
+		m_vParticles[0].pEntity->Translate(glm::vec3(m_vParticles[0].v2Direction * m_vParticles[0].fSpeed * static_cast<float>(Time::dTimeDelta), 0));
 		m_vParticles[0].pEntity->Translate(glm::vec3(0, -m_fGravity * Time::dTimeDelta, 0));
 		glm::vec2 v2Distance = Utils::GetDistance2D(m_vParticles[0].pEntity, this->shared_from_this());
-		
+
 		if (sqrt(pow(v2Distance.x, 2) + pow(v2Distance.y, 2)) >= m_vParticles[0].fFalloffDistance || m_vParticles[0].fTimeLength > m_vParticles[0].fFallOffTime)
 		{
 			SceneManager::GetInstance()->GetCurrentScene()->DestroyEntity(m_vParticles[0].pEntity);

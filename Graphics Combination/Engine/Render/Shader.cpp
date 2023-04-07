@@ -1,35 +1,19 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2005 - 2018 Media Design School
-//
-// File Name    	:    Shader.cpp
-// Description    	:    main implementation for Shader
-// Author       	:    Alex Coultas
-// Mail         	:    alex.cou7417@mediadesign.school.nz
-//
+// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-
-// This Includes //
 #include "Shader.h"
 
 // Library Includes //
-#include <soil\SOIL.h>
 #include <ft2build.h>
-#include FT_FREETYPE_H
-#include <map>
 #include <iostream>
+#include <map>
+#include <soil/SOIL.h>
+#include FT_FREETYPE_H
 
 // Engine Includes //
 #include "ModelObject.h"
 #include "ShaderLoader.h"
 
 // Local Includes //
-
-
 
 // Static Variables //
 //GLuint Shader::program;
@@ -42,11 +26,9 @@
 //GLuint Shader::ModelProgramLit;
 //GLuint Shader::ReflectionProgram;
 
-
 std::map<std::string, std::shared_ptr<ModelObject>> Shader::Models;
-std::map<const char *, GLuint> Shader::Textures;
+std::map<const char*, GLuint> Shader::Textures;
 std::map<std::string, GLuint> Shader::Programs;
-
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -81,23 +63,23 @@ void Shader::CleanUp()
 
 void Shader::LoadAllDefaultShadersInCurrentContext()
 {
-	Shader::AddProgram("Resources/Shaders/TextureVertexShader.vs", "Resources/Shaders/TextureFragmentShader.fs", "BaseProgram");
-	Shader::AddComputeProgram("Resources/Shaders/ComputeShader.comps", "ComputeProgram");
-	Shader::AddProgram("Resources/Shaders/ParticleShaderCompute.vs", "Resources/Shaders/ParticleShaderCompute.fs", "GPUParticlesProgram");
-	Shader::AddProgram("Resources/Shaders/ParticleShader.vs", "Resources/Shaders/ParticleShader.fs", "ParticleShader", "Resources/Shaders/ParticleShader.gs");
-	Shader::AddProgram("Resources/Shaders/LitVertexShader.vs", "Resources/Shaders/LitFragmentShader.fs", "LitTextureprogram");
-	Shader::AddProgram("Resources/Shaders/AnimatedModel.vs", "Resources/Shaders/AnimatedModel.fs", "AnimatedModel");
-	Shader::AddProgram("Resources/Shaders/Text.vs", "Resources/Shaders/Text.fs", "TextUIprogram");
-	Shader::AddProgram("Resources/Shaders/UI.vs", "Resources/Shaders/UI.fs", "UIprogram");
-	Shader::AddProgram("Resources/Shaders/CubeMapVertexShader.vs", "Resources/Shaders/CubeMapFragmentShader.fs", "CubeMapProgram");
-	Shader::AddProgram("Resources/Shaders/ModelVertexShader.vs", "Resources/Shaders/ModelFragmentShader.fs", "ModelProgram");
-	Shader::AddProgram("Resources/Shaders/ModelVertexShaderLit.vs", "Resources/Shaders/ModelFragmentShaderLit.fs", "ModelProgramLit");
-	Shader::AddProgram("Resources/Shaders/ReflectionShader.vs", "Resources/Shaders/ReflectionShader.fs", "ReflectionProgram");
-	Shader::AddProgram("Resources/Shaders/FogShader.vs", "Resources/Shaders/FogShader.fs", "FogProgram");
-	Shader::AddProgram("Resources/Shaders/GeometryShader.vs", "Resources/Shaders/GeometryShader.fs", "GeometryShader", "Resources/Shaders/GeometryShader.gs");
-	Shader::AddProgram("Resources/Shaders/ParticleShader.vs", "Resources/Shaders/ParticleShader.fs", "ParticleShader", "Resources/Shaders/ParticleShader.gs");
-	Shader::AddTessProgram("Resources/Shaders/Tessellation.vs", "Resources/Shaders/Tessellation.fs", "Resources/Shaders/TessControl.tc", "Resources/Shaders/TessEval.te", "TessProgram");
-	Shader::AddProgram("Resources/Shaders/FrameBuffer.vs", "Resources/Shaders/FrameBuffer.fs", "FrameBuffer");
+	AddProgram("Resources/Shaders/TextureVertexShader.vs", "Resources/Shaders/TextureFragmentShader.fs", "BaseProgram");
+	AddComputeProgram("Resources/Shaders/ComputeShader.comps", "ComputeProgram");
+	AddProgram("Resources/Shaders/ParticleShaderCompute.vs", "Resources/Shaders/ParticleShaderCompute.fs", "GPUParticlesProgram");
+	AddProgram("Resources/Shaders/ParticleShader.vs", "Resources/Shaders/ParticleShader.fs", "ParticleShader", "Resources/Shaders/ParticleShader.gs");
+	AddProgram("Resources/Shaders/LitVertexShader.vs", "Resources/Shaders/LitFragmentShader.fs", "LitTextureprogram");
+	AddProgram("Resources/Shaders/AnimatedModel.vs", "Resources/Shaders/AnimatedModel.fs", "AnimatedModel");
+	AddProgram("Resources/Shaders/Text.vs", "Resources/Shaders/Text.fs", "TextUIprogram");
+	AddProgram("Resources/Shaders/UI.vs", "Resources/Shaders/UI.fs", "UIprogram");
+	AddProgram("Resources/Shaders/CubeMapVertexShader.vs", "Resources/Shaders/CubeMapFragmentShader.fs", "CubeMapProgram");
+	AddProgram("Resources/Shaders/ModelVertexShader.vs", "Resources/Shaders/ModelFragmentShader.fs", "ModelProgram");
+	AddProgram("Resources/Shaders/ModelVertexShaderLit.vs", "Resources/Shaders/ModelFragmentShaderLit.fs", "ModelProgramLit");
+	AddProgram("Resources/Shaders/ReflectionShader.vs", "Resources/Shaders/ReflectionShader.fs", "ReflectionProgram");
+	AddProgram("Resources/Shaders/FogShader.vs", "Resources/Shaders/FogShader.fs", "FogProgram");
+	AddProgram("Resources/Shaders/GeometryShader.vs", "Resources/Shaders/GeometryShader.fs", "GeometryShader", "Resources/Shaders/GeometryShader.gs");
+	AddProgram("Resources/Shaders/ParticleShader.vs", "Resources/Shaders/ParticleShader.fs", "ParticleShader", "Resources/Shaders/ParticleShader.gs");
+	AddTessProgram("Resources/Shaders/Tessellation.vs", "Resources/Shaders/Tessellation.fs", "Resources/Shaders/TessControl.tc", "Resources/Shaders/TessEval.te", "TessProgram");
+	AddProgram("Resources/Shaders/FrameBuffer.vs", "Resources/Shaders/FrameBuffer.fs", "FrameBuffer");
 }
 
 void Shader::AddProgram(std::string VertexShaderPath, std::string FragmentShaderPath, std::string ShaderName, std::string GeometryShaderPath)
@@ -407,10 +389,10 @@ GLuint Shader::BindArray(float fWidth, float fHeight, glm::vec4 Colour)
 
 	GLfloat vertices[] = {
 		// Positions						// Colors			
-		-fHalfWidth, fHalfHeight, 0.0f,		Colour.r, Colour.g, Colour.b, Colour.a,
-		fHalfWidth, fHalfHeight, 0.0f,		Colour.r, Colour.g, Colour.b, Colour.a,
-		fHalfWidth, -fHalfHeight, 0.0f,		Colour.r, Colour.g, Colour.b, Colour.a,
-		-fHalfWidth, -fHalfHeight, 0.0f,	Colour.r, Colour.g, Colour.b, Colour.a,
+		-fHalfWidth, fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
+		fHalfWidth, fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
+		fHalfWidth, -fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
+		-fHalfWidth, -fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
 
 	};
 
@@ -551,8 +533,8 @@ GLuint Shader::BindArray(float fWidth, float fHeight, glm::vec4 Colour)
 #--Parameters--#: 	Takes in size, colour, texture source, ref texture gluint and draw mode
 #--Return--#: 		New vao gluint
 ************************************************************/
-GLuint Shader::BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour, const char * TextureSource, GLuint & Texture, int _DrawMode)
-{		
+GLuint Shader::BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour, const char* TextureSource, GLuint& Texture, int _DrawMode)
+{
 	GLuint vao;
 	GLuint vbo;
 	GLuint ebo;
@@ -566,23 +548,23 @@ GLuint Shader::BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour,
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	int width, height;
-	unsigned char* image = SOIL_load_image(TextureSource, &width, &height, 0, SOIL_LOAD_RGBA);
+	unsigned char* image = SOIL_load_image(TextureSource, &width, &height, nullptr, SOIL_LOAD_RGBA);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-			
+
 	glGenerateMipmap(GL_TEXTURE_2D);
 	SOIL_free_image_data(image);
 	Texture = texture;
 	glBindTexture(GL_TEXTURE_2D, 0);
-	
+
 	glm::vec4 UVCoords = glm::vec4(0, 1, 0, 1);
 	if (_DrawMode == 1)
 	{
-		float yValue = (fHeight / fWidth) *  ((float)width / (float)height);
+		float yValue = (fHeight / fWidth) * (static_cast<float>(width) / static_cast<float>(height));
 		UVCoords = glm::vec4(0, 1, 0, yValue);
 	}
 	else if (_DrawMode == 2)
 	{
-		float xValue = (fWidth / fHeight) *  ((float)height / (float)width);
+		float xValue = (fWidth / fHeight) * (static_cast<float>(height) / static_cast<float>(width));
 		UVCoords = glm::vec4(0, xValue, 0, 1);
 	}
 	float fHalfWidth = fWidth / 2;
@@ -590,10 +572,10 @@ GLuint Shader::BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour,
 
 	GLfloat vertices[] = {
 		// Positions				// Tex Coords
-		-fHalfWidth, fHalfHeight,	UVCoords.x, UVCoords.z,// Top Left
-		fHalfWidth, fHalfHeight,	UVCoords.y, UVCoords.z, // Top Right
-		fHalfWidth, -fHalfHeight,	UVCoords.y, UVCoords.w, // Bottom Right
-		-fHalfWidth, -fHalfHeight,	UVCoords.x, UVCoords.w, // Bottom Left
+		-fHalfWidth, fHalfHeight, UVCoords.x, UVCoords.z, // Top Left
+		fHalfWidth, fHalfHeight, UVCoords.y, UVCoords.z, // Top Right
+		fHalfWidth, -fHalfHeight, UVCoords.y, UVCoords.w, // Bottom Right
+		-fHalfWidth, -fHalfHeight, UVCoords.x, UVCoords.w, // Bottom Left
 	};
 	GLuint indices[] = {
 		0, 1, 2, // First Triangle
@@ -607,7 +589,7 @@ GLuint Shader::BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour,
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), nullptr);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -618,7 +600,7 @@ GLuint Shader::BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour,
 
 	glEnableVertexAttribArray(2);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	
+
 	return vao;
 }
 
@@ -638,12 +620,11 @@ Text::cFont Shader::AddFont(std::string fontPath, int iPSize)
 		}
 	}
 
-
 	// Initiate the font Lib
 	FT_Library ft;
 	if (FT_Init_FreeType(&ft))
 	{
-		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;		
+		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 	}
 	// Each character is called a glyph and Face is the collection of glyphs
 	FT_Face face;
@@ -675,16 +656,17 @@ Text::cFont Shader::AddFont(std::string fontPath, int iPSize)
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, face->glyph->bitmap.width, face->glyph->bitmap.rows, 0, GL_ALPHA,
-			GL_UNSIGNED_BYTE, face->glyph->bitmap.buffer);
+		             GL_UNSIGNED_BYTE, face->glyph->bitmap.buffer);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		// Now to store character for later use
-		Text::Character character = { texture,
-			glm::ivec2((GLuint)face->glyph->bitmap.width, (GLuint)face->glyph->bitmap.rows),
-			glm::ivec2((GLuint)face->glyph->bitmap_left, (GLuint)face->glyph->bitmap_top),
-			(GLuint)face->glyph->advance.x
+		Text::Character character = {
+			texture,
+			glm::ivec2(static_cast<GLuint>(face->glyph->bitmap.width), static_cast<GLuint>(face->glyph->bitmap.rows)),
+			glm::ivec2(static_cast<GLuint>(face->glyph->bitmap_left), static_cast<GLuint>(face->glyph->bitmap_top)),
+			static_cast<GLuint>(face->glyph->advance.x)
 		};
 		newFont.Characters.insert(std::pair<GLchar, Text::Character>(c, character));
 	}
@@ -700,9 +682,9 @@ Text::cFont Shader::AddFont(std::string fontPath, int iPSize)
 
 	glGenBuffers(1, &newFont.VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, newFont.VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
 
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), nullptr);
 	glEnableVertexAttribArray(0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -718,13 +700,13 @@ Text::cFont Shader::AddFont(std::string fontPath, int iPSize)
 #--Parameters--#: 	Takes texture path and texture gluint ref
 #--Return--#: 		New vao gluint
 ************************************************************/
-GLuint Shader::CreateBuffer(const char * TextureSource, GLuint & Texture, bool bAA, bool bHasNormals)
+GLuint Shader::CreateBuffer(const char* TextureSource, GLuint& Texture, bool bAA, bool bHasNormals)
 {
 	GLuint vao;
 	GLuint vbo;
 	GLuint ebo;
 	GLuint texture;
-	
+
 	Texture = GetTexture(TextureSource, bAA);
 
 	glGenVertexArrays(1, &vao);
@@ -738,7 +720,7 @@ GLuint Shader::CreateBuffer(const char * TextureSource, GLuint & Texture, bool b
 	{
 		if (bHasNormals)
 		{
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat), (GLvoid*)0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat), static_cast<GLvoid*>(0));
 			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat), (GLvoid*)(7 * sizeof(GLfloat)));
 			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat), (GLvoid*)(9 * sizeof(GLfloat)));
@@ -749,7 +731,7 @@ GLuint Shader::CreateBuffer(const char * TextureSource, GLuint & Texture, bool b
 		}
 		else
 		{
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), static_cast<GLvoid*>(0));
 			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(7 * sizeof(GLfloat)));
 			glEnableVertexAttribArray(0);
@@ -761,7 +743,7 @@ GLuint Shader::CreateBuffer(const char * TextureSource, GLuint & Texture, bool b
 	{
 		if (bHasNormals)
 		{
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), static_cast<GLvoid*>(0));
 			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)(7 * sizeof(GLfloat)));
 			glEnableVertexAttribArray(0);
@@ -770,7 +752,7 @@ GLuint Shader::CreateBuffer(const char * TextureSource, GLuint & Texture, bool b
 		}
 		else
 		{
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (GLvoid*)0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), static_cast<GLvoid*>(0));
 			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 			glEnableVertexAttribArray(0);
 			glEnableVertexAttribArray(1);
@@ -782,7 +764,7 @@ GLuint Shader::CreateBuffer(const char * TextureSource, GLuint & Texture, bool b
 	return vao;
 }
 
-GLuint Shader::GetTexture(const char * TextureSource, bool bAA)
+GLuint Shader::GetTexture(const char* TextureSource, bool bAA)
 {
 	GLuint texture = 0;
 
@@ -817,13 +799,12 @@ GLuint Shader::GetTexture(const char * TextureSource, bool bAA)
 			}
 
 			int width, height;
-			unsigned char* image = SOIL_load_image(TextureSource, &width, &height, 0, SOIL_LOAD_RGBA);
+			unsigned char* image = SOIL_load_image(TextureSource, &width, &height, nullptr, SOIL_LOAD_RGBA);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
 			glGenerateMipmap(GL_TEXTURE_2D);
 			SOIL_free_image_data(image);
 			glBindTexture(GL_TEXTURE_2D, 0);
-
 
 			Textures.insert(std::pair<const char*, GLuint>(TextureSource, texture));
 			LogManager::GetInstance()->DisplayLogMessage("Adding Texture, \"" + std::string(TextureSource) + "\", Total Texture Count : " + std::to_string(Textures.size()));
