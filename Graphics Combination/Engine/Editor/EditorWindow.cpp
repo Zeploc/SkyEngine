@@ -74,19 +74,15 @@ void EditorWindow::SetupUI()
 		//20, Size.y - 20.0f
 		std::shared_ptr<UIButton> TestBtn(new UIButton(glm::vec2(0.0f, 0.0f), Utils::TOP_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), Size.x - 35, 30, nullptr));
 
-		FDelegate<EditorWindow>* PressDelegate = new FDelegate<EditorWindow>(this, &EditorWindow::StartDrag);
-		FDelegate<EditorWindow>* ReleaseDelegate = new FDelegate<EditorWindow>(this, &EditorWindow::StopDrag);
-
-		TestBtn->BindPress(PressDelegate);
-		TestBtn->BindRelease(ReleaseDelegate);
+		TestBtn->BindPress(this, &EditorWindow::StartDrag);
+		TestBtn->BindRelease(this, &EditorWindow::StopDrag);
 
 		TestBtn->AddText(WindowName, "Resources/Fonts/Roboto-Thin.ttf", 20, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, {0, 0});
 		UIElements.push_back(TestBtn);
 
 		std::shared_ptr<UIButton> PopoutButton(new UIButton(glm::vec2(Size.x, 0.0f), Utils::TOP_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 30, 30, nullptr));
 
-		FDelegate<EditorWindow>* PopoutPressDelegate = new FDelegate<EditorWindow>(this, &EditorWindow::PopOut);
-		PopoutButton->BindPress(PopoutPressDelegate);
+		PopoutButton->BindPress(this, &EditorWindow::PopOut);
 		UIElements.push_back(PopoutButton);
 	}
 }

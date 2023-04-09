@@ -16,9 +16,9 @@ public:
 	~Button3DEntity();
 
 	template <class T>
-	void BindPress(FDelegate<T>* callback)
+	void BindPress(T* Object, void(T::*Function)())
 	{
-		PressFunc = callback;
+		PressDelegate.Bind(Object, Function);
 	}
 
 	void Update() override;
@@ -27,11 +27,9 @@ public:
 
 	static bool bButtonPressedThisFrame;
 
-private:
-	using GMVoidFunc = void(*)();
+	FMulticastDelegate PressDelegate;
 
-	DelegateBase* PressFunc;
-	GMVoidFunc PressFuncCall = nullptr;
+private:
 
 	bool CheckHit(glm::vec3 BottomLeftOffset, glm::vec3 TopRightOffset);
 

@@ -12,6 +12,8 @@
 // This Includes //
 #include "Scene.h"
 
+#include "Engine/Entity/Button3DEntity.h"
+
 /************************************************************
 #--Description--#:  Constructor function
 #--Author--#: 		Alex Coultas
@@ -199,6 +201,8 @@ void Scene::Update()
 	{
 		UIElementsToBeDestroyed.clear();
 	}
+
+	Button3DEntity::bButtonPressedThisFrame = false;
 }
 
 void Scene::OnLoadScene()

@@ -38,17 +38,17 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 	// Pause Screen elements
 	std::shared_ptr<UIButton> QuitBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 20, Camera::GetInstance()->SCR_HEIGHT - 10.0f), Utils::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
 	QuitBtn->AddText("Quit", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, {0, 0});
-	QuitBtn->BindPress(new FDelegate<Level>(this, &Level::QuitCall));
+	QuitBtn->BindPress(this, &Level::QuitCall);
 	AddUIElement(QuitBtn);
 
 	std::shared_ptr<UIButton> SaveBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 150, Camera::GetInstance()->SCR_HEIGHT - 10.0f), Utils::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
 	SaveBtn->AddText("Save", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, {0, 0});
-	SaveBtn->BindPress(new FDelegate<Level>(this, &Level::SaveCurrentLevel));
+	SaveBtn->BindPress(this, &Level::SaveCurrentLevel);
 	AddUIElement(SaveBtn);
 
 	std::shared_ptr<UIButton> OpenBtn(new UIButton(glm::vec2(Camera::GetInstance()->SCR_WIDTH - 280, Camera::GetInstance()->SCR_HEIGHT - 10.0f), Utils::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
 	OpenBtn->AddText("Open", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, {0, 0});
-	OpenBtn->BindPress(new FDelegate<Level>(this, &Level::OpenFile));
+	OpenBtn->BindPress(this, &Level::OpenFile);
 	AddUIElement(OpenBtn);
 
 	LevelNameText = std::make_shared<UIText>(UIText({Camera::GetInstance()->SCR_WIDTH - 410, Camera::GetInstance()->SCR_HEIGHT - 15.0f}, 0, {0.3, 0.3, 0.3, 1.0f}, "Level Name", "Resources/Fonts/Roboto-Regular.ttf", 20, Utils::BOTTOM_RIGHT));
@@ -143,7 +143,7 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 	AddEntity(SphereRaycastTest, true);
 
 	std::shared_ptr<Button3DEntity> FowardCubeButton = std::make_shared<Button3DEntity>(Button3DEntity(Utils::Transform{{4.0f, 7.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, Utils::CENTER, 6.0f, 2.0f, 1.0f, glm::vec4(0.7, 0.5, 0.7, 1.0f), glm::vec4(0.4, 0.5, 0.3, 1.0f), "Resources/Images/StoneWall_2x2.jpg"));
-	FowardCubeButton->BindPress(new FDelegate<Level>(this, &Level::ButtonBoiFuncorness));
+	FowardCubeButton->BindPress(this, &Level::ButtonBoiFuncorness);
 	AddEntity(FowardCubeButton, true);
 
 	std::shared_ptr<Entity> CubeEnty = std::make_shared<Entity>(Entity(Utils::Transform{{25.0f, 4.0f, 4.0f}, {0, 0, 0}, {1, 1, 1}}, Utils::CENTER));
@@ -371,5 +371,5 @@ void Level::QuitCall()
 
 void Level::ButtonBoiFuncorness()
 {
-	std::cout << "BUTTON THINGIE BOI\n";
+	std::cout << "BUTTON THINGIE BOI" << std::endl;
 }

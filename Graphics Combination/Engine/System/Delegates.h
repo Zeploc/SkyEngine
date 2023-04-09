@@ -1,0 +1,233 @@
+﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
+
+#pragma once
+#include <list>
+
+class DelegateBase
+{
+public:
+	DelegateBase()
+	{
+		
+	}	
+
+	virtual ~DelegateBase()
+	{
+	}
+	//virtual DelegateBase* copy() {};
+	virtual void operator()() = 0;
+
+	// virtual bool EqualTo(void* Object, void(*Function)())
+	// {
+	// 	return false;
+	// }
+
+	DelegateBase(const DelegateBase& other)
+	{
+	}
+
+};
+
+template <class T>
+class VoidDelegate : public DelegateBase
+{
+public:
+	using fn = void(T::*)();
+
+	VoidDelegate()
+	{
+		
+	}
+
+	VoidDelegate(const VoidDelegate& other)
+	{
+		// TODO:
+	}
+	
+	VoidDelegate(T* trg, fn op) : m_rTarget(trg)
+							   , m_Operation(op)
+	{
+	}
+
+	virtual ~VoidDelegate()
+	{
+	}
+	//virtual DelegateBase* copy() {};
+	void operator()()
+	{
+		(m_rTarget->*m_Operation)();
+	}
+	
+	bool EqualTo(T* Object, void(T::*Function)())
+	{
+		return m_rTarget == Object && m_Operation == Function;
+	}
+
+	//private:
+
+	T* m_rTarget;
+	fn m_Operation;
+};
+
+class FDelegate
+{
+public:
+	
+	FDelegate()
+	{
+		
+	}
+
+	FDelegate(const FDelegate& other)
+	{
+		// TODO:
+	}
+	
+	template <class T>
+	void Bind(T* Object, void(T::*Function)())
+	{
+		Clear();
+		Delegate = new VoidDelegate(Object, Function);
+	}
+
+	void Clear()
+	{
+		delete Delegate;
+		Delegate = nullptr;
+	}
+
+	void Broadcast() const
+	{
+		if (Delegate)
+		{
+			(*Delegate)();
+		}
+	}
+	
+	virtual ~FDelegate()
+	{
+		Clear();
+	}
+
+private:
+	DelegateBase* Delegate = nullptr;
+
+};
+
+
+class FMulticastDelegate
+{
+public:
+	
+	FMulticastDelegate()
+	{
+		
+	}
+	FMulticastDelegate(const FMulticastDelegate& other)
+	{
+		// TODO:
+	}
+	
+	template <class T>
+	void Bind(T* Object, void(T::*Function)())
+	{
+		Delegates.push_back(new VoidDelegate(Object, Function));
+	}
+	template <class T>
+	bool Unbind(T* Object, void(T::*Function)())
+	{
+		using void_delegate = VoidDelegate<T>;
+		for (DelegateBase* Delegate : Delegates)
+		{
+			// TODO: Improve from static cast
+			void_delegate* VoidDelegate = static_cast<void_delegate*>(Delegate);
+			if (Delegate && VoidDelegate->EqualTo(Object, Function))
+			{
+				Delegates.remove(Delegate);
+				delete Delegate;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void Clear()
+	{
+		for (const DelegateBase* Delegate : Delegates)
+		{
+			delete Delegate;
+		}
+		Delegates.clear();
+	}
+
+	void Broadcast() const
+	{
+		const std::list<DelegateBase*> DelegatesCopy = Delegates;
+		for (DelegateBase* Delegate : DelegatesCopy)
+		{
+			// TODO: Need to account for being unbound from another delegate
+			if (Delegate)
+			{
+				(*Delegate)();
+			}
+		}
+	}
+
+	FMulticastDelegate(const FDelegate& other)
+	{
+	}
+	
+	virtual ~FMulticastDelegate()
+	{
+		Clear();
+	}
+
+private:
+	std::list<DelegateBase*> Delegates;
+
+};
+
+
+//class FDelegateWrapper
+//{
+//private:
+//	class ParameterBase {
+//	public:
+//		virtual ~ParameterBase() {}
+//		virtual ParameterBase* copy() = 0;
+//		virtual void foo() = 0;
+//	};
+//
+//	template <typename T>
+//	class ParameterModel : public ParameterBase {
+//	public:
+//		// take by value so we simply move twice, if movable
+//		ParameterModel(const T& t) : t(t) {}
+//		ParameterModel(T&& t) : t(t) {}
+//		void foo() { t.foo(); }
+//		ParameterModel* copy() { return new ParameterModel(*this); }
+//	private:
+//		T t;
+//	};
+//
+//public:
+//	template <typename T>
+//	FDelegateWrapper(T&& t)
+//		: pp(new ParameterModel< typename std::remove_reference<T>::type >(std::forward<T>(t))) {}
+//
+//	// Movable and Copyable only
+//	FDelegateWrapper(FDelegateWrapper&&) = default;
+//	FDelegateWrapper& operator=(FDelegateWrapper&&) = default;
+//
+//	FDelegateWrapper(const FDelegateWrapper& other) : pp(other.pp->copy()) {};
+//	FDelegateWrapper operator=(const FDelegateWrapper& other) {
+//		pp.reset(other.pp->copy());
+//		return *this;
+//	};
+//
+//	// members
+//
+//	void foo() { pp->foo(); }
+//private:
+//	std::unique_ptr<ParameterBase> pp;
+//};

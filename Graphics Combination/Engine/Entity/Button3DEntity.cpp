@@ -10,7 +10,7 @@
 // Static Variables //
 bool Button3DEntity::bButtonPressedThisFrame = false;
 
-Button3DEntity::Button3DEntity(Utils::Transform _Transform, Utils::EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, void (*func)()) : Entity(_Transform, _Anchor), PressFuncCall(func)
+Button3DEntity::Button3DEntity(Utils::Transform _Transform, Utils::EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, void (*func)()) : Entity(_Transform, _Anchor)
 {
 	std::shared_ptr<Cube> ButtonCubeMesh = std::make_shared<Cube>(Cube(fWidth, fHeight, fDepth, _Colour));
 	EntityMesh = ButtonCubeMesh;
@@ -18,7 +18,7 @@ Button3DEntity::Button3DEntity(Utils::Transform _Transform, Utils::EANCHOR _Anch
 	btnHighlightColour = _HightlightColour;
 }
 
-Button3DEntity::Button3DEntity(Utils::Transform _Transform, Utils::EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, const char* Texturepath, void (*func)()) : Entity(_Transform, _Anchor), PressFuncCall(func)
+Button3DEntity::Button3DEntity(Utils::Transform _Transform, Utils::EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, const char* Texturepath, void (*func)()) : Entity(_Transform, _Anchor)
 {
 	std::shared_ptr<Cube> ButtonCubeMesh = std::make_shared<Cube>(Cube(fWidth, fHeight, fDepth, _Colour, Texturepath));
 	EntityMesh = ButtonCubeMesh;
@@ -50,15 +50,9 @@ void Button3DEntity::Update()
 		if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
 		{
 			bPressed = true;
+			// TODO: Switch to order/depth system
 			bButtonPressedThisFrame = true;
-			if (PressFuncCall != nullptr)
-			{
-				PressFuncCall();
-			}
-			if (PressFunc)
-			{
-				(*PressFunc)();
-			}
+			PressDelegate.Broadcast();
 		}
 		EntityMesh->Colour = btnHighlightColour;
 	}

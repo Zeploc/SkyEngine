@@ -3839,6 +3839,7 @@
     <ClInclude Include="Engine/UI\UIText.h" />
     <ClInclude Include="Engine/UI\UITextField.h" />
     <ClInclude Include="Engine/UI\Widget.h" />
+    <ClInclude Include="Engine\System\Delegates.h" />
     <ClInclude Include="Game\Animation\ssAnimatedModel.h" />
     <ClInclude Include="Game\Players\Player.h" />
     <ClInclude Include="Game\Scenes\Level.h" />
