@@ -40,10 +40,10 @@ Player::~Player()
 void Player::Update()
 {
 	Entity::Update();
-
+	
 	float MoveSpeed = 20.0f;
 
-	if (Input::GetInstance()->KeyState[static_cast<unsigned char>(' ')] == Input::INPUT_FIRST_PRESS && YOffset <= 0)
+	if (Input::GetInstance()->KeyState[GLFW_KEY_SPACE] == Input::INPUT_FIRST_PRESS && YOffset <= 0)
 	{
 		//MoveSpeed = 20.0f;
 		VerticalSpeed = 20.0f;
@@ -65,10 +65,10 @@ void Player::Update()
 		YOffset = 0;
 	}
 
-	bool MoveForward = Input::GetInstance()->KeyState[static_cast<unsigned char>('w')] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->KeyState[static_cast<unsigned char>('w')] == Input::INPUT_HOLD;
-	bool MoveBackward = Input::GetInstance()->KeyState[static_cast<unsigned char>('s')] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->KeyState[static_cast<unsigned char>('s')] == Input::INPUT_HOLD;
-	bool MoveRight = Input::GetInstance()->KeyState[static_cast<unsigned char>('d')] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->KeyState[static_cast<unsigned char>('d')] == Input::INPUT_HOLD;
-	bool MoveLeft = Input::GetInstance()->KeyState[static_cast<unsigned char>('a')] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->KeyState[static_cast<unsigned char>('a')] == Input::INPUT_HOLD;
+	bool MoveForward = Input::GetInstance()->KeyState[GLFW_KEY_W] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->KeyState[GLFW_KEY_W] == Input::INPUT_HOLD;
+	bool MoveBackward = Input::GetInstance()->KeyState[GLFW_KEY_S] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->KeyState[GLFW_KEY_S] == Input::INPUT_HOLD;
+	bool MoveRight = Input::GetInstance()->KeyState[GLFW_KEY_D] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->KeyState[GLFW_KEY_D] == Input::INPUT_HOLD;
+	bool MoveLeft = Input::GetInstance()->KeyState[GLFW_KEY_A] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->KeyState[GLFW_KEY_A] == Input::INPUT_HOLD;
 
 	glm::vec2 Dir = {0, 0};
 
@@ -164,7 +164,16 @@ void Player::Update()
 	else
 	{
 		transform.Position += RightMovement + ForwardMovement;
+
+		transform.Position.y = YOffset;
 	}
+
+	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(transform.Rotation.x), glm::vec3(1, 0, 0));
+	rotation = rotate(rotation, glm::radians(transform.Rotation.y), glm::vec3(0, 1, 0));
+	rotation = rotate(rotation, glm::radians(transform.Rotation.z), glm::vec3(0, 0, 1));
+	
+	glm::vec3 NewCamPosition = transform.Position + glm::vec3(0, 10, -20);
+	Camera::GetInstance()->SetCameraPos(NewCamPosition);
 }
 
 void Player::DrawEntity()

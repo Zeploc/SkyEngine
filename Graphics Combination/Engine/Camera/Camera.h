@@ -7,6 +7,7 @@
 
 // OpenGL Library Includes //
 #include <glew.h>
+#include <glfw3.h>
 
 // Engine Includes //
 #include "Engine/System/Utils.h"
@@ -72,11 +73,13 @@ public:
 	bool bSpectatorMovement = true;
 
 	struct GLFWwindow* MainWindow;
-private:
-	// FPS CONTROLLS
-	bool bUseSpectatorControls = false;
 
-	void SpectatorControls();
+protected:
+	virtual void SpectatorControls();
+	
+private:
+	// FPS CONTROLS
+	bool bUseSpectatorControls = false;
 
 	float MouseSensitivity = 0.15f;
 	float cameraSpeed = 5.0f;

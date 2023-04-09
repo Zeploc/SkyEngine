@@ -12,7 +12,6 @@
 #include <glm/gtx/rotate_vector.hpp>
 
 // Engine Includes //
-#include "Engine/Editor/EditorWindowManager.h"
 #include "Engine/Input/Input.h"
 
 // Static Variables //
@@ -87,12 +86,6 @@ void Camera::EnableSpectatorControls(bool _bSpectatorControls)
 
 void Camera::SpectatorControls()
 {
-	// When main window not focus don't add movement
-	if (EditorWindowManager::GetCurrentFocus() != EditorWindowManager::MainWindow)
-	{
-		return;
-	}
-
 	glm::vec2 Offset = glm::vec2(Input::GetInstance()->MousePos - glm::vec2(static_cast<float>(SCR_WIDTH) * 0.5f, static_cast<float>(SCR_HEIGHT) * 0.5f));
 	Offset *= MouseSensitivity;
 	Yaw -= Offset.x;

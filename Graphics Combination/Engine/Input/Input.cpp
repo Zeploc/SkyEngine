@@ -9,8 +9,10 @@
 // Engine Includes //
 #include "Input.h"
 #include "CXBOXController.h"
-#include "Engine/Editor/EditorWindowManager.h"
 #include "Engine/UI/UIButton.h"
+
+// TODO: Remove
+#include "Editor/Windows/EditorWindowManager.h"
 
 // Static Variables //
 std::map<int, Input*> Input::m_pInputs;
@@ -347,6 +349,7 @@ std::string Input::InputStateString(unsigned int State)
 
 void Input::SetCursorVisible(bool _bIsVisible)
 {
+	// TODO: Update to not reference editor
 	if (_bIsVisible)
 	{
 		glfwSetInputMode(EditorWindowManager::MainWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

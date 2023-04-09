@@ -18,24 +18,11 @@ public:
 
 	void RenderScene() override;
 
-	void OpenFile();
-
-	void LoadLevel(std::vector<std::string> Lines);
-
-	void SaveCurrentLevel();
-
-	void QuitCall();
-
 	void ButtonBoiFuncorness();
 
 	std::shared_ptr<class Terrain> LevelTerrain;
 	std::shared_ptr<class Player> NewPlayer;
 	std::shared_ptr<class ssAnimatedModel> OriginalAnimatedModel;
-	std::shared_ptr<class UIText> LevelNameText;
-
-	bool Wireframe = false;
 
 	std::shared_ptr<class FrameBuffer> NewFramy;
-
-	std::shared_ptr<class TransformationWidget> LocationBox;
 };

@@ -117,12 +117,12 @@ private:
 
 class FMulticastDelegate
 {
-public:
-	
+public:	
 	FMulticastDelegate()
 	{
 		
 	}
+	
 	FMulticastDelegate(const FMulticastDelegate& other)
 	{
 		// TODO:
@@ -133,6 +133,7 @@ public:
 	{
 		Delegates.push_back(new VoidDelegate(Object, Function));
 	}
+	
 	template <class T>
 	bool Unbind(T* Object, void(T::*Function)())
 	{

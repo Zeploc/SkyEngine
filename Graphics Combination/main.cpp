@@ -24,14 +24,15 @@
 #include <GLFW/glfw3.h>
 
 // Engine Includes //
+#include "Editor/Scene/EditorScene.h"
 #include "Engine/Input/Input.h"
 #include "Engine/Scene/SceneManager.h"
 #include "Engine/Sound/SoundManager.h"
 #include "Engine/System/Time.h"
 #include "Engine/System/LogManager.h"
-#include "Engine/Editor/EditorWindowManager.h"
+#include "Editor/Windows/EditorWindowManager.h"
 #include "Engine/Camera/Camera.h"
-#include "Engine/Editor/EditorWindow.h"
+#include "Editor/Windows/EditorWindow.h"
 #include "Engine/Render/FrameBuffer.h"
 #include "Engine/Render/Shader.h"
 #include "Game/Scenes/Level.h"
@@ -118,17 +119,6 @@ int main(int argc, char **argv)
 
 	// The input function registration
 	SI->Init(window);
-
-
-	EditorWindow* NewWindow = new EditorWindow("Outliner", window, glm::vec2(300, 400), glm::vec2(0, 0));
-	NewWindow->SetBackColour(glm::vec3(0.2, 0.6, 0.8));
-
-	EditorWindow* ContentWindow = new EditorWindow("Content", window, glm::vec2(600, 150), glm::vec2(0, MainWindowSize.y - 150));
-	ContentWindow->SetBackColour(glm::vec3(0.4, 0.4, 0.4));
-
-
-	//EditorWindow* ExternalWindow = new EditorWindow("External Test", nullptr, glm::vec2(500, 300), glm::vec2(100, 100));
-	//ExternalWindow->SetBackColour(glm::vec3(0.6, 0.3, 0.4));
 
 	//SetupGLUT(argc, argv);
 
@@ -239,6 +229,9 @@ void Update()
 		SoundManager::GetInstance()->InitFMod();
 		// Scene setup here
 		std::shared_ptr<Level> LevelScene = std::shared_ptr<Level>(new Level("Demo Environment"));
+		
+		// std::shared_ptr<EditorScene> LevelScene = std::shared_ptr<EditorScene>(new EditorScene("Editor"));
+		
 		SceneManager::GetInstance()->AddScene(LevelScene);
 		bLoading = false;
 	}
@@ -253,7 +246,6 @@ void Update()
 		{
 			Camera::GetInstance()->Update();
 			SceneManager::GetInstance()->UpdateCurrentScene();
-			EditorWindowManager::UpdateWindows();
 			Time::Update();
 			SI->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 			CurrentTimer = 0.0f;
