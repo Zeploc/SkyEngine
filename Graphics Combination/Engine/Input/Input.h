@@ -39,7 +39,7 @@ public:
 	unsigned int MouseCTRL = INPUT_RELEASED;
 	unsigned int MouseALT = INPUT_RELEASED;
 
-	glm::vec3 Axis = {0, 0, 0};
+	Vector3 Axis = {0, 0, 0};
 
 	std::vector<class XBOXController*> Players;
 

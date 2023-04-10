@@ -34,7 +34,7 @@ public:
 	Matrix4 View;
 	Matrix4 Projection;
 
-	void Init(int ScreenWidth, int ScreenWidthheight, glm::vec3 CamPos, glm::vec3 ForwardVec, glm::vec3 UpVec);
+	void Init(int ScreenWidth, int ScreenWidthheight, Vector3 CamPos, Vector3 ForwardVec, Vector3 UpVec);
 
 	void Update();
 
@@ -48,7 +48,7 @@ public:
 
 	float GetWindowScale() { return fWindowScale; }
 
-	void SetCameraForwardVector(glm::vec3 _Forward)
+	void SetCameraForwardVector(Vector3 _Forward)
 	{
 		CameraForward = _Forward;
 	}
@@ -66,7 +66,7 @@ public:
 
 	void SetCameraPos(Vector3 NewPos) { CameraPosition = NewPos; }
 
-	void MoveCamera(glm::vec3 _Movement);
+	void MoveCamera(Vector3 _Movement);
 
 	void EnableSpectatorControls(bool _bSpectatorControls);
 

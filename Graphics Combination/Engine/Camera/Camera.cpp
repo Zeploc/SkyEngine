@@ -26,7 +26,7 @@ Camera* Camera::m_pCamera;
 #--Parameters--#: 	Takes in screen size and camera vectors
 #--Return--#: 		NA
 ************************************************************/
-void Camera::Init(int ScreenWidth, int ScreenWidthheight, glm::vec3 CamPos, glm::vec3 ForwardVec, glm::vec3 UpVec)
+void Camera::Init(int ScreenWidth, int ScreenWidthheight, Vector3 CamPos, Vector3 ForwardVec, Vector3 UpVec)
 {
 	SCR_WIDTH = ScreenWidth;
 	SCR_HEIGHT = ScreenWidthheight;
@@ -88,7 +88,7 @@ Vector3 Camera::GetCameraRightVector()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Camera::MoveCamera(glm::vec3 _Movement)
+void Camera::MoveCamera(Vector3 _Movement)
 {
 	CameraPosition += _Movement;
 	//SetMVP(FTransform());
@@ -102,16 +102,16 @@ void Camera::EnableSpectatorControls(bool _bSpectatorControls)
 
 void Camera::SpectatorControls()
 {
-	glm::vec2 Offset = glm::vec2(Input::GetInstance()->MousePos.ToGLM() - glm::vec2(static_cast<float>(SCR_WIDTH) * 0.5f, static_cast<float>(SCR_HEIGHT) * 0.5f));
+	Vector2 Offset = Vector2(Input::GetInstance()->MousePos - glm::vec2(static_cast<float>(SCR_WIDTH) * 0.5f, static_cast<float>(SCR_HEIGHT) * 0.5f));
 	Offset *= MouseSensitivity;
-	Yaw -= Offset.x;
-	Pitch -= Offset.y;
+	Yaw -= Offset.X;
+	Pitch -= Offset.Y;
 
 	glm::clamp(Pitch, 89.0f, -89.0f);
-	glm::vec3 frontVector(-cos(glm::radians(Pitch)) * sin(glm::radians(Yaw)),
+	Vector3 frontVector(-cos(glm::radians(Pitch)) * sin(glm::radians(Yaw)),
 	                      sin(glm::radians(Pitch)),
 	                      -cos(glm::radians(Pitch)) * cos(glm::radians(Yaw)));
-	CameraForward = normalize(frontVector);
+	CameraForward = frontVector.GetNormalized();
 
 	if (bSpectatorMovement)
 	{
@@ -198,9 +198,9 @@ void Camera::SetMVP(FTransform _transform, GLuint program)
 {
 	glm::mat4 translate = glm::translate(glm::mat4(), _transform.Position.ToGLM());
 	glm::mat4 scale = glm::scale(glm::mat4(), _transform.Scale.ToGLM());
-	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(_transform.Rotation.X), glm::vec3(1, 0, 0));
-	rotation = rotate(rotation, glm::radians(_transform.Rotation.Y), glm::vec3(0, 1, 0));
-	rotation = rotate(rotation, glm::radians(_transform.Rotation.Z), glm::vec3(0, 0, 1));
+	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(_transform.Rotation.Pitch), glm::vec3(1, 0, 0));
+	rotation = rotate(rotation, glm::radians(_transform.Rotation.Yaw), glm::vec3(0, 1, 0));
+	rotation = rotate(rotation, glm::radians(_transform.Rotation.Roll), glm::vec3(0, 0, 1));
 
 	glm::mat4 model = translate * rotation * scale;
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, value_ptr(model));

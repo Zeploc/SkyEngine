@@ -141,7 +141,7 @@ void Entity::Update()
 	{
 		b2Vec2 BodyPosition = body->GetPosition();
 		Transform.Position = glm::vec3(BodyPosition.x, BodyPosition.y, 0.0f);
-		Transform.Rotation.Z = (body->GetAngle() / b2_pi) * 180;
+		Transform.Rotation.Roll = (body->GetAngle() / b2_pi) * 180;
 	}
 }
 
@@ -170,7 +170,7 @@ void Entity::Reset()
 	Transform = EntityInitialState.Transform;
 	if (body)
 	{
-		body->SetTransform(b2Vec2(Transform.Position.X, Transform.Position.Y), (Transform.Rotation.Z / 180) * b2_pi);
+		body->SetTransform(b2Vec2(Transform.Position.X, Transform.Position.Y), (Transform.Rotation.Roll / 180) * b2_pi);
 		body->SetAwake(true);
 		body->SetActive(bActive);
 		body->SetLinearVelocity(b2Vec2_zero);
@@ -216,7 +216,7 @@ std::string Entity::EntityToString()
 #--Parameters--#: 	Takes in the movement to move the entity by
 #--Return--#: 		NA
 ************************************************************/
-void Entity::Translate(glm::vec3 _Movement)
+void Entity::Translate(Vector3 _Movement)
 {
 	Transform.Position += _Movement;
 }
@@ -227,7 +227,7 @@ void Entity::Translate(glm::vec3 _Movement)
 #--Parameters--#: 	Takes in the rotation to add
 #--Return--#: 		NA
 ************************************************************/
-void Entity::Rotate(glm::vec3 Rotate)
+void Entity::Rotate(Rotator Rotate)
 {
 	Transform.Rotation += Rotate;
 }
@@ -238,7 +238,7 @@ void Entity::Rotate(glm::vec3 Rotate)
 #--Parameters--#: 	Takes in the new scale
 #--Return--#: 		NA
 ************************************************************/
-void Entity::SetScale(glm::vec3 _NewScale)
+void Entity::SetScale(Vector3 _NewScale)
 {
 	Transform.Scale = _NewScale;
 }
@@ -247,9 +247,9 @@ Matrix4 Entity::GetModel()
 {
 	glm::mat4 translate = glm::translate(glm::mat4(), Transform.Position.ToGLM());
 	glm::mat4 scale = glm::scale(glm::mat4(), Transform.Scale.ToGLM());
-	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(Transform.Rotation.X), glm::vec3(1, 0, 0));
-	rotation = rotate(rotation, glm::radians(Transform.Rotation.Y), glm::vec3(0, 1, 0));
-	rotation = rotate(rotation, glm::radians(Transform.Rotation.Z), glm::vec3(0, 0, 1));
+	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(Transform.Rotation.Pitch), glm::vec3(1, 0, 0));
+	rotation = rotate(rotation, glm::radians(Transform.Rotation.Yaw), glm::vec3(0, 1, 0));
+	rotation = rotate(rotation, glm::radians(Transform.Rotation.Roll), glm::vec3(0, 0, 1));
 
 	return translate * rotation * scale;
 }
@@ -264,7 +264,7 @@ void Entity::SetupB2BoxBody(b2World& Box2DWorld, b2BodyType BodyType, bool bCanR
 		bodyDef.position.Set(Transform.Position.X, Transform.Position.Y);
 		bodyDef.userData = &*this;
 		body = Box2DWorld.CreateBody(&bodyDef);
-		body->SetTransform(bodyDef.position, (Transform.Rotation.Z / 180) * b2_pi);
+		body->SetTransform(bodyDef.position, (Transform.Rotation.Roll / 180) * b2_pi);
 		body->SetFixedRotation(!bCanRotate);
 		bodyDef.bullet = true;
 
@@ -305,7 +305,7 @@ void Entity::SetupB2CircleBody(b2World& Box2DWorld, b2BodyType BodyType, bool bC
 		bodyDef.position.Set(Transform.Position.X, Transform.Position.Y);
 		bodyDef.userData = &*this;
 		body = Box2DWorld.CreateBody(&bodyDef);
-		body->SetTransform(bodyDef.position, (Transform.Rotation.Z / 180) * b2_pi);
+		body->SetTransform(bodyDef.position, (Transform.Rotation.Roll / 180) * b2_pi);
 		body->SetFixedRotation(!bCanRotate);
 
 		// Define another Circle shape for our dynamic body.
@@ -337,10 +337,10 @@ void Entity::SetupB2CircleBody(b2World& Box2DWorld, b2BodyType BodyType, bool bC
 	}
 }
 
-void Entity::SetBox2DTransform(glm::vec3 _Position, float _Rotation)
+void Entity::SetBox2DTransform(Vector3 _Position, float _Rotation)
 {
 	if (body)
 	{
-		body->SetTransform(b2Vec2(_Position.x, _Position.y), (_Rotation / 180) * b2_pi);
+		body->SetTransform(b2Vec2(_Position.X, _Position.Y), (_Rotation / 180) * b2_pi);
 	}
 }

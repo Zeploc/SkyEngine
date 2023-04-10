@@ -4,11 +4,14 @@
 
 #include "Vector.h"
 #include <string>
+#include <sstream>
+
+#include "Rotator.h"
 
 struct FTransform
 {
 	Vector3 Position;
-	Vector3 Rotation;
+	Rotator Rotation;
 	Vector3 Scale;
 
 	std::string ToString();
@@ -16,21 +19,22 @@ struct FTransform
 
 	friend std::istream& operator>>(std::istream& is, FTransform& transform)
 	{
-		int x, y, z, roll, yaw, pitch, sx, sy, sz;
-		std::string PosX, PosY, PosZ, Roll, Yaw, Pitch, ScaleX, ScaleY, ScaleZ;
-		is >> PosX >> PosY >> PosZ >> Roll >> Yaw >> Pitch >> ScaleX >> ScaleY >> ScaleZ;
-		x = std::stoi(PosX.substr(5));
-		y = std::stoi(PosY);
-		z = std::stoi(PosZ);
-		roll = std::stoi(Roll.substr(5));
-		yaw = std::stoi(Yaw);
-		pitch = std::stoi(Pitch);
-		sx = std::stoi(ScaleX.substr(5));
-		sy = std::stoi(ScaleY);
-		sz = std::stoi(ScaleZ);
-		transform.Position = glm::vec3(x, y, z);
-		transform.Rotation = glm::vec3(roll, yaw, pitch);
-		transform.Scale = glm::vec3(sx, sy, sz);
+		// TODO:
+		float x, y, z, roll, yaw, pitch, sx, sy, sz;
+		std::string PosX, PosY, PosZ, Roll, Pitch, Yaw, ScaleX, ScaleY, ScaleZ;
+		is >> PosX >> PosY >> PosZ >> Pitch >> Yaw >> Roll >> ScaleX >> ScaleY >> ScaleZ;
+		x = std::stof(PosX.substr(1, PosX.length() - 1));
+		y = std::stof(PosY.substr(0, PosY.length() - 1));
+		z = std::stof(PosZ.substr(0, PosZ.length() - 1));
+		pitch = std::stof(Pitch.substr(1, Pitch.length() - 1));
+		yaw = std::stof(Yaw.substr(0, Yaw.length() - 1));
+		roll = std::stof(Roll.substr(0, Roll.length() - 1));
+		sx = std::stof(ScaleX.substr(1, ScaleX.length() - 1));
+		sy = std::stof(ScaleY.substr(0, ScaleY.length() - 1));
+		sz = std::stof(ScaleZ.substr(0, ScaleZ.length() - 1));
+		transform.Position = Vector3(x, y, z);
+		transform.Rotation = Rotator(pitch, yaw, roll);
+		transform.Scale = Vector3(sx, sy, sz);
 		return is;
 	}
 

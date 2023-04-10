@@ -36,9 +36,10 @@ ssAnimatedModel::ssAnimatedModel(std::string modelFilname, std::string texFilena
 	//textureID = loadTexture(texFilename);
 	program = Shader::Programs["AnimatedModel"]; // _program;
 
-	this->scale = glm::vec3(0.1f, 0.1f, 0.1f);
-	this->position = glm::vec3(0.0, 0.0, 0.0);
-	this->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
+	this->Transform.Scale = Vector3(0.1f, 0.1f, 0.1f);
+	this->Transform.Position = Vector3(0.0, 0.0, 0.0);
+	// TODO: Verify 1 yaw?
+	this->Transform.Rotation = Rotator(1.0f, 0.0f, 0.0f);
 
 	m_VAO = 0;
 	ZERO_MEM(m_Buffers);
@@ -368,9 +369,9 @@ void ssAnimatedModel::setShaderEffectVariables(std::shared_ptr<Terrain> terrain)
 
 	glm::mat4 model;
 
-	glm::mat4 t = translate(glm::mat4(), this->position);
-	glm::mat4 r = glm::rotate(glm::mat4(), glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 s = glm::scale(glm::mat4(), this->scale);
+	glm::mat4 t = translate(glm::mat4(), this->Transform.Position.ToGLM());
+	glm::mat4 r = glm::rotate(glm::mat4(), glm::radians(Transform.Rotation.Pitch), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 s = glm::scale(glm::mat4(), this->Transform.Scale.ToGLM());
 
 	model = t * r * s;
 
@@ -403,11 +404,7 @@ void ssAnimatedModel::setShaderEffectVariables(std::shared_ptr<Terrain> terrain)
 	}
 
 	glUniform1i(glGetUniformLocation(program, "bIsLit"), true);
-	FTransform transform;
-	transform.Position = position;
-	transform.Rotation = rotation;
-	transform.Scale = scale;
-	Lighting::PassLightingToShader(program, ModelLightInfo, transform);
+	Lighting::PassLightingToShader(program, ModelLightInfo, Transform);
 }
 
 void ssAnimatedModel::render(std::shared_ptr<Terrain> terrain)
@@ -696,19 +693,19 @@ void ssAnimatedModel::Clear()
 
 ///////////////// getter and setters //////////////////////
 
-void ssAnimatedModel::setPosition(glm::vec3 _position)
+void ssAnimatedModel::SetPosition(const Vector3 InPosition)
 {
-	this->position = _position;
+	this->Transform.Position = InPosition;
 }
 
-void ssAnimatedModel::setRotation(glm::vec3 _rotation)
+void ssAnimatedModel::SetRotation(const Rotator InRotation)
 {
-	this->rotation = _rotation;
+	this->Transform.Rotation = InRotation;
 }
 
-void ssAnimatedModel::setScale(glm::vec3 _scale)
+void ssAnimatedModel::SetScale(const Vector3 InScale)
 {
-	this->scale = _scale;
+	this->Transform.Scale = InScale;
 }
 
 void ssAnimatedModel::setSpeed(float _speed)

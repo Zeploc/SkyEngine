@@ -47,7 +47,7 @@ public:
 	{
 		std::shared_ptr<Entity> pEntity;
 		float fSpeed;
-		glm::vec2 v2Direction;
+		Vector2 v2Direction;
 		float fFalloffDistance;
 		float fFallOffTime;
 		float fTimeLength;

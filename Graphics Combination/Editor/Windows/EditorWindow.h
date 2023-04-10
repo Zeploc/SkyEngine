@@ -7,6 +7,11 @@
 #include <vector>
 #include <glm/glm.hpp>
 
+#include "Engine/Math/Vector.h"
+
+class UIElement;
+class UIImage;
+
 class EditorWindow
 {
 public:
@@ -20,9 +25,9 @@ public:
 
 	std::string GetWindowName() { return WindowName; };
 
-	glm::vec2 GetPosition();
+	Vector2 GetPosition();
 
-	void SetWindowPosition(glm::vec2 _position);
+	void SetWindowPosition(Vector2 _position);
 
 	GLFWwindow* GetParentWindow() { return ParentWindow; }
 
@@ -40,7 +45,7 @@ public:
 
 	void StopDrag();
 
-	bool IsPointInWindow(glm::vec2 _point);
+	bool IsPointInWindow(Vector2 _point);
 
 	void SetBackColour(glm::vec3 _Colour);
 
@@ -52,15 +57,15 @@ protected:
 	std::string WindowName;
 	GLFWwindow* ParentWindow;
 
-	std::shared_ptr<class UIImage> BackImage;
+	std::shared_ptr<UIImage> BackImage;
 
-	glm::vec2 Size = glm::vec2(100, 100);
-	glm::vec2 Position = glm::vec2(0, 0);
+	Vector2 Size = glm::vec2(100, 100);
+	Vector2 Position = glm::vec2(0, 0);
 
-	glm::vec2 DragOffset;
+	Vector2 DragOffset;
 	bool DraggingWindow = false;
 
-	std::vector<std::shared_ptr<class UIElement>> UIElements;
+	std::vector<std::shared_ptr<UIElement>> UIElements;
 
 	bool bCanPopIn = true;
 };

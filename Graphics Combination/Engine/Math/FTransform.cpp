@@ -21,7 +21,7 @@ void FTransform::FromString(std::string sTransform)
 	if (Seperated.size() >= 3)
 	{
 		Position = Utils::StringToVec3(Seperated[0]);
-		Rotation = Utils::StringToVec3(Seperated[1]);
+		Rotation = Utils::StringToRotator(Seperated[1]);
 		Scale = Utils::StringToVec3(Seperated[2]);
 	}
 }

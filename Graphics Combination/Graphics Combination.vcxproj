@@ -3340,6 +3340,7 @@
     <ClCompile Include="Engine\Math\Matrix.cpp" />
     <ClCompile Include="Engine\Math\Quaternion.cpp" />
     <ClCompile Include="Engine\Math\FTransform.cpp" />
+    <ClCompile Include="Engine\Math\Rotator.cpp" />
     <ClCompile Include="Engine\Math\Vector.cpp" />
     <ClCompile Include="Game\Animation\ssAnimatedModel.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
@@ -3775,6 +3776,7 @@
     <ClInclude Include="Engine\Math\Matrix.h" />
     <ClInclude Include="Engine\Math\Quaternion.h" />
     <ClInclude Include="Engine\Math\FTransform.h" />
+    <ClInclude Include="Engine\Math\Rotator.h" />
     <ClInclude Include="Engine\Math\Vector.h" />
     <ClInclude Include="Engine\System\Delegates.h" />
     <ClInclude Include="Engine\System\EnumTypes.h" />

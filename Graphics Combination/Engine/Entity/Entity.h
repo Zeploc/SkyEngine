@@ -14,6 +14,7 @@
 // Engine Includes //
 #include "Engine/Math/FTransform.h"
 #include "Engine/Math/Matrix.h"
+#include "Engine/Math/Rotator.h"
 #include "Engine/System/EnumTypes.h"
 
 class Mesh;
@@ -56,11 +57,11 @@ public:
 
 	std::string EntityToString();
 
-	void Translate(glm::vec3 _Movement);
+	void Translate(Vector3 _Movement);
 
-	void Rotate(glm::vec3 Rotate);
+	void Rotate(Rotator Rotate);
 
-	void SetScale(glm::vec3 _NewScale);
+	void SetScale(Vector3 _NewScale);
 
 	Matrix4 GetModel();
 
@@ -79,7 +80,7 @@ public:
 
 	void SetupB2CircleBody(b2World& Box2DWorld, b2BodyType BodyType, bool bCanRotate = true, bool bHasFixture = true, float Density = 1.0f, float Friction = 0.3f);
 
-	void SetBox2DTransform(glm::vec3 _Position, float _Rotation);
+	void SetBox2DTransform(Vector3 _Position, float _Rotation);
 
 	bool bRayCast = true;
 

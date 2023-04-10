@@ -16,8 +16,6 @@
 #include "Editor/Windows/EditorWindowManager.h"
 #include "Engine/Render/Cube.h"
 #include "Engine/Render/GeometryObject.h"
-#include "Engine/Render/ParticleSystem.h"
-#include "Engine/Render/Plane.h"
 #include "Engine/Render/Sphere.h"
 
 EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)

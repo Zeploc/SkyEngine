@@ -58,11 +58,11 @@ public:
 
 	void setCurrentAnimation(int startFrameNum, int endFramNum);
 
-	void setPosition(glm::vec3 _position);
+	void SetPosition(Vector3 InPosition);
 
-	void setRotation(glm::vec3 _rotation);
+	void SetRotation(Rotator InRotation);
 
-	void setScale(glm::vec3 _scale);
+	void SetScale(Vector3 InScale);
 
 	void setSpeed(float _speed);
 
@@ -217,9 +217,7 @@ private:
 
 	float animationTime;
 
-	glm::vec3 position;
-	glm::vec3 scale;
-	glm::vec3 rotation;
+	FTransform Transform;
 
 	float currentPlayerSpeed;
 	float currentRotationSpeed;

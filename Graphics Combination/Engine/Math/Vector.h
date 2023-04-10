@@ -12,6 +12,10 @@ struct Vector2i
 	int y;
 };
 
+// TODO: Change to vector base
+// TODO: Template for type (float, int, double)
+// TODO: Use for loops for basic operations in base
+
 struct Vector2
 {
 	float X;
@@ -35,9 +39,99 @@ struct Vector2
 	{
 		return glm::vec2(X, Y);
 	}
+	
+	std::string ToString() const
+	{
+		// TODO: Update c++
+		// std::format
+		char Str[1024];
+		sprintf_s(Str,"(%.02f, %.02f)", X, Y);
+		return Str;
+	}
+	
+	Vector2& operator+=(const Vector2& r)
+	{
+		X += r.X;
+		Y += r.Y;
+
+		return *this;
+	}
+
+	Vector2& operator-()
+	{
+		X *= -1;
+		Y *= -1;
+
+		return *this;
+	}
+
+	Vector2& operator-=(const Vector2& r)
+	{
+		X -= r.X;
+		Y -= r.Y;
+
+		return *this;
+	}
+
+	Vector2& operator*=(float f)
+	{
+		X *= f;
+		Y *= f;
+
+		return *this;
+	}
+	
+	Vector2 Cross(const Vector2& V) const;
+
+	float Dot(const Vector2& V) const;
+
+	Vector2 GetNormalized();
+	Vector2& Normalize();
+
+	float Size() const;
 };
 
-// TODO: Make vectors derived from templated base? see gmtl
+
+inline Vector2 operator+(const Vector2& l, const Vector2& r)
+{
+	Vector2 Ret(l.X + r.X,
+				 l.Y + r.Y);
+
+	return Ret;
+}
+
+inline Vector2 operator-(const Vector2& l, const Vector2& r)
+{
+	Vector2 Ret(l.X - r.X,
+				 l.Y - r.Y);
+
+	return Ret;
+}
+
+inline Vector2 operator*(const Vector2& l, float f)
+{
+	Vector2 Ret(l.X * f,
+				 l.Y * f);
+
+	return Ret;
+}
+
+inline Vector2 operator/(const Vector2& l, float f)
+{
+	Vector2 Ret(l.X / f,
+				 l.Y / f);
+
+	return Ret;
+}
+
+inline Vector2 operator/(float f, const Vector2& l)
+{
+	Vector2 Ret(f / l.X,
+				 f / l.Y);
+
+	return Ret;
+}
+
 struct Vector3
 {
 	float X;
@@ -66,6 +160,12 @@ struct Vector3
 	Vector3(float f)
 	{
 		X = Y = Z = f;
+	}
+	Vector3(Vector2 V, float _z)
+	{
+		X = V.X;
+		Y = V.Y;
+		Z = _z;
 	}
 
 	Vector3(glm::vec3 V)

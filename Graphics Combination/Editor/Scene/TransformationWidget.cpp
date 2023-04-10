@@ -50,7 +50,7 @@ void TransformationWidget::Update()
 	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)
 	{
 		Vector3 rayStart = Camera::GetInstance()->GetCameraPosition();
-		Vector3 rayDirection = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos).ToGLM();
+		Vector3 rayDirection = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos);
 		Vector3 HitPos;
 		if (Utils::CheckHit(rayStart, rayDirection, XMoveTransform, HitPos))
 		{
@@ -84,7 +84,7 @@ void TransformationWidget::Update()
 	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_HOLD && SelectedEntity)
 	{
 		const Vector3 RayStart = Camera::GetInstance()->GetCameraPosition();
-		const Vector3 RayDirection = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos).ToGLM();
+		const Vector3 RayDirection = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos);
 
 		if (XHit)
 		{

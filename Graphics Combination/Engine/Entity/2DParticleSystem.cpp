@@ -195,8 +195,8 @@ void ParticleSystem2D::Update()
 		for (auto iter = m_vParticles.begin(); iter != m_vParticles.end();)
 		{
 			(*iter).fTimeLength += static_cast<float>(Time::dTimeDelta);
-			(*iter).pEntity->Translate(glm::vec3(0, -m_fGravity * Time::dTimeDelta, 0));
-			(*iter).pEntity->Translate(glm::vec3((*iter).v2Direction * (*iter).fSpeed * static_cast<float>(Time::dTimeDelta), 0));
+			(*iter).pEntity->Translate(Vector3(0, -m_fGravity * Time::dTimeDelta, 0));
+			(*iter).pEntity->Translate(Vector3((*iter).v2Direction * (*iter).fSpeed * static_cast<float>(Time::dTimeDelta), 0));
 
 			glm::vec2 v2Distance = Utils::GetDistance2D((*iter).pEntity, this->shared_from_this());
 			if (sqrt(pow(v2Distance.x, 2) + pow(v2Distance.y, 2)) >= (*iter).fFalloffDistance || (*iter).fTimeLength > (*iter).fFallOffTime)
@@ -213,8 +213,8 @@ void ParticleSystem2D::Update()
 	else if (!m_vParticles.empty())
 	{
 		m_vParticles[0].fTimeLength += static_cast<float>(Time::dTimeDelta);
-		m_vParticles[0].pEntity->Translate(glm::vec3(m_vParticles[0].v2Direction * m_vParticles[0].fSpeed * static_cast<float>(Time::dTimeDelta), 0));
-		m_vParticles[0].pEntity->Translate(glm::vec3(0, -m_fGravity * Time::dTimeDelta, 0));
+		m_vParticles[0].pEntity->Translate(Vector3(m_vParticles[0].v2Direction * m_vParticles[0].fSpeed * static_cast<float>(Time::dTimeDelta), 0));
+		m_vParticles[0].pEntity->Translate(Vector3(0, -m_fGravity * Time::dTimeDelta, 0));
 		glm::vec2 v2Distance = Utils::GetDistance2D(m_vParticles[0].pEntity, this->shared_from_this());
 
 		if (sqrt(pow(v2Distance.x, 2) + pow(v2Distance.y, 2)) >= m_vParticles[0].fFalloffDistance || m_vParticles[0].fTimeLength > m_vParticles[0].fFallOffTime)

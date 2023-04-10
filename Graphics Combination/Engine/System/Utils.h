@@ -83,7 +83,9 @@ public:
 
 	static std::vector<std::string> SeparateString(std::string _string, char _seperator);
 
-	static glm::vec3 StringToVec3(std::string _string);
+	// TODO: Convert to type from string
+	static Vector3 StringToVec3(std::string _string);
+	static Rotator StringToRotator(std::string _string);
 
 	static bool CheckFaceHit(Vector3 BottomLeftOffset, Vector3 TopRightOffset, Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
 

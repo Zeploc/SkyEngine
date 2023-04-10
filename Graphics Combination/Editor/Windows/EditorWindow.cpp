@@ -19,7 +19,7 @@ EditorWindow::EditorWindow(std::string _WindowName, GLFWwindow* _ParentWindow, g
 {
 	if (!_ParentWindow)
 	{
-		ParentWindow = glfwCreateWindow(Size.x, Size.y, WindowName.c_str(), nullptr, nullptr);
+		ParentWindow = glfwCreateWindow(Size.X, Size.Y, WindowName.c_str(), nullptr, nullptr);
 		if (ParentWindow == nullptr)
 		{
 			std::cout << "Failed to create GLFW window" << std::endl;
@@ -27,9 +27,9 @@ EditorWindow::EditorWindow(std::string _WindowName, GLFWwindow* _ParentWindow, g
 		}
 		glfwMakeContextCurrent(ParentWindow);
 
-		glfwSetWindowPos(ParentWindow, Position.x, Position.y);
+		glfwSetWindowPos(ParentWindow, Position.X, Position.Y);
 
-		glViewport(0, 0, Size.x, Size.y);
+		glViewport(0, 0, Size.X, Size.Y);
 
 		// OpenGL init
 		glewInit();
@@ -67,12 +67,12 @@ void EditorWindow::SetupUI()
 {
 	if (ParentWindow == EditorWindowManager::MainWindow)
 	{
-		BackImage = std::make_shared<UIImage>(UIImage(glm::vec2(Size.x / 2.0f, Size.y / 2.0f), EANCHOR::CENTER, 0.0f, glm::vec4(0.5f, 0.5f, 0.5f, 1.0f), Size.x, Size.y));
+		BackImage = std::make_shared<UIImage>(UIImage(glm::vec2(Size.X / 2.0f, Size.Y / 2.0f), EANCHOR::CENTER, 0.0f, glm::vec4(0.5f, 0.5f, 0.5f, 1.0f), Size.X, Size.Y));
 		//TestBtn->AddText("Test", "Resources/Fonts/Roboto-Thin.ttf", 30, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 		UIElements.push_back(BackImage);
 
 		//20, Size.y - 20.0f
-		std::shared_ptr<UIButton> TestBtn(new UIButton(glm::vec2(0.0f, 0.0f), EANCHOR::TOP_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), Size.x - 35, 30, nullptr));
+		std::shared_ptr<UIButton> TestBtn(new UIButton(glm::vec2(0.0f, 0.0f), EANCHOR::TOP_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), Size.X - 35, 30, nullptr));
 
 		TestBtn->BindPress(this, &EditorWindow::StartDrag);
 		TestBtn->BindRelease(this, &EditorWindow::StopDrag);
@@ -80,7 +80,7 @@ void EditorWindow::SetupUI()
 		TestBtn->AddText(WindowName, "Resources/Fonts/Roboto-Thin.ttf", 20, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
 		UIElements.push_back(TestBtn);
 
-		std::shared_ptr<UIButton> PopoutButton(new UIButton(glm::vec2(Size.x, 0.0f), EANCHOR::TOP_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 30, 30, nullptr));
+		std::shared_ptr<UIButton> PopoutButton(new UIButton(glm::vec2(Size.X, 0.0f), EANCHOR::TOP_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 30, 30, nullptr));
 
 		PopoutButton->BindPress(this, &EditorWindow::PopOut);
 		UIElements.push_back(PopoutButton);
@@ -104,11 +104,11 @@ void EditorWindow::RenderWindow()
 	int width, height;
 	glfwGetWindowSize(ParentWindow, &width, &height);
 
-	glViewport(Position.x, height - Position.y - Size.y, Size.x, Size.y);
-	Camera::GetInstance()->SCR_WIDTH = Size.x;
-	Camera::GetInstance()->SCR_HEIGHT = Size.y;
-	Camera::GetInstance()->VIEWPORT_X = Position.x;
-	Camera::GetInstance()->VIEWPORT_Y = Position.y;
+	glViewport(Position.X, height - Position.Y - Size.Y, Size.X, Size.Y);
+	Camera::GetInstance()->SCR_WIDTH = Size.X;
+	Camera::GetInstance()->SCR_HEIGHT = Size.Y;
+	Camera::GetInstance()->VIEWPORT_X = Position.X;
+	Camera::GetInstance()->VIEWPORT_Y = Position.Y;
 
 	glDisable(GL_DEPTH_TEST);
 
@@ -127,7 +127,7 @@ void EditorWindow::PopOut()
 {
 	//EditorWindowManager::WindowRemoved(this);
 
-	ParentWindow = glfwCreateWindow(Size.x, Size.y, WindowName.c_str(), nullptr, nullptr);
+	ParentWindow = glfwCreateWindow(Size.X, Size.Y, WindowName.c_str(), nullptr, nullptr);
 	if (ParentWindow == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -138,10 +138,10 @@ void EditorWindow::PopOut()
 	int x, y;
 	glfwGetWindowPos(EditorWindowManager::MainWindow, &x, &y);
 
-	Position.y += 30;
-	glfwSetWindowPos(ParentWindow, x + Position.x, y + Position.y);
+	Position.Y += 30;
+	glfwSetWindowPos(ParentWindow, x + Position.X, y + Position.Y);
 
-	glViewport(0, 0, Size.x, Size.y);
+	glViewport(0, 0, Size.X, Size.Y);
 
 	// OpenGL init
 	glewInit();
@@ -205,7 +205,7 @@ void EditorWindow::PopIn()
 	int MainX, MainY;
 	glfwGetWindowPos(ParentWindow, &MainX, &MainY);
 	Position -= glm::vec2(MainX, MainY);
-	Position.y -= 30;
+	Position.Y -= 30;
 
 	SetupUI();
 	SetBackColour(BackColour);
@@ -213,7 +213,7 @@ void EditorWindow::PopIn()
 
 void EditorWindow::StartDrag()
 {
-	DragOffset = Input::GetInstance()->MousePos.ToGLM() - Position;
+	DragOffset = Input::GetInstance()->MousePos - Position;
 	DraggingWindow = true;
 }
 
@@ -221,23 +221,23 @@ void EditorWindow::StopDrag()
 {
 	if (DraggingWindow)
 	{
-		glm::vec2 NewPosition = Input::GetInstance()->MousePos.ToGLM() - DragOffset;
+		Vector2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
 		SetWindowPosition(NewPosition);
 
 		DraggingWindow = false;
 	}
 }
 
-bool EditorWindow::IsPointInWindow(glm::vec2 _point)
+bool EditorWindow::IsPointInWindow(Vector2 _point)
 {
-	if (_point.x < Position.x || _point.y < Position.y)
+	if (_point.X < Position.X || _point.Y < Position.Y)
 	{
 		return false;
 	}
 
-	glm::vec2 EndPos = Position + Size;
+	Vector2 EndPos = Position + Size;
 
-	if (_point.x > EndPos.x || _point.y > EndPos.y)
+	if (_point.X > EndPos.X || _point.Y > EndPos.Y)
 	{
 		return false;
 	}
@@ -263,9 +263,9 @@ void EditorWindow::UpdateWindow()
 		// Update position
 		GetPosition();
 
-		if (Position.x + Size.x > MainX && Position.x < MainX + MainWidth && Position.y > MainY && Position.y < MainY + MainHeight)
+		if (Position.X + Size.X > MainX && Position.X < MainX + MainWidth && Position.Y > MainY && Position.Y < MainY + MainHeight)
 		{
-			std::cout << "Window Pos: " << Position.x << ", " << Position.y << std::endl;
+			std::cout << "Window Pos: " << Position.ToString() << std::endl;
 			PopIn();
 		}
 		else
@@ -276,14 +276,14 @@ void EditorWindow::UpdateWindow()
 
 	glfwMakeContextCurrent(ParentWindow);
 
-	Camera::GetInstance()->SCR_WIDTH = Size.x;
-	Camera::GetInstance()->SCR_HEIGHT = Size.y;
-	Camera::GetInstance()->VIEWPORT_X = Position.x;
-	Camera::GetInstance()->VIEWPORT_Y = Position.y;
+	Camera::GetInstance()->SCR_WIDTH = Size.X;
+	Camera::GetInstance()->SCR_HEIGHT = Size.Y;
+	Camera::GetInstance()->VIEWPORT_X = Position.X;
+	Camera::GetInstance()->VIEWPORT_Y = Position.Y;
 
 	if (DraggingWindow)
 	{
-		glm::vec2 NewPosition = Input::GetInstance()->MousePos.ToGLM() - DragOffset;
+		Vector2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
 		SetWindowPosition(NewPosition);
 	}
 
@@ -324,7 +324,7 @@ void EditorWindow::UpdateWindow()
 	//Input::GetInstance()->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 }
 
-glm::vec2 EditorWindow::GetPosition()
+Vector2 EditorWindow::GetPosition()
 {
 	if (ParentWindow != EditorWindowManager::MainWindow)
 	{
@@ -335,11 +335,11 @@ glm::vec2 EditorWindow::GetPosition()
 	return Position;
 }
 
-void EditorWindow::SetWindowPosition(glm::vec2 _position)
+void EditorWindow::SetWindowPosition(Vector2 _position)
 {
 	if (ParentWindow != EditorWindowManager::MainWindow)
 	{
-		glfwSetWindowPos(ParentWindow, _position.x, _position.y);
+		glfwSetWindowPos(ParentWindow, _position.X, _position.Y);
 	}
 	Position = _position;
 }

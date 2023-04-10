@@ -70,60 +70,63 @@ void Player::Update()
 	bool MoveRight = Input::GetInstance()->KeyState[GLFW_KEY_D] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->KeyState[GLFW_KEY_D] == Input::INPUT_HOLD;
 	bool MoveLeft = Input::GetInstance()->KeyState[GLFW_KEY_A] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->KeyState[GLFW_KEY_A] == Input::INPUT_HOLD;
 
-	glm::vec2 Dir = {0, 0};
+	Vector2 Dir = {0, 0};
 
 	if (MoveForward && !MoveBackward)
 	{
-		Dir.y = 1;
+		Dir.Y = 1;
 	}
 	else if (MoveBackward && !MoveForward)
 	{
-		Dir.y = -1;
+		Dir.Y = -1;
 	}
 
 	if (MoveRight && !MoveLeft)
 	{
-		Dir.x = -1;
+		Dir.X = -1;
 	}
 	else if (MoveLeft && !MoveRight)
 	{
-		Dir.x = 1;
+		Dir.X = 1;
 	}
 
-	glm::vec3 ForwardDirection = Camera::GetInstance()->GetCameraForwardVector().ToGLM();
-	ForwardDirection.y = 0;
-	ForwardDirection = normalize(ForwardDirection);
-	glm::vec3 ForwardMovement = ForwardDirection * (Dir.y * static_cast<float>(Time::dTimeDelta) * MoveSpeed);
+	Vector3 ForwardDirection = Camera::GetInstance()->GetCameraForwardVector();
+	ForwardDirection.Y = 0;
+	ForwardDirection.Normalize();
+	Vector3 ForwardMovement = ForwardDirection * (Dir.Y * static_cast<float>(Time::dTimeDelta) * MoveSpeed);
 
-	ForwardDirection = rotateY(ForwardDirection, static_cast<float>((90.0f / 180) * M_PI));
+	ForwardDirection = rotateY(ForwardDirection.ToGLM(), static_cast<float>((90.0f / 180) * M_PI));
 
-	glm::vec3 RightMovement = ForwardDirection * (Dir.x * static_cast<float>(Time::dTimeDelta) * MoveSpeed);
+	Vector3 RightMovement = ForwardDirection * (Dir.X * static_cast<float>(Time::dTimeDelta) * MoveSpeed);
 
-	if (Dir.x != 0 || Dir.y != 0)
+	if (Dir.X != 0 || Dir.Y != 0)
 	{
-		glm::vec3 DirectionVec = ForwardMovement + RightMovement;
-		glm::vec3 target = Transform.Position.ToGLM() + DirectionVec;
-		glm::mat4 Rotation = orientation(DirectionVec, {0, 1, 0}); //  glm::lookAt(Transform.Position, target, { 0, 1, 0 });
-		glm::vec3 NewRotation = glm::vec4(1, 1, 1, 0) * Rotation;
-		NewRotation.x = glm::degrees(NewRotation.x);
-		NewRotation.y = glm::degrees(NewRotation.y);
-		NewRotation.z = glm::degrees(NewRotation.z);
+		Vector3 DirectionVec = ForwardMovement + RightMovement;
+		Vector3 target = Transform.Position + DirectionVec;
+		// TODO: Add vector/rotator math
+		glm::mat4 Rotation = orientation(DirectionVec.ToGLM(), {0, 1, 0}); //  glm::lookAt(Transform.Position, target, { 0, 1, 0 });
+		// TODO: vec4 * mat4
+		Rotator NewRotation = Vector3(glm::vec4(1, 1, 1, 0) * Rotation);
+		NewRotation.Pitch = glm::degrees(NewRotation.Pitch);
+		NewRotation.Yaw = glm::degrees(NewRotation.Yaw);
+		NewRotation.Roll = glm::degrees(NewRotation.Roll);
 		NewRotation -= 45;
-		if (NewRotation.x < 0)
+		// TODO: Change to quaternions
+		if (NewRotation.Pitch < 0)
 		{
-			NewRotation.x = 360 + NewRotation.x;
+			NewRotation.Pitch = 360 + NewRotation.Pitch;
 		}
-		if (NewRotation.y < 0)
+		if (NewRotation.Yaw < 0)
 		{
-			NewRotation.y = 360 + NewRotation.y;
+			NewRotation.Yaw = 360 + NewRotation.Yaw;
 		}
-		if (NewRotation.z < 0)
+		if (NewRotation.Roll < 0)
 		{
-			NewRotation.z = 360 + NewRotation.z;
+			NewRotation.Roll = 360 + NewRotation.Roll;
 		}
-		std::cout << to_string(NewRotation) << std::endl;
-		NewRotation.x = 0;
-		NewRotation.z = 0;
+		std::cout << NewRotation.ToString() << std::endl;
+		NewRotation.Pitch = 0;
+		NewRotation.Roll = 0;
 		Transform.Rotation = NewRotation; //  glm::rotateY(glm::vec3(0, 1, 0), angle);
 
 		/*if (Dir.y < 0)
@@ -168,9 +171,9 @@ void Player::Update()
 		Transform.Position.Y = YOffset;
 	}
 
-	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(Transform.Rotation.X), glm::vec3(1, 0, 0));
-	rotation = rotate(rotation, glm::radians(Transform.Rotation.Y), glm::vec3(0, 1, 0));
-	rotation = rotate(rotation, glm::radians(Transform.Rotation.Z), glm::vec3(0, 0, 1));
+	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(Transform.Rotation.Pitch), glm::vec3(1, 0, 0));
+	rotation = rotate(rotation, glm::radians(Transform.Rotation.Yaw), glm::vec3(0, 1, 0));
+	rotation = rotate(rotation, glm::radians(Transform.Rotation.Roll), glm::vec3(0, 0, 1));
 	
 	glm::vec3 NewCamPosition = Transform.Position.ToGLM() + glm::vec3(0, 10, -20);
 	Camera::GetInstance()->SetCameraPos(NewCamPosition);
@@ -179,8 +182,8 @@ void Player::Update()
 void Player::DrawEntity()
 {
 	Entity::DrawEntity();
-	AnimatedModel->setPosition(Transform.Position.ToGLM());
-	AnimatedModel->setScale(Transform.Scale.ToGLM());
-	AnimatedModel->setRotation(Transform.Rotation.ToGLM());
+	AnimatedModel->SetPosition(Transform.Position);
+	AnimatedModel->SetScale(Transform.Scale);
+	AnimatedModel->SetRotation(Transform.Rotation);
 	AnimatedModel->render(TerrainRef);
 }

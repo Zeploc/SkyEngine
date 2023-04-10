@@ -308,11 +308,18 @@ std::vector<std::string> Utils::SeparateString(std::string _string, char _sepera
 	return result;
 }
 
-glm::vec3 Utils::StringToVec3(std::string _string)
+Vector3 Utils::StringToVec3(std::string _string)
 {
 	float x = 0.0f, y = 0.0f, z = 0.0f;
 	_string = _string.substr(3, _string.length() - 3);
-	return glm::vec3(x, y, z);
+	return Vector3(x, y, z);
+}
+
+Rotator Utils::StringToRotator(std::string _string)
+{
+	float x = 0.0f, y = 0.0f, z = 0.0f;
+	_string = _string.substr(3, _string.length() - 3);
+	return Rotator(x, y, z);
 }
 
 bool Utils::CheckHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos)
