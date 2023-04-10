@@ -13,7 +13,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Cursor::Cursor(const char* _CursorImage) : UIImage({0, 0}, Utils::TOP_LEFT, 0, {1.0f, 1.0f, 1.0f, 1.0f}, 25, 35, _CursorImage, 1)
+Cursor::Cursor(const char* _CursorImage) : UIImage({0, 0}, EANCHOR::TOP_LEFT, 0, {1.0f, 1.0f, 1.0f, 1.0f}, 25, 35, _CursorImage, 1)
 {
 }
 
@@ -35,7 +35,7 @@ Cursor::~Cursor()
 ************************************************************/
 void Cursor::Update()
 {
-	position = glm::vec3(Input::GetInstance()->MousePos, 0);
+	position = glm::vec3(Input::GetInstance()->MousePos.ToGLM(), 0);
 	if ((position.x < m_v2InvisibleRange.x && position.y < m_v2InvisibleRange.y) ||
 		(position.x > m_v2VisibleRange.x || position.y > m_v2VisibleRange.y) && m_v2VisibleRange.x != 0 && m_v2VisibleRange.y != 0)
 	{

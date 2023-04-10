@@ -12,7 +12,7 @@ public:
 
 	~TessMesh();
 
-	void Render(Utils::Transform Newtransform) override;
+	void Render(FTransform Newtransform) override;
 
 	void Rebind() override; // Will replace if texture exists
 

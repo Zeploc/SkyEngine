@@ -45,7 +45,7 @@ public:
 	}
 
 	// Render the mesh
-	void Render(GLuint program, Utils::Transform ModelTransform)
+	void Render(GLuint program, FTransform ModelTransform)
 	{
 		glUseProgram(program);
 

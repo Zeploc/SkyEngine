@@ -67,20 +67,20 @@ void EditorWindow::SetupUI()
 {
 	if (ParentWindow == EditorWindowManager::MainWindow)
 	{
-		BackImage = std::make_shared<UIImage>(UIImage(glm::vec2(Size.x / 2.0f, Size.y / 2.0f), Utils::CENTER, 0.0f, glm::vec4(0.5f, 0.5f, 0.5f, 1.0f), Size.x, Size.y));
+		BackImage = std::make_shared<UIImage>(UIImage(glm::vec2(Size.x / 2.0f, Size.y / 2.0f), EANCHOR::CENTER, 0.0f, glm::vec4(0.5f, 0.5f, 0.5f, 1.0f), Size.x, Size.y));
 		//TestBtn->AddText("Test", "Resources/Fonts/Roboto-Thin.ttf", 30, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
 		UIElements.push_back(BackImage);
 
 		//20, Size.y - 20.0f
-		std::shared_ptr<UIButton> TestBtn(new UIButton(glm::vec2(0.0f, 0.0f), Utils::TOP_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), Size.x - 35, 30, nullptr));
+		std::shared_ptr<UIButton> TestBtn(new UIButton(glm::vec2(0.0f, 0.0f), EANCHOR::TOP_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), Size.x - 35, 30, nullptr));
 
 		TestBtn->BindPress(this, &EditorWindow::StartDrag);
 		TestBtn->BindRelease(this, &EditorWindow::StopDrag);
 
-		TestBtn->AddText(WindowName, "Resources/Fonts/Roboto-Thin.ttf", 20, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, {0, 0});
+		TestBtn->AddText(WindowName, "Resources/Fonts/Roboto-Thin.ttf", 20, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
 		UIElements.push_back(TestBtn);
 
-		std::shared_ptr<UIButton> PopoutButton(new UIButton(glm::vec2(Size.x, 0.0f), Utils::TOP_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 30, 30, nullptr));
+		std::shared_ptr<UIButton> PopoutButton(new UIButton(glm::vec2(Size.x, 0.0f), EANCHOR::TOP_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 30, 30, nullptr));
 
 		PopoutButton->BindPress(this, &EditorWindow::PopOut);
 		UIElements.push_back(PopoutButton);
@@ -185,7 +185,7 @@ void EditorWindow::PopOut()
 	//SetupGlutBindings();
 	//EditorWindowManager::NewWindowCreated(this);
 	//Camera::GetInstance()->Init(Size.x, Size.y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
-	//Camera::GetInstance()->SwitchProjection(Camera::PERSPECTIVE);
+	//Camera::GetInstance()->SwitchProjection(Camera::Perspective);
 }
 
 void EditorWindow::PopIn()
@@ -213,7 +213,7 @@ void EditorWindow::PopIn()
 
 void EditorWindow::StartDrag()
 {
-	DragOffset = Input::GetInstance()->MousePos - Position;
+	DragOffset = Input::GetInstance()->MousePos.ToGLM() - Position;
 	DraggingWindow = true;
 }
 
@@ -221,7 +221,7 @@ void EditorWindow::StopDrag()
 {
 	if (DraggingWindow)
 	{
-		glm::vec2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
+		glm::vec2 NewPosition = Input::GetInstance()->MousePos.ToGLM() - DragOffset;
 		SetWindowPosition(NewPosition);
 
 		DraggingWindow = false;
@@ -283,7 +283,7 @@ void EditorWindow::UpdateWindow()
 
 	if (DraggingWindow)
 	{
-		glm::vec2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
+		glm::vec2 NewPosition = Input::GetInstance()->MousePos.ToGLM() - DragOffset;
 		SetWindowPosition(NewPosition);
 	}
 

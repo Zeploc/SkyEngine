@@ -32,7 +32,7 @@ struct InitInfo
 class Terrain : public Entity
 {
 public:
-	Terrain(Utils::Transform _Transform, Utils::EANCHOR _Anchor, InitInfo& _InitInfo);
+	Terrain(FTransform _Transform, EANCHOR _Anchor, InitInfo& _InitInfo);
 
 	~Terrain();
 

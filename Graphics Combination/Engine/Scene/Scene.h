@@ -35,7 +35,7 @@ public:
 
 	void AddUITextElement(std::shared_ptr<UIText> Element);
 
-	void AddUITextElement(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string font, int iPSize, Utils::EANCHOR _Anchor);
+	void AddUITextElement(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string font, int iPSize, EANCHOR _Anchor);
 
 	void DestroyUIElement(std::shared_ptr<UIElement> _Element);
 

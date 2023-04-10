@@ -22,7 +22,7 @@ Pyramid::Pyramid(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour)
 	bHasTexture = false;
 	m_iIndicies = 18;
 	BindPyramid();
-	m_eShape = Utils::PYRAMID;
+	m_eShape = EMESHTYPE::PYRAMID;
 	program = Shader::Programs["BaseProgram"];
 
 	SetInitialStates();
@@ -45,7 +45,7 @@ Pyramid::Pyramid(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, c
 	bHasTexture = true;
 	m_iIndicies = 18;
 	BindPyramid();
-	m_eShape = Utils::PYRAMID;
+	m_eShape = EMESHTYPE::PYRAMID;
 	program = Shader::Programs["BaseProgram"];
 
 	SetInitialStates();
@@ -133,7 +133,7 @@ void Pyramid::Rebind()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Pyramid::Render(Utils::Transform Newtransform)
+void Pyramid::Render(FTransform Newtransform)
 {
 	if (bHasTexture)
 	{

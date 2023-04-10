@@ -12,7 +12,9 @@
 // OpenGL Library Includes //
 
 // Engine Includes //
-#include "Engine/System/Utils.h"
+#include "Engine/Math/FTransform.h"
+#include "Engine/Math/Matrix.h"
+#include "Engine/System/EnumTypes.h"
 
 class Mesh;
 
@@ -21,13 +23,13 @@ class Entity : public std::enable_shared_from_this<Entity>
 public:
 	Entity(std::string _FromString);
 
-	Entity(Utils::Transform _Transform, Utils::EANCHOR _Anchor);
+	Entity(FTransform _Transform, EANCHOR _Anchor);
 
 	//Entity() {};
-	/*Entity(Utils::Transform _Transform, float _fWidth, float _fHeight, Utils::EANCHOR _Anchor, glm::vec4 _Colour, Utils::ESHAPE _eShape);
-	Entity(Utils::Transform _Transform, float _fWidth, float _fHeight, Utils::EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, Utils::ESHAPE _eShape, glm::vec4 UVCoords = glm::vec4(0, 1, 0, 1));
-	Entity(Utils::Transform _Transform, float _fWidth, float _fHeight, Utils::EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, int iCount, bool bHorizontal);
-	Entity(Utils::Transform _Transform, float _fWidth, float _fHeight, Utils::EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, glm::vec2 v2FrameCounts, int _iFPS);*/
+	/*Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, Utils::ESHAPE _eShape);
+	Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, Utils::ESHAPE _eShape, glm::vec4 UVCoords = glm::vec4(0, 1, 0, 1));
+	Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, int iCount, bool bHorizontal);
+	Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, glm::vec2 v2FrameCounts, int _iFPS);*/
 	~Entity();
 
 	void AddMesh(std::shared_ptr<Mesh> _NewMesh);
@@ -46,11 +48,11 @@ public:
 
 	virtual void SetActive(bool _bIsActive, bool _bIsInitialState = false);
 
-	bool IsActive() { return bActive; };
+	bool IsActive() const { return bActive; }
 
 	virtual void SetVisible(bool _bIsVisible, bool _bIsInitialState = false);
 
-	bool IsVisible() { return bVisible; };
+	bool IsVisible() const { return bVisible; }
 
 	std::string EntityToString();
 
@@ -60,15 +62,15 @@ public:
 
 	void SetScale(glm::vec3 _NewScale);
 
-	glm::mat4 GetModel();
+	Matrix4 GetModel();
 
-	Utils::Transform transform;
-	Utils::EANCHOR EntityAnchor;
+	FTransform Transform;
+	EANCHOR EntityAnchor;
 	std::shared_ptr<Mesh> EntityMesh;
 
-	int GetEntityValue() { return iEntityID; };
-	void SetInitialEntity(bool IsInitial) { bIsInitialEntity = IsInitial; };
-	bool IsInitialEntity() { return bIsInitialEntity; };
+	int GetEntityValue() const { return iEntityID; }
+	void SetInitialEntity(bool IsInitial) { bIsInitialEntity = IsInitial; }
+	bool IsInitialEntity() const { return bIsInitialEntity; }
 
 	// Box2D Physics
 	b2Body* body = nullptr;
@@ -90,8 +92,8 @@ protected:
 
 	struct InitialState
 	{
-		Utils::Transform transform;
-		Utils::EANCHOR EntityAnchor;
+		FTransform Transform;
+		EANCHOR EntityAnchor;
 		bool bActive;
 		bool bVisible;
 		int iEntityID;

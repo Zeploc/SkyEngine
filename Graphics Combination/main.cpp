@@ -100,7 +100,7 @@ int main(int argc, char **argv)
 	glfwMakeContextCurrent(window);
 
 	CAM->Init(MainWindowSize.x, MainWindowSize.y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
-	CAM->SwitchProjection(Camera::PERSPECTIVE);
+	// CAM->SwitchProjection(EProjectionMode::Perspective);
 	CAM->MainWindow = window;
 
 	glViewport(0, 0, MainWindowSize.x, MainWindowSize.y);
@@ -140,7 +140,6 @@ int main(int argc, char **argv)
 
 		renderScene();
 
-
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -160,61 +159,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-//void SetupGLUT(int &argc, char ** argv)
-//{
-//	// init GLUT and create Window
-//	glutInit(&argc, argv);
-//
-//
-//	//glutInitWindowPosition(0, 0);
-//	glutInitWindowSize(MainWindowSize.x, MainWindowSize.y);
-//	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-//	GameWindowID = glutCreateWindow("Game Window");
-//	EditorWindowManager::iMainWindowID = GameWindowID;
-//	//glutFullScreen();
-//
-//	CAM->Init(MainWindowSize.x, MainWindowSize.y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
-//	CAM->SwitchProjection(Camera::PERSPECTIVE);
-//
-//	// Settings Initialised
-//	Init();
-//
-//	EditorWindow* NewWindow = new EditorWindow("Test", GameWindowID, glm::vec2(300, 300), glm::vec2(10, 10));
-//	NewWindow->BackColour = glm::vec3(0.4, 0.4, 0.4);
-//
-//	glutSetWindow(NewWindow->GetWindowID());
-//	Init();
-//
-//	//EditorWindow* SecondNewWindow = new EditorWindow("Hey", GameWindowID, glm::vec2(400, 200), glm::vec2(700, 500));
-//	//SecondNewWindow->BackColour = glm::vec3(0.4, 0.4, 0.4);
-//
-//
-//	glutSetWindow(GameWindowID);
-//
-//
-//	// register callbacks
-//	glutDisplayFunc(renderScene);
-//
-//	// Set close function if window is closed
-//	glutCloseFunc(OnExit);
-//
-//	// here is the idle func registration
-//	glutIdleFunc(Update);
-//
-//	//Input::SetInstanceToSingleton();
-//	// The input function registration
-//	//SI->Init();
-//
-//	// Window Resize Function
-//	glutReshapeFunc(changeSize);
-//
-//
-//
-//	// Enter GLUT event processing cycle
-//	glutMainLoop();
-//}
-
-
 /************************************************************
 #--Description--#: 	Update for every frame
 #--Author--#: 		Alex Coultas
@@ -228,16 +172,14 @@ void Update()
 	{
 		SoundManager::GetInstance()->InitFMod();
 		// Scene setup here
-		std::shared_ptr<Level> LevelScene = std::shared_ptr<Level>(new Level("Demo Environment"));
-		
-		// std::shared_ptr<EditorScene> LevelScene = std::shared_ptr<EditorScene>(new EditorScene("Editor"));
+		// std::shared_ptr<Level> LevelScene = std::shared_ptr<Level>(new Level("Demo Environment"));		
+		std::shared_ptr<EditorScene> LevelScene = std::shared_ptr<EditorScene>(new EditorScene("Editor"));
 		
 		SceneManager::GetInstance()->AddScene(LevelScene);
 		bLoading = false;
 	}
 	else
 	{
-
 		double dCurrentTime = glfwGetTime();//glutGet(GLUT_ELAPSED_TIME);
 		double TimeDelta = (dCurrentTime - dPrevTime);// / 1000;
 		dPrevTime = glfwGetTime();//glutGet(GLUT_ELAPSED_TIME);
@@ -276,9 +218,6 @@ void renderScene()
 	{
 		SM->RenderCurrentScene();
 	}
-
-	EditorWindowManager::RenderWindows();
-
 }
 
 /************************************************************

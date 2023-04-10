@@ -16,7 +16,7 @@ public:
 
 	void Rebind() override;
 
-	void Render();
+	void Render(FTransform Transform) override;
 
 	GLuint renderTexture;
 	GLuint framebuffer;

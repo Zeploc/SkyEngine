@@ -15,7 +15,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-UITextField::UITextField(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, int iWidth, int iHeight, glm::vec4 _TextColour, std::string _DefaultValue, std::string _FontPath, int _iPSize, Utils::EANCHOR TextAnchor) : UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, _Colour),
+UITextField::UITextField(glm::vec2 _Position, EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, int iWidth, int iHeight, glm::vec4 _TextColour, std::string _DefaultValue, std::string _FontPath, int _iPSize, EANCHOR TextAnchor) : UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, _Colour),
 	FieldText(_Position, _fRotation, _TextColour, _DefaultValue, _FontPath, _iPSize, TextAnchor),
 	BackImage(_Position, _anchor, _fRotation, _Colour, iWidth, iHeight), sHintText(_DefaultValue)
 {
@@ -27,7 +27,7 @@ UITextField::UITextField(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRo
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-UITextField::UITextField(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, const char* _ImagePath, int iWidth, int iHeight, glm::vec4 _TextColour, std::string _DefaultValue, std::string _FontPath, int _iPSize, Utils::EANCHOR TextAnchor) :
+UITextField::UITextField(glm::vec2 _Position, EANCHOR _anchor, float _fRotation, const char* _ImagePath, int iWidth, int iHeight, glm::vec4 _TextColour, std::string _DefaultValue, std::string _FontPath, int _iPSize, EANCHOR TextAnchor) :
 	UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), FieldText(UIImage::GetPositionFromAnchor(_Position, TextAnchor, iWidth, iHeight), _fRotation, _TextColour, _DefaultValue, _FontPath, _iPSize, TextAnchor),
 	BackImage(_Position, _anchor, _fRotation, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), iWidth, iHeight, _ImagePath, 1)
 {
@@ -82,7 +82,7 @@ void UITextField::Update()
 {
 	glm::vec2 TopLeft = glm::vec2(position.x - BackImage.GetWidth() / 2, position.y - BackImage.GetHeight() / 2);
 	glm::vec2 BottomRight = glm::vec2(position.x + BackImage.GetWidth() / 2, position.y + BackImage.GetHeight() / 2);
-	if (Input::GetInstance()->MousePos.x > TopLeft.x && Input::GetInstance()->MousePos.x < BottomRight.x && Input::GetInstance()->MousePos.y < BottomRight.y && Input::GetInstance()->MousePos.y > TopLeft.y)
+	if (Input::GetInstance()->MousePos.X > TopLeft.x && Input::GetInstance()->MousePos.X < BottomRight.x && Input::GetInstance()->MousePos.Y < BottomRight.y && Input::GetInstance()->MousePos.Y > TopLeft.y)
 	{
 		if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == (Input::InputState::INPUT_HOLD | Input::InputState::INPUT_FIRST_PRESS))
 		{

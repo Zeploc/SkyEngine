@@ -25,7 +25,7 @@ FrameBuffer::FrameBuffer()
 	bHasTexture = false;
 	UVCoords = {0, 1, 0, 1};
 	BindFrameBuffer();
-	m_eShape = Utils::PLANE;
+	m_eShape = EMESHTYPE::PLANE;
 	program = Shader::Programs["FrameBuffer"];
 	SetInitialStates();
 }
@@ -147,7 +147,7 @@ void FrameBuffer::Rebind()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void FrameBuffer::Render()
+void FrameBuffer::Render(FTransform Transform)
 {
 	//if (bHasTexture)
 	//{

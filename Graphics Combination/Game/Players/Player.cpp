@@ -23,7 +23,7 @@
 #include <math.h>
 
 Player::Player(glm::vec3 StartPosition) // Will also take the type of player (asthetic)
-	: Entity({StartPosition, {0, 0, 0}, {0.05, 0.05, 0.05}}, Utils::CENTER)
+	: Entity({StartPosition, {0, 0, 0}, {0.05, 0.05, 0.05}}, EANCHOR::CENTER)
 {
 	std::shared_ptr<Sphere> PlayerSphere = std::make_shared<Sphere>(Sphere(2.0f, 2.0f, 2.0f, {0.9f, 0.4f, 0.7f, 1.0f}, "Resources/Images/Box.png"));
 	AddMesh(PlayerSphere);
@@ -90,7 +90,7 @@ void Player::Update()
 		Dir.x = 1;
 	}
 
-	glm::vec3 ForwardDirection = Camera::GetInstance()->GetCameraForwardVector();
+	glm::vec3 ForwardDirection = Camera::GetInstance()->GetCameraForwardVector().ToGLM();
 	ForwardDirection.y = 0;
 	ForwardDirection = normalize(ForwardDirection);
 	glm::vec3 ForwardMovement = ForwardDirection * (Dir.y * static_cast<float>(Time::dTimeDelta) * MoveSpeed);
@@ -102,8 +102,8 @@ void Player::Update()
 	if (Dir.x != 0 || Dir.y != 0)
 	{
 		glm::vec3 DirectionVec = ForwardMovement + RightMovement;
-		glm::vec3 target = transform.Position + DirectionVec;
-		glm::mat4 Rotation = orientation(DirectionVec, {0, 1, 0}); //  glm::lookAt(transform.Position, target, { 0, 1, 0 });
+		glm::vec3 target = Transform.Position.ToGLM() + DirectionVec;
+		glm::mat4 Rotation = orientation(DirectionVec, {0, 1, 0}); //  glm::lookAt(Transform.Position, target, { 0, 1, 0 });
 		glm::vec3 NewRotation = glm::vec4(1, 1, 1, 0) * Rotation;
 		NewRotation.x = glm::degrees(NewRotation.x);
 		NewRotation.y = glm::degrees(NewRotation.y);
@@ -124,7 +124,7 @@ void Player::Update()
 		std::cout << to_string(NewRotation) << std::endl;
 		NewRotation.x = 0;
 		NewRotation.z = 0;
-		transform.Rotation = NewRotation; //  glm::rotateY(glm::vec3(0, 1, 0), angle);
+		Transform.Rotation = NewRotation; //  glm::rotateY(glm::vec3(0, 1, 0), angle);
 
 		/*if (Dir.y < 0)
 		{			
@@ -154,33 +154,33 @@ void Player::Update()
 
 	if (TerrainRef)
 	{
-		transform.Position += ForwardMovement;
-		transform.Position += RightMovement;
-		transform.Position.x = glm::clamp(transform.Position.x, 1.0f, TerrainRef->mInfo.NumRows - 2.0f);
-		transform.Position.z = glm::clamp(transform.Position.z, 1.0f, TerrainRef->mInfo.NumCols - 2.0f);
+		Transform.Position += ForwardMovement;
+		Transform.Position += RightMovement;
+		Transform.Position.X = glm::clamp(Transform.Position.X, 1.0f, TerrainRef->mInfo.NumRows - 2.0f);
+		Transform.Position.Z = glm::clamp(Transform.Position.Z, 1.0f, TerrainRef->mInfo.NumCols - 2.0f);
 
-		transform.Position.y = TerrainRef->GetYPosition({transform.Position.x, transform.Position.z}) + 0.05f + YOffset;
+		Transform.Position.Y = TerrainRef->GetYPosition({Transform.Position.X, Transform.Position.Z}) + 0.05f + YOffset;
 	}
 	else
 	{
-		transform.Position += RightMovement + ForwardMovement;
+		Transform.Position += RightMovement + ForwardMovement;
 
-		transform.Position.y = YOffset;
+		Transform.Position.Y = YOffset;
 	}
 
-	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(transform.Rotation.x), glm::vec3(1, 0, 0));
-	rotation = rotate(rotation, glm::radians(transform.Rotation.y), glm::vec3(0, 1, 0));
-	rotation = rotate(rotation, glm::radians(transform.Rotation.z), glm::vec3(0, 0, 1));
+	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(Transform.Rotation.X), glm::vec3(1, 0, 0));
+	rotation = rotate(rotation, glm::radians(Transform.Rotation.Y), glm::vec3(0, 1, 0));
+	rotation = rotate(rotation, glm::radians(Transform.Rotation.Z), glm::vec3(0, 0, 1));
 	
-	glm::vec3 NewCamPosition = transform.Position + glm::vec3(0, 10, -20);
+	glm::vec3 NewCamPosition = Transform.Position.ToGLM() + glm::vec3(0, 10, -20);
 	Camera::GetInstance()->SetCameraPos(NewCamPosition);
 }
 
 void Player::DrawEntity()
 {
 	Entity::DrawEntity();
-	AnimatedModel->setPosition(transform.Position);
-	AnimatedModel->setScale(transform.Scale);
-	AnimatedModel->setRotation(transform.Rotation);
+	AnimatedModel->setPosition(Transform.Position.ToGLM());
+	AnimatedModel->setScale(Transform.Scale.ToGLM());
+	AnimatedModel->setRotation(Transform.Rotation.ToGLM());
 	AnimatedModel->render(TerrainRef);
 }

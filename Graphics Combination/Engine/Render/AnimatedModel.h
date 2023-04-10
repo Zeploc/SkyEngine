@@ -31,7 +31,7 @@ public:
 
 	~AnimatedModel();
 
-	void Render(Utils::Transform Newtransform) override;
+	void Render(FTransform Newtransform) override;
 
 	void Update() override;
 
@@ -69,8 +69,8 @@ private:
 
 	struct BoneInfo
 	{
-		Matrix4f BoneOffset;
-		Matrix4f FinalTransformation;
+		Matrix4 BoneOffset;
+		Matrix4 FinalTransformation;
 
 		BoneInfo()
 		{
@@ -118,7 +118,7 @@ private:
 
 	void setShaderEffectVariables();
 
-	void boneTransforms(std::vector<Matrix4f>& transforms);
+	void boneTransforms(std::vector<Matrix4>& transforms);
 
 	void setCurrentAnimation(int startFrameNum, int endFramNum);
 
@@ -136,7 +136,7 @@ private:
 	std::vector<MeshEntry> m_Entries;
 	std::vector<GLuint> m_Textures;
 
-	Matrix4f m_GlobalInverseTransform;
+	Matrix4 m_GlobalInverseTransform;
 	GLuint m_boneLocation[100];
 
 	// Model
@@ -156,7 +156,7 @@ private:
 	float animationTime;
 
 	// Animation
-	void ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const Matrix4f& ParentTransform);
+	void ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const Matrix4& ParentTransform);
 
 	const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, std::string NodeName);
 

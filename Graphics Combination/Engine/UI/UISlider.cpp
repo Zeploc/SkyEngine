@@ -15,16 +15,16 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-UISlider::UISlider(glm::vec2 _Position, float _fRotation, glm::vec4 _HandleColour, glm::vec4 _SliderColour, int _iSliderLength, int _iSliderThickness, int _iHandleHeight, int _iHandleWidth, Utils::EANCHOR _Anchor, std::string _sTitle) : UIElement(_Position, _fRotation, _HandleColour),
+UISlider::UISlider(glm::vec2 _Position, float _fRotation, glm::vec4 _HandleColour, glm::vec4 _SliderColour, int _iSliderLength, int _iSliderThickness, int _iHandleHeight, int _iHandleWidth, EANCHOR _Anchor, std::string _sTitle) : UIElement(_Position, _fRotation, _HandleColour),
                                                                                                                                                                                                                                              SliderBar(_Position, _Anchor, 0, _SliderColour, glm::vec4(glm::vec3(_SliderColour), 0.5), _iSliderLength,
 	                                                                                                                                                                                                                                             _iSliderThickness, nullptr),
                                                                                                                                                                                                                                              SliderHandle(
 	                                                                                                                                                                                                                                             Utils::GetAncoredPosition2D(
 		                                                                                                                                                                                                                                             glm::vec2(_Position.x - _iSliderLength / 2, _Position.y), glm::vec2(_iSliderLength, _iSliderThickness), _Anchor),
-	                                                                                                                                                                                                                                             Utils::CENTER, 0, _HandleColour, glm::vec4(glm::vec3(_HandleColour), 0.5), _iHandleWidth, _iHandleHeight, nullptr),
+	                                                                                                                                                                                                                                             EANCHOR::CENTER, 0, _HandleColour, glm::vec4(glm::vec3(_HandleColour), 0.5), _iHandleWidth, _iHandleHeight, nullptr),
                                                                                                                                                                                                                                              sTitle(_sTitle)
 {
-	SliderBar.AddText(sTitle + ": 0.00", "Resources/Fonts/Roboto-Thin.ttf", 25, glm::vec4(1, 1, 1, 1), Utils::BOTTOM_CENTER);
+	SliderBar.AddText(sTitle + ": 0.00", "Resources/Fonts/Roboto-Thin.ttf", 25, glm::vec4(1, 1, 1, 1), EANCHOR::BOTTOM_CENTER);
 	SliderBar.TextComponent.SetPosition(SliderBar.TextComponent.GetPosition() + glm::vec2(0, -_iHandleHeight));
 }
 
@@ -58,7 +58,7 @@ void UISlider::DrawUIElement()
 ************************************************************/
 void UISlider::Update()
 {
-	glm::vec2 MousePos = Input::GetInstance()->MousePos;
+	glm::vec2 MousePos = Input::GetInstance()->MousePos.ToGLM();
 
 	SliderBar.Update();
 	SliderHandle.Update();

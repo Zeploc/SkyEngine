@@ -13,6 +13,7 @@ public:
 	EditorScene(std::string sSceneName);
 	
 	void Update() override;
+	void RenderScene() override;
 	
 	void OpenFile();
 
@@ -20,7 +21,7 @@ public:
 
 	void SaveCurrentLevel();
 
-	void QuitCall();
+	void QuitApplication();
 	
 	bool Wireframe = false;
 	

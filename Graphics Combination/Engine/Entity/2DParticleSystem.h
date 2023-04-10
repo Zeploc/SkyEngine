@@ -15,7 +15,7 @@
 class ParticleSystem2D : public Entity
 {
 public:
-	ParticleSystem2D(Utils::Transform _Transform, const char* _CharName);
+	ParticleSystem2D(FTransform _Transform, const char* _CharName);
 
 	~ParticleSystem2D();
 

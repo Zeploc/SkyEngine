@@ -8,7 +8,7 @@
 class TransformationWidget : public Entity
 {
 public:
-	TransformationWidget(Utils::Transform _Transform, class Scene* OwningScene);
+	TransformationWidget(FTransform _Transform, class Scene* OwningScene);
 
 	~TransformationWidget();
 
@@ -24,6 +24,6 @@ public:
 	bool YHit = false;
 	bool ZHit = false;
 
-	glm::vec3 HitPosition;
+	Vector3 HitPosition;
 	std::shared_ptr<Entity> SelectedEntity;
 };

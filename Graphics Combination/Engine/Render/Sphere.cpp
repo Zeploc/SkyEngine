@@ -24,7 +24,7 @@ Sphere::Sphere(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour)
 	TextureSource = "";
 	bHasTexture = false;
 	BindSphere();
-	m_eShape = Utils::SPHERE;
+	m_eShape = EMESHTYPE::SPHERE;
 	if (bIsLit)
 	{
 		program = Shader::Programs["LitTextureprogram"];
@@ -53,7 +53,7 @@ Sphere::Sphere(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, con
 	UVCoords = _UVCoords;
 	bHasTexture = true;
 	BindSphere();
-	m_eShape = Utils::SPHERE;
+	m_eShape = EMESHTYPE::SPHERE;
 	program = Shader::Programs["BaseProgram"];
 
 	SetInitialStates();
@@ -220,7 +220,7 @@ void Sphere::SetLit(bool _bIsLit)
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Sphere::Render(Utils::Transform Newtransform)
+void Sphere::Render(FTransform Newtransform)
 {
 	if (bIsLit)
 	{

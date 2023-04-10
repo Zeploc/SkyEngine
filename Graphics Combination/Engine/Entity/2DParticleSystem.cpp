@@ -21,7 +21,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-ParticleSystem2D::ParticleSystem2D(Utils::Transform _Transform, const char* _CharName) : Entity(_Transform, Utils::CENTER)
+ParticleSystem2D::ParticleSystem2D(FTransform _Transform, const char* _CharName) : Entity(_Transform, EANCHOR::CENTER)
 {
 	m_vParticlePaths.push_back(_CharName);
 }
@@ -181,7 +181,7 @@ void ParticleSystem2D::Update()
 		// Random path from paths
 		int iRandPath = rand() % m_vParticlePaths.size();
 
-		std::shared_ptr<Entity> NewParticleEntity = std::make_shared<Entity>(transform, Utils::CENTER);
+		std::shared_ptr<Entity> NewParticleEntity = std::make_shared<Entity>(Transform, EANCHOR::CENTER);
 		std::shared_ptr<Plane> NewParticlePlaneMesh = std::make_shared<Plane>(fNewSize, fNewSize, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), m_vParticlePaths[iRandPath]);
 		NewParticleEntity->AddMesh(NewParticlePlaneMesh);
 

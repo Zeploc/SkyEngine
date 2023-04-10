@@ -376,9 +376,9 @@ void ssAnimatedModel::setShaderEffectVariables(std::shared_ptr<Terrain> terrain)
 
 	//glm::mat4 vp = Camera::GetInstance()->projection * Camera::GetInstance()->view;
 	GLint vLoc = glGetUniformLocation(program, "view");
-	glUniformMatrix4fv(vLoc, 1, GL_FALSE, value_ptr(Camera::GetInstance()->view));
+	glUniformMatrix4fv(vLoc, 1, GL_FALSE, value_ptr(Camera::GetInstance()->View.ToGLM()));
 	GLint pLoc = glGetUniformLocation(program, "proj");
-	glUniformMatrix4fv(pLoc, 1, GL_FALSE, value_ptr(Camera::GetInstance()->projection));
+	glUniformMatrix4fv(pLoc, 1, GL_FALSE, value_ptr(Camera::GetInstance()->Projection.ToGLM()));
 
 	GLint modelLoc = glGetUniformLocation(program, "model");
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, value_ptr(model));
@@ -392,18 +392,18 @@ void ssAnimatedModel::setShaderEffectVariables(std::shared_ptr<Terrain> terrain)
 		m_boneLocation[i] = glGetUniformLocation(program, name);
 	}
 
-	std::vector<Matrix4f> transforms; // = getJointTransforms();
+	std::vector<Matrix4> transforms; // = getJointTransforms();
 
 	boneTransforms(transforms);
 
 	for (int i = 0; i < transforms.size(); i++)
 	{
-		Matrix4f Transform = transforms[i];
+		Matrix4 Transform = transforms[i];
 		glUniformMatrix4fv(m_boneLocation[i], 1, GL_TRUE, static_cast<const GLfloat*>(Transform));
 	}
 
 	glUniform1i(glGetUniformLocation(program, "bIsLit"), true);
-	Utils::Transform transform;
+	FTransform transform;
 	transform.Position = position;
 	transform.Rotation = rotation;
 	transform.Scale = scale;
@@ -446,9 +446,9 @@ void ssAnimatedModel::render(std::shared_ptr<Terrain> terrain)
 	glBindVertexArray(0);
 }
 
-void ssAnimatedModel::boneTransforms(std::vector<Matrix4f>& transforms)
+void ssAnimatedModel::boneTransforms(std::vector<Matrix4>& transforms)
 {
-	Matrix4f Identity;
+	Matrix4 Identity;
 	Identity.InitIdentity();
 
 	//float animDuration = (float)m_pScene->mAnimations[0]->mDuration;
@@ -484,13 +484,13 @@ void ssAnimatedModel::setCurrentAnimation(int startFrameNum, int endFramNum)
 // Helper functions
 //////////////////////////////////////////////
 
-void ssAnimatedModel::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const Matrix4f& ParentTransform)
+void ssAnimatedModel::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const Matrix4& ParentTransform)
 {
 	std::string NodeName(pNode->mName.data);
 
 	const aiAnimation* pAnimation = m_pScene->mAnimations[0];
 
-	Matrix4f NodeTransformation(pNode->mTransformation); //initalizing with some value
+	Matrix4 NodeTransformation(pNode->mTransformation); //initalizing with some value
 	//NodeTransformation.InitIdentity(); // can initialize with identity but them model is 10 times bigger
 
 	const aiNodeAnim* pNodeAnim = FindNodeAnim(pAnimation, NodeName);
@@ -500,21 +500,21 @@ void ssAnimatedModel::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode
 		// Interpolate translation and generate translation transformation matrix
 		aiVector3D Translation;
 		CalcInterpolatedPosition(Translation, AnimationTime, pNodeAnim);
-		Matrix4f TranslationM;
-		TranslationM.InitTranslationTransform(Translation.x, Translation.y, Translation.z);
+		Matrix4 TranslationM;
+		TranslationM.SetTranslationTransform(Translation.x, Translation.y, Translation.z);
 		//glm::mat4 TranslationM = glm::translate(glm::mat4(), glm::vec3(Translation.x, Translation.y, Translation.z));
 
 		// Interpolate rotation and generate rotation transformation matrix
 		aiQuaternion RotationQ;
 		CalcInterpolatedRotation(RotationQ, AnimationTime, pNodeAnim);
-		Matrix4f RotationM = Matrix4f(RotationQ.GetMatrix());
+		Matrix4 RotationM = Matrix4(RotationQ.GetMatrix());
 		//glm::quat myQuat = glm::quat(RotationQ.x, RotationQ.y, RotationQ.z, RotationQ.w);
 		//glm::mat4 RotationM = glm::toMat4(myQuat);
 
 		// Interpolate scaling and generate scaling transformation matrix
 		aiVector3D Scaling;
 		CalcInterpolatedScaling(Scaling, AnimationTime, pNodeAnim);
-		Matrix4f ScalingM;
+		Matrix4 ScalingM;
 		ScalingM.InitIdentity();
 		ScalingM.InitScaleTransform(Scaling.x, Scaling.y, Scaling.z);
 		//glm::mat4 ScalingM = glm::scale(glm::mat4(), glm::vec3(Scaling.x, Scaling.y, Scaling.z));
@@ -523,15 +523,15 @@ void ssAnimatedModel::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode
 		NodeTransformation = TranslationM * RotationM * ScalingM;
 	}
 
-	Matrix4f modalAnimParentTransform = ParentTransform * //modalSpace parentBone animTransform
+	Matrix4 modalAnimParentTransform = ParentTransform * //modalSpace parentBone animTransform
 		NodeTransformation; //boneSpace currentbone animTransform
 
 	if (m_BoneMapping.find(NodeName) != m_BoneMapping.end())
 	{
 		size_t BoneIndex = m_BoneMapping[NodeName];
-		m_BoneInfo[BoneIndex].FinalTransformation = m_GlobalInverseTransform * // sceneSpace transform 
-			modalAnimParentTransform * // modelspace anim transform for current bone
-			m_BoneInfo[BoneIndex].BoneOffset; // modelSpace inverse pose transform for current bone
+		m_BoneInfo[BoneIndex].FinalTransformation = m_GlobalInverseTransform * // sceneSpace Transform 
+			modalAnimParentTransform * // modelspace anim Transform for current bone
+			m_BoneInfo[BoneIndex].BoneOffset; // modelSpace inverse pose Transform for current bone
 	}
 
 	for (size_t i = 0; i < pNode->mNumChildren; i++)

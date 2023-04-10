@@ -23,7 +23,7 @@ GeometryObject::GeometryObject(glm::vec4 _Colour)
 	TextureSource = "";
 	bHasTexture = false;
 	BindGeometryObject();
-	m_eShape = Utils::GEOMETRY;
+	m_eShape = EMESHTYPE::GEOMETRY;
 	program = Shader::Programs["GeometryShader"];
 
 	SetInitialStates();
@@ -74,7 +74,7 @@ void GeometryObject::Rebind()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void GeometryObject::Render(Utils::Transform Newtransform)
+void GeometryObject::Render(FTransform Newtransform)
 {
 	glUseProgram(program);
 	if (bHasTexture)

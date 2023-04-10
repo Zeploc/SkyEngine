@@ -11,7 +11,7 @@
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
 
-Terrain::Terrain(Utils::Transform _Transform, Utils::EANCHOR _Anchor, InitInfo& _InitInfo) : Entity(_Transform, _Anchor)
+Terrain::Terrain(FTransform _Transform, EANCHOR _Anchor, InitInfo& _InitInfo) : Entity(_Transform, _Anchor)
 {
 	mInfo = _InitInfo;
 	ReadTerrainMap();
@@ -135,7 +135,7 @@ void Terrain::DrawEntity()
 	glUniform1i(glGetUniformLocation(program, "bFog"), bFog);
 	glUniform1i(glGetUniformLocation(program, "bIsLit"), true);
 	glUniform1i(glGetUniformLocation(program, "ToonShade"), true);
-	Lighting::PassLightingToShader(program, LightProperties, transform);
+	Lighting::PassLightingToShader(program, LightProperties, Transform);
 	if (bHasTexture)
 	{
 		glEnable(GL_BLEND);
@@ -149,14 +149,14 @@ void Terrain::DrawEntity()
 	}
 	if (bFog)
 	{
-		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, value_ptr(Camera::GetInstance()->GetCameraPosition()));
+		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, value_ptr(Camera::GetInstance()->GetCameraPosition().ToGLM()));
 		glUniform4fv(glGetUniformLocation(program, "vFogColor"), 1, value_ptr(Lighting::m_v4FogColour));
 		glUniform1f(glGetUniformLocation(program, "StartFog"), Lighting::StartFogDistance);
 		glUniform1f(glGetUniformLocation(program, "EndFog"), Lighting::EndFogDistance);
 	}
 	glFrontFace(GL_CW);
 	glDisable(GL_CULL_FACE);
-	Camera::GetInstance()->SetMVP(transform, program);
+	Camera::GetInstance()->SetMVP(Transform, program);
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, indiciesVec.size(), GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);

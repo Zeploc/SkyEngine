@@ -44,15 +44,15 @@ bool CollisionBounds::isColliding(std::shared_ptr<Entity> Entity2)
 	}
 	std::shared_ptr<Mesh> Entity1Mesh = std::dynamic_pointer_cast<Mesh>(EntityRef->EntityMesh);
 	std::shared_ptr<Mesh> Entity2Mesh = std::dynamic_pointer_cast<Mesh>(Entity2->EntityMesh);
-	float HalfWidth1 = (fWidth) / 2; // * * abs(EntityRef->transform.Scale.x);
-	float HalfHeight1 = (fHeight) / 2; // * * abs(EntityRef->transform.Scale.y);
-	float HalfDepth1 = (fDepth) / 2; // * * abs(EntityRef->transform.Scale.z);
-	float HalfWidth2 = (Entity2Mesh->GetCollisionBounds()->fWidth) / 2; // * * abs(Entity2->transform.Scale.x);
-	float HalfHeight2 = (Entity2Mesh->GetCollisionBounds()->fHeight) / 2; // * * abs(Entity2->transform.Scale.y);
-	float HalfDepth2 = (Entity2Mesh->GetCollisionBounds()->fDepth) / 2; // * * abs(Entity2->transform.Scale.z);
+	float HalfWidth1 = (fWidth) / 2; // * * abs(EntityRef->Transform.Scale.x);
+	float HalfHeight1 = (fHeight) / 2; // * * abs(EntityRef->Transform.Scale.y);
+	float HalfDepth1 = (fDepth) / 2; // * * abs(EntityRef->Transform.Scale.z);
+	float HalfWidth2 = (Entity2Mesh->GetCollisionBounds()->fWidth) / 2; // * * abs(Entity2->Transform.Scale.x);
+	float HalfHeight2 = (Entity2Mesh->GetCollisionBounds()->fHeight) / 2; // * * abs(Entity2->Transform.Scale.y);
+	float HalfDepth2 = (Entity2Mesh->GetCollisionBounds()->fDepth) / 2; // * * abs(Entity2->Transform.Scale.z);
 
-	glm::vec3 Entity1Pos = Utils::GetAncoredPosition(EntityRef->transform.Position, Entity1Mesh->GetCollisionBounds()->GetDimensions(), EntityRef->EntityAnchor);
-	glm::vec3 Entity2Pos = Utils::GetAncoredPosition(Entity2->transform.Position, Entity2Mesh->GetCollisionBounds()->GetDimensions(), Entity2->EntityAnchor);
+	glm::vec3 Entity1Pos = Utils::GetAncoredPosition(EntityRef->Transform.Position, Entity1Mesh->GetCollisionBounds()->GetDimensions(), EntityRef->EntityAnchor);
+	glm::vec3 Entity2Pos = Utils::GetAncoredPosition(Entity2->Transform.Position, Entity2Mesh->GetCollisionBounds()->GetDimensions(), Entity2->EntityAnchor);
 
 	if (Entity1Pos.x + Entity1Mesh->GetCollisionBounds()->v3Offset.x + HalfWidth1 > Entity2Pos.x + Entity2Mesh->GetCollisionBounds()->v3Offset.x - HalfWidth2
 		&& Entity1Pos.x + Entity1Mesh->GetCollisionBounds()->v3Offset.x - HalfWidth1 < Entity2Pos.x + Entity2Mesh->GetCollisionBounds()->v3Offset.x + HalfWidth2
@@ -70,15 +70,15 @@ bool CollisionBounds::CheckCollision(std::shared_ptr<Entity> Entity2, glm::vec3 
 {
 	std::shared_ptr<Mesh> Entity1Mesh = std::dynamic_pointer_cast<Mesh>(EntityRef->EntityMesh);
 	std::shared_ptr<Mesh> Entity2Mesh = std::dynamic_pointer_cast<Mesh>(Entity2->EntityMesh);
-	float HalfWidth1 = (fWidth) / 2; // *abs(EntityRef->transform.Scale.x);
-	float HalfHeight1 = (fHeight) / 2; // *abs(EntityRef->transform.Scale.y);
-	float HalfDepth1 = (fDepth) / 2; // *abs(EntityRef->transform.Scale.z);
-	float HalfWidth2 = (Entity2Mesh->GetCollisionBounds()->fWidth) / 2; // *abs(Entity2->transform.Scale.x);
-	float HalfHeight2 = (Entity2Mesh->GetCollisionBounds()->fHeight) / 2; // *abs(Entity2->transform.Scale.y);
-	float HalfDepth2 = (Entity2Mesh->GetCollisionBounds()->fDepth) / 2; // *abs(Entity2->transform.Scale.z);
+	float HalfWidth1 = (fWidth) / 2; // *abs(EntityRef->Transform.Scale.x);
+	float HalfHeight1 = (fHeight) / 2; // *abs(EntityRef->Transform.Scale.y);
+	float HalfDepth1 = (fDepth) / 2; // *abs(EntityRef->Transform.Scale.z);
+	float HalfWidth2 = (Entity2Mesh->GetCollisionBounds()->fWidth) / 2; // *abs(Entity2->Transform.Scale.x);
+	float HalfHeight2 = (Entity2Mesh->GetCollisionBounds()->fHeight) / 2; // *abs(Entity2->Transform.Scale.y);
+	float HalfDepth2 = (Entity2Mesh->GetCollisionBounds()->fDepth) / 2; // *abs(Entity2->Transform.Scale.z);
 
-	glm::vec3 Entity1Pos = Utils::GetAncoredPosition(EntityRef->transform.Position, Entity1Mesh->GetCollisionBounds()->GetDimensions(), EntityRef->EntityAnchor);
-	glm::vec3 Entity2Pos = Utils::GetAncoredPosition(Entity2->transform.Position, Entity2Mesh->GetCollisionBounds()->GetDimensions(), Entity2->EntityAnchor);
+	glm::vec3 Entity1Pos = Utils::GetAncoredPosition(EntityRef->Transform.Position, Entity1Mesh->GetCollisionBounds()->GetDimensions(), EntityRef->EntityAnchor);
+	glm::vec3 Entity2Pos = Utils::GetAncoredPosition(Entity2->Transform.Position, Entity2Mesh->GetCollisionBounds()->GetDimensions(), Entity2->EntityAnchor);
 
 	if (Entity1Pos.x + Entity1Mesh->GetCollisionBounds()->v3Offset.x + HalfWidth1 + Movement.x > Entity2Pos.x + Entity2Mesh->GetCollisionBounds()->v3Offset.x - HalfWidth2
 		&& Entity1Pos.x + Entity1Mesh->GetCollisionBounds()->v3Offset.x - HalfWidth1 + Movement.x < Entity2Pos.x + Entity2Mesh->GetCollisionBounds()->v3Offset.x + HalfWidth2
@@ -97,15 +97,15 @@ glm::vec3 CollisionBounds::GetDistance(std::shared_ptr<Entity> Entity2)
 	std::shared_ptr<Mesh> Entity1Mesh = std::dynamic_pointer_cast<Mesh>(EntityRef->EntityMesh);
 	std::shared_ptr<Mesh> Entity2Mesh = std::dynamic_pointer_cast<Mesh>(Entity2->EntityMesh);
 	glm::vec3 fDistance = glm::vec3(0, 0, 0);
-	float HalfWidth1 = (fWidth) / 2; // * * abs(EntityRef->transform.Scale.x);
-	float HalfHeight1 = (fHeight) / 2; // * * abs(EntityRef->transform.Scale.y);
-	float HalfDepth1 = (fDepth) / 2; // * * abs(EntityRef->transform.Scale.z);
-	float HalfWidth2 = (Entity2Mesh->GetCollisionBounds()->fWidth) / 2; // * * abs(Entity2->transform.Scale.x);
-	float HalfHeight2 = (Entity2Mesh->GetCollisionBounds()->fHeight) / 2; // * * abs(Entity2->transform.Scale.y);
-	float HalfDepth2 = (Entity2Mesh->GetCollisionBounds()->fDepth) / 2; // * * abs(Entity2->transform.Scale.z);
+	float HalfWidth1 = (fWidth) / 2; // * * abs(EntityRef->Transform.Scale.x);
+	float HalfHeight1 = (fHeight) / 2; // * * abs(EntityRef->Transform.Scale.y);
+	float HalfDepth1 = (fDepth) / 2; // * * abs(EntityRef->Transform.Scale.z);
+	float HalfWidth2 = (Entity2Mesh->GetCollisionBounds()->fWidth) / 2; // * * abs(Entity2->Transform.Scale.x);
+	float HalfHeight2 = (Entity2Mesh->GetCollisionBounds()->fHeight) / 2; // * * abs(Entity2->Transform.Scale.y);
+	float HalfDepth2 = (Entity2Mesh->GetCollisionBounds()->fDepth) / 2; // * * abs(Entity2->Transform.Scale.z);
 
-	glm::vec3 Entity1Pos = Utils::GetAncoredPosition(EntityRef->transform.Position, Entity1Mesh->GetCollisionBounds()->GetDimensions(), EntityRef->EntityAnchor);
-	glm::vec3 Entity2Pos = Utils::GetAncoredPosition(Entity2->transform.Position, Entity2Mesh->GetCollisionBounds()->GetDimensions(), Entity2->EntityAnchor);
+	glm::vec3 Entity1Pos = Utils::GetAncoredPosition(EntityRef->Transform.Position, Entity1Mesh->GetCollisionBounds()->GetDimensions(), EntityRef->EntityAnchor);
+	glm::vec3 Entity2Pos = Utils::GetAncoredPosition(Entity2->Transform.Position, Entity2Mesh->GetCollisionBounds()->GetDimensions(), Entity2->EntityAnchor);
 
 	if (Entity1Pos.x + Entity1Mesh->GetCollisionBounds()->v3Offset.x + HalfWidth1 <= Entity2Pos.x + Entity2Mesh->GetCollisionBounds()->v3Offset.x - HalfWidth2)
 	{

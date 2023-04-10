@@ -34,7 +34,7 @@ CubeMap::CubeMap(float fWidth, float fHeight, float fDepth, char* _TextureSource
 	m_fHeight = fHeight;
 	m_fDepth = fDepth;
 	bHasTexture = false;
-	m_eShape = Utils::CUBE;
+	m_eShape = EMESHTYPE::CUBE;
 	BindCubeMap();
 	program = Shader::Programs["CubeMapProgram"];
 }
@@ -173,7 +173,7 @@ void CubeMap::Rebind()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void CubeMap::Render(Utils::Transform Newtransform)
+void CubeMap::Render(FTransform Newtransform)
 {
 	glUseProgram(program);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);

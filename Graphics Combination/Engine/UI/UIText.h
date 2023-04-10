@@ -17,7 +17,7 @@ class UIText : public UIElement
 public:
 	void DrawUIElement() override;
 
-	UIText(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string Font, int _iPSize, Utils::EANCHOR _Anchor);
+	UIText(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string Font, int _iPSize, EANCHOR _Anchor);
 
 	UIText(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour);
 
@@ -26,5 +26,5 @@ public:
 	std::string sText;
 	std::string sFont;
 	int iPSize;
-	Utils::EANCHOR Anchor;
+	EANCHOR Anchor;
 };

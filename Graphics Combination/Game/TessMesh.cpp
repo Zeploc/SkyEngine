@@ -26,7 +26,7 @@ TessMesh::~TessMesh()
 {
 }
 
-void TessMesh::Render(Utils::Transform Newtransform)
+void TessMesh::Render(FTransform Newtransform)
 {
 	if (bHasTexture)
 	{
@@ -39,7 +39,7 @@ void TessMesh::Render(Utils::Transform Newtransform)
 		glDisable(GL_BLEND);
 	}
 	glFrontFace(GL_CW);
-	Utils::Transform ScaledUpTransform = Newtransform;
+	FTransform ScaledUpTransform = Newtransform;
 	ScaledUpTransform.Scale *= 1.1;
 	// ABOVE CALLED FROM DERIVED RENDER
 	glUniform1i(glGetUniformLocation(program, "bIsTex"), bHasTexture);
@@ -51,7 +51,7 @@ void TessMesh::Render(Utils::Transform Newtransform)
 	}
 	if (bFog)
 	{
-		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, value_ptr(Camera::GetInstance()->GetCameraPosition()));
+		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, value_ptr(Camera::GetInstance()->GetCameraPosition().ToGLM()));
 		glUniform4fv(glGetUniformLocation(program, "vFogColor"), 1, value_ptr(Lighting::m_v4FogColour));
 		glUniform1f(glGetUniformLocation(program, "StartFog"), Lighting::StartFogDistance);
 		glUniform1f(glGetUniformLocation(program, "EndFog"), Lighting::EndFogDistance);

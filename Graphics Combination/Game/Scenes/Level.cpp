@@ -41,14 +41,14 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 	Lighting::m_v3LightPosition = {0, 7, 0};
 	Lighting::m_v3SunDirection = {3, -1, 5};
 
-	std::shared_ptr<Entity> GeomPlatform = std::make_shared<Entity>(Entity({{10, 5, 13}, {90, 0, 0}, {1, 1, 1}}, Utils::CENTER));
+	std::shared_ptr<Entity> GeomPlatform = std::make_shared<Entity>(Entity({{10, 5, 13}, {90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
 	std::shared_ptr<Plane> GoemPlatformMesh = std::make_shared<Plane>(Plane(1, 1, {0.4f, 0.5f, 0.7f, 1.0f}));
 	GeomPlatform->AddMesh(GoemPlatformMesh);
 	GoemPlatformMesh->SetLit(true, true);
 	GoemPlatformMesh->LightProperties.fAmbientStrength = 1.0f;
 	GoemPlatformMesh->bCullFace = false;
 	AddEntity(GeomPlatform, true);
-	std::shared_ptr<Entity> DynamicBoxEntity = std::make_shared<Entity>(Entity({{0, 0, 0}, {90, 0, 0}, {1, 1, 1}}, Utils::CENTER));
+	std::shared_ptr<Entity> DynamicBoxEntity = std::make_shared<Entity>(Entity({{0, 0, 0}, {90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
 	//glm::vec3 Points[4] = { {-10, 10, 1}, {10, 10, -1 }, { 10, -10, 0 }, { -10, -10, -3 } };
 	std::shared_ptr<Plane> TestImage = std::make_shared<Plane>(Plane(50, 50, {0.9f, 0.3f, 0.1f, 1.0f}));
 	DynamicBoxEntity->AddMesh(TestImage);
@@ -67,7 +67,7 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 	NewPlayer->TerrainRef = LevelTerrain;
 	AddEntity(NewPlayer, true);
 
-	std::shared_ptr<Entity> GeomEnt = std::make_shared<Entity>(Entity({{10, 6, 10}, {0, 0, 0}, {1, 1, 1}}, Utils::CENTER));
+	std::shared_ptr<Entity> GeomEnt = std::make_shared<Entity>(Entity({{10, 6, 10}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
 	std::shared_ptr<GeometryObject> GeomShape = std::make_shared<GeometryObject>(GeometryObject({0.0, 0.9f, 0.3f, 1.0f}));
 	GeomEnt->AddMesh(GeomShape);
 	AddEntity(GeomEnt, true);
@@ -106,18 +106,18 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 
 	NewFramy = std::make_shared<FrameBuffer>();
 
-	std::shared_ptr<Entity> SphereRaycastTest = std::make_shared<Entity>(Entity(Utils::Transform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, Utils::CENTER));
+	std::shared_ptr<Entity> SphereRaycastTest = std::make_shared<Entity>(Entity(FTransform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
 	std::shared_ptr<Sphere> SphereMesh = std::make_shared<Sphere>(Sphere(2.0f, 2.0f, 2.0f, {0.1f, 0.8f, 0.3f, 1.0f}, "Resources/Images/SmoothCliff_1024.jpg"));
 	SphereRaycastTest->AddMesh(SphereMesh);
 	SphereMesh->SetLit(true);
 	SphereMesh->SetReflection(true);
 	AddEntity(SphereRaycastTest, true);
 
-	std::shared_ptr<Button3DEntity> FowardCubeButton = std::make_shared<Button3DEntity>(Button3DEntity(Utils::Transform{{4.0f, 7.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, Utils::CENTER, 6.0f, 2.0f, 1.0f, glm::vec4(0.7, 0.5, 0.7, 1.0f), glm::vec4(0.4, 0.5, 0.3, 1.0f), "Resources/Images/StoneWall_2x2.jpg"));
+	std::shared_ptr<Button3DEntity> FowardCubeButton = std::make_shared<Button3DEntity>(Button3DEntity(FTransform{{4.0f, 7.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER, 6.0f, 2.0f, 1.0f, glm::vec4(0.7, 0.5, 0.7, 1.0f), glm::vec4(0.4, 0.5, 0.3, 1.0f), "Resources/Images/StoneWall_2x2.jpg"));
 	FowardCubeButton->BindPress(this, &Level::ButtonBoiFuncorness);
 	AddEntity(FowardCubeButton, true);
 
-	std::shared_ptr<Entity> CubeEnty = std::make_shared<Entity>(Entity(Utils::Transform{{25.0f, 4.0f, 4.0f}, {0, 0, 0}, {1, 1, 1}}, Utils::CENTER));
+	std::shared_ptr<Entity> CubeEnty = std::make_shared<Entity>(Entity(FTransform{{25.0f, 4.0f, 4.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
 	std::shared_ptr<Cube> CubyMesh = std::make_shared<Cube>(Cube(3.0f, 3.0f, 3.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
 	CubeEnty->AddMesh(CubyMesh);
 	CubyMesh->SetLit(true);

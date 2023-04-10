@@ -8,11 +8,11 @@
 #include "Engine/Render/Cube.h"
 #include "Engine/Scene/Scene.h"
 
-TransformationWidget::TransformationWidget(Utils::Transform _Transform, Scene* OwningScene) : Entity(_Transform, Utils::CENTER)
+TransformationWidget::TransformationWidget(FTransform _Transform, Scene* OwningScene) : Entity(_Transform, EANCHOR::CENTER)
 {
-	XMoveTransform = std::make_shared<Entity>(Entity(_Transform, Utils::CENTER));
-	YMoveTransform = std::make_shared<Entity>(Entity(_Transform, Utils::CENTER));
-	ZMoveTransform = std::make_shared<Entity>(Entity(_Transform, Utils::CENTER));
+	XMoveTransform = std::make_shared<Entity>(Entity(_Transform, EANCHOR::CENTER));
+	YMoveTransform = std::make_shared<Entity>(Entity(_Transform, EANCHOR::CENTER));
+	ZMoveTransform = std::make_shared<Entity>(Entity(_Transform, EANCHOR::CENTER));
 	std::shared_ptr<Cube> XMoveTransformMesh = std::make_shared<Cube>(Cube(1.0f, 0.1f, 0.1f, {0.9f, 0.1f, 0.1f, 1.0f}));
 	std::shared_ptr<Cube> ZMoveTransformMesh = std::make_shared<Cube>(Cube(0.1f, 0.1f, 1.0f, {0.1f, 0.9f, 0.1f, 1.0f}));
 	std::shared_ptr<Cube> YMoveTransformMesh = std::make_shared<Cube>(Cube(0.1f, 1.0f, 0.1f, {0.1f, 0.1f, 0.9f, 1.0f}));
@@ -49,9 +49,9 @@ void TransformationWidget::Update()
 	Entity::Update();
 	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)
 	{
-		glm::vec3 rayStart = Camera::GetInstance()->GetCameraPosition();
-		glm::vec3 rayDirection = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos);
-		glm::vec3 HitPos;
+		Vector3 rayStart = Camera::GetInstance()->GetCameraPosition();
+		Vector3 rayDirection = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos).ToGLM();
+		Vector3 HitPos;
 		if (Utils::CheckHit(rayStart, rayDirection, XMoveTransform, HitPos))
 		{
 			XHit = true;
@@ -83,29 +83,29 @@ void TransformationWidget::Update()
 
 	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_HOLD && SelectedEntity)
 	{
-		glm::vec3 rayStart = Camera::GetInstance()->GetCameraPosition();
-		glm::vec3 rayDirection = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos);
+		const Vector3 RayStart = Camera::GetInstance()->GetCameraPosition();
+		const Vector3 RayDirection = Camera::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos).ToGLM();
 
 		if (XHit)
 		{
-			glm::vec3 HitPoint = Utils::LinePlaneIntersect(rayStart, rayDirection, transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
-			transform.Position.x = HitPoint.x;
+			const Vector3 HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
+			Transform.Position.X = HitPoint.X;
 		}
 		else if (YHit)
 		{
-			glm::vec3 HitPoint = Utils::LinePlaneIntersect(rayStart, rayDirection, transform.Position, glm::vec3(0.0f, 0.0f, 1.0f));
-			transform.Position.y = HitPoint.y;
+			const Vector3 HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 0.0f, 1.0f));
+			Transform.Position.Y = HitPoint.Y;
 		}
 		else if (ZHit)
 		{
-			glm::vec3 HitPoint = Utils::LinePlaneIntersect(rayStart, rayDirection, transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
-			transform.Position.z = HitPoint.z;
+			const Vector3 HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
+			Transform.Position.Z = HitPoint.Z;
 		}
-		SelectedEntity->transform.Position = transform.Position;
+		SelectedEntity->Transform.Position = Transform.Position;
 	}
-	XMoveTransform->transform.Position = transform.Position + glm::vec3(XMoveTransform->EntityMesh->m_fWidth / 2.0f, 0, 0);
-	YMoveTransform->transform.Position = transform.Position + glm::vec3(0, YMoveTransform->EntityMesh->m_fHeight / 2.0f, 0);
-	ZMoveTransform->transform.Position = transform.Position + glm::vec3(0, 0, ZMoveTransform->EntityMesh->m_fDepth / 2.0f);
+	XMoveTransform->Transform.Position = Transform.Position + glm::vec3(XMoveTransform->EntityMesh->m_fWidth / 2.0f, 0, 0);
+	YMoveTransform->Transform.Position = Transform.Position + glm::vec3(0, YMoveTransform->EntityMesh->m_fHeight / 2.0f, 0);
+	ZMoveTransform->Transform.Position = Transform.Position + glm::vec3(0, 0, ZMoveTransform->EntityMesh->m_fDepth / 2.0f);
 }
 
 void TransformationWidget::DrawEntity()

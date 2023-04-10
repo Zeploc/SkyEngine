@@ -24,7 +24,7 @@ Cube::Cube(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour)
 	bHasTexture = false;
 	m_iIndicies = 36;
 	BindCube();
-	m_eShape = Utils::CUBE;
+	m_eShape = EMESHTYPE::CUBE;
 	program = Shader::Programs["BaseProgram"];
 
 	SetInitialStates();
@@ -47,7 +47,7 @@ Cube::Cube(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, const c
 	bHasTexture = true;
 	m_iIndicies = 36;
 	BindCube();
-	m_eShape = Utils::CUBE;
+	m_eShape = EMESHTYPE::CUBE;
 	program = Shader::Programs["BaseProgram"];
 
 	SetInitialStates();
@@ -219,7 +219,7 @@ void Cube::SetLit(bool _bIsLit)
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Cube::Render(Utils::Transform Newtransform)
+void Cube::Render(FTransform Newtransform)
 {
 	glUseProgram(program);
 	glFrontFace(GL_CW);

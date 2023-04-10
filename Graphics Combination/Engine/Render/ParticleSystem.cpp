@@ -20,7 +20,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-ParticleSystem::ParticleSystem(Utils::Transform _Transform) : Entity(_Transform, Utils::CENTER)
+ParticleSystem::ParticleSystem(FTransform _Transform) : Entity(_Transform, EANCHOR::CENTER)
 {
 	Colour = glm::vec4(123.0f / 255.0f, 173.0f / 255.0f, 203.0f / 255.0f, 2.0f);
 }
@@ -51,7 +51,7 @@ void ParticleSystem::Init(int ParticleCount, const char* TexturePath)
 		float PositionY = RandomBetweenRange(m_v2StartPositionRangeY.x, m_v2StartPositionRangeY.y);
 		float PositionZ = RandomBetweenRange(m_v2StartPositionRangeZ.x, m_v2StartPositionRangeZ.y);
 
-		Particle NewParticle = Particle(Speed, {DirectionX, DirectionY, DirectionZ}, Falloff, FalloffTime, Delay, transform.Position + glm::vec3(PositionX, PositionY, PositionZ));
+		Particle NewParticle = Particle(Speed, {DirectionX, DirectionY, DirectionZ}, Falloff, FalloffTime, Delay, Transform.Position.ToGLM() + glm::vec3(PositionX, PositionY, PositionZ));
 		m_vParticles.push_back(NewParticle);
 	}
 
@@ -223,11 +223,10 @@ void ParticleSystem::DrawEntity()
 		m_vPosition[i] = m_vParticles[i].position;
 	}
 
-	glm::mat4 viewMat = Camera::GetInstance()->view;
 	glm::vec3 vQuad1, vQuad2;
-	glm::vec3 vView = Camera::GetInstance()->GetCameraForwardVector();
+	glm::vec3 vView = Camera::GetInstance()->GetCameraForwardVector().ToGLM();
 	vView = normalize(vView);
-	vQuad1 = cross(vView, Camera::GetInstance()->GetCameraUpVector());
+	vQuad1 = cross(vView, Camera::GetInstance()->GetCameraUpVector().ToGLM());
 	vQuad1 = normalize(vQuad1);
 	vQuad2 = cross(vView, vQuad1);
 	vQuad2 = normalize(vQuad2);
@@ -237,7 +236,7 @@ void ParticleSystem::DrawEntity()
 	            vQuad1.z);
 	glUniform3f(glGetUniformLocation(program, "vQuad2"), vQuad2.x, vQuad2.y,
 	            vQuad2.z);
-	glUniformMatrix4fv(glGetUniformLocation(program, "vp"), 1, GL_FALSE, value_ptr(Camera::GetInstance()->projection * Camera::GetInstance()->view));
+	glUniformMatrix4fv(glGetUniformLocation(program, "vp"), 1, GL_FALSE, value_ptr(Camera::GetInstance()->Projection.ToGLM() * Camera::GetInstance()->View.ToGLM()));
 	glUniform4f(glGetUniformLocation(program, "Colour"), Colour.r, Colour.g, Colour.b, Colour.a);
 	glUniform1f(glGetUniformLocation(program, "Size"), ParticleSize);
 

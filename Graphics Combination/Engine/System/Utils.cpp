@@ -9,6 +9,8 @@
 // Engine Includes //
 #include "Camera.h"
 #include "LogManager.h"
+#include "Engine/Entity/2DParticleSystem.h"
+#include "Engine/Entity/2DParticleSystem.h"
 #include "Engine/Entity/Entity.h"
 #include "Engine/Render/Cube.h"
 #include "Engine/Render/Plane.h"
@@ -31,31 +33,31 @@ glm::vec3 Utils::GetAncoredPosition2D(glm::vec2 position, glm::vec2 Dimensions, 
 	glm::vec3 NewPos;
 	switch (_AnchorType)
 	{
-		case TOP_LEFT:
+		case EANCHOR::TOP_LEFT:
 			NewPos = glm::vec3(position.x + Dimensions.x / 2, position.y - Dimensions.y / 2, 0);
 			break;
-		case TOP_RIGHT:
+		case EANCHOR::TOP_RIGHT:
 			NewPos = glm::vec3(position.x - Dimensions.x / 2, position.y - Dimensions.y / 2, 0);
 			break;
-		case TOP_CENTER:
+		case EANCHOR::TOP_CENTER:
 			NewPos = glm::vec3(position.x, position.y - Dimensions.y / 2, 0);
 			break;
-		case CENTER_LEFT:
+		case EANCHOR::CENTER_LEFT:
 			NewPos = glm::vec3(position.x + Dimensions.x / 2, position.y, 0);
 			break;
-		case CENTER:
+		case EANCHOR::CENTER:
 			NewPos = glm::vec3(position.x, position.y, 0);
 			break;
-		case CENTER_RIGHT:
+		case EANCHOR::CENTER_RIGHT:
 			NewPos = glm::vec3(position.x - Dimensions.x / 2, position.y, 0);
 			break;
-		case BOTTOM_LEFT:
+		case EANCHOR::BOTTOM_LEFT:
 			NewPos = glm::vec3(position.x + Dimensions.x / 2, position.y + Dimensions.y / 2, 0);
 			break;
-		case BOTTOM_CENTER:
+		case EANCHOR::BOTTOM_CENTER:
 			NewPos = glm::vec3(position.x, position.y + Dimensions.y / 2, 0);
 			break;
-		case BOTTOM_RIGHT:
+		case EANCHOR::BOTTOM_RIGHT:
 			NewPos = glm::vec3(position.x - Dimensions.x / 2, position.y + Dimensions.y / 2, 0);
 			break;
 		default:
@@ -70,37 +72,37 @@ glm::vec3 Utils::GetAncoredPosition2D(glm::vec2 position, glm::vec2 Dimensions, 
 #--Parameters--#:	Element position, dimensions and current anchor
 #--Return--#: 		Returns vector 3 of new position
 ************************************************************/
-glm::vec3 Utils::GetAncoredPosition(glm::vec3 position, glm::vec3 Dimensions, EANCHOR _AnchorType)
+glm::vec3 Utils::GetAncoredPosition(Vector3 position, Vector3 Dimensions, EANCHOR _AnchorType)
 {
 	glm::vec3 NewPos;
 	switch (_AnchorType)
 	{
-		case TOP_LEFT:
-			NewPos = glm::vec3(position.x + Dimensions.x / 2, position.y - Dimensions.y / 2, position.z);
+		case EANCHOR::TOP_LEFT:
+			NewPos = glm::vec3(position.X + Dimensions.X / 2, position.Y - Dimensions.Y / 2, position.Z);
 			break;
-		case TOP_RIGHT:
-			NewPos = glm::vec3(position.x - Dimensions.x / 2, position.y - Dimensions.y / 2, position.z);
+		case EANCHOR::TOP_RIGHT:
+			NewPos = glm::vec3(position.X - Dimensions.X / 2, position.Y - Dimensions.Y / 2, position.Z);
 			break;
-		case TOP_CENTER:
-			NewPos = glm::vec3(position.x, position.y - Dimensions.y / 2, position.z);
+		case EANCHOR::TOP_CENTER:
+			NewPos = glm::vec3(position.X, position.Y - Dimensions.Y / 2, position.Z);
 			break;
-		case CENTER_LEFT:
-			NewPos = glm::vec3(position.x + Dimensions.x / 2, position.y, position.z);
+		case EANCHOR::CENTER_LEFT:
+			NewPos = glm::vec3(position.X + Dimensions.X / 2, position.Y, position.Z);
 			break;
-		case CENTER:
-			NewPos = glm::vec3(position.x, position.y, position.z);
+		case EANCHOR::CENTER:
+			NewPos = glm::vec3(position.X, position.Y, position.Z);
 			break;
-		case CENTER_RIGHT:
-			NewPos = glm::vec3(position.x - Dimensions.x / 2, position.y, position.z);
+		case EANCHOR::CENTER_RIGHT:
+			NewPos = glm::vec3(position.X - Dimensions.X / 2, position.Y, position.Z);
 			break;
-		case BOTTOM_LEFT:
-			NewPos = glm::vec3(position.x + Dimensions.x / 2, position.y + Dimensions.y / 2, position.z);
+		case EANCHOR::BOTTOM_LEFT:
+			NewPos = glm::vec3(position.X + Dimensions.X / 2, position.Y + Dimensions.Y / 2, position.Z);
 			break;
-		case BOTTOM_CENTER:
-			NewPos = glm::vec3(position.x, position.y + Dimensions.y / 2, position.z);
+		case EANCHOR::BOTTOM_CENTER:
+			NewPos = glm::vec3(position.X, position.Y + Dimensions.Y / 2, position.Z);
 			break;
-		case BOTTOM_RIGHT:
-			NewPos = glm::vec3(position.x - Dimensions.x / 2, position.y + Dimensions.y / 2, position.z);
+		case EANCHOR::BOTTOM_RIGHT:
+			NewPos = glm::vec3(position.X - Dimensions.X / 2, position.Y + Dimensions.Y / 2, position.Z);
 			break;
 		default:
 			break;
@@ -119,31 +121,31 @@ glm::vec3 Utils::GetTextAncoredPosition(glm::vec2 position, glm::vec2 Dimensions
 	glm::vec3 NewPos;
 	switch (_AnchorType)
 	{
-		case TOP_LEFT:
+		case EANCHOR::TOP_LEFT:
 			NewPos = glm::vec3(position.x, position.y + Dimensions.y / 2, 0);
 			break;
-		case TOP_RIGHT:
+		case EANCHOR::TOP_RIGHT:
 			NewPos = glm::vec3(position.x - Dimensions.x, position.y + Dimensions.y / 2, 0);
 			break;
-		case TOP_CENTER:
+		case EANCHOR::TOP_CENTER:
 			NewPos = glm::vec3(position.x - Dimensions.x / 2, position.y + Dimensions.y / 2, 0);
 			break;
-		case CENTER_LEFT:
+		case EANCHOR::CENTER_LEFT:
 			NewPos = glm::vec3(position.x, position.y, 0);
 			break;
-		case CENTER:
+		case EANCHOR::CENTER:
 			NewPos = glm::vec3(position.x - Dimensions.x / 2, position.y, 0);
 			break;
-		case CENTER_RIGHT:
+		case EANCHOR::CENTER_RIGHT:
 			NewPos = glm::vec3(position.x - Dimensions.x, position.y, 0);
 			break;
-		case BOTTOM_LEFT:
+		case EANCHOR::BOTTOM_LEFT:
 			NewPos = glm::vec3(position.x, position.y - Dimensions.y / 2, 0);
 			break;
-		case BOTTOM_CENTER:
+		case EANCHOR::BOTTOM_CENTER:
 			NewPos = glm::vec3(position.x - Dimensions.x / 2, position.y - Dimensions.y / 2, 0);
 			break;
-		case BOTTOM_RIGHT:
+		case EANCHOR::BOTTOM_RIGHT:
 			NewPos = glm::vec3(position.x - Dimensions.x, position.y - Dimensions.y / 2, 0);
 			break;
 		default:
@@ -162,13 +164,13 @@ bool Utils::isColliding2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entit
 {
 	std::shared_ptr<Plane> Entity1Mesh = std::dynamic_pointer_cast<Plane>(Entity1->EntityMesh);
 	std::shared_ptr<Plane> Entity2Mesh = std::dynamic_pointer_cast<Plane>(Entity2->EntityMesh);
-	float HalfWidth1 = (Entity1Mesh->CollisionBox.fWidth / 2) * abs(Entity1->transform.Scale.x);
-	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->transform.Scale.y);
-	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->transform.Scale.x);
-	float HalfHeight2 = (Entity2Mesh->CollisionBox.fHeight / 2) * abs(Entity2->transform.Scale.y);
+	float HalfWidth1 = (Entity1Mesh->CollisionBox.fWidth / 2) * abs(Entity1->Transform.Scale.X);
+	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->Transform.Scale.Y);
+	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->Transform.Scale.X);
+	float HalfHeight2 = (Entity2Mesh->CollisionBox.fHeight / 2) * abs(Entity2->Transform.Scale.Y);
 
-	glm::vec3 Entity1Pos = GetAncoredPosition2D(Entity1->transform.Position, glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * static_cast<glm::vec2>(Entity1->transform.Scale), Entity1->EntityAnchor);
-	glm::vec3 Entity2Pos = GetAncoredPosition2D(Entity2->transform.Position, glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * static_cast<glm::vec2>(Entity2->transform.Scale), Entity2->EntityAnchor);
+	glm::vec3 Entity1Pos = GetAncoredPosition2D(Entity1->Transform.Position.ToGLM(), glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * static_cast<glm::vec2>(Entity1->Transform.Scale.ToGLM()), Entity1->EntityAnchor);
+	glm::vec3 Entity2Pos = GetAncoredPosition2D(Entity2->Transform.Position.ToGLM(), glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * static_cast<glm::vec2>(Entity2->Transform.Scale.ToGLM()), Entity2->EntityAnchor);
 
 	if (Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x + HalfWidth1 > Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x - HalfWidth2
 		&& Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x - HalfWidth1 < Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x + HalfWidth2
@@ -190,13 +192,13 @@ bool Utils::CheckCollision2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<En
 {
 	std::shared_ptr<Plane> Entity1Mesh = std::dynamic_pointer_cast<Plane>(Entity1->EntityMesh);
 	std::shared_ptr<Plane> Entity2Mesh = std::dynamic_pointer_cast<Plane>(Entity2->EntityMesh);
-	float HalfWidth1 = (Entity1Mesh->CollisionBox.fWidth / 2) * abs(Entity1->transform.Scale.x);
-	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->transform.Scale.y);
-	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->transform.Scale.x);
-	float HalfHeight2 = (Entity2Mesh->CollisionBox.fHeight / 2) * abs(Entity2->transform.Scale.y);
+	float HalfWidth1 = (Entity1Mesh->CollisionBox.fWidth / 2) * abs(Entity1->Transform.Scale.X);
+	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->Transform.Scale.Y);
+	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->Transform.Scale.X);
+	float HalfHeight2 = (Entity2Mesh->CollisionBox.fHeight / 2) * abs(Entity2->Transform.Scale.Y);
 
-	glm::vec3 Entity1Pos = GetAncoredPosition2D(Entity1->transform.Position, glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * static_cast<glm::vec2>(Entity1->transform.Scale), Entity1->EntityAnchor);
-	glm::vec3 Entity2Pos = GetAncoredPosition2D(Entity2->transform.Position + glm::vec3(Entity2Mesh->CollisionBox.v2Offset, 0), glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * static_cast<glm::vec2>(Entity2->transform.Scale), Entity2->EntityAnchor);
+	glm::vec3 Entity1Pos = GetAncoredPosition2D(Entity1->Transform.Position.ToGLM(), glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * static_cast<glm::vec2>(Entity1->Transform.Scale.ToGLM()), Entity1->EntityAnchor);
+	glm::vec3 Entity2Pos = GetAncoredPosition2D(Entity2->Transform.Position.ToGLM() + glm::vec3(Entity2Mesh->CollisionBox.v2Offset, 0), glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * static_cast<glm::vec2>(Entity2->Transform.Scale.ToGLM()), Entity2->EntityAnchor);
 
 	if (Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x + HalfWidth1 + Movement.x > Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x - HalfWidth2
 		&& Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x - HalfWidth1 + Movement.x < Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x + HalfWidth2
@@ -219,13 +221,13 @@ glm::vec2 Utils::GetDistance2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<
 	std::shared_ptr<Plane> Entity1Mesh = std::dynamic_pointer_cast<Plane>(Entity1->EntityMesh);
 	std::shared_ptr<Plane> Entity2Mesh = std::dynamic_pointer_cast<Plane>(Entity2->EntityMesh);
 	glm::vec2 fDistance = glm::vec2(0, 0);
-	float HalfWidth1 = (Entity1Mesh->CollisionBox.fWidth / 2) * abs(Entity1->transform.Scale.x);
-	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->transform.Scale.y);
-	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->transform.Scale.x);
-	float HalfHeight2 = (Entity2Mesh->CollisionBox.fHeight / 2) * abs(Entity2->transform.Scale.y);
+	float HalfWidth1 = (Entity1Mesh->CollisionBox.fWidth / 2) * abs(Entity1->Transform.Scale.X);
+	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->Transform.Scale.Y);
+	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->Transform.Scale.X);
+	float HalfHeight2 = (Entity2Mesh->CollisionBox.fHeight / 2) * abs(Entity2->Transform.Scale.Y);
 
-	glm::vec3 Entity1Pos = GetAncoredPosition2D(Entity1->transform.Position, glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * static_cast<glm::vec2>(Entity1->transform.Scale), Entity1->EntityAnchor);
-	glm::vec3 Entity2Pos = GetAncoredPosition2D(Entity2->transform.Position, glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * static_cast<glm::vec2>(Entity2->transform.Scale), Entity2->EntityAnchor);
+	glm::vec3 Entity1Pos = GetAncoredPosition2D(Entity1->Transform.Position.ToGLM(), glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * static_cast<glm::vec2>(Entity1->Transform.Scale.ToGLM()), Entity1->EntityAnchor);
+	glm::vec3 Entity2Pos = GetAncoredPosition2D(Entity2->Transform.Position.ToGLM(), glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * static_cast<glm::vec2>(Entity2->Transform.Scale.ToGLM()), Entity2->EntityAnchor);
 
 	if (Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x + HalfWidth1 <= Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x - HalfWidth2)
 	{
@@ -258,13 +260,13 @@ glm::vec2 Utils::GetDifference2D(std::shared_ptr<Entity> Entity1, std::shared_pt
 	std::shared_ptr<Plane> Entity1Mesh = std::dynamic_pointer_cast<Plane>(Entity1->EntityMesh);
 	std::shared_ptr<Plane> Entity2Mesh = std::dynamic_pointer_cast<Plane>(Entity2->EntityMesh);
 	glm::vec2 fDistance = glm::vec2(0, 0);
-	float HalfWidth1 = (Entity1Mesh->CollisionBox.fWidth / 2) * abs(Entity1->transform.Scale.x);
-	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->transform.Scale.y);
-	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->transform.Scale.x);
-	float HalfHeight2 = (Entity2Mesh->CollisionBox.fHeight / 2) * abs(Entity2->transform.Scale.y);
+	float HalfWidth1 = (Entity1Mesh->CollisionBox.fWidth / 2) * abs(Entity1->Transform.Scale.X);
+	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->Transform.Scale.Y);
+	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->Transform.Scale.X);
+	float HalfHeight2 = (Entity2Mesh->CollisionBox.fHeight / 2) * abs(Entity2->Transform.Scale.Y);
 
-	glm::vec3 Entity1Pos = GetAncoredPosition2D(Entity1->transform.Position, glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * static_cast<glm::vec2>(Entity1->transform.Scale), Entity1->EntityAnchor);
-	glm::vec3 Entity2Pos = GetAncoredPosition2D(Entity2->transform.Position, glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * static_cast<glm::vec2>(Entity2->transform.Scale), Entity2->EntityAnchor);
+	glm::vec3 Entity1Pos = GetAncoredPosition2D(Entity1->Transform.Position.ToGLM(), glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * static_cast<glm::vec2>(Entity1->Transform.Scale.ToGLM()), Entity1->EntityAnchor);
+	glm::vec3 Entity2Pos = GetAncoredPosition2D(Entity2->Transform.Position.ToGLM(), glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * static_cast<glm::vec2>(Entity2->Transform.Scale.ToGLM()), Entity2->EntityAnchor);
 
 	if (Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x + HalfWidth1 < Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x - HalfWidth2)
 	{
@@ -313,21 +315,21 @@ glm::vec3 Utils::StringToVec3(std::string _string)
 	return glm::vec3(x, y, z);
 }
 
-bool Utils::CheckHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos)
+bool Utils::CheckHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos)
 {
 	if (!EntityCheck->EntityMesh)
 	{
 		return false;
 	}
-	if (EntityCheck->EntityMesh->m_eShape == SPHERE && std::dynamic_pointer_cast<Sphere>(EntityCheck->EntityMesh))
+	if (EntityCheck->EntityMesh->m_eShape == EMESHTYPE::SPHERE && std::dynamic_pointer_cast<Sphere>(EntityCheck->EntityMesh))
 	{
 		return CheckSphereEntityHit(RayStart, RayDirection, EntityCheck, HitPos);
 	}
-	if (EntityCheck->EntityMesh->m_eShape == CUBE && std::dynamic_pointer_cast<Cube>(EntityCheck->EntityMesh))
+	if (EntityCheck->EntityMesh->m_eShape == EMESHTYPE::CUBE && std::dynamic_pointer_cast<Cube>(EntityCheck->EntityMesh))
 	{
 		return CheckCubeEntityHit(RayStart, RayDirection, EntityCheck, HitPos);
 	}
-	if (EntityCheck->EntityMesh->m_eShape == PLANE && std::dynamic_pointer_cast<Plane>(EntityCheck->EntityMesh))
+	if (EntityCheck->EntityMesh->m_eShape == EMESHTYPE::PLANE && std::dynamic_pointer_cast<Plane>(EntityCheck->EntityMesh))
 	{
 		return CheckPlaneEntityHit(RayStart, RayDirection, EntityCheck, HitPos);
 	}
@@ -335,13 +337,18 @@ bool Utils::CheckHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr
 	return false;
 }
 
-bool Utils::CheckSphereEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos)
+bool Utils::CheckSphereEntityHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos)
 {
-	glm::vec3 v = EntityCheck->transform.Position - RayStart;
+	// Vector3 PositionTemp(EntityCheck->Transform.Position);
+	// Vector3 V = PositionTemp - RayStart;
 
-	float a = dot(RayDirection, RayDirection);
-	float b = 2.0f * dot(v, RayDirection);
-	float c = dot(v, v) - EntityCheck->EntityMesh->m_fWidth * EntityCheck->EntityMesh->m_fWidth;
+	const Vector3 Offset = EntityCheck->Transform.Position - RayStart;
+	// float a = RayDirection.Dot(RayDirection);
+	// float b = 2.0f * V.Dot(RayDirection);
+	// float c = V.Dot(V) - EntityCheck->EntityMesh->m_fWidth * EntityCheck->EntityMesh->m_fWidth;
+	float a = glm::dot(RayDirection.ToGLM(), RayDirection.ToGLM());
+	float b = 2.0f * Offset.Dot(RayDirection);
+	float c = Offset.Dot(Offset) - EntityCheck->EntityMesh->m_fWidth * EntityCheck->EntityMesh->m_fWidth;
 	float d = b * b - 4 * a * c;
 
 	if (d > 0)
@@ -349,9 +356,9 @@ bool Utils::CheckSphereEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std
 		float x1 = (-b - sqrt(d)) / 2;
 		float x2 = (-b + sqrt(d)) / 2;
 
-		float XPos = RayStart.x + RayDirection.x * -x2;
-		float YPos = RayStart.y + RayDirection.y * -x2;
-		float ZPos = RayStart.z + RayDirection.z * -x2;
+		float XPos = RayStart.X + RayDirection.X * -x2;
+		float YPos = RayStart.Y + RayDirection.Y * -x2;
+		float ZPos = RayStart.Z + RayDirection.Z * -x2;
 		HitPos = {XPos, YPos, ZPos};
 
 		return true;
@@ -381,31 +388,31 @@ bool Utils::CheckSphereEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std
 	return false;
 }
 
-bool Utils::CheckCubeEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos)
+bool Utils::CheckCubeEntityHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos)
 {
-	glm::vec3 HalfDimensionvec = glm::vec3(EntityCheck->EntityMesh->m_fWidth / 2.0f, EntityCheck->EntityMesh->m_fHeight / 2.0f, EntityCheck->EntityMesh->m_fDepth / 2.0f);
-	std::vector<glm::vec3> HitPositions;
-	if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
+	Vector3 HalfDimensionvec = Vector3(EntityCheck->EntityMesh->m_fWidth / 2.0f, EntityCheck->EntityMesh->m_fHeight / 2.0f, EntityCheck->EntityMesh->m_fDepth / 2.0f);
+	std::vector<Vector3> HitPositions;
+	if (CheckFaceHit(Vector3(-HalfDimensionvec.X, -HalfDimensionvec.Y, HalfDimensionvec.Z), Vector3(HalfDimensionvec.X, HalfDimensionvec.Y, HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
 	{
 		HitPositions.push_back(HitPos);
 	}
-	if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, -HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
+	if (CheckFaceHit(Vector3(-HalfDimensionvec.X, -HalfDimensionvec.Y, -HalfDimensionvec.Z), Vector3(HalfDimensionvec.X, HalfDimensionvec.Y, -HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
 	{
 		HitPositions.push_back(HitPos);
 	}
-	if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
+	if (CheckFaceHit(Vector3(-HalfDimensionvec.X, -HalfDimensionvec.Y, -HalfDimensionvec.Z), Vector3(HalfDimensionvec.X, -HalfDimensionvec.Y, HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
 	{
 		HitPositions.push_back(HitPos);
 	}
-	if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
+	if (CheckFaceHit(Vector3(-HalfDimensionvec.X, HalfDimensionvec.Y, -HalfDimensionvec.Z), Vector3(HalfDimensionvec.X, HalfDimensionvec.Y, HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
 	{
 		HitPositions.push_back(HitPos);
 	}
-	if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(-HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
+	if (CheckFaceHit(Vector3(-HalfDimensionvec.X, -HalfDimensionvec.Y, -HalfDimensionvec.Z), Vector3(-HalfDimensionvec.X, HalfDimensionvec.Y, HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
 	{
 		HitPositions.push_back(HitPos);
 	}
-	if (CheckFaceHit(glm::vec3(HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
+	if (CheckFaceHit(Vector3(HalfDimensionvec.X, -HalfDimensionvec.Y, -HalfDimensionvec.Z), Vector3(HalfDimensionvec.X, HalfDimensionvec.Y, HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
 	{
 		HitPositions.push_back(HitPos);
 	}
@@ -423,7 +430,7 @@ bool Utils::CheckCubeEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::
 
 	for (int i = 0; i < HitPositions.size(); i++)
 	{
-		if (length(RayStart - HitPositions[i]) < length(RayStart - HitPos))
+		if ((RayStart - HitPositions[i]).Size() < (RayStart - HitPos).Size())
 		{
 			HitPos = HitPositions[i];
 		}
@@ -431,41 +438,42 @@ bool Utils::CheckCubeEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::
 	return true;
 }
 
-bool Utils::CheckPlaneEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos)
+bool Utils::CheckPlaneEntityHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos)
 {
 	glm::vec3 HalfDimensionvec = glm::vec3(EntityCheck->EntityMesh->m_fWidth / 2.0f, EntityCheck->EntityMesh->m_fHeight / 2.0f, EntityCheck->EntityMesh->m_fDepth / 2.0f);
-	if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
+	if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart.ToGLM(), RayDirection.ToGLM(), EntityCheck, HitPos))
 	{
 		return true;
 	}
 	return false;
 }
 
-glm::vec3 Utils::LinePlaneIntersect(glm::vec3 RayStart, glm::vec3 RayDirection, glm::vec3 PlanePos, glm::vec3 PlaneNormal)
+Vector3 Utils::LinePlaneIntersect(Vector3 RayStart, Vector3 RayDirection, Vector3 PlanePos, Vector3 PlaneNormal)
 {
-	glm::vec3 diff = RayStart - PlanePos;
-	double prod1 = dot(diff, PlaneNormal);
-	double prod2 = dot(RayDirection, PlaneNormal);
+	Vector3 diff = RayStart - PlanePos;
+	double prod1 = diff.Dot(PlaneNormal);
+	double prod2 = RayDirection.Dot(PlaneNormal);
 	float prod3 = prod1 / prod2;
 	return RayStart - RayDirection * prod3;
 }
 
-bool Utils::CheckFaceHit(glm::vec3 BottomLeftOffset, glm::vec3 TopRightOffset, glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos)
+bool Utils::CheckFaceHit(Vector3 BottomLeftOffset, Vector3 TopRightOffset, Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos)
 {
-	glm::vec3 AnchoredPosition = GetAncoredPosition(EntityCheck->transform.Position, glm::vec3(EntityCheck->EntityMesh->m_fWidth, EntityCheck->EntityMesh->m_fHeight, EntityCheck->EntityMesh->m_fDepth), EntityCheck->EntityAnchor);
-	glm::vec3 lb = BottomLeftOffset + AnchoredPosition;
-	glm::vec3 rt = TopRightOffset + AnchoredPosition;
-	lb = glm::vec4(lb, 1.0f) * EntityCheck->GetModel();
-	rt = glm::vec4(rt, 1.0f) * EntityCheck->GetModel();
+	Vector3 AnchoredPosition = GetAncoredPosition(EntityCheck->Transform.Position, glm::vec3(EntityCheck->EntityMesh->m_fWidth, EntityCheck->EntityMesh->m_fHeight, EntityCheck->EntityMesh->m_fDepth), EntityCheck->EntityAnchor);
+	Vector3 lb = BottomLeftOffset + AnchoredPosition;
+	Vector3 rt = TopRightOffset + AnchoredPosition;
+	// TODO: Confirm matrix to vector order for new system and create/convert
+	lb = Vector3(Vector4(lb, 1.0f).ToGLM() * EntityCheck->GetModel().ToGLM());
+	rt = Vector3(Vector4(rt, 1.0f).ToGLM() * EntityCheck->GetModel().ToGLM());
 
-	glm::vec3 DirFrac = 1.0f / RayDirection;
+	Vector3 DirFrac = 1.0f / RayDirection;
 
-	float t1 = (lb.x - RayStart.x) * DirFrac.x;
-	float t2 = (rt.x - RayStart.x) * DirFrac.x;
-	float t3 = (lb.y - RayStart.y) * DirFrac.y;
-	float t4 = (rt.y - RayStart.y) * DirFrac.y;
-	float t5 = (lb.z - RayStart.z) * DirFrac.z;
-	float t6 = (rt.z - RayStart.z) * DirFrac.z;
+	float t1 = (lb.X - RayStart.X) * DirFrac.X;
+	float t2 = (rt.X - RayStart.X) * DirFrac.X;
+	float t3 = (lb.Y - RayStart.Y) * DirFrac.Y;
+	float t4 = (rt.Y - RayStart.Y) * DirFrac.Y;
+	float t5 = (lb.Z - RayStart.Z) * DirFrac.Z;
+	float t6 = (rt.Z - RayStart.Z) * DirFrac.Z;
 
 	float tmin = std::fmax(std::fmax(std::fmin(t1, t2), std::fmin(t3, t4)), std::fmin(t5, t6));
 	float tmax = std::fmin(std::fmin(std::fmax(t1, t2), std::fmax(t3, t4)), std::fmax(t5, t6));

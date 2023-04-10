@@ -8,6 +8,7 @@
 //#include <freeglut.h>
 
 // Local Libraries //
+#include "Engine/Math/FTransform.h"
 #include "Engine/System/Utils.h"
 
 struct LightInfo
@@ -33,5 +34,5 @@ public:
 	static float StartFogDistance;
 	static float EndFogDistance;
 
-	static void PassLightingToShader(GLuint program, LightInfo _LightInfo, Utils::Transform ModelTransform);
+	static void PassLightingToShader(GLuint program, LightInfo _LightInfo, FTransform ModelTransform);
 };

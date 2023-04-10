@@ -143,7 +143,7 @@ void Scene::AddUITextElement(std::shared_ptr<UIText> Element)
 #--Parameters--#: 	UI Text Element paramters to add
 #--Return--#: 		NA
 ************************************************************/
-void Scene::AddUITextElement(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string font, int iPSize, Utils::EANCHOR _Anchor)
+void Scene::AddUITextElement(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string font, int iPSize, EANCHOR _Anchor)
 {
 	std::shared_ptr<UIText> NewElement = std::make_shared<UIText>(_Position, _fRotation, _Colour, _sText, font, iPSize, _Anchor);
 	UIElements.push_back(NewElement);

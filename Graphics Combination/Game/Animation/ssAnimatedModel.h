@@ -54,7 +54,7 @@ public:
 		return mNumBones;
 	}
 
-	void boneTransforms(std::vector<Matrix4f>& transforms);
+	void boneTransforms(std::vector<Matrix4>& transforms);
 
 	void setCurrentAnimation(int startFrameNum, int endFramNum);
 
@@ -83,8 +83,8 @@ private:
 
 	struct BoneInfo
 	{
-		Matrix4f BoneOffset;
-		Matrix4f FinalTransformation;
+		Matrix4 BoneOffset;
+		Matrix4 FinalTransformation;
 
 		BoneInfo()
 		{
@@ -149,7 +149,7 @@ private:
 
 	const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, std::string NodeName);
 
-	void ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const Matrix4f& ParentTransform);
+	void ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const Matrix4& ParentTransform);
 
 	void setShaderEffectVariables(std::shared_ptr<Terrain> terrain);
 
@@ -194,7 +194,7 @@ private:
 	std::vector<BoneInfo> m_BoneInfo;
 	GLuint m_NumBones;
 
-	Matrix4f m_GlobalInverseTransform;
+	Matrix4 m_GlobalInverseTransform;
 	GLuint m_boneLocation[100];
 
 	const aiScene* m_pScene;

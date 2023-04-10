@@ -28,7 +28,7 @@ Triangle::Triangle(glm::vec3 _Point1, glm::vec3 _Point2, glm::vec3 _Point3, glm:
 	bHasTexture = false;
 	m_iIndicies = 3;
 	BindTriangle();
-	m_eShape = Utils::TRIANGLE;
+	m_eShape = EMESHTYPE::TRIANGLE;
 	program = Shader::Programs["BaseProgram"];
 
 	SetInitialStates();
@@ -47,7 +47,7 @@ Triangle::Triangle(glm::vec3 CenterPoint, float Width, glm::vec4 _Colour)
 	bHasTexture = false;
 	m_iIndicies = 3;
 	BindTriangle();
-	m_eShape = Utils::TRIANGLE;
+	m_eShape = EMESHTYPE::TRIANGLE;
 	program = Shader::Programs["BaseProgram"];
 
 	SetInitialStates();
@@ -87,7 +87,7 @@ void Triangle::Rebind()
 	BindTriangle();
 }
 
-void Triangle::Render(Utils::Transform Newtransform)
+void Triangle::Render(FTransform Newtransform)
 {
 	glUseProgram(program);
 	glFrontFace(GL_CW);

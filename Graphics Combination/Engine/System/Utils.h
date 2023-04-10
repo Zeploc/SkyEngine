@@ -2,8 +2,9 @@
 
 #pragma once
 
+#include "Engine/Math/Vector.h"
+
 // Library Includes //
-#include <istream>
 #include <memory>
 #include <string>
 #include <vector>
@@ -11,12 +12,17 @@
 // OpenGL Library Includes //
 #include <glm/gtx/string_cast.hpp>
 
+#include "EnumTypes.h"
+#include "Engine/Entity/2DParticleSystem.h"
+#include "Engine/Entity/2DParticleSystem.h"
+
 // Forward Declarations //
 class Entity;
 
 class Utils
 {
 public:
+	// TODO: Move structs and enums out of class
 	struct AnimInfo
 	{
 		glm::vec2 v2FrameSize;
@@ -48,82 +54,9 @@ public:
 		glm::vec2 v2Offset = glm::vec2();
 	};
 
-	struct Transform
-	{
-		glm::vec3 Position;
-		glm::vec3 Rotation;
-		glm::vec3 Scale;
+	static Vector3 LinePlaneIntersect(Vector3 RayStart, Vector3 RayDirection, Vector3 PlanePos, Vector3 PlaneNormal);
 
-		std::string ToString()
-		{
-			std::string sTransform;
-			sTransform += to_string(Position) + " ";
-			sTransform += to_string(Rotation) + " ";
-			sTransform += to_string(Scale);
-			return sTransform;
-		}
-
-		friend std::istream& operator>>(std::istream& is, Transform& transform)
-		{
-			int x, y, z, roll, yaw, pitch, sx, sy, sz;
-			std::string PosX, PosY, PosZ, Roll, Yaw, Pitch, ScaleX, ScaleY, ScaleZ;
-			is >> PosX >> PosY >> PosZ >> Roll >> Yaw >> Pitch >> ScaleX >> ScaleY >> ScaleZ;
-			x = std::stoi(PosX.substr(5));
-			y = std::stoi(PosY);
-			z = std::stoi(PosZ);
-			roll = std::stoi(Roll.substr(5));
-			yaw = std::stoi(Yaw);
-			pitch = std::stoi(Pitch);
-			sx = std::stoi(ScaleX.substr(5));
-			sy = std::stoi(ScaleY);
-			sz = std::stoi(ScaleZ);
-			transform.Position = glm::vec3(x, y, z);
-			transform.Rotation = glm::vec3(roll, yaw, pitch);
-			transform.Scale = glm::vec3(sx, sy, sz);
-			return is;
-		}
-
-		void FromString(std::string sTransform)
-		{
-			std::vector<std::string> Seperated = SeparateString(sTransform, ' ');
-			if (Seperated.size() >= 3)
-			{
-				Position = StringToVec3(Seperated[0]);
-				Rotation = StringToVec3(Seperated[1]);
-				Scale = StringToVec3(Seperated[2]);
-			}
-		}
-	};
-
-	enum EANCHOR
-	{
-		TOP_LEFT,
-		TOP_CENTER,
-		TOP_RIGHT,
-		CENTER_LEFT,
-		CENTER,
-		CENTER_RIGHT,
-		BOTTOM_LEFT,
-		BOTTOM_CENTER,
-		BOTTOM_RIGHT
-	};
-
-	enum EMESHTYPE
-	{
-		NONE,
-		LINE,
-		TRIANGLE,
-		PLANE,
-		PYRAMID,
-		CUBE,
-		SPHERE,
-		MODEL,
-		GEOMETRY
-	};
-
-	static glm::vec3 LinePlaneIntersect(glm::vec3 RayStart, glm::vec3 RayDirection, glm::vec3 PlanePos, glm::vec3 PlaneNormal);
-
-	static glm::vec3 GetAncoredPosition(glm::vec3 position, glm::vec3 Dimensions, EANCHOR _AnchorType);
+	static glm::vec3 GetAncoredPosition(Vector3 position, Vector3 Dimensions, EANCHOR _AnchorType);
 
 	static glm::vec3 GetAncoredPosition2D(glm::vec2 position, glm::vec2 Dimensions, EANCHOR _AnchorType);
 
@@ -144,7 +77,7 @@ public:
 
 	static glm::vec2 GetDifference2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2);
 
-	static bool CheckHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
+	static bool CheckHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
 
 	static int AddEntityID();
 
@@ -152,16 +85,17 @@ public:
 
 	static glm::vec3 StringToVec3(std::string _string);
 
+	static bool CheckFaceHit(Vector3 BottomLeftOffset, Vector3 TopRightOffset, Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
+
 	static std::shared_ptr<Entity> WorldCubeMap;
 
 private:
 	static int iEntityNumber;
 
-	static bool CheckSphereEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
+	static bool CheckSphereEntityHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
 
-	static bool CheckCubeEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
+	static bool CheckCubeEntityHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
 
-	static bool CheckPlaneEntityHit(glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
+	static bool CheckPlaneEntityHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
 
-	static bool CheckFaceHit(glm::vec3 BottomLeftOffset, glm::vec3 TopRightOffset, glm::vec3 RayStart, glm::vec3 RayDirection, std::shared_ptr<Entity> EntityCheck, glm::vec3& HitPos);
 };

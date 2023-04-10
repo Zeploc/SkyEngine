@@ -44,10 +44,10 @@ Mesh::~Mesh()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Mesh::Render(Utils::Transform Newtransform)
+void Mesh::Render(FTransform Newtransform)
 {
-	Utils::Transform ScaledUpTransform = Newtransform;
-	ScaledUpTransform.Scale *= 1.1;
+	FTransform ScaledUpTransform = Newtransform;
+	ScaledUpTransform.Scale *= 1.1f;
 	// ABOVE CALLED FROM DERIVED RENDER
 	glUniform1i(glGetUniformLocation(program, "bIsTex"), bHasTexture);
 	glUniform1i(glGetUniformLocation(program, "bFog"), bFog);
@@ -67,7 +67,7 @@ void Mesh::Render(Utils::Transform Newtransform)
 	}
 	if (bFog)
 	{
-		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, value_ptr(Camera::GetInstance()->GetCameraPosition()));
+		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, value_ptr(Camera::GetInstance()->GetCameraPosition().ToGLM()));
 		glUniform4fv(glGetUniformLocation(program, "vFogColor"), 1, value_ptr(Lighting::m_v4FogColour));
 		glUniform1f(glGetUniformLocation(program, "StartFog"), Lighting::StartFogDistance);
 		glUniform1f(glGetUniformLocation(program, "EndFog"), Lighting::EndFogDistance);

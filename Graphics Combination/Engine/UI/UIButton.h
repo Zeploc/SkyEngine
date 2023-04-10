@@ -16,15 +16,15 @@
 class UIButton : public UIElement
 {
 public:
-	UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, glm::vec4 _HightlightColour, int iWidth, int iHeight, void (*func)() = nullptr);
+	UIButton(glm::vec2 _Position, EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, glm::vec4 _HightlightColour, int iWidth, int iHeight, void (*func)() = nullptr);
 
-	UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, const char* _ImagePath, glm::vec4 _HightlightColour, int iWidth, int iHeight, void (*func)() = nullptr);
+	UIButton(glm::vec2 _Position, EANCHOR _anchor, float _fRotation, const char* _ImagePath, glm::vec4 _HightlightColour, int iWidth, int iHeight, void (*func)() = nullptr);
 
 	~UIButton();
 
-	void AddText(std::string sText, std::string sFont, int iPSize, glm::vec4 TextColour, Utils::EANCHOR _Anchor);
+	void AddText(std::string sText, std::string sFont, int iPSize, glm::vec4 TextColour, EANCHOR _Anchor);
 
-	void AddText(std::string sText, std::string sFont, int iPSize, glm::vec4 TextColour, Utils::EANCHOR _Anchor, glm::vec2 _v2Offset);
+	void AddText(std::string sText, std::string sFont, int iPSize, glm::vec4 TextColour, EANCHOR _Anchor, glm::vec2 _v2Offset);
 
 	template <class T>
 	void BindPress(T* Object, void(T::*Function)())

@@ -10,34 +10,39 @@
 #include <glfw3.h>
 
 // Engine Includes //
+#include "Engine/Entity/2DParticleSystem.h"
+#include "Engine/Entity/2DParticleSystem.h"
+#include "Engine/Math/Matrix.h"
 #include "Engine/System/Utils.h"
+
+// TODO: How does class affect this? 
+enum class EProjectionMode
+{
+	Orthographic = 1,
+	Perspective
+};
 
 class Camera
 {
 public:
-	enum PROJECTIONMODE
-	{
-		ORTHAGRAPHIC = 1,
-		PERSPECTIVE
-	};
 
 	unsigned int SCR_WIDTH = 800;
 	unsigned int SCR_HEIGHT = 800;
 	unsigned int VIEWPORT_X = 0;
 	unsigned int VIEWPORT_Y = 0;
-
-	glm::mat4 view;
-	glm::mat4 projection;
+		
+	Matrix4 View;
+	Matrix4 Projection;
 
 	void Init(int ScreenWidth, int ScreenWidthheight, glm::vec3 CamPos, glm::vec3 ForwardVec, glm::vec3 UpVec);
 
 	void Update();
 
-	void SetMVP(Utils::Transform _transform, GLuint program);
+	void SetMVP(FTransform _transform, GLuint program);
 
-	void SwitchProjection(PROJECTIONMODE _Mode);
+	void SwitchProjection(EProjectionMode InMode);
 
-	PROJECTIONMODE ReturnDimensionMode() { return m_ProjectionMode; };
+	EProjectionMode ReturnDimensionMode() { return ProjectionMode; };
 
 	void SetWindowScale(float _fNewScale);
 
@@ -45,21 +50,21 @@ public:
 
 	void SetCameraForwardVector(glm::vec3 _Forward)
 	{
-		cameraFront = _Forward;
-	};
+		CameraForward = _Forward;
+	}
 
-	glm::vec3 ScreenToWorldDirection(glm::vec2 _ScreenPosition);
+	Vector3 ScreenToWorldDirection(Vector2 InScreenPosition);
 
-	glm::vec3 ScreenToWorldPosition2D(glm::vec2 _ScreenPosition);
+	Vector3 ScreenToWorldPosition2D(Vector2 InScreenPosition);
 
 	// Getters
-	glm::vec3 GetCameraPosition() { return cameraPos; };
-	glm::vec3 GetCameraForwardVector() { return cameraFront; };
-	glm::vec3 GetCameraUpVector() { return cameraUp; };
+	Vector3 GetCameraPosition() const { return CameraPosition; }
+	Vector3 GetCameraForwardVector() const { return CameraForward; }
+	Vector3 GetCameraUpVector() const { return CameraUp; }
 
-	glm::vec3 GetCameraRightVector();
+	Vector3 GetCameraRightVector();
 
-	void SetCameraPos(glm::vec3 NewPos) { cameraPos = NewPos; };
+	void SetCameraPos(Vector3 NewPos) { CameraPosition = NewPos; }
 
 	void MoveCamera(glm::vec3 _Movement);
 
@@ -86,13 +91,15 @@ private:
 	GLfloat Yaw = 0.0f;
 	GLfloat Pitch = 0.0f;
 
-	glm::vec3 cameraPos;
-	glm::vec3 cameraFront;
-	glm::vec3 cameraUp;
+	Vector3 CameraPosition;
+	Vector3 CameraForward;
+	Vector3 CameraUp;
 
-	PROJECTIONMODE m_ProjectionMode = ORTHAGRAPHIC;
+	EProjectionMode ProjectionMode = EProjectionMode::Perspective;
 
+	// TODO: Check only for orthographic or apply to perspective
 	float fWindowScale = 200;
+	
 	float fMaxViewClipping = 2000.0f;
 
 	// Singleton

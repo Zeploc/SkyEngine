@@ -22,7 +22,7 @@ std::vector<Text::cFont> Text::Fonts;
 #--Parameters--#: 	Takes text, font, size, position, colour and draw anchor
 #--Return--#: 		NA
 ************************************************************/
-void Text::Render(std::string Text, std::string Font, int iSize, glm::vec2 Position, glm::vec3 colour, Utils::EANCHOR _Anchor)
+void Text::Render(std::string Text, std::string Font, int iSize, glm::vec2 Position, glm::vec3 colour, EANCHOR _Anchor)
 {
 	cFont TextFont;
 	for (auto it : Fonts)

@@ -12,26 +12,26 @@
 class UIImage : public UIElement
 {
 public:
-	UIImage(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, int _iWidth, int _iHeight);
+	UIImage(glm::vec2 _Position, EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, int _iWidth, int _iHeight);
 
-	UIImage(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, int _iWidth, int _iHeight, const char* TextureSource, int _DrawMode);
+	UIImage(glm::vec2 _Position, EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, int _iWidth, int _iHeight, const char* TextureSource, int _DrawMode);
 
 	~UIImage();
 
 	void DrawUIElement() override;
 
-	Utils::EANCHOR GetAnchor() { return ImageAnchor; };
+	EANCHOR GetAnchor() { return ImageAnchor; };
 	int GetWidth() { return iWidth; };
 	int GetHeight() { return iHeight; };
 
-	static glm::vec2 GetPositionFromAnchor(glm::vec2 _Position, Utils::EANCHOR _anchor, int _iWidth, int _iHeight);
+	static glm::vec2 GetPositionFromAnchor(glm::vec2 _Position, EANCHOR _anchor, int _iWidth, int _iHeight);
 
 private:
 	GLuint VAO;
 	GLuint texture;
 
 	bool bHasTexture = false;
-	Utils::EANCHOR ImageAnchor;
+	EANCHOR ImageAnchor;
 	int iWidth;
 	int iHeight;
 };

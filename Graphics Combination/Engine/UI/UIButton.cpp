@@ -23,7 +23,7 @@ bool UIButton::bButtonPressedThisFrame = false;
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-UIButton::UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, glm::vec4 _HightlightColour, int iWidth, int iHeight, void (*func)()) : UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, _Colour),
+UIButton::UIButton(glm::vec2 _Position, EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, glm::vec4 _HightlightColour, int iWidth, int iHeight, void (*func)()) : UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, _Colour),
                                                                                                                                                                              TextComponent(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)),
                                                                                                                                                                              ImageComponent(_Position, _anchor, _fRotation, _Colour, iWidth, iHeight),
                                                                                                                                                                              btnColour(_Colour), btnHighlightColour(_HightlightColour)
@@ -37,7 +37,7 @@ UIButton::UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-UIButton::UIButton(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, const char* _ImagePath, glm::vec4 _HightlightColour, int iWidth, int iHeight, void (*func)()) : UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)),
+UIButton::UIButton(glm::vec2 _Position, EANCHOR _anchor, float _fRotation, const char* _ImagePath, glm::vec4 _HightlightColour, int iWidth, int iHeight, void (*func)()) : UIElement(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)),
                                                                                                                                                                                   TextComponent(UIImage::GetPositionFromAnchor(_Position, _anchor, iWidth, iHeight), _fRotation, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)),
                                                                                                                                                                                   ImageComponent(_Position, _anchor, _fRotation, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), iWidth, iHeight, _ImagePath, 1),
                                                                                                                                                                                   btnColour(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), btnHighlightColour(_HightlightColour)
@@ -62,7 +62,7 @@ UIButton::~UIButton()
 #--Parameters--#: 	Takes text, font, size, colour and draw anchor
 #--Return--#: 		NA
 ************************************************************/
-void UIButton::AddText(std::string sText, std::string sFont, int iPSize, glm::vec4 TextColour, Utils::EANCHOR _Anchor)
+void UIButton::AddText(std::string sText, std::string sFont, int iPSize, glm::vec4 TextColour, EANCHOR _Anchor)
 {
 	TextComponent = UIText(position, fRotation, TextColour, sText, sFont, iPSize, _Anchor);
 	bHasText = true;
@@ -74,7 +74,7 @@ void UIButton::AddText(std::string sText, std::string sFont, int iPSize, glm::ve
 #--Parameters--#: 	Takes text, font, size, colour, draw anchor and offset
 #--Return--#: 		NA
 ************************************************************/
-void UIButton::AddText(std::string sText, std::string sFont, int iPSize, glm::vec4 TextColour, Utils::EANCHOR _Anchor, glm::vec2 _v2Offset)
+void UIButton::AddText(std::string sText, std::string sFont, int iPSize, glm::vec4 TextColour, EANCHOR _Anchor, glm::vec2 _v2Offset)
 {
 	TextComponent = UIText(position + _v2Offset, fRotation, TextColour, sText, sFont, iPSize, _Anchor);
 	bHasText = true;
@@ -138,7 +138,7 @@ void UIButton::Update()
 	{
 		return;
 	}
-	glm::vec2 MousePosViewport = Input::GetInstance()->MousePos;
+	glm::vec2 MousePosViewport = Input::GetInstance()->MousePos.ToGLM();
 	glm::vec2 ViewportOffset = glm::vec2(Camera::GetInstance()->VIEWPORT_X, Camera::GetInstance()->VIEWPORT_Y);
 	//MousePosViewport += ViewportOffset;
 	glm::vec2 TopLeft = glm::vec2(position.x - ImageComponent.GetWidth() / 2, position.y - ImageComponent.GetHeight() / 2) + ViewportOffset;

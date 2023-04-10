@@ -20,7 +20,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-UIImage::UIImage(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, int _iWidth, int _iHeight) : UIElement(_Position, _fRotation, _Colour), ImageAnchor(_anchor), iWidth(_iWidth), iHeight(_iHeight)
+UIImage::UIImage(glm::vec2 _Position, EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, int _iWidth, int _iHeight) : UIElement(_Position, _fRotation, _Colour), ImageAnchor(_anchor), iWidth(_iWidth), iHeight(_iHeight)
 {
 	VAO = Shader::BindArray(static_cast<float>(iWidth), static_cast<float>(iHeight), _Colour);
 }
@@ -31,7 +31,7 @@ UIImage::UIImage(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, 
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-UIImage::UIImage(glm::vec2 _Position, Utils::EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, int _iWidth, int _iHeight, const char* TextureSource, int _DrawMode) : UIElement(_Position, _fRotation, _Colour), ImageAnchor(_anchor), iWidth(_iWidth), iHeight(_iHeight)
+UIImage::UIImage(glm::vec2 _Position, EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, int _iWidth, int _iHeight, const char* TextureSource, int _DrawMode) : UIElement(_Position, _fRotation, _Colour), ImageAnchor(_anchor), iWidth(_iWidth), iHeight(_iHeight)
 {
 	VAO = Shader::BindUITextureArray(static_cast<float>(iWidth), static_cast<float>(iHeight), _Colour, TextureSource, texture, _DrawMode);
 	bHasTexture = true;
@@ -91,35 +91,35 @@ void UIImage::DrawUIElement()
 #--Parameters--#:	Element position, current anchor, with width and height of the object
 #--Return--#: 		Returns vector 2 of new position
 ************************************************************/
-glm::vec2 UIImage::GetPositionFromAnchor(glm::vec2 _Position, Utils::EANCHOR _anchor, int _iWidth, int _iHeight)
+glm::vec2 UIImage::GetPositionFromAnchor(glm::vec2 _Position, EANCHOR _anchor, int _iWidth, int _iHeight)
 {
 	switch (_anchor)
 	{
-		case Utils::TOP_LEFT:
+		case EANCHOR::TOP_LEFT:
 			return glm::vec3(_Position.x + _iWidth / 2, _Position.y + _iHeight / 2, 0);
 			break;
-		case Utils::TOP_RIGHT:
+		case EANCHOR::TOP_RIGHT:
 			return glm::vec3(_Position.x - _iWidth / 2, _Position.y + _iHeight / 2, 0);
 			break;
-		case Utils::TOP_CENTER:
+		case EANCHOR::TOP_CENTER:
 			return glm::vec3(_Position.x, _Position.y + _iHeight / 2, 0);
 			break;
-		case Utils::CENTER_LEFT:
+		case EANCHOR::CENTER_LEFT:
 			return glm::vec3(_Position.x + _iWidth / 2, _Position.y, 0);
 			break;
-		case Utils::CENTER:
+		case EANCHOR::CENTER:
 			return glm::vec3(_Position.x, _Position.y, 0);
 			break;
-		case Utils::CENTER_RIGHT:
+		case EANCHOR::CENTER_RIGHT:
 			return glm::vec3(_Position.x - _iWidth / 2, _Position.y, 0);
 			break;
-		case Utils::BOTTOM_LEFT:
+		case EANCHOR::BOTTOM_LEFT:
 			return glm::vec3(_Position.x + _iWidth / 2, _Position.y - _iHeight / 2, 0);
 			break;
-		case Utils::BOTTOM_CENTER:
+		case EANCHOR::BOTTOM_CENTER:
 			return glm::vec3(_Position.x, _Position.y - _iHeight / 2, 0);
 			break;
-		case Utils::BOTTOM_RIGHT:
+		case EANCHOR::BOTTOM_RIGHT:
 			return glm::vec3(_Position.x - _iWidth / 2, _Position.y - _iHeight / 2, 0);
 			break;
 		default:

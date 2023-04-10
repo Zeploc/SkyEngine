@@ -27,7 +27,7 @@ Model::Model(glm::vec4 _Colour, const char* ModelSource)
 	program = Shader::Programs["ModelProgram"];
 	//m_iIndicies = 36;
 	BindModel();
-	m_eShape = Utils::MODEL;
+	m_eShape = EMESHTYPE::MODEL;
 
 	SetInitialStates();
 }
@@ -95,7 +95,7 @@ void Model::SetLit(bool _bIsLit)
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Model::Render(Utils::Transform Newtransform)
+void Model::Render(FTransform Newtransform)
 {
 	glFrontFace(GL_CCW);
 	if (bIsLit)

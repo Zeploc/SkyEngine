@@ -47,7 +47,7 @@ public:
 	}
 
 	// Draws the model, and thus all its meshes
-	void Render(Utils::Transform MeshTransform)
+	void Render(FTransform MeshTransform)
 	{
 		for (GLuint i = 0; i < this->meshes.size(); i++)
 		{

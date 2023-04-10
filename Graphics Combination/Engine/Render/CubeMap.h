@@ -16,7 +16,7 @@ public:
 
 	void Rebind() override;
 
-	void Render(Utils::Transform Newtransform) override;
+	void Render(FTransform Newtransform) override;
 
 	void Update() override;
 

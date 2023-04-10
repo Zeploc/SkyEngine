@@ -13,6 +13,8 @@
 
 // Engine Includes //
 #include "Engine/Input/Input.h"
+#include "Engine/Math/Matrix.h"
+#include "Engine/Math/Vector.h"
 
 // Static Variables //
 std::map<int, Camera*> Camera::m_pCameras;
@@ -28,18 +30,23 @@ void Camera::Init(int ScreenWidth, int ScreenWidthheight, glm::vec3 CamPos, glm:
 {
 	SCR_WIDTH = ScreenWidth;
 	SCR_HEIGHT = ScreenWidthheight;
-	cameraPos = CamPos;
-	cameraFront = ForwardVec;
-	cameraUp = UpVec;
+	CameraPosition = CamPos;
+	CameraForward = ForwardVec;
+	CameraUp = UpVec;
 
+	SwitchProjection(ProjectionMode);
+	
 	//projection = glm::perspective(90.0f, (float)SCR_WIDTH /	(float)SCR_HEIGHT, 0.1f, 100.0f);
 
-	float HalfWidth = static_cast<float>(SCR_WIDTH) / fWindowScale;
-	float HalfHeight = static_cast<float>(SCR_HEIGHT) / fWindowScale;
-	projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, 100.0f);
-	view = lookAt(cameraPos,
-	              cameraPos + cameraFront,
-	              cameraUp);
+	// float HalfWidth = static_cast<float>(SCR_WIDTH) / fWindowScale;
+	// float HalfHeight = static_cast<float>(SCR_HEIGHT) / fWindowScale;
+	// projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, 100.0f);
+	// View.SetViewTranslation(CameraPosition);
+	// View.SetCameraOrientation(CameraPosition + CameraForward, CameraUp);
+	
+	View.SetLookAt(CameraPosition,
+				  CameraPosition + CameraForward,
+				  CameraUp);
 }
 
 /************************************************************
@@ -50,20 +57,29 @@ void Camera::Init(int ScreenWidth, int ScreenWidthheight, glm::vec3 CamPos, glm:
 ************************************************************/
 void Camera::Update()
 {
-	/*if (m_ProjectionMode == PERSPECTIVE && m_bFPS)
+	/*if (ProjectionMode == Perspective && m_bFPS)
 		FPSControls();*/
 	if (bUseSpectatorControls)
 	{
 		SpectatorControls();
 	}
-	view = lookAt(cameraPos,
-	              cameraPos + cameraFront,
-	              cameraUp);
+	
+	// view = lookAt(CameraPosition,
+	//               CameraPosition + CameraForward,
+	//               CameraUp);
+	//View = Matrix4(view);
+	View.SetLookAt(CameraPosition,
+				  CameraPosition + CameraForward,
+				  CameraUp);
+	
+	// TODO: Complete
+	//View.SetViewTranslation(CameraPosition);
+	//View.SetCameraOrientation(CameraForward, CameraUp);
 }
 
-glm::vec3 Camera::GetCameraRightVector()
+Vector3 Camera::GetCameraRightVector()
 {
-	return cross(cameraUp, cameraFront);
+	return CameraUp.Cross(CameraForward);
 }
 
 /************************************************************
@@ -74,8 +90,8 @@ glm::vec3 Camera::GetCameraRightVector()
 ************************************************************/
 void Camera::MoveCamera(glm::vec3 _Movement)
 {
-	cameraPos += _Movement;
-	//SetMVP(Utils::Transform());
+	CameraPosition += _Movement;
+	//SetMVP(FTransform());
 }
 
 void Camera::EnableSpectatorControls(bool _bSpectatorControls)
@@ -86,7 +102,7 @@ void Camera::EnableSpectatorControls(bool _bSpectatorControls)
 
 void Camera::SpectatorControls()
 {
-	glm::vec2 Offset = glm::vec2(Input::GetInstance()->MousePos - glm::vec2(static_cast<float>(SCR_WIDTH) * 0.5f, static_cast<float>(SCR_HEIGHT) * 0.5f));
+	glm::vec2 Offset = glm::vec2(Input::GetInstance()->MousePos.ToGLM() - glm::vec2(static_cast<float>(SCR_WIDTH) * 0.5f, static_cast<float>(SCR_HEIGHT) * 0.5f));
 	Offset *= MouseSensitivity;
 	Yaw -= Offset.x;
 	Pitch -= Offset.y;
@@ -95,35 +111,35 @@ void Camera::SpectatorControls()
 	glm::vec3 frontVector(-cos(glm::radians(Pitch)) * sin(glm::radians(Yaw)),
 	                      sin(glm::radians(Pitch)),
 	                      -cos(glm::radians(Pitch)) * cos(glm::radians(Yaw)));
-	cameraFront = normalize(frontVector);
+	CameraForward = normalize(frontVector);
 
 	if (bSpectatorMovement)
 	{
 		if (Input::GetInstance()->KeyState[GLFW_KEY_W] == Input::INPUT_HOLD)
 		{
-			cameraPos += cameraFront * cameraSpeed * 0.025f;
+			CameraPosition += CameraForward * cameraSpeed * 0.025f;
 		}
 		else if (Input::GetInstance()->KeyState[GLFW_KEY_S] == Input::INPUT_HOLD)
 		{
-			cameraPos -= cameraFront * cameraSpeed * 0.025f;
+			CameraPosition -= CameraForward * cameraSpeed * 0.025f;
 		}
 
 		if (Input::GetInstance()->KeyState[GLFW_KEY_A] == Input::INPUT_HOLD)
 		{
-			cameraPos -= normalize(cross(cameraFront, cameraUp)) * cameraSpeed * 0.025f;
+			CameraPosition -= CameraForward.Cross(CameraUp).GetNormalized() * cameraSpeed * 0.025f;
 		}
 		else if (Input::GetInstance()->KeyState[GLFW_KEY_D] == Input::INPUT_HOLD)
 		{
-			cameraPos += normalize(cross(cameraFront, cameraUp)) * cameraSpeed * 0.025f;
+			CameraPosition += CameraForward.Cross(CameraUp).GetNormalized() * cameraSpeed * 0.025f;
 		}
 
-		if (Input::GetInstance()->KeyState[GLFW_KEY_SPACE] == Input::INPUT_HOLD)
+		if (Input::GetInstance()->KeyState[GLFW_KEY_E] == Input::INPUT_HOLD)
 		{
-			cameraPos += cameraUp * cameraSpeed * 0.025f;
+			CameraPosition += CameraUp * cameraSpeed * 0.025f;
 		}
-		else if (Input::GetInstance()->KeyState[GLFW_KEY_LEFT_CONTROL] == Input::INPUT_HOLD)
+		else if (Input::GetInstance()->KeyState[GLFW_KEY_Q] == Input::INPUT_HOLD)
 		{
-			cameraPos -= cameraUp * cameraSpeed * 0.025f;
+			CameraPosition -= CameraUp * cameraSpeed * 0.025f;
 		}
 	}
 	glfwSetCursorPos(MainWindow, static_cast<double>(SCR_WIDTH) * 0.5, static_cast<double>(SCR_HEIGHT) * 0.5);
@@ -138,35 +154,38 @@ void Camera::SpectatorControls()
 void Camera::SetWindowScale(float _fNewScale)
 {
 	fWindowScale = _fNewScale;
-	float HalfWidth = static_cast<float>(SCR_WIDTH) / fWindowScale;
-	float HalfHeight = static_cast<float>(SCR_HEIGHT) / fWindowScale;
-	projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, fMaxViewClipping);
+	
+	SwitchProjection(EProjectionMode::Perspective);
+	
+	// float HalfWidth = static_cast<float>(SCR_WIDTH) / fWindowScale;
+	// float HalfHeight = static_cast<float>(SCR_HEIGHT) / fWindowScale;
+	// projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, fMaxViewClipping);
 }
 
-glm::vec3 Camera::ScreenToWorldDirection(glm::vec2 _ScreenPosition)
+Vector3 Camera::ScreenToWorldDirection(Vector2 InScreenPosition)
 {
-	float x = (2.0f * _ScreenPosition.x) / SCR_WIDTH - 1.0f;
-	float y = 1.0f - (2.0f * _ScreenPosition.y) / SCR_HEIGHT;
-	glm::vec2 ray_nds = {x, y};
+	float x = (2.0f * InScreenPosition.X) / SCR_WIDTH - 1.0f;
+	float y = 1.0f - (2.0f * InScreenPosition.Y) / SCR_HEIGHT;
+	const Vector2 RayNds = {x, y};
 
-	glm::vec4 ray_clip = glm::vec4(ray_nds.x, ray_nds.y, -1.0f, 1.0f);
+	const Vector4 RayClip = Vector4(RayNds.X, RayNds.Y, -1.0f, 1.0f);
+	
+	Vector4 RayEye = Projection.GetInverse() * RayClip;
+	RayEye = Vector4(RayEye.X, RayEye.Y, -1.0f, 0.0f);
 
-	glm::vec4 ray_eye = inverse(projection) * ray_clip;
-	ray_eye = glm::vec4(ray_eye.x, ray_eye.y, -1.0f, 0.0f);
+	Vector3 RayWorld = (View.GetInverse() * RayEye).To3F();
 
-	glm::vec3 ray_wor = inverse(view) * ray_eye;
-
-	ray_wor = normalize(ray_wor);
-	return ray_wor;
+	RayWorld = RayWorld.Normalize();
+	return RayWorld;
 }
 
-glm::vec3 Camera::ScreenToWorldPosition2D(glm::vec2 _ScreenPosition)
+Vector3 Camera::ScreenToWorldPosition2D(Vector2 InScreenPosition)
 {
-	glm::vec3 PlaneNormal = -cameraFront;
-	glm::vec3 MouseDirection = ScreenToWorldDirection(_ScreenPosition);
-	float t = -(dot(cameraPos, PlaneNormal)) / (dot(MouseDirection, PlaneNormal));
-	t /= abs(cameraPos.z);
-	return MouseDirection * t + cameraPos;
+	Vector3 PlaneNormal = -CameraForward;
+	Vector3 MouseDirection = ScreenToWorldDirection(InScreenPosition);
+	float t = -(CameraPosition.Dot(PlaneNormal) / MouseDirection.Dot(PlaneNormal));
+	t /= abs(CameraPosition.Z);
+	return (MouseDirection * t).ToGLM() + CameraPosition;
 }
 
 /************************************************************
@@ -175,20 +194,20 @@ glm::vec3 Camera::ScreenToWorldPosition2D(glm::vec2 _ScreenPosition)
 #--Parameters--#: 	Takes in the transforms vectors
 #--Return--#: 		NA
 ************************************************************/
-void Camera::SetMVP(Utils::Transform _transform, GLuint program)
+void Camera::SetMVP(FTransform _transform, GLuint program)
 {
-	glm::mat4 translate = glm::translate(glm::mat4(), _transform.Position);
-	glm::mat4 scale = glm::scale(glm::mat4(), _transform.Scale);
-	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(_transform.Rotation.x), glm::vec3(1, 0, 0));
-	rotation = rotate(rotation, glm::radians(_transform.Rotation.y), glm::vec3(0, 1, 0));
-	rotation = rotate(rotation, glm::radians(_transform.Rotation.z), glm::vec3(0, 0, 1));
+	glm::mat4 translate = glm::translate(glm::mat4(), _transform.Position.ToGLM());
+	glm::mat4 scale = glm::scale(glm::mat4(), _transform.Scale.ToGLM());
+	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(_transform.Rotation.X), glm::vec3(1, 0, 0));
+	rotation = rotate(rotation, glm::radians(_transform.Rotation.Y), glm::vec3(0, 1, 0));
+	rotation = rotate(rotation, glm::radians(_transform.Rotation.Z), glm::vec3(0, 0, 1));
 
 	glm::mat4 model = translate * rotation * scale;
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, value_ptr(model));
-	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, value_ptr(view));
-	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_FALSE, value_ptr(projection));
+	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, glm::value_ptr(View.ToGLM()));//view));//
+	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_FALSE, glm::value_ptr(Projection.ToGLM()));
 
-	glm::mat4 MVP = projection * view * model;
+	glm::mat4 MVP = Projection.ToGLM() * View.ToGLM() * model;
 	GLint MVPLoc = glGetUniformLocation(program, "MVP");
 	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, value_ptr(MVP));
 }
@@ -199,23 +218,36 @@ void Camera::SetMVP(Utils::Transform _transform, GLuint program)
 #--Parameters--#:	Takes int mode
 #--Return--#: 		NA
 ************************************************************/
-void Camera::SwitchProjection(PROJECTIONMODE _Mode)
+void Camera::SwitchProjection(EProjectionMode InMode)
 {
-	m_ProjectionMode = _Mode;
-	switch (m_ProjectionMode)
+	ProjectionMode = InMode;
+	switch (ProjectionMode)
 	{
-		case 1:
+		case EProjectionMode::Orthographic:
 			{
-				float HalfWidth = static_cast<float>(SCR_WIDTH) / 200;
-				float HalfHeight = static_cast<float>(SCR_HEIGHT) / 200;
-				projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, fMaxViewClipping);
+				const float HalfWidth = static_cast<float>(SCR_WIDTH) / fWindowScale;
+				const float HalfHeight = static_cast<float>(SCR_HEIGHT) / fWindowScale;
+				//projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, fMaxViewClipping);
+				OrthoProjInfo ProjectionInfo;
+				ProjectionInfo.Left = -HalfWidth;
+				ProjectionInfo.Right = HalfWidth;
+				ProjectionInfo.Bottom = -HalfHeight;
+				ProjectionInfo.Top = HalfHeight;
+				ProjectionInfo.ZNear = 0.1f;
+				ProjectionInfo.ZFar = fMaxViewClipping;
+				Projection.SetOrthographicProjection(ProjectionInfo);
 				break;
 			}
-		case 2:
+		case EProjectionMode::Perspective:
 			{
-				float HalfWidth = static_cast<float>(SCR_WIDTH) / 200;
-				float HalfHeight = static_cast<float>(SCR_HEIGHT) / 200;
-				projection = glm::perspective(45.0f, static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, fMaxViewClipping);
+				PersProjInfo ProjectionInfo;
+				ProjectionInfo.FOV = 45.0f;
+				ProjectionInfo.Width = static_cast<float>(SCR_WIDTH);
+				ProjectionInfo.Height = static_cast<float>(SCR_HEIGHT);
+				ProjectionInfo.zNear = 0.1f;
+				ProjectionInfo.zFar = fMaxViewClipping;
+				Projection.SetPerspectiveProjection(ProjectionInfo);
+				// projection = glm::perspective(45.0f, static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, fMaxViewClipping);
 				break;
 			}
 		default:

@@ -14,7 +14,7 @@
 class ParticleSystem : public Entity
 {
 public:
-	ParticleSystem(Utils::Transform _Transform);
+	ParticleSystem(FTransform _Transform);
 
 	~ParticleSystem();
 

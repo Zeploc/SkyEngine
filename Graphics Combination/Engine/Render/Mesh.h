@@ -11,7 +11,7 @@
 
 // Engine Includes //
 #include "Lighting.h"
-#include "Engine/System/Utils.h"
+#include "Engine/Math/FTransform.h"
 
 // Library Include //
 #include <memory>
@@ -24,16 +24,16 @@ public:
 	Mesh();
 
 	~Mesh();
-
-	virtual void Render(Utils::Transform Newtransform);
+	
+	virtual void Render(FTransform Newtransform);
 
 	virtual void Update()
 	{
-	};
+	}
 
 	virtual void OnDestroy()
 	{
-	};
+	}
 
 	virtual void SetInitialStates();
 
@@ -41,7 +41,7 @@ public:
 
 	virtual void Rebind()
 	{
-	}; // Will replace if texture exists
+	} // Will replace if texture exists
 	virtual void SetLit(bool _bIsLit, bool _bIsInitialState = false)
 	{
 		bIsLit = _bIsLit;
@@ -49,12 +49,12 @@ public:
 		{
 			MeshInitialState.bIsLit = bIsLit;
 		}
-	};
-	bool IsLit() { return bIsLit; };
+	}
+	bool IsLit() { return bIsLit; }
 
 	void SetReflection(bool _bReflecting, bool _bIsInitialState = false);
 
-	bool IsReflecting() { return bReflection; };
+	bool IsReflecting() { return bReflection; }
 
 	void AddCollisionBounds(float fHeight, float fWidth, float fDepth, std::shared_ptr<Entity> _EntityRef);
 
@@ -66,7 +66,7 @@ public:
 	};
 
 	bool bDepthTest = true;
-	Utils::EMESHTYPE m_eShape;
+	EMESHTYPE m_eShape;
 	float m_fWidth;
 	float m_fHeight;
 	float m_fDepth = 0;
@@ -92,7 +92,7 @@ protected:
 
 	struct InitialState
 	{
-		Utils::EMESHTYPE m_eShape;
+		EMESHTYPE m_eShape;
 		float m_fWidth;
 		float m_fHeight;
 		float m_fDepth;

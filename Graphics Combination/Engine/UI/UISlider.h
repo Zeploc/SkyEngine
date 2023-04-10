@@ -10,7 +10,7 @@
 class UISlider : public UIElement
 {
 public:
-	UISlider(glm::vec2 _Position, float _fRotation, glm::vec4 _HandleColour, glm::vec4 _SliderColour, int _iSliderLength, int _iSliderThickness, int _iHandleHeight, int _iHandleWidth, Utils::EANCHOR _Anchor, std::string _sTitle);
+	UISlider(glm::vec2 _Position, float _fRotation, glm::vec4 _HandleColour, glm::vec4 _SliderColour, int _iSliderLength, int _iSliderThickness, int _iHandleHeight, int _iHandleWidth, EANCHOR _Anchor, std::string _sTitle);
 
 	~UISlider();
 

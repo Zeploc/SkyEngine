@@ -16,8 +16,8 @@
 class ParticleSystemGPU : public Entity
 {
 public:
-	ParticleSystemGPU(Utils::Transform _Transform);
-
+	ParticleSystemGPU(FTransform _Transform);
+	
 	~ParticleSystemGPU();
 
 	void Init(int ParticleCount, const char* TexturePath);

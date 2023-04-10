@@ -18,7 +18,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-ParticleSystemGPU::ParticleSystemGPU(Utils::Transform _Transform) : Entity(_Transform, Utils::CENTER)
+ParticleSystemGPU::ParticleSystemGPU(FTransform _Transform) : Entity(_Transform, EANCHOR::CENTER)
 {
 	Colour = glm::vec4(123.0f / 255.0f, 173.0f / 255.0f, 203.0f / 255.0f, 2.0f);
 }
@@ -49,9 +49,9 @@ void ParticleSystemGPU::Init(int ParticleCount, const char* TexturePath)
 		float PositionY = RandomBetweenRange(m_v2StartPositionRangeY.x, m_v2StartPositionRangeY.y);
 		float PositionZ = RandomBetweenRange(m_v2StartPositionRangeZ.x, m_v2StartPositionRangeZ.y);
 
-		Particle NewParticle = Particle(Speed, {DirectionX, DirectionY, DirectionZ}, Falloff, FalloffTime, Delay, transform.Position + glm::vec3(PositionX, PositionY, PositionZ));
+		Particle NewParticle = Particle(Speed, {DirectionX, DirectionY, DirectionZ}, Falloff, FalloffTime, Delay, Transform.Position.ToGLM() + glm::vec3(PositionX, PositionY, PositionZ));
 		//m_vParticles.push_back(NewParticle);
-		m_vPosition.push_back(glm::vec4(transform.Position + glm::vec3(PositionX, PositionY, PositionZ), FalloffTime));
+		m_vPosition.push_back(glm::vec4(Transform.Position.ToGLM() + glm::vec3(PositionX, PositionY, PositionZ), FalloffTime));
 		m_vVelocity.push_back(glm::vec4(glm::vec3(DirectionX, DirectionY, DirectionZ) * Speed, 0.0f));
 	}
 
@@ -260,7 +260,7 @@ void ParticleSystemGPU::DrawEntity()
 	//glUniform3f(glGetUniformLocation(program, "vQuad2"), vQuad2.x, vQuad2.y,
 	//	vQuad2.z);*/
 
-	glUniformMatrix4fv(glGetUniformLocation(program, "vp"), 1, GL_FALSE, value_ptr(Camera::GetInstance()->projection * Camera::GetInstance()->view));
+	glUniformMatrix4fv(glGetUniformLocation(program, "vp"), 1, GL_FALSE, value_ptr(Camera::GetInstance()->Projection.ToGLM() * Camera::GetInstance()->View.ToGLM()));
 	////glUniform4f(glGetUniformLocation(program, "Colour"), Colour.r, Colour.g, Colour.b, Colour.a);
 	////glUniform1f(glGetUniformLocation(program, "Size"), ParticleSize);
 

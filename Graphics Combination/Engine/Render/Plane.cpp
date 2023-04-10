@@ -30,7 +30,7 @@ Plane::Plane(float fWidth, float fHeight, glm::vec4 _Colour)
 	TextureSource = "";
 	bHasTexture = false;
 	BindPlane();
-	m_eShape = Utils::PLANE;
+	m_eShape = EMESHTYPE::PLANE;
 	program = Shader::Programs["BaseProgram"];
 
 	SetInitialStates();
@@ -58,7 +58,7 @@ Plane::Plane(float fWidth, float fHeight, glm::vec4 _Colour, const char* _Textur
 	UVCoords = _UVCoords;
 	bHasTexture = true;
 	BindPlane();
-	m_eShape = Utils::PLANE;
+	m_eShape = EMESHTYPE::PLANE;
 	program = Shader::Programs["BaseProgram"];
 
 	SetInitialStates();
@@ -88,7 +88,7 @@ Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char* _Text
 	m_fFrameCheck = 1.0f / AnimationInfo.iFPS;
 	CollisionBox.fHeight = m_fHeight;
 	CollisionBox.fWidth = m_fWidth;
-	m_eShape = Utils::PLANE;
+	m_eShape = EMESHTYPE::PLANE;
 
 	// Get Image Dimensions
 	int width, height;
@@ -128,7 +128,7 @@ Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char* _Text
 	bHasTexture = true;
 	CollisionBox.fHeight = m_fHeight;
 	CollisionBox.fWidth = m_fWidth;
-	m_eShape = Utils::PLANE;
+	m_eShape = EMESHTYPE::PLANE;
 
 	int width, height;
 	unsigned char* image = SOIL_load_image(_TextureSource, &width, &height, nullptr, SOIL_LOAD_RGBA);
@@ -167,7 +167,7 @@ Plane::Plane(glm::vec3 _Points[4], glm::vec4 _Colour)
 	TextureSource = "";
 	bHasTexture = false;
 	BindPlane();
-	m_eShape = Utils::PLANE;
+	m_eShape = EMESHTYPE::PLANE;
 	program = Shader::Programs["BaseProgram"];
 
 	SetInitialStates();
@@ -188,7 +188,7 @@ Plane::Plane(glm::vec3 _Points[4], glm::vec4 _Colour, const char* _TextureSource
 	UVCoords = _UVCoords;
 	bHasTexture = true;
 	BindPlane();
-	m_eShape = Utils::PLANE;
+	m_eShape = EMESHTYPE::PLANE;
 	program = Shader::Programs["BaseProgram"];
 
 	SetInitialStates();
@@ -211,7 +211,7 @@ Plane::Plane(glm::vec3 _Points[4], glm::vec4 _Colour, const char* _TextureSource
 	bHasTexture = true;
 	CollisionBox.fHeight = m_fHeight;
 	CollisionBox.fWidth = m_fWidth;
-	m_eShape = Utils::PLANE;
+	m_eShape = EMESHTYPE::PLANE;
 
 	int width, height;
 	unsigned char* image = SOIL_load_image(_TextureSource, &width, &height, nullptr, SOIL_LOAD_RGBA);
@@ -329,7 +329,7 @@ void Plane::Reset()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Plane::Render(Utils::Transform Newtransform)
+void Plane::Render(FTransform Newtransform)
 {
 	if (m_fFrameCheck > 0)
 	{

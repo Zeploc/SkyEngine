@@ -35,5 +35,5 @@ public:
 
 	static std::vector<cFont> Fonts;
 
-	static void Render(std::string Text, std::string Font, int iSize, glm::vec2 Position, glm::vec3 colour, Utils::EANCHOR _Anchor);
+	static void Render(std::string Text, std::string Font, int iSize, glm::vec2 Position, glm::vec3 colour, EANCHOR _Anchor);
 };

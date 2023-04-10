@@ -26,9 +26,9 @@ Entity::Entity(std::string _FromString)
 		return;
 	}
 	ss >> iEntityID;
-	ss >> transform;
+	ss >> Transform;
 
-	EntityAnchor = Utils::CENTER;
+	EntityAnchor = EANCHOR::CENTER;
 }
 
 //************************************************************
@@ -37,7 +37,7 @@ Entity::Entity(std::string _FromString)
 //#--Parameters--#:		Takes contructor values
 //#--Return--#: 		NA
 //************************************************************/
-Entity::Entity(Utils::Transform _Transform, Utils::EANCHOR _Anchor) : transform(_Transform), EntityAnchor(_Anchor)
+Entity::Entity(FTransform _Transform, EANCHOR _Anchor) : Transform(_Transform), EntityAnchor(_Anchor)
 {
 	iEntityID = Utils::AddEntityID();
 	LogManager::GetInstance()->DisplayLogMessage("New Entity created with ID #" + std::to_string(iEntityID));
@@ -46,7 +46,7 @@ Entity::Entity(Utils::Transform _Transform, Utils::EANCHOR _Anchor) : transform(
 	EntityInitialState.bVisible = bVisible;
 	EntityInitialState.EntityAnchor = EntityAnchor;
 	EntityInitialState.iEntityID = iEntityID;
-	EntityInitialState.transform = transform;
+	EntityInitialState.Transform = Transform;
 }
 
 /************************************************************
@@ -75,7 +75,7 @@ void Entity::AddMesh(std::shared_ptr<Mesh> _NewMesh)
 //	case Utils::PYRAMID:
 //		EntityMesh = std::make_shared<Pyramid>(Pyramid(1, 1, 1, { 1.0f, 1.0f, 1.0f,  1.0f }));
 //		break;
-//	case Utils::CUBE:
+//	case EMESHTYPE::CUBE:
 //		break;
 //	case Utils::SPHERE:
 //		EntityMesh = std::make_shared<Sphere>(Sphere(1, 1, 1, { 1.0f, 1.0f, 1.0f,  1.0f }));
@@ -87,7 +87,7 @@ void Entity::AddMesh(std::shared_ptr<Mesh> _NewMesh)
 //}
 
 /************************************************************
-#--Description--#: 	Draws the entity on the screen at the using the transform
+#--Description--#: 	Draws the entity on the screen at the using the Transform
 #--Author--#: 		Alex Coultas
 #--Parameters--#: 	NA
 #--Return--#: 		NA
@@ -98,14 +98,14 @@ void Entity::DrawEntity()
 	{
 		return;
 	}
-	Utils::Transform AnchoredTransform = transform;
+	FTransform AnchoredTransform = Transform;
 	if (EntityMesh->GetCollisionBounds())
 	{
-		AnchoredTransform.Position = Utils::GetAncoredPosition(transform.Position, EntityMesh->GetCollisionBounds()->GetDimensions(), EntityAnchor);
+		AnchoredTransform.Position = Utils::GetAncoredPosition(Transform.Position, EntityMesh->GetCollisionBounds()->GetDimensions(), EntityAnchor);
 	}
 	else
 	{
-		AnchoredTransform.Position = Utils::GetAncoredPosition(transform.Position, glm::vec3(EntityMesh->m_fWidth, EntityMesh->m_fHeight, EntityMesh->m_fDepth), EntityAnchor);
+		AnchoredTransform.Position = Utils::GetAncoredPosition(Transform.Position, glm::vec3(EntityMesh->m_fWidth, EntityMesh->m_fHeight, EntityMesh->m_fDepth), EntityAnchor);
 	}
 	EntityMesh->Render(AnchoredTransform);
 }
@@ -140,8 +140,8 @@ void Entity::Update()
 	if (body)
 	{
 		b2Vec2 BodyPosition = body->GetPosition();
-		transform.Position = glm::vec3(BodyPosition.x, BodyPosition.y, 0.0f);
-		transform.Rotation.z = (body->GetAngle() / b2_pi) * 180;
+		Transform.Position = glm::vec3(BodyPosition.x, BodyPosition.y, 0.0f);
+		Transform.Rotation.Z = (body->GetAngle() / b2_pi) * 180;
 	}
 }
 
@@ -167,10 +167,10 @@ void Entity::Reset()
 	bVisible = EntityInitialState.bVisible;
 	EntityAnchor = EntityInitialState.EntityAnchor;
 	iEntityID = EntityInitialState.iEntityID;
-	transform = EntityInitialState.transform;
+	Transform = EntityInitialState.Transform;
 	if (body)
 	{
-		body->SetTransform(b2Vec2(transform.Position.x, transform.Position.y), (transform.Rotation.z / 180) * b2_pi);
+		body->SetTransform(b2Vec2(Transform.Position.X, Transform.Position.Y), (Transform.Rotation.Z / 180) * b2_pi);
 		body->SetAwake(true);
 		body->SetActive(bActive);
 		body->SetLinearVelocity(b2Vec2_zero);
@@ -206,7 +206,7 @@ std::string Entity::EntityToString()
 	std::stringstream sEntity("");
 	sEntity << "[Entity] ";
 	sEntity << iEntityID << " ";
-	sEntity << transform.ToString();
+	sEntity << Transform.ToString();
 	return sEntity.str();
 }
 
@@ -218,7 +218,7 @@ std::string Entity::EntityToString()
 ************************************************************/
 void Entity::Translate(glm::vec3 _Movement)
 {
-	transform.Position += _Movement;
+	Transform.Position += _Movement;
 }
 
 /************************************************************
@@ -229,7 +229,7 @@ void Entity::Translate(glm::vec3 _Movement)
 ************************************************************/
 void Entity::Rotate(glm::vec3 Rotate)
 {
-	transform.Rotation += Rotate;
+	Transform.Rotation += Rotate;
 }
 
 /************************************************************
@@ -240,16 +240,16 @@ void Entity::Rotate(glm::vec3 Rotate)
 ************************************************************/
 void Entity::SetScale(glm::vec3 _NewScale)
 {
-	transform.Scale = _NewScale;
+	Transform.Scale = _NewScale;
 }
 
-glm::mat4 Entity::GetModel()
+Matrix4 Entity::GetModel()
 {
-	glm::mat4 translate = glm::translate(glm::mat4(), transform.Position);
-	glm::mat4 scale = glm::scale(glm::mat4(), transform.Scale);
-	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(transform.Rotation.x), glm::vec3(1, 0, 0));
-	rotation = rotate(rotation, glm::radians(transform.Rotation.y), glm::vec3(0, 1, 0));
-	rotation = rotate(rotation, glm::radians(transform.Rotation.z), glm::vec3(0, 0, 1));
+	glm::mat4 translate = glm::translate(glm::mat4(), Transform.Position.ToGLM());
+	glm::mat4 scale = glm::scale(glm::mat4(), Transform.Scale.ToGLM());
+	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(Transform.Rotation.X), glm::vec3(1, 0, 0));
+	rotation = rotate(rotation, glm::radians(Transform.Rotation.Y), glm::vec3(0, 1, 0));
+	rotation = rotate(rotation, glm::radians(Transform.Rotation.Z), glm::vec3(0, 0, 1));
 
 	return translate * rotation * scale;
 }
@@ -261,10 +261,10 @@ void Entity::SetupB2BoxBody(b2World& Box2DWorld, b2BodyType BodyType, bool bCanR
 		// Define the dynamic body. We set its position and call the body factory.
 		b2BodyDef bodyDef;
 		bodyDef.type = BodyType;
-		bodyDef.position.Set(transform.Position.x, transform.Position.y);
+		bodyDef.position.Set(Transform.Position.X, Transform.Position.Y);
 		bodyDef.userData = &*this;
 		body = Box2DWorld.CreateBody(&bodyDef);
-		body->SetTransform(bodyDef.position, (transform.Rotation.z / 180) * b2_pi);
+		body->SetTransform(bodyDef.position, (Transform.Rotation.Z / 180) * b2_pi);
 		body->SetFixedRotation(!bCanRotate);
 		bodyDef.bullet = true;
 
@@ -302,10 +302,10 @@ void Entity::SetupB2CircleBody(b2World& Box2DWorld, b2BodyType BodyType, bool bC
 		// Define the dynamic body. We set its position and call the body factory.
 		b2BodyDef bodyDef;
 		bodyDef.type = BodyType;
-		bodyDef.position.Set(transform.Position.x, transform.Position.y);
+		bodyDef.position.Set(Transform.Position.X, Transform.Position.Y);
 		bodyDef.userData = &*this;
 		body = Box2DWorld.CreateBody(&bodyDef);
-		body->SetTransform(bodyDef.position, (transform.Rotation.z / 180) * b2_pi);
+		body->SetTransform(bodyDef.position, (Transform.Rotation.Z / 180) * b2_pi);
 		body->SetFixedRotation(!bCanRotate);
 
 		// Define another Circle shape for our dynamic body.

@@ -2,13 +2,12 @@
 
 #pragma once
 
-// OpenGL Library Includes //
-#include <glm/common.hpp>
-
 // Library Includes //
 #include <map>
 #include <string>
 #include <vector>
+
+#include "Engine/Math/Vector.h"
 
 class Input
 {
@@ -32,7 +31,7 @@ public:
 		MOUSE_RIGHT,
 	};
 
-	glm::vec2 MousePos;
+	Vector2 MousePos;
 	unsigned int KeyState[350]; //255
 	unsigned int MouseState[3];
 
