@@ -12,7 +12,7 @@ public:
 	Button3DEntity(FTransform _Transform, EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, void (*func)() = nullptr);
 
 	Button3DEntity(FTransform _Transform, EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, const char* Texturepath, void (*func)() = nullptr);
-
+	
 	~Button3DEntity();
 
 	template <class T>

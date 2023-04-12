@@ -194,13 +194,14 @@ Vector3 Camera::ScreenToWorldPosition2D(Vector2 InScreenPosition)
 #--Parameters--#: 	Takes in the transforms vectors
 #--Return--#: 		NA
 ************************************************************/
-void Camera::SetMVP(FTransform _transform, GLuint program)
+void Camera::SetMVP(FTransform InTransform, GLuint program)
 {
-	glm::mat4 translate = glm::translate(glm::mat4(), _transform.Position.ToGLM());
-	glm::mat4 scale = glm::scale(glm::mat4(), _transform.Scale.ToGLM());
-	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(_transform.Rotation.Pitch), glm::vec3(1, 0, 0));
-	rotation = rotate(rotation, glm::radians(_transform.Rotation.Yaw), glm::vec3(0, 1, 0));
-	rotation = rotate(rotation, glm::radians(_transform.Rotation.Roll), glm::vec3(0, 0, 1));
+	glm::mat4 translate = glm::translate(glm::mat4(), InTransform.Position.ToGLM());
+	glm::mat4 scale = glm::scale(glm::mat4(), InTransform.Scale.ToGLM());	
+	glm::mat4 rotation = glm::mat4();
+	rotation = rotate(rotation, glm::radians(InTransform.Rotation.Yaw), glm::vec3(0, 1, 0));
+	rotation = rotate(rotation, glm::radians(InTransform.Rotation.Pitch), glm::vec3(1, 0, 0));
+	rotation = rotate(rotation, glm::radians(InTransform.Rotation.Roll), glm::vec3(0, 0, 1));
 
 	glm::mat4 model = translate * rotation * scale;
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, value_ptr(model));

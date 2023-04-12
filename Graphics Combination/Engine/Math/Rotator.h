@@ -4,8 +4,9 @@
 
 #include <string>
 
-#include "Vector.h"
 #include "Engine/Math/MathDefinitions.h"
+
+struct Vector3;
 
 struct Rotator
 {
@@ -43,12 +44,8 @@ struct Rotator
 		Yaw = V.y;
 		Roll = V.z;
 	}
-	Rotator(Vector3 V)
-	{
-		Pitch = V.X;
-		Yaw = V.Y;
-		Roll = V.Z;
-	}
+	Rotator(Vector3 V);
+
 	glm::vec3 ToGLM() const
 	{
 		return glm::vec3(Pitch, Yaw, Roll);

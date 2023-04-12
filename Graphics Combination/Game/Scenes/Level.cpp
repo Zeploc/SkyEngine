@@ -65,6 +65,8 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 
 	NewPlayer = std::make_shared<Player>(Player({ 3, 0, 3 }));
 	NewPlayer->TerrainRef = LevelTerrain;
+	// std::shared_ptr<GeometryObject> PlayerGeomShape = std::make_shared<GeometryObject>(GeometryObject({0.0, 0.9f, 0.3f, 1.0f}));
+	// NewPlayer->AddMesh(PlayerGeomShape);
 	AddEntity(NewPlayer, true);
 
 	std::shared_ptr<Entity> GeomEnt = std::make_shared<Entity>(Entity({{10, 6, 10}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
@@ -113,9 +115,9 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 	SphereMesh->SetReflection(true);
 	AddEntity(SphereRaycastTest, true);
 
-	std::shared_ptr<Button3DEntity> FowardCubeButton = std::make_shared<Button3DEntity>(Button3DEntity(FTransform{{4.0f, 7.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER, 6.0f, 2.0f, 1.0f, glm::vec4(0.7, 0.5, 0.7, 1.0f), glm::vec4(0.4, 0.5, 0.3, 1.0f), "Resources/Images/StoneWall_2x2.jpg"));
-	FowardCubeButton->BindPress(this, &Level::ButtonBoiFuncorness);
-	AddEntity(FowardCubeButton, true);
+	CubeButton = std::make_shared<Button3DEntity>(Button3DEntity(FTransform{{4.0f, 7.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER, 6.0f, 2.0f, 1.0f, glm::vec4(0.7, 0.5, 0.7, 1.0f), glm::vec4(0.4, 0.5, 0.3, 1.0f), "Resources/Images/StoneWall_2x2.jpg"));
+	CubeButton->BindPress(this, &Level::ButtonBoiFuncorness);
+	AddEntity(CubeButton, true);
 
 	std::shared_ptr<Entity> CubeEnty = std::make_shared<Entity>(Entity(FTransform{{25.0f, 4.0f, 4.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
 	std::shared_ptr<Cube> CubyMesh = std::make_shared<Cube>(Cube(3.0f, 3.0f, 3.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));

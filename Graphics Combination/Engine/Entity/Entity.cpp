@@ -247,8 +247,9 @@ Matrix4 Entity::GetModel()
 {
 	glm::mat4 translate = glm::translate(glm::mat4(), Transform.Position.ToGLM());
 	glm::mat4 scale = glm::scale(glm::mat4(), Transform.Scale.ToGLM());
-	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(Transform.Rotation.Pitch), glm::vec3(1, 0, 0));
+	glm::mat4 rotation = glm::mat4();
 	rotation = rotate(rotation, glm::radians(Transform.Rotation.Yaw), glm::vec3(0, 1, 0));
+	rotation = rotate(rotation, glm::radians(Transform.Rotation.Pitch), glm::vec3(1, 0, 0));
 	rotation = rotate(rotation, glm::radians(Transform.Rotation.Roll), glm::vec3(0, 0, 1));
 
 	return translate * rotation * scale;

@@ -6,6 +6,8 @@
 
 #include "Engine/Math/MathDefinitions.h"
 
+struct Rotator;
+
 struct Vector2i
 {
 	int x;
@@ -161,19 +163,21 @@ struct Vector3
 	{
 		X = Y = Z = f;
 	}
+
 	Vector3(Vector2 V, float _z)
 	{
 		X = V.X;
 		Y = V.Y;
 		Z = _z;
 	}
-
+	
 	Vector3(glm::vec3 V)
 	{
 		X = V.x;
 		Y = V.y;
 		Z = V.z;
 	}
+
 	glm::vec3 ToGLM() const
 	{
 		return glm::vec3(X, Y, Z);
@@ -224,12 +228,13 @@ struct Vector3
 
 	float Dot(const Vector3& V) const;
 
-	Vector3 GetNormalized();
+	Vector3 GetNormalized() const;
 	Vector3& Normalize();
 
 	float Size() const;
 
 	void Rotate(float Angle, const Vector3& Axis);
+	Rotator ToRotator() const;
 	
 	std::string ToString() const
 	{

@@ -172,8 +172,8 @@ void Update()
 	{
 		SoundManager::GetInstance()->InitFMod();
 		// Scene setup here
-		// std::shared_ptr<Level> LevelScene = std::shared_ptr<Level>(new Level("Demo Environment"));		
-		std::shared_ptr<EditorScene> LevelScene = std::shared_ptr<EditorScene>(new EditorScene("Editor"));
+		std::shared_ptr<Level> LevelScene = std::shared_ptr<Level>(new Level("Demo Environment"));		
+		// std::shared_ptr<EditorScene> LevelScene = std::shared_ptr<EditorScene>(new EditorScene("Editor"));
 		
 		SceneManager::GetInstance()->AddScene(LevelScene);
 		bLoading = false;

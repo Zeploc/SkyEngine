@@ -3,6 +3,7 @@
 #include "Vector.h"
 
 #include "Quaternion.h"
+#include "Rotator.h"
 
 Vector3 Vector3::Cross(const Vector3& V) const
 {
@@ -18,7 +19,7 @@ float Vector3::Dot(const Vector3& V) const
 	return X * V.X + Y * V.Y + Z * V.Z;
 }
 
-Vector3 Vector3::GetNormalized()
+Vector3 Vector3::GetNormalized() const
 {
 	Vector3 Normalised(*this);
 	Normalised.Normalize();
@@ -60,4 +61,21 @@ void Vector3::Rotate(float Angle, const Vector3& Axe)
 	X = W.X;
 	Y = W.Y;
 	Z = W.Z;
+}
+
+Rotator Vector3::ToRotator() const
+{
+	// Get Angle on the lateral plane (will be in radians)
+	const float YawAngle = atan2(X,Z);
+	// Get pitch based on Y (Up)
+	const float PitchAngle = sin(Y);
+
+	Rotator NewRotator;
+	NewRotator.Yaw = ToDegree(YawAngle);//Magnitude * cos(Angle));
+	NewRotator.Pitch = ToDegree(PitchAngle);//ToDegree(Magnitude * sin(Angle));
+
+	// Default roll to 0 ie Z up
+	NewRotator.Roll = 0;
+
+	return NewRotator;
 }

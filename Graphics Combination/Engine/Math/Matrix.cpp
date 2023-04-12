@@ -2,6 +2,9 @@
 
 #include "Matrix.h"
 
+#include "Quaternion.h"
+#include "Vector.h"
+
 void Matrix4::InitScaleTransform(float ScaleX, float ScaleY, float ScaleZ)
 {
 	M[0][0] = ScaleX;
@@ -234,6 +237,30 @@ void Matrix4::SetOrthographicProjection(const OrthoProjInfo& P)
 	M[1][3] = -(t + b) / (t - b);
 	M[2][2] = 2.0f / (f - n);
 	M[2][3] = -(f + n) / (f - n);
+}
+
+Vector4 Matrix4::operator*(const Vector4& V) const
+{
+	glm::vec4 Vec4 = ToGLM() * V.ToGLM();
+	return Vec4;
+
+	// TODO: Fix
+	Vector4 Result;
+
+	Result.X = M[0][0] * V.X + M[0][1] * V.Y + M[0][2] * V.Z + M[0][3] * V.W;
+	Result.Y = M[1][0] * V.X + M[1][1] * V.Y + M[1][2] * V.Z + M[1][3] * V.W;
+	Result.Z = M[2][0] * V.X + M[2][1] * V.Y + M[2][2] * V.Z + M[2][3] * V.W;
+	Result.W = M[3][0] * V.X + M[3][1] * V.Y + M[3][2] * V.Z + M[3][3] * V.W;
+
+	return Result;
+}
+
+void Matrix4::Print() const
+{
+	for (int i = 0; i < 4; i++)
+	{
+		printf("%f %f %f %f\n", M[i][0], M[i][1], M[i][2], M[i][3]);
+	}
 }
 
 float Matrix4::Determinant() const

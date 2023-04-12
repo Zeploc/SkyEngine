@@ -367,22 +367,24 @@ void ssAnimatedModel::setShaderEffectVariables(std::shared_ptr<Terrain> terrain)
 {
 	glUseProgram(this->program);
 
-	glm::mat4 model;
-
-	glm::mat4 t = translate(glm::mat4(), this->Transform.Position.ToGLM());
-	glm::mat4 r = glm::rotate(glm::mat4(), glm::radians(Transform.Rotation.Pitch), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 s = glm::scale(glm::mat4(), this->Transform.Scale.ToGLM());
-
-	model = t * r * s;
-
-	//glm::mat4 vp = Camera::GetInstance()->projection * Camera::GetInstance()->view;
-	GLint vLoc = glGetUniformLocation(program, "view");
-	glUniformMatrix4fv(vLoc, 1, GL_FALSE, value_ptr(Camera::GetInstance()->View.ToGLM()));
-	GLint pLoc = glGetUniformLocation(program, "proj");
-	glUniformMatrix4fv(pLoc, 1, GL_FALSE, value_ptr(Camera::GetInstance()->Projection.ToGLM()));
-
-	GLint modelLoc = glGetUniformLocation(program, "model");
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, value_ptr(model));
+	Camera::GetInstance()->SetMVP(Transform, program);
+	
+	// glm::mat4 model;
+	//
+	// glm::mat4 t = translate(glm::mat4(), this->Transform.Position.ToGLM());
+	// glm::mat4 r = glm::rotate(glm::mat4(), glm::radians(Transform.Rotation.Pitch), glm::vec3(0.0f, 1.0f, 0.0f));
+	// glm::mat4 s = glm::scale(glm::mat4(), this->Transform.Scale.ToGLM());
+	//
+	// model = t * r * s;
+	//
+	// //glm::mat4 vp = Camera::GetInstance()->projection * Camera::GetInstance()->view;
+	// GLint vLoc = glGetUniformLocation(program, "view");
+	// glUniformMatrix4fv(vLoc, 1, GL_FALSE, value_ptr(Camera::GetInstance()->View.ToGLM()));
+	// GLint pLoc = glGetUniformLocation(program, "proj");
+	// glUniformMatrix4fv(pLoc, 1, GL_FALSE, value_ptr(Camera::GetInstance()->Projection.ToGLM()));
+	//
+	// GLint modelLoc = glGetUniformLocation(program, "model");
+	// glUniformMatrix4fv(modelLoc, 1, GL_FALSE, value_ptr(model));
 
 	// get uniform location for transforms
 	for (unsigned int i = 0; i < ARRAY_SIZE(m_boneLocation); i++)

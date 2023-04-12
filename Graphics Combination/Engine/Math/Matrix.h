@@ -2,8 +2,10 @@
 
 #pragma once
 
-#include "Quaternion.h"
-#include "Vector.h"
+#include "Engine/Math/MathDefinitions.h"
+// #include <matrix3x3.h>
+// #include <matrix4x4.h>
+// #include <glm/mat4x4.hpp>
 
 struct PersProjInfo
 {
@@ -23,6 +25,10 @@ struct OrthoProjInfo
 	float ZNear;
 	float ZFar;
 };
+
+struct Vector4;
+struct Vector3;
+struct Quaternion;
 
 class Matrix4
 {
@@ -200,34 +206,14 @@ public:
 		return Ret;
 	}
 
-	Vector4 operator*(const Vector4& V) const
-	{
-		glm::vec4 Vec4 = ToGLM() * V.ToGLM();
-		return Vec4;
-
-		// TODO: Fix
-		Vector4 Result;
-
-		Result.X = M[0][0] * V.X + M[0][1] * V.Y + M[0][2] * V.Z + M[0][3] * V.W;
-		Result.Y = M[1][0] * V.X + M[1][1] * V.Y + M[1][2] * V.Z + M[1][3] * V.W;
-		Result.Z = M[2][0] * V.X + M[2][1] * V.Y + M[2][2] * V.Z + M[2][3] * V.W;
-		Result.W = M[3][0] * V.X + M[3][1] * V.Y + M[3][2] * V.Z + M[3][3] * V.W;
-
-		return Result;
-	}
+	Vector4 operator*(const Vector4& V) const;
 
 	operator const float*() const
 	{
 		return &(M[0][0]);
 	}
 
-	void Print() const
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			printf("%f %f %f %f\n", M[i][0], M[i][1], M[i][2], M[i][3]);
-		}
-	}
+	void Print() const;
 
 	float Determinant() const;
 

@@ -22,6 +22,8 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+#include "Engine/Entity/Button3DEntity.h"
+
 Player::Player(glm::vec3 StartPosition) // Will also take the type of player (asthetic)
 	: Entity({StartPosition, {0, 0, 0}, {0.05, 0.05, 0.05}}, EANCHOR::CENTER)
 {
@@ -93,41 +95,37 @@ void Player::Update()
 	Vector3 ForwardDirection = Camera::GetInstance()->GetCameraForwardVector();
 	ForwardDirection.Y = 0;
 	ForwardDirection.Normalize();
-	Vector3 ForwardMovement = ForwardDirection * (Dir.Y * static_cast<float>(Time::dTimeDelta) * MoveSpeed);
+	const Vector3 ForwardMovement = ForwardDirection * (Dir.Y * static_cast<float>(Time::dTimeDelta) * MoveSpeed);
 
-	ForwardDirection = rotateY(ForwardDirection.ToGLM(), static_cast<float>((90.0f / 180) * M_PI));
+	const Vector3 RightDirection = Camera::GetInstance()->GetCameraRightVector();
+	const Vector3 RightMovement = RightDirection * (Dir.X * static_cast<float>(Time::dTimeDelta) * MoveSpeed);
 
-	Vector3 RightMovement = ForwardDirection * (Dir.X * static_cast<float>(Time::dTimeDelta) * MoveSpeed);
+	// TODO: Normalise movement direction ie so diagonal is not faster 
 
-	if (Dir.X != 0 || Dir.Y != 0)
+	if (Dir.X != 0.0f || Dir.Y != 0.0f)
 	{
 		Vector3 DirectionVec = ForwardMovement + RightMovement;
-		Vector3 target = Transform.Position + DirectionVec;
-		// TODO: Add vector/rotator math
-		glm::mat4 Rotation = orientation(DirectionVec.ToGLM(), {0, 1, 0}); //  glm::lookAt(Transform.Position, target, { 0, 1, 0 });
-		// TODO: vec4 * mat4
-		Rotator NewRotation = Vector3(glm::vec4(1, 1, 1, 0) * Rotation);
-		NewRotation.Pitch = glm::degrees(NewRotation.Pitch);
-		NewRotation.Yaw = glm::degrees(NewRotation.Yaw);
-		NewRotation.Roll = glm::degrees(NewRotation.Roll);
-		NewRotation -= 45;
-		// TODO: Change to quaternions
-		if (NewRotation.Pitch < 0)
-		{
-			NewRotation.Pitch = 360 + NewRotation.Pitch;
-		}
-		if (NewRotation.Yaw < 0)
-		{
-			NewRotation.Yaw = 360 + NewRotation.Yaw;
-		}
-		if (NewRotation.Roll < 0)
-		{
-			NewRotation.Roll = 360 + NewRotation.Roll;
-		}
+		DirectionVec.Normalize();
+		// TODO: Test pitch
+		// DirectionVec.Y = -1.0f;
+		DirectionVec.Normalize();
+		std::cout << DirectionVec.ToString() << std::endl;
+		Rotator NewRotation = DirectionVec.ToRotator();
+		
+		// NewRotation.Roll = 15.0f;
 		std::cout << NewRotation.ToString() << std::endl;
-		NewRotation.Pitch = 0;
-		NewRotation.Roll = 0;
+		// NewRotation.Pitch = 0;
+		// NewRotation.Roll = 0;
+
+		// TODO: Add lerp
 		Transform.Rotation = NewRotation; //  glm::rotateY(glm::vec3(0, 1, 0), angle);
+
+		// std::shared_ptr<Scene> Scene = SceneManager::GetInstance()->GetCurrentScene();
+		// std::shared_ptr<Level> FoundLevel = std::dynamic_pointer_cast<Level>(Scene);
+		// if (FoundLevel)
+		// {
+		// 	FoundLevel->CubeButton->Transform.Rotation = Transform.Rotation;
+		// }
 
 		/*if (Dir.y < 0)
 		{			
@@ -180,8 +178,10 @@ void Player::Update()
 }
 
 void Player::DrawEntity()
-{
+{	
 	Entity::DrawEntity();
+
+	// TODO: If adding mesh to this player, render error occurs related to animated model
 	AnimatedModel->SetPosition(Transform.Position);
 	AnimatedModel->SetScale(Transform.Scale);
 	AnimatedModel->SetRotation(Transform.Rotation);

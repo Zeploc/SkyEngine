@@ -1,2 +1,0 @@
-Give option to attach programs on other windows without repeating whole process?
-Change UI bindings (buttons) to be able to use member functions

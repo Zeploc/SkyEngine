@@ -38,7 +38,7 @@ public:
 
 	void Update();
 
-	void SetMVP(FTransform _transform, GLuint program);
+	void SetMVP(FTransform InTransform, GLuint program);
 
 	void SwitchProjection(EProjectionMode InMode);
 
