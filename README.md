@@ -66,6 +66,7 @@ A custom project for developing an engine and editor for experience purposes.
 - Gizmo always draw infront
 - Scale
 - Shader/Material editor
+- Editor Settings
 ## Production Cycle
 - Seperate editor and project (Seperate dlls)
 - Ability to inject game into editor when playing
@@ -88,6 +89,9 @@ A custom project for developing an engine and editor for experience purposes.
 - Setup placeholder for DirectX and Vulkan
 - Generic shader system to use across rendering pipeline
 ## Component system
+- Base Component
+- Mesh Component
+- Skeletal Mesh Component
 ## Math Libraries
 - Transform operations
 - Quaternion operations
