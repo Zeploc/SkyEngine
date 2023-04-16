@@ -54,7 +54,7 @@ A custom project for developing an engine and editor for experience purposes.
 
 # Further Development
 
-- Rename > SkyEngine?
+- Split up projects within solution into: Engine, Editor and Game
 
 ## Editor
 - Content Panel
@@ -67,11 +67,20 @@ A custom project for developing an engine and editor for experience purposes.
 - Scale
 - Shader/Material editor
 - Editor Settings
+## Examples
+- Reflection
+- Refraction
+- Standard Lighting
+- Basic Shapes
+- Custom Model
+- Animated Model
+- 2D Sprites + View
 ## Production Cycle
 - Seperate editor and project (Seperate dlls)
 - Ability to inject game into editor when playing
 - Differientate development vs shipping
 ## Systems
+- Custom Pointer Wrapper type
 - Log system
 - Delegates create multiple parameters with templates
 - Create macro to define custom multi param delegates
@@ -88,6 +97,8 @@ A custom project for developing an engine and editor for experience purposes.
 - Split open gl to one rendering pipeline
 - Setup placeholder for DirectX and Vulkan
 - Generic shader system to use across rendering pipeline
+- No Depth test render order
+- Live shader compiling/editing
 ## Component system
 - Base Component
 - Mesh Component

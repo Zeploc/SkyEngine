@@ -11,6 +11,7 @@ class EditorScene : public Scene
 {
 public:
 	EditorScene(std::string sSceneName);
+	void AddSampleEntities();
 
 	void UpdateSelectedEntity();
 
@@ -30,4 +31,5 @@ public:
 	std::shared_ptr<TransformationWidget> LocationBox;
 	
 	float CurrentFocusDistance = 7.0f;
+	Vector2 PreviousMousePosition;
 };

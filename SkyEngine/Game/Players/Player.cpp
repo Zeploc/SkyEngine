@@ -17,12 +17,10 @@
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
-#include <glm/gtx/string_cast.hpp>
 
-#define _USE_MATH_DEFINES
-#include <math.h>
+// #define _USE_MATH_DEFINES
+// #include <math.h>
 
-#include "Engine/Entity/Button3DEntity.h"
 
 Player::Player(glm::vec3 StartPosition) // Will also take the type of player (asthetic)
 	: Entity({StartPosition, {0, 0, 0}, {0.05, 0.05, 0.05}}, EANCHOR::CENTER)

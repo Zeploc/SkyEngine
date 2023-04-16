@@ -328,6 +328,7 @@ bool Utils::CheckHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Ent
 	{
 		return false;
 	}
+	// TODO: Move to mesh class + Account for rotation
 	if (EntityCheck->EntityMesh->m_eShape == EMESHTYPE::SPHERE && std::dynamic_pointer_cast<Sphere>(EntityCheck->EntityMesh))
 	{
 		return CheckSphereEntityHit(RayStart, RayDirection, EntityCheck, HitPos);
@@ -340,7 +341,7 @@ bool Utils::CheckHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Ent
 	{
 		return CheckPlaneEntityHit(RayStart, RayDirection, EntityCheck, HitPos);
 	}
-	//LogManager::GetInstance()->DisplayLogMessage("Could not find mesh type to perform ray hit check!");
+	// LogManager::GetInstance()->DisplayLogMessage("Could not find mesh type to perform ray hit check!");
 	return false;
 }
 

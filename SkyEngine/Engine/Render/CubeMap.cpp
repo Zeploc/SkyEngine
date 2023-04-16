@@ -5,13 +5,10 @@
 // Local Includes //
 
 // Engine Includes //
-#include "Camera.h"
 #include "Shader.h"
 
 // OpenGL Includes //
 #include <SOIL.h>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include "Engine/Camera/CameraManager.h"
 
@@ -182,7 +179,7 @@ void CubeMap::Render(FTransform Newtransform)
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
-	glUniform1i(glGetUniformLocation(Shader::Programs["CubeMapProgram"], "cubeSampler"), 0);
+	glUniform1i(glGetUniformLocation(program, "cubeSampler"), 0);
 
 	CameraManager::GetInstance()->SetMVP(Newtransform, program);
 

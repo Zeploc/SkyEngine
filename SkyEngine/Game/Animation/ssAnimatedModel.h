@@ -24,6 +24,7 @@
 #include <map>
 #include <vector>
 
+#include "Engine/Math/Matrix.h"
 #include "Engine/Render/Lighting.h"
 #include "Engine/System/Math_3d.h"
 

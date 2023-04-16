@@ -21,6 +21,8 @@ enum class EProjectionMode
 	Perspective
 };
 
+struct FTransform;
+
 class CameraManager
 {
 public:

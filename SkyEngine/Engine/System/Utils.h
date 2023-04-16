@@ -13,8 +13,6 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include "EnumTypes.h"
-#include "Engine/Entity/2DParticleSystem.h"
-#include "Engine/Entity/2DParticleSystem.h"
 
 // Forward Declarations //
 class Entity;

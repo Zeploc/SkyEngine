@@ -9,7 +9,8 @@
 #include <memory>
 
 // Engine Includes //
-#include "ModelObject.h"
+
+class ModelObject;
 
 class Model : public Mesh
 {

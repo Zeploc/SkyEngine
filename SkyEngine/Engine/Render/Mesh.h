@@ -2,9 +2,6 @@
 
 #pragma once
 
-#ifndef _MESH_H
-#define _MESH_H
-
 // OpenGL Library Includes //
 #include <glew.h>
 #include <glm/glm.hpp>
@@ -41,15 +38,10 @@ public:
 
 	virtual void Rebind()
 	{
-	} // Will replace if texture exists
-	virtual void SetLit(bool _bIsLit, bool _bIsInitialState = false)
-	{
-		bIsLit = _bIsLit;
-		if (_bIsInitialState)
-		{
-			MeshInitialState.bIsLit = bIsLit;
-		}
 	}
+	// Will replace if texture exists
+	virtual void SetLit(bool _bIsLit, bool _bIsInitialState = false);
+
 	bool IsLit() { return bIsLit; }
 
 	void SetReflection(bool _bReflecting, bool _bIsInitialState = false);
@@ -86,7 +78,7 @@ public:
 	//std::shared_ptr<Entity> EntityRef;
 protected:
 	std::shared_ptr<CollisionBounds> MeshCollisionBounds;
-	bool bIsLit = false;
+	bool bIsLit = true;
 	bool bReflection = false;
 	bool bFog = true;
 
@@ -112,4 +104,3 @@ protected:
 	InitialState MeshInitialState;
 };
 
-#endif

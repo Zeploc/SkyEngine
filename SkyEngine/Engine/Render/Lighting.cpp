@@ -13,8 +13,8 @@
 glm::vec3 Lighting::m_v3LightPosition = {5, 10, 5};
 glm::vec3 Lighting::m_v3SunDirection = {15, 2, 25};
 glm::vec4 Lighting::m_v4FogColour = {0.5f, 0.5f, 0.5f, 1.0f};
-float Lighting::StartFogDistance = 20.0f;
-float Lighting::EndFogDistance = 35.0f;
+float Lighting::StartFogDistance = 30.0f;
+float Lighting::EndFogDistance = 45.0f;
 
 /************************************************************
 #--Description--#:  Constructor function

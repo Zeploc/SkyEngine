@@ -89,11 +89,6 @@ void Triangle::Rebind()
 
 void Triangle::Render(FTransform Newtransform)
 {
-	glUseProgram(program);
-	glFrontFace(GL_CW);
-	glUniform1i(glGetUniformLocation(program, "bIsTex"), bHasTexture);
-	Lighting::PassLightingToShader(program, LightProperties, Newtransform);
-	glDisable(GL_BLEND);
 	Mesh::Render(Newtransform);
 }
 

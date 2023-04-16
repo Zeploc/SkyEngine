@@ -12,6 +12,7 @@
 
 // Engine Includes //
 #include "Engine/Input/Input.h"
+#include "Engine/Math/FTransform.h"
 #include "Engine/Math/Matrix.h"
 #include "Engine/Math/Vector.h"
 

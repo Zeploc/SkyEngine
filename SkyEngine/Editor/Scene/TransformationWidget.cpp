@@ -10,6 +10,7 @@
 
 TransformationWidget::TransformationWidget(FTransform _Transform, Scene* OwningScene) : Entity(_Transform, EANCHOR::CENTER)
 {
+	// TODO: Convert to components
 	XMoveTransform = std::make_shared<Entity>(Entity(_Transform, EANCHOR::CENTER));
 	YMoveTransform = std::make_shared<Entity>(Entity(_Transform, EANCHOR::CENTER));
 	ZMoveTransform = std::make_shared<Entity>(Entity(_Transform, EANCHOR::CENTER));
@@ -23,6 +24,10 @@ TransformationWidget::TransformationWidget(FTransform _Transform, Scene* OwningS
 	XMoveTransformMesh->StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
 	ZMoveTransformMesh->StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
 	YMoveTransformMesh->StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
+
+	XMoveTransformMesh->SetLit(false, true);
+	ZMoveTransformMesh->SetLit(false, true);
+	YMoveTransformMesh->SetLit(false, true);
 
 	XMoveTransform->AddMesh(XMoveTransformMesh);
 	YMoveTransform->AddMesh(YMoveTransformMesh);
@@ -52,6 +57,8 @@ void TransformationWidget::Update()
 		Vector3 rayStart = CameraManager::GetInstance()->GetCameraPosition();
 		Vector3 rayDirection = CameraManager::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos);
 		Vector3 HitPos;
+		// TODO: Change hover to lighter colour
+		// TODO: Allow for multi axis (use plane/triangle check between axis)
 		if (Utils::CheckHit(rayStart, rayDirection, XMoveTransform, HitPos))
 		{
 			XHit = true;

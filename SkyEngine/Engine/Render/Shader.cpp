@@ -12,6 +12,7 @@
 // Engine Includes //
 #include "ModelObject.h"
 #include "ShaderLoader.h"
+#include "Engine/System/LogManager.h"
 
 // Local Includes //
 

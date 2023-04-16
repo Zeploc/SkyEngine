@@ -343,16 +343,9 @@ void Plane::Render(FTransform Newtransform)
 	if (bHasTexture)
 	{
 		glUseProgram(program);
-		glEnable(GL_BLEND);
-		GLint UVCoordsLoc = glGetUniformLocation(Shader::Programs["BaseProgram"], "uTexCoordOffset");
+		GLint UVCoordsLoc = glGetUniformLocation(program, "uTexCoordOffset");
 		glUniform2f(UVCoordsLoc, AnimationInfo.v2CurrentFrame.x * AnimationInfo.v2FrameSize.x, AnimationInfo.v2CurrentFrame.y * AnimationInfo.v2FrameSize.y);
 	}
-	else
-	{
-		glUseProgram(program);
-		glDisable(GL_BLEND);
-	}
-	glFrontFace(GL_CW);
 	Mesh::Render(Newtransform);
 }
 

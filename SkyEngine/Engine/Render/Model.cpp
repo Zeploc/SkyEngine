@@ -10,6 +10,8 @@
 #include <map>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "ModelObject.h"
+
 /************************************************************
 #--Description--#:  Constructor function
 #--Author--#: 		Alex Coultas
@@ -24,7 +26,8 @@ Model::Model(glm::vec4 _Colour, const char* ModelSource)
 	Colour = _Colour;
 	TextureSource = ModelSource;
 	bHasTexture = true;
-	program = Shader::Programs["ModelProgram"];
+	// NOTE: Not currently used when drawing this model
+	program = Shader::Programs["BaseProgram"];//Shader::Programs["ModelProgram"];// 
 	//m_iIndicies = 36;
 	BindModel();
 	m_eShape = EMESHTYPE::MODEL;
@@ -77,6 +80,7 @@ void Model::Rebind()
 void Model::SetLit(bool _bIsLit)
 {
 	Mesh::SetLit(_bIsLit);
+	// TODO: Not currently used properly
 	if (bIsLit)
 	{
 		program = Shader::Programs["ModelProgramLit"];
@@ -97,6 +101,7 @@ void Model::SetLit(bool _bIsLit)
 ************************************************************/
 void Model::Render(FTransform Newtransform)
 {
+	// TODO: Review/improve
 	glFrontFace(GL_CCW);
 	if (bIsLit)
 	{

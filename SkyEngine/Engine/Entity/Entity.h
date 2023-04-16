@@ -15,9 +15,9 @@
 #include "Engine/Math/FTransform.h"
 #include "Engine/Math/Matrix.h"
 #include "Engine/Math/Rotator.h"
+#include "Engine/Render/Mesh.h"
 #include "Engine/System/EnumTypes.h"
 
-class Mesh;
 
 class Entity : public std::enable_shared_from_this<Entity>
 {

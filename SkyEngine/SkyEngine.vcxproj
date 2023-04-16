@@ -3868,6 +3868,8 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Engine\Render\ModelMesh.cpp" />
+    <ClCompile Include="Engine\Render\ModelObject.cpp" />
     <ClCompile Include="Game\Animation\ssAnimatedModel.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -4314,6 +4316,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\README.md" />
+    <Content Include="Resources\Models\theDude.DAE" />
+    <Content Include="Resources\Models\theDude.png" />
+    <Content Include="Resources\Models\theDude_idle_run.DAE" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

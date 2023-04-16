@@ -197,21 +197,21 @@ void Sphere::Rebind()
 void Sphere::SetLit(bool _bIsLit)
 {
 	Mesh::SetLit(_bIsLit);
-	if (bIsLit)
-	{
-		program = Shader::Programs["LitTextureprogram"];
-	}
-	else
-	{
-		if (bHasTexture)
-		{
-			program = Shader::Programs["BaseProgram"];
-		}
-		else
-		{
-			program = Shader::Programs["BaseProgram"];
-		}
-	}
+	// if (bIsLit)
+	// {
+	// 	program = Shader::Programs["LitTextureprogram"];
+	// }
+	// else
+	// {
+	// 	if (bHasTexture)
+	// 	{
+	// 		program = Shader::Programs["BaseProgram"];
+	// 	}
+	// 	else
+	// 	{
+	// 		program = Shader::Programs["BaseProgram"];
+	// 	}
+	// }
 }
 
 /************************************************************
@@ -222,35 +222,6 @@ void Sphere::SetLit(bool _bIsLit)
 ************************************************************/
 void Sphere::Render(FTransform Newtransform)
 {
-	if (bIsLit)
-	{
-		glUseProgram(program);
-		glUniform1i(glGetUniformLocation(program, "bIsTex"), bHasTexture);
-		Lighting::PassLightingToShader(program, LightProperties, Newtransform);
-	}
-	else
-	{
-		glUseProgram(program);
-	}
-	glFrontFace(GL_CW);
-	/*if (bHasTexture)
-	{		
-
-		glEnable(GL_BLEND);
-	}
-	else
-	{
-		if (bIsLit)
-		{
-			glUseProgram(program);
-			glUniform1i(glGetUniformLocation(program, "bIsTex"), bHasTexture);
-		}
-		else
-		{
-			glUseProgram(program);
-		}
-		glDisable(GL_BLEND);
-	}*/
 	Mesh::Render(Newtransform);
 }
 

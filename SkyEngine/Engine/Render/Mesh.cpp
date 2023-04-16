@@ -46,12 +46,24 @@ Mesh::~Mesh()
 ************************************************************/
 void Mesh::Render(FTransform Newtransform)
 {
+	glUseProgram(program);
+	glFrontFace(GL_CW);	
+	if (bHasTexture)
+	{
+		glEnable(GL_BLEND);
+	}
+	else
+	{
+		glDisable(GL_BLEND);
+	}
+	
 	FTransform ScaledUpTransform = Newtransform;
 	ScaledUpTransform.Scale *= 1.1f;
 	// ABOVE CALLED FROM DERIVED RENDER
 	glUniform1i(glGetUniformLocation(program, "bIsTex"), bHasTexture);
 	glUniform1i(glGetUniformLocation(program, "bFog"), bFog);
 	glUniform1i(glGetUniformLocation(program, "bIsLit"), bIsLit);
+	// TODO: Only pass in information if bIsLit? Is info still used elsewhere/otherwise
 	Lighting::PassLightingToShader(program, LightProperties, Newtransform);
 	if (bHasTexture)
 	{
@@ -169,6 +181,15 @@ void Mesh::Reset()
 	if (MeshCollisionBounds)
 	{
 		MeshCollisionBounds->Reset();
+	}
+}
+
+void Mesh::SetLit(bool _bIsLit, bool _bIsInitialState)
+{
+	bIsLit = _bIsLit;
+	if (_bIsInitialState)
+	{
+		MeshInitialState.bIsLit = bIsLit;
 	}
 }
 

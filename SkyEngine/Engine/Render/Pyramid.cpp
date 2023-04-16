@@ -135,17 +135,6 @@ void Pyramid::Rebind()
 ************************************************************/
 void Pyramid::Render(FTransform Newtransform)
 {
-	if (bHasTexture)
-	{
-		glUseProgram(program);
-		glEnable(GL_BLEND);
-	}
-	else
-	{
-		glUseProgram(program);
-		glDisable(GL_BLEND);
-	}
-	glFrontFace(GL_CW);
 	Mesh::Render(Newtransform);
 }
 

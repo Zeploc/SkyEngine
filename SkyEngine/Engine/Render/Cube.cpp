@@ -193,24 +193,13 @@ void Cube::Rebind()
 	BindCube();
 }
 
-void Cube::SetLit(bool _bIsLit)
+void Cube::SetLit(bool _bIsLit, bool _bIsInitialState)
 {
-	Mesh::SetLit(_bIsLit);
-	if (bIsLit)
-	{
-		program = Shader::Programs["LitTextureprogram"];
-	}
-	else
-	{
-		if (bHasTexture)
-		{
-			program = Shader::Programs["BaseProgram"];
-		}
-		else
-		{
-			program = Shader::Programs["BaseProgram"];
-		}
-	}
+	Mesh::SetLit(_bIsLit, _bIsInitialState);
+	// if (bIsLit)
+	// {
+	// 	program = Shader::Programs["LitTextureprogram"];
+	// }
 }
 
 /************************************************************
@@ -221,18 +210,6 @@ void Cube::SetLit(bool _bIsLit)
 ************************************************************/
 void Cube::Render(FTransform Newtransform)
 {
-	glUseProgram(program);
-	glFrontFace(GL_CW);
-	glUniform1i(glGetUniformLocation(program, "bIsTex"), bHasTexture);
-	Lighting::PassLightingToShader(program, LightProperties, Newtransform);
-	if (bHasTexture)
-	{
-		glEnable(GL_BLEND);
-	}
-	else
-	{
-		//glDisable(GL_BLEND);
-	}
 	Mesh::Render(Newtransform);
 }
 

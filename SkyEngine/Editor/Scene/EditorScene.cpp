@@ -16,6 +16,10 @@
 #include "Editor/Windows/EditorWindowManager.h"
 #include "Engine/Render/Cube.h"
 #include "Engine/Render/GeometryObject.h"
+#include "Engine/Render/Model.h"
+#include "Engine/Render/ParticleSystem.h"
+#include "Engine/Render/Plane.h"
+#include "Engine/Render/Pyramid.h"
 #include "Engine/Render/Sphere.h"
 
 EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
@@ -42,15 +46,11 @@ EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 	std::shared_ptr<UIText> TipText(new UIText({CameraManager::GetInstance()->SCR_WIDTH - 20, 15.0f}, 0, {0.3, 0.3, 0.3, 1.0f}, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 22, EANCHOR::TOP_RIGHT));
 	AddUIElement(TipText);
 	
+	Lighting::m_v3LightPosition = {5, 7, 5};
+	Lighting::m_v3SunDirection = {3, -1, 5};
+	
 	CameraManager::GetInstance()->SetCameraPos({-10, 10, 0});
 	CameraManager::GetInstance()->SetCameraForwardVector({0, -0.5, 1.0f});	
-
-	LocationBox = std::make_shared<TransformationWidget>(TransformationWidget(FTransform{{0.0f, 0.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, this));
-	//std::shared_ptr<Cube> BoxMesh = std::make_shared<Cube>(Cube(0.4f, 0.4f, 0.4f, { 0.9, 0.1, 0.1, 1.0f }));
-	//LocationBox->AddMesh(BoxMesh);
-	AddEntity(LocationBox, true);
-	LocationBox->SetVisible(false, true);
-	LocationBox->bRayCast = false;
 	
 	EditorWindow* NewWindow = new EditorWindow("Outliner", EditorWindowManager::MainWindow, glm::vec2(300, 400), glm::vec2(0, 0));
 	NewWindow->SetBackColour(glm::vec3(0.2, 0.6, 0.8));
@@ -61,12 +61,90 @@ EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 	//EditorWindow* ExternalWindow = new EditorWindow("External Test", nullptr, glm::vec2(500, 300), glm::vec2(100, 100));
 	//ExternalWindow->SetBackColour(glm::vec3(0.6, 0.3, 0.4));
 
+	AddSampleEntities();
+
+	// Last added to appear on top
+	// TODO: Depth test order to always be infront of loaded level objects
+	LocationBox = std::make_shared<TransformationWidget>(TransformationWidget(FTransform{{0.0f, 0.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, this));
+	//std::shared_ptr<Cube> BoxMesh = std::make_shared<Cube>(Cube(0.4f, 0.4f, 0.4f, { 0.9, 0.1, 0.1, 1.0f }));
+	//LocationBox->AddMesh(BoxMesh);
+	AddEntity(LocationBox, true);
+	LocationBox->SetVisible(false, true);
+	LocationBox->bRayCast = false;
+}
+
+void EditorScene::AddSampleEntities()
+{
 	std::shared_ptr<Entity> SphereRaycastTest = std::make_shared<Entity>(Entity(FTransform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	std::shared_ptr<Sphere> SphereMesh = std::make_shared<Sphere>(Sphere(2.0f, 2.0f, 2.0f, {0.1f, 0.8f, 0.3f, 1.0f}, "Resources/Images/SmoothCliff_1024.jpg"));
-	SphereRaycastTest->AddMesh(SphereMesh);
+	std::shared_ptr<Sphere> SphereRaycastMesh = std::make_shared<Sphere>(Sphere(2.0f, 2.0f, 2.0f, {0.1f, 0.8f, 0.3f, 1.0f}, "Resources/Images/SmoothCliff_1024.jpg"));
+	SphereRaycastTest->AddMesh(SphereRaycastMesh);
+	SphereRaycastMesh->SetLit(true);
+	SphereRaycastMesh->SetReflection(true);
+	AddEntity(SphereRaycastTest, true);
+	
+	std::shared_ptr<Entity> FloorEntity = std::make_shared<Entity>(Entity({{0, 0, 0}, {90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	//glm::vec3 Points[4] = { {-10, 10, 1}, {10, 10, -1 }, { 10, -10, 0 }, { -10, -10, -3 } };
+	std::shared_ptr<Plane> FloorPlanMesh = std::make_shared<Plane>(Plane(50, 50, {0.5f, 0.5f, 0.5f, 1.0f}));
+	FloorEntity->AddMesh(FloorPlanMesh);
+	FloorPlanMesh->bCullFace = false;
+	AddEntity(FloorEntity, true);
+
+	std::shared_ptr<ParticleSystem> ParticleBoy = std::make_shared<ParticleSystem>(ParticleSystem({{20, 8, 10}, {0, 0, 0}, {1, 1, 1}}));
+	ParticleBoy->SetPositionRange({-5, 5}, {0, 0}, {-5, 5});
+	ParticleBoy->SetDirectionRange({0, 0}, {-1, -1}, {0, 0});
+	ParticleBoy->SetFalloffTime({100.0f, 100.0f});
+	ParticleBoy->SetFalloffRange({30, 40});
+	ParticleBoy->SetSpeedRange({1, 10});
+	ParticleBoy->ParticleSize = 0.8f;
+	ParticleBoy->Init(1000, "Resources/Images/raindrop.png");
+	AddEntity(ParticleBoy, true);
+	
+	std::shared_ptr<ParticleSystem> ParticleBoy2 = std::make_shared<ParticleSystem>(ParticleSystem({{20, 1, 20}, {0, 0, 0}, {1, 1, 1}}));
+	ParticleBoy2->Init(1000, "Resources/Images/Box.png");
+	AddEntity(ParticleBoy2, true);
+	
+	std::shared_ptr<Entity> GeomEnt = std::make_shared<Entity>(Entity({{10, 6, 10}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	std::shared_ptr<GeometryObject> GeomShape = std::make_shared<GeometryObject>(GeometryObject({0.0, 0.9f, 0.3f, 1.0f}));
+	GeomEnt->AddMesh(GeomShape);
+	AddEntity(GeomEnt, true);
+	
+	std::shared_ptr<Entity> ModelEntity = std::make_shared<Entity>(Entity(FTransform{{10.0f, 2.0f, 0.0f}, {-90, -90, 0}, {0.2f, 0.2f, 0.2f}}, EANCHOR::CENTER));
+	std::shared_ptr<Model> ModelEntityMesh = std::make_shared<Model>(Model({1.0f, 1.0f, 1.0f, 1.0f}, "Resources/Models/theDude.DAE"));
+	ModelEntity->AddMesh(ModelEntityMesh);
+	ModelEntityMesh->SetLit(true);
+	ModelEntityMesh->SetReflection(true);
+	AddEntity(ModelEntity, true);
+	
+	std::shared_ptr<Entity> CubeEnty = std::make_shared<Entity>(Entity(FTransform{{10.0f, 4.0f, 4.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	std::shared_ptr<Cube> CubyMesh = std::make_shared<Cube>(Cube(3.0f, 3.0f, 3.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
+	CubeEnty->AddMesh(CubyMesh);
+	CubyMesh->SetLit(true);
+	CubyMesh->SetReflection(true);
+	AddEntity(CubeEnty, true);
+	
+	std::shared_ptr<Entity> PyramidEntity = std::make_shared<Entity>(Entity(FTransform{{10.0f, 4.0f, 8.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	std::shared_ptr<Pyramid> PyramidMesh = std::make_shared<Pyramid>(Pyramid(3.0f, 3.0f, 3.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
+	PyramidEntity->AddMesh(PyramidMesh);
+	// PyramidMesh->SetLit(false, true);
+	// TODO: Identify and fix pyramid lighting
+	PyramidMesh->SetLit(true);
+	PyramidMesh->SetReflection(true);
+	AddEntity(PyramidEntity, true);
+	
+	std::shared_ptr<Entity> SphereEntity = std::make_shared<Entity>(Entity(FTransform{{10.0f, 4.0f, 12.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	std::shared_ptr<Sphere> SphereMesh = std::make_shared<Sphere>(Sphere(2.0f, 2.0f, 2.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
+	SphereEntity->AddMesh(SphereMesh);
 	SphereMesh->SetLit(true);
 	SphereMesh->SetReflection(true);
-	AddEntity(SphereRaycastTest, true);
+	AddEntity(SphereEntity, true);
+	
+	std::shared_ptr<Entity> PlaneEntity = std::make_shared<Entity>(Entity(FTransform{{10.0f, 4.0f, 16.0f}, {-90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	std::shared_ptr<Plane> PlaneMesh = std::make_shared<Plane>(Plane(2.0f, 2.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
+	PlaneEntity->AddMesh(PlaneMesh);
+	PlaneMesh->SetLit(true);
+	PlaneMesh->SetReflection(true);
+	PlaneMesh->bCullFace = false;
+	AddEntity(PlaneEntity, true);
 }
 
 void EditorScene::UpdateSelectedEntity()
@@ -84,6 +162,7 @@ void EditorScene::UpdateSelectedEntity()
 			{
 				continue; // Don't check for raycast
 			}
+			// TODO: Fix check hit for plane and pryamid
 			if (Utils::CheckHit(rayStart, RayDirection, Ent, HitPos))
 			{
 				HitEntities.push_back(Ent);
@@ -121,11 +200,13 @@ void EditorScene::UpdateSelectedEntity()
 void EditorScene::Update()
 {
 	Scene::Update();
-	
 	LevelNameText->sText = SceneName;
 	CameraManager* CameraInstance = CameraManager::GetInstance();
+
+	// TODO: Change from moving back to center to instead get offset (loop mouse when edge of screen?
+	Vector2 CenterScreen(static_cast<double>(CameraInstance->SCR_WIDTH) * 0.5, static_cast<double>(CameraInstance->SCR_HEIGHT) * 0.5);	
 	
-	Vector2 Offset = Input::GetInstance()->MousePos - Vector2(static_cast<float>(CameraInstance->SCR_WIDTH) * 0.5f, static_cast<float>(CameraInstance->SCR_HEIGHT) * 0.5f);
+	Vector2 Offset = Input::GetInstance()->MousePos - CenterScreen;
 	Offset *= CameraInstance->MouseSensitivity;
 	
 	const bool bAltDown = Input::GetInstance()->MouseALT == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseALT == Input::INPUT_HOLD;
@@ -143,6 +224,7 @@ void EditorScene::Update()
 	}
 	if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_FIRST_PRESS && !bAltDown && !bShiftDown)
 	{
+		PreviousMousePosition = Input::GetInstance()->MousePos;
 		Input::GetInstance()->SetCursorVisible(false);
 		CameraInstance->EnableSpectatorControls(true);
 	}
@@ -150,6 +232,7 @@ void EditorScene::Update()
 	{
 		Input::GetInstance()->SetCursorVisible(true);
 		CameraInstance->EnableSpectatorControls(false);
+		// glfwSetCursorPos(CameraInstance->MainWindow, PreviousMousePosition.X, PreviousMousePosition.Y);
 	}
 	if (Input::GetInstance()->KeyState[GLFW_KEY_G] == Input::INPUT_FIRST_PRESS)
 	{
@@ -174,54 +257,77 @@ void EditorScene::Update()
 	// TODO: Change spectator to use left click while alt down
 	if (bAltDown)
 	{
-		if (LocationBox && LocationBox->SelectedEntity)
+		const Vector3 CameraPivotPoint = CameraInstance->GetCameraPosition() + CameraInstance->GetCameraForwardVector() * CurrentFocusDistance;
+		if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_HOLD)
 		{
-			if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_HOLD)
+			if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_PRESS)
 			{
-				if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_PRESS)
-				{
-					Input::GetInstance()->SetCursorVisible(false);
-				}
-				else
-				{
-					Vector3 NewCameraForwardVector = CameraInstance->GetCameraForwardVector();
-					NewCameraForwardVector.Rotate(-Offset.X, Vector3(0,1,0));
-					NewCameraForwardVector.Rotate(-Offset.Y, CameraInstance->GetCameraRightVector());
-					CameraInstance->SetCameraForwardVector(NewCameraForwardVector);
-				}
-				glfwSetCursorPos(CameraInstance->MainWindow, static_cast<double>(CameraInstance->SCR_WIDTH) * 0.5, static_cast<double>(CameraInstance->SCR_HEIGHT) * 0.5);
+				Input::GetInstance()->SetCursorVisible(false);
 			}
-			else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_HOLD)
+			else
 			{
-				if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_FIRST_PRESS)
-				{
-					Input::GetInstance()->SetCursorVisible(false);
-				}
-				else
-				{
-					CurrentFocusDistance += Offset.Y * .3f;
-				}
-				glfwSetCursorPos(CameraInstance->MainWindow, static_cast<double>(CameraInstance->SCR_WIDTH) * 0.5, static_cast<double>(CameraInstance->SCR_HEIGHT) * 0.5);
+				Vector3 NewCameraForwardVector = CameraInstance->GetCameraForwardVector();
+				NewCameraForwardVector.Rotate(-Offset.X, Vector3(0,1,0));
+				NewCameraForwardVector.Rotate(-Offset.Y, CameraInstance->GetCameraRightVector());
+				CameraInstance->SetCameraForwardVector(NewCameraForwardVector);
 			}
-			CameraInstance->SetCameraPos(LocationBox->SelectedEntity->Transform.Position + (-CameraInstance->GetCameraForwardVector() * CurrentFocusDistance));
-			
+			PreviousMousePosition = Input::GetInstance()->MousePos;
+			glfwSetCursorPos(CameraInstance->MainWindow, CenterScreen.X, CenterScreen.Y);
 		}
+		else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_HOLD)
+		{
+			if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_FIRST_PRESS)
+			{
+				Input::GetInstance()->SetCursorVisible(false);
+			}
+			else
+			{
+				CurrentFocusDistance += Offset.Y * .3f;
+			}
+			PreviousMousePosition = Input::GetInstance()->MousePos;
+			glfwSetCursorPos(CameraInstance->MainWindow, CenterScreen.X, CenterScreen.Y);
+		}
+		else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_RELEASE)
+		{
+			Input::GetInstance()->SetCursorVisible(true);
+		}
+		CameraInstance->SetCameraPos(CameraPivotPoint + (-CameraInstance->GetCameraForwardVector() * CurrentFocusDistance));
 	}
 	// TODO: Refine release of alt
 	else if (Input::GetInstance()->KeyState[GLFW_KEY_LEFT_ALT] == Input::INPUT_FIRST_RELEASE)
 	{
 		Input::GetInstance()->SetCursorVisible(true);
+		// glfwSetCursorPos(CameraInstance->MainWindow, PreviousMousePosition.X, PreviousMousePosition.Y);
 	}
-	// TODO: Left click position to Pan
 	if (bShiftDown)
 	{
-		if (LocationBox && LocationBox->SelectedEntity)
+		if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_HOLD)
 		{
-			CameraInstance->SetCameraPos(LocationBox->SelectedEntity->Transform.Position + (-CameraInstance->GetCameraForwardVector() * CurrentFocusDistance));
+			if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_PRESS)
+			{
+				Input::GetInstance()->SetCursorVisible(false);
+			}
+			else
+			{
+				Vector3 NewCameraPosition = CameraInstance->GetCameraPosition();
+				NewCameraPosition += -CameraInstance->GetCameraRightVector() * Offset.X * CameraInstance->MouseSensitivity;
+				NewCameraPosition += CameraInstance->GetCameraUpVector() * Offset.Y * CameraInstance->MouseSensitivity;
+				CameraInstance->SetCameraPos(NewCameraPosition);
+			}
+			PreviousMousePosition = Input::GetInstance()->MousePos;
+			glfwSetCursorPos(CameraInstance->MainWindow, CenterScreen.X, CenterScreen.Y);
+		}
+		else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_RELEASE)
+		{
+			Input::GetInstance()->SetCursorVisible(true);
+			// glfwSetCursorPos(CameraInstance->MainWindow, PreviousMousePosition.X, PreviousMousePosition.Y);
 		}
 	}
 
-	UpdateSelectedEntity();
+	if (!bAltDown && !bShiftDown)
+	{
+		UpdateSelectedEntity();
+	}
 	
 	// TODO: Change later?
 	EditorWindowManager::UpdateWindows();

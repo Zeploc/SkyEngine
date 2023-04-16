@@ -18,8 +18,8 @@ uniform int bFog = 0;
 uniform vec4 vFogColor;
 uniform vec3 cameraPos;
 
-uniform float StartFog = 5.0f;
-uniform float EndFog = 10.0f;
+uniform float StartFog = 10.0f;
+uniform float EndFog = 20.0f;
 
 // ### LIGHT ###
 uniform int ToonShade = 0;
@@ -49,8 +49,7 @@ void main(void)
 	if (bFog == 1)
 	{
 		SetFogColour();
-	}
-	
+	}	
 } 
 
 void SetFogColour()
@@ -73,10 +72,8 @@ void SetLighting()
 	float spec = pow(max(dot(negViewDir , reflectDir), 0.0f), shininess);
 	vec3 specular = lightSpecStr * spec * lightColor;
 
-
 	vec3 ambient = ambientStr * ambientColor;
-	
-	
+		
 	// Diffuse Coloring
 	float diffuseStr = max(dot(norm, -lightDir) * 2, 0.0f);
 	vec3 diffuse = diffuseStr * lightColor;
