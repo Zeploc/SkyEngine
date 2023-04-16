@@ -52,6 +52,22 @@ A custom project for developing an engine and editor for experience purposes.
 - Basic 3D Collision
 - Collision Bounds
 
+# Next Steps
+- Rendering crash on runtime entity creation
+- Complete Saving/Loading entities from save
+- Move Hit check to mesh instead of entity and account for rotation
+- Fix/Complete translating entities in editor
+- Rotate + Scale entities in editor
+- Change editor movement/look to state based input + Improve "Spectator" controls structure
+- Switch Vector to template and add: Vector2, Vector3 with types int, float and double
+- Complete basic Vector/ Rotator and Quat math functions
+- Add Transform math functions
+- Link up cubemap
+- Multi Param Delegates
+- Switch input to delegates
+- Pyramid Lighting fix
+- Play editor level
+
 # Further Development
 
 - Split up projects within solution into: Engine, Editor and Game
@@ -74,7 +90,12 @@ A custom project for developing an engine and editor for experience purposes.
 - Basic Shapes
 - Custom Model
 - Animated Model
+- 3D Collision
+- 3D Particles
+- Cubemap
 - 2D Sprites + View
+- 2D Collision
+- 2D Particles
 ## Production Cycle
 - Seperate editor and project (Seperate dlls)
 - Ability to inject game into editor when playing

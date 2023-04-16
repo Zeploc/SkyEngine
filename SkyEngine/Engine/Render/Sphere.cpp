@@ -194,9 +194,9 @@ void Sphere::Rebind()
 	BindSphere();
 }
 
-void Sphere::SetLit(bool _bIsLit)
+void Sphere::SetLit(bool _bIsLit, bool _bIsInitialState)
 {
-	Mesh::SetLit(_bIsLit);
+	Mesh::SetLit(_bIsLit, _bIsInitialState);
 	// if (bIsLit)
 	// {
 	// 	program = Shader::Programs["LitTextureprogram"];

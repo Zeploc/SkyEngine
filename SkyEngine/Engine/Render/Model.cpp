@@ -103,9 +103,9 @@ void Model::Render(FTransform Newtransform)
 {
 	// TODO: Review/improve
 	glFrontFace(GL_CCW);
+	glUseProgram(program);
 	if (bIsLit)
 	{
-		glUseProgram(program);
 		Lighting::PassLightingToShader(program, LightProperties, Newtransform);
 	}
 	glUniform4fv(glGetUniformLocation(program, "fragcolor"), 1, value_ptr(Colour));

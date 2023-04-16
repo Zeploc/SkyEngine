@@ -72,10 +72,14 @@ void Mesh::Render(FTransform Newtransform)
 	}
 	if (bReflection)
 	{
-		glActiveTexture(GL_TEXTURE1);
-		glUniform1i(glGetUniformLocation(program, "skybox"), 1);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, Utils::WorldCubeMap->EntityMesh->texture);
-		glUniform1f(glGetUniformLocation(program, "ReflectionSize"), 0.1f);
+		// TODO: Make cubemap and test
+		if (Utils::WorldCubeMap)
+		{
+			glActiveTexture(GL_TEXTURE1);
+			glUniform1i(glGetUniformLocation(program, "skybox"), 1);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, Utils::WorldCubeMap->EntityMesh->texture);
+			glUniform1f(glGetUniformLocation(program, "ReflectionSize"), 0.1f);
+		}
 	}
 	if (bFog)
 	{

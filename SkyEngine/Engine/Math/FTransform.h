@@ -19,7 +19,6 @@ struct FTransform
 
 	friend std::istream& operator>>(std::istream& is, FTransform& transform)
 	{
-		// TODO:
 		float x, y, z, roll, yaw, pitch, sx, sy, sz;
 		std::string PosX, PosY, PosZ, Roll, Pitch, Yaw, ScaleX, ScaleY, ScaleZ;
 		is >> PosX >> PosY >> PosZ >> Pitch >> Yaw >> Roll >> ScaleX >> ScaleY >> ScaleZ;

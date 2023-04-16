@@ -69,7 +69,7 @@ float TickRate = 60.0f;
 double dPrevTime = 0.0f;
 
 
-glm::vec2 MainWindowSize = glm::vec2(1280, 720);
+glm::vec2 MainWindowSize = glm::vec2(1920, 1080);
 glm::vec3 SkyColour = glm::vec3(0.3f, 0.8f, 0.9f);
 
 /************************************************************
@@ -89,7 +89,25 @@ int main(int argc, char **argv)
 
 	Lighting::m_v4FogColour = glm::vec4(SkyColour, 1.0f);
 
-	GLFWwindow* window = glfwCreateWindow(MainWindowSize.x, MainWindowSize.y, "Editor", NULL, NULL);
+	GLFWmonitor* FullscreenMonitor = nullptr;
+	Vector2 WindowPosition;
+	bool bFullScreen = false;
+	if (bFullScreen)
+	{
+		int* MonitorCount = new int;
+		GLFWmonitor** GlfwGetMonitors = glfwGetMonitors(MonitorCount);
+		FullscreenMonitor = GlfwGetMonitors[0];
+	}
+	else
+	{
+		int MonitorCount;
+		GLFWmonitor** GlfwGetMonitors = glfwGetMonitors(&MonitorCount);
+		int x, y, width, height;
+		glfwGetMonitorWorkarea(GlfwGetMonitors[0], &x, &y, &width, &height);
+		WindowPosition.X = width / 2.0f - MainWindowSize.x / 2.0f;
+		WindowPosition.Y = height / 2.0f - MainWindowSize.y / 2.0f;
+	}
+	GLFWwindow* window = glfwCreateWindow(MainWindowSize.x, MainWindowSize.y, "Editor", FullscreenMonitor, NULL);
 	EditorWindowManager::SetMainWindow(window);
 	if (window == NULL)
 	{
@@ -104,7 +122,8 @@ int main(int argc, char **argv)
 	CAM->MainWindow = window;
 
 	glViewport(0, 0, MainWindowSize.x, MainWindowSize.y);
-
+	glfwSetWindowPos(window, WindowPosition.X, WindowPosition.Y);
+	
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	glfwSetErrorCallback(glfw_onError);
