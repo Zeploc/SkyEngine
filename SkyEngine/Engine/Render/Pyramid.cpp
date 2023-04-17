@@ -24,8 +24,6 @@ Pyramid::Pyramid(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour)
 	BindPyramid();
 	m_eShape = EMESHTYPE::PYRAMID;
 	program = Shader::Programs["BaseProgram"];
-
-	SetInitialStates();
 }
 
 /************************************************************
@@ -47,8 +45,6 @@ Pyramid::Pyramid(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, c
 	BindPyramid();
 	m_eShape = EMESHTYPE::PYRAMID;
 	program = Shader::Programs["BaseProgram"];
-
-	SetInitialStates();
 }
 
 /************************************************************

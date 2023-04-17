@@ -32,19 +32,17 @@ public:
 	{
 	}
 
-	virtual void SetInitialStates();
-
 	virtual void Reset();
 
 	virtual void Rebind()
 	{
 	}
 	// Will replace if texture exists
-	virtual void SetLit(bool _bIsLit, bool _bIsInitialState = false);
+	virtual void SetLit(bool _bIsLit);
 
 	bool IsLit() { return bIsLit; }
 
-	void SetReflection(bool _bReflecting, bool _bIsInitialState = false);
+	void SetReflection(bool _bReflecting);
 
 	bool IsReflecting() { return bReflection; }
 
@@ -81,26 +79,5 @@ protected:
 	bool bIsLit = true;
 	bool bReflection = false;
 	bool bFog = true;
-
-	struct InitialState
-	{
-		EMESHTYPE m_eShape;
-		float m_fWidth;
-		float m_fHeight;
-		float m_fDepth;
-		glm::vec4 Colour;
-		GLuint program;
-		GLuint vao;
-		GLuint texture;
-		const char* TextureSource;
-		glm::vec4 UVCoords;
-		bool bHasTexture;
-		int m_iIndicies;
-		LightInfo LightProperties;
-		bool bIsLit;
-		bool bReflection;
-	};
-
-	InitialState MeshInitialState;
 };
 

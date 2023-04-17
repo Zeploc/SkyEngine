@@ -10,6 +10,7 @@
 #include "Engine/Camera/CameraManager.h"
 #include "Engine/Entity/CollisionBounds.h"
 #include "Engine/Entity/Entity.h"
+#include "Engine/System/LogManager.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -19,10 +20,7 @@
 ************************************************************/
 Mesh::Mesh()
 {
-	MeshInitialState.bIsLit = bIsLit;
-	MeshInitialState.bReflection = bReflection;
-	MeshInitialState.m_fDepth = m_fDepth;
-	MeshInitialState.LightProperties = LightProperties;
+
 }
 
 /************************************************************
@@ -33,9 +31,12 @@ Mesh::Mesh()
 ************************************************************/
 Mesh::~Mesh()
 {
+	// TODO: Look into further cleanup
 	glDeleteVertexArrays(1, &vao);
 	//if (MeshCollisionBounds) delete MeshCollisionBounds;
 	MeshCollisionBounds = nullptr;
+	// TODO: Give id (component system?) and link to parent
+	LogManager::GetInstance()->DisplayLogMessage("Mesh was destroyed!");	
 }
 
 /************************************************************
@@ -145,41 +146,37 @@ void Mesh::Render(FTransform Newtransform)
 
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// TODO: Check all errors and log any
+	// LogManager::GetInstance()->DisplayLogMessage("Open GL Error: " + std::to_string(glGetError(0)));
+	// glCheckError_
 }
 
-void Mesh::SetInitialStates()
-{
-	MeshInitialState.m_eShape = m_eShape;
-	MeshInitialState.m_fWidth = m_fWidth;
-	MeshInitialState.m_fHeight = m_fHeight;
-	MeshInitialState.m_fDepth = m_fDepth;
-	MeshInitialState.Colour = Colour;
-	MeshInitialState.program = program;
-	MeshInitialState.vao = vao;
-	MeshInitialState.texture = texture;
-	MeshInitialState.TextureSource = TextureSource;
-	MeshInitialState.UVCoords = UVCoords;
-	MeshInitialState.bHasTexture = bHasTexture;
-	MeshInitialState.m_iIndicies = m_iIndicies;
-}
+// GLenum glCheckError_(const char *file, int line)
+// {
+// 	GLenum errorCode;
+// 	while ((errorCode = glGetError()) != GL_NO_ERROR)
+// 	{
+// 		std::string error;
+// 		switch (errorCode)
+// 		{
+// 			case GL_INVALID_ENUM:                  error = "INVALID_ENUM"; break;
+// 			case GL_INVALID_VALUE:                 error = "INVALID_VALUE"; break;
+// 			case GL_INVALID_OPERATION:             error = "INVALID_OPERATION"; break;
+// 			case GL_STACK_OVERFLOW:                error = "STACK_OVERFLOW"; break;
+// 			case GL_STACK_UNDERFLOW:               error = "STACK_UNDERFLOW"; break;
+// 			case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
+// 			case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
+// 		}
+// 		std::cout << error << " | " << file << " (" << line << ")" << std::endl;
+// 	}
+// 	return errorCode;
+// }
+// #define glCheckError() glCheckError_(__FILE__, __LINE__) 
 
 void Mesh::Reset()
 {
 	// Reset all mesh variables
-	m_eShape = MeshInitialState.m_eShape;
-	m_fWidth = MeshInitialState.m_fWidth;
-	m_fDepth = MeshInitialState.m_fDepth;
-	Colour = MeshInitialState.Colour;
-	program = MeshInitialState.program;
-	vao = MeshInitialState.vao;
-	texture = MeshInitialState.texture;
-	TextureSource = MeshInitialState.TextureSource;
-	UVCoords = MeshInitialState.UVCoords;
-	bHasTexture = MeshInitialState.bHasTexture;
-	m_iIndicies = MeshInitialState.m_iIndicies;
-	LightProperties = MeshInitialState.LightProperties;
-	bIsLit = MeshInitialState.bIsLit;
-	bReflection = MeshInitialState.bReflection;
 	Rebind();
 	// Reset Mesh Collision Bounds
 	if (MeshCollisionBounds)
@@ -188,37 +185,29 @@ void Mesh::Reset()
 	}
 }
 
-void Mesh::SetLit(bool _bIsLit, bool _bIsInitialState)
+void Mesh::SetLit(bool _bIsLit)
 {
 	bIsLit = _bIsLit;
-	if (_bIsInitialState)
-	{
-		MeshInitialState.bIsLit = bIsLit;
-	}
 }
 
-void Mesh::SetReflection(bool _bReflecting, bool _bIsInitialState)
+void Mesh::SetReflection(bool _bReflecting)
 {
 	bReflection = _bReflecting;
-	if (bReflection)
-	{
-		program = Shader::Programs["ReflectionProgram"];
-	}
-	else
-	{
-		if (bIsLit)
-		{
-			program = Shader::Programs["LitTextureprogram"];
-		}
-		else
-		{
-			program = Shader::Programs["BaseProgram"];
-		}
-	}
-	if (_bIsInitialState)
-	{
-		MeshInitialState.bReflection = bReflection;
-	}
+	// if (bReflection)
+	// {
+	// 	program = Shader::Programs["ReflectionProgram"];
+	// }
+	// else
+	// {
+	// 	if (bIsLit)
+	// 	{
+	// 		program = Shader::Programs["LitTextureprogram"];
+	// 	}
+	// 	else
+	// 	{
+	// 		program = Shader::Programs["BaseProgram"];
+	// 	}
+	// }
 }
 
 void Mesh::AddCollisionBounds(float fWidth, float fHeight, float fDepth, std::shared_ptr<Entity> _EntityRef)

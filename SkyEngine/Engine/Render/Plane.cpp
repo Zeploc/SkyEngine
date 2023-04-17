@@ -32,8 +32,6 @@ Plane::Plane(float fWidth, float fHeight, glm::vec4 _Colour)
 	BindPlane();
 	m_eShape = EMESHTYPE::PLANE;
 	program = Shader::Programs["BaseProgram"];
-
-	SetInitialStates();
 }
 
 /************************************************************
@@ -60,8 +58,6 @@ Plane::Plane(float fWidth, float fHeight, glm::vec4 _Colour, const char* _Textur
 	BindPlane();
 	m_eShape = EMESHTYPE::PLANE;
 	program = Shader::Programs["BaseProgram"];
-
-	SetInitialStates();
 }
 
 /************************************************************
@@ -102,8 +98,6 @@ Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char* _Text
 
 	BindPlane();
 	program = Shader::Programs["BaseProgram"];
-
-	SetInitialStates();
 }
 
 /************************************************************
@@ -149,8 +143,6 @@ Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char* _Text
 	UVCoords = glm::vec4(0, hSize, 0, vSize);
 	BindPlane();
 	program = Shader::Programs["BaseProgram"];
-
-	SetInitialStates();
 }
 
 Plane::Plane(glm::vec3 _Points[4], glm::vec4 _Colour)
@@ -169,8 +161,6 @@ Plane::Plane(glm::vec3 _Points[4], glm::vec4 _Colour)
 	BindPlane();
 	m_eShape = EMESHTYPE::PLANE;
 	program = Shader::Programs["BaseProgram"];
-
-	SetInitialStates();
 }
 
 Plane::Plane(glm::vec3 _Points[4], glm::vec4 _Colour, const char* _TextureSource, glm::vec4 _UVCoords)
@@ -190,8 +180,6 @@ Plane::Plane(glm::vec3 _Points[4], glm::vec4 _Colour, const char* _TextureSource
 	BindPlane();
 	m_eShape = EMESHTYPE::PLANE;
 	program = Shader::Programs["BaseProgram"];
-
-	SetInitialStates();
 }
 
 Plane::Plane(glm::vec3 _Points[4], glm::vec4 _Colour, const char* _TextureSource, int iCount, bool bHorizontal)
@@ -232,8 +220,6 @@ Plane::Plane(glm::vec3 _Points[4], glm::vec4 _Colour, const char* _TextureSource
 	UVCoords = glm::vec4(0, hSize, 0, vSize);
 	BindPlane();
 	program = Shader::Programs["BaseProgram"];
-
-	SetInitialStates();
 }
 
 /************************************************************
@@ -301,16 +287,6 @@ void Plane::BindPlane()
 void Plane::Rebind()
 {
 	BindPlane();
-}
-
-void Plane::SetInitialStates()
-{
-	Mesh::SetInitialStates();
-	// Set plane specific states
-	m_PlaneInitialState.AnimationInfo = AnimationInfo;
-	m_PlaneInitialState.m_dFPSCounter = m_dFPSCounter;
-	m_PlaneInitialState.m_fFrameCheck = m_fFrameCheck;
-	m_PlaneInitialState.CollisionBox = CollisionBox;
 }
 
 void Plane::Reset()

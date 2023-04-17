@@ -28,8 +28,6 @@ public:
 
 	void Rebind() override;
 
-	void SetInitialStates() override;
-
 	void Reset() override;
 
 	void Render(FTransform Newtransform) override;

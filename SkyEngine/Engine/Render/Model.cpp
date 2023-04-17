@@ -31,8 +31,6 @@ Model::Model(glm::vec4 _Colour, const char* ModelSource)
 	//m_iIndicies = 36;
 	BindModel();
 	m_eShape = EMESHTYPE::MODEL;
-
-	SetInitialStates();
 }
 
 /************************************************************

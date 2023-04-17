@@ -9,6 +9,7 @@
 
 #include "Engine/Camera/CameraManager.h"
 #include "Engine/Input/Input.h"
+#include "Engine/UI/UIText.h"
 #include "Engine/UI/UIButton.h"
 
 #include "TransformationWidget.h"
@@ -40,7 +41,7 @@ EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 	OpenBtn->BindPress(this, &EditorScene::OpenFile);
 	AddUIElement(OpenBtn);
 
-	LevelNameText = std::make_shared<UIText>(UIText({CameraManager::GetInstance()->SCR_WIDTH - 410, CameraManager::GetInstance()->SCR_HEIGHT - 15.0f}, 0, {0.3, 0.3, 0.3, 1.0f}, "Level Name", "Resources/Fonts/Roboto-Regular.ttf", 20, EANCHOR::BOTTOM_RIGHT));
+	LevelNameText = std::make_shared<UIText>(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 410, CameraManager::GetInstance()->SCR_HEIGHT - 15.0f), 0.0f, glm::vec4(0.3, 0.3, 0.3, 1.0f), "Level Name", "Resources/Fonts/Roboto-Regular.ttf", 20, EANCHOR::BOTTOM_RIGHT);
 	AddUIElement(LevelNameText);
 
 	std::shared_ptr<UIText> TipText(new UIText({CameraManager::GetInstance()->SCR_WIDTH - 20, 15.0f}, 0, {0.3, 0.3, 0.3, 1.0f}, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 22, EANCHOR::TOP_RIGHT));
@@ -62,34 +63,39 @@ EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 	//ExternalWindow->SetBackColour(glm::vec3(0.6, 0.3, 0.4));
 
 	AddSampleEntities();
+	
+	std::shared_ptr<Entity> CubeEnty(new Entity(FTransform{{10.0f, 4.0f, 4.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	std::shared_ptr<Cube> CubyMesh(new Cube(3.0f, 3.0f, 3.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
+	CubeEnty->AddMesh(CubyMesh);
+	CubyMesh->SetLit(true);
+	// CubyMesh->SetReflection(true);
+	AddEntity(CubeEnty, true);
 
 	// Last added to appear on top
 	// TODO: Depth test order to always be infront of loaded level objects
-	LocationBox = std::make_shared<TransformationWidget>(TransformationWidget(FTransform{{0.0f, 0.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, this));
-	//std::shared_ptr<Cube> BoxMesh = std::make_shared<Cube>(Cube(0.4f, 0.4f, 0.4f, { 0.9, 0.1, 0.1, 1.0f }));
-	//LocationBox->AddMesh(BoxMesh);
+	LocationBox = std::make_shared<TransformationWidget>(FTransform{{0.0f, 0.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, this);
 	AddEntity(LocationBox, true);
-	LocationBox->SetVisible(false, true);
+	LocationBox->SetVisible(false);
 	LocationBox->bRayCast = false;
 }
 
 void EditorScene::AddSampleEntities()
 {
-	std::shared_ptr<Entity> SphereRaycastTest = std::make_shared<Entity>(Entity(FTransform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	std::shared_ptr<Sphere> SphereRaycastMesh = std::make_shared<Sphere>(Sphere(2.0f, 2.0f, 2.0f, {0.1f, 0.8f, 0.3f, 1.0f}, "Resources/Images/SmoothCliff_1024.jpg"));
+	std::shared_ptr<Entity> SphereRaycastTest(new Entity(FTransform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	std::shared_ptr<Sphere> SphereRaycastMesh(new Sphere(2.0f, 2.0f, 2.0f, {0.1f, 0.8f, 0.3f, 1.0f}, "Resources/Images/SmoothCliff_1024.jpg"));
 	SphereRaycastTest->AddMesh(SphereRaycastMesh);
 	SphereRaycastMesh->SetLit(true);
 	SphereRaycastMesh->SetReflection(true);
 	AddEntity(SphereRaycastTest, true);
 	
-	std::shared_ptr<Entity> FloorEntity = std::make_shared<Entity>(Entity({{0, 0, 0}, {90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	std::shared_ptr<Entity> FloorEntity(new Entity({{0, 0, 0}, {90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
 	//glm::vec3 Points[4] = { {-10, 10, 1}, {10, 10, -1 }, { 10, -10, 0 }, { -10, -10, -3 } };
-	std::shared_ptr<Plane> FloorPlanMesh = std::make_shared<Plane>(Plane(50, 50, {0.5f, 0.5f, 0.5f, 1.0f}));
+	std::shared_ptr<Plane> FloorPlanMesh(new Plane(50, 50, {0.5f, 0.5f, 0.5f, 1.0f}));
 	FloorEntity->AddMesh(FloorPlanMesh);
 	FloorPlanMesh->bCullFace = false;
 	AddEntity(FloorEntity, true);
 
-	std::shared_ptr<ParticleSystem> ParticleBoy = std::make_shared<ParticleSystem>(ParticleSystem({{20, 8, 10}, {0, 0, 0}, {1, 1, 1}}));
+	std::shared_ptr<ParticleSystem> ParticleBoy(new ParticleSystem({{20, 8, 10}, {0, 0, 0}, {1, 1, 1}}));
 	ParticleBoy->SetPositionRange({-5, 5}, {0, 0}, {-5, 5});
 	ParticleBoy->SetDirectionRange({0, 0}, {-1, -1}, {0, 0});
 	ParticleBoy->SetFalloffTime({100.0f, 100.0f});
@@ -99,31 +105,31 @@ void EditorScene::AddSampleEntities()
 	ParticleBoy->Init(1000, "Resources/Images/raindrop.png");
 	AddEntity(ParticleBoy, true);
 	
-	std::shared_ptr<ParticleSystem> ParticleBoy2 = std::make_shared<ParticleSystem>(ParticleSystem({{20, 1, 20}, {0, 0, 0}, {1, 1, 1}}));
+	std::shared_ptr<ParticleSystem> ParticleBoy2(new ParticleSystem({{20, 1, 20}, {0, 0, 0}, {1, 1, 1}}));
 	ParticleBoy2->Init(1000, "Resources/Images/Box.png");
 	AddEntity(ParticleBoy2, true);
 	
-	std::shared_ptr<Entity> GeomEnt = std::make_shared<Entity>(Entity({{10, 6, 10}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	std::shared_ptr<GeometryObject> GeomShape = std::make_shared<GeometryObject>(GeometryObject({0.0, 0.9f, 0.3f, 1.0f}));
+	std::shared_ptr<Entity> GeomEnt(new Entity({{10, 6, 10}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	std::shared_ptr<GeometryObject> GeomShape(new GeometryObject({0.0, 0.9f, 0.3f, 1.0f}));
 	GeomEnt->AddMesh(GeomShape);
 	AddEntity(GeomEnt, true);
 	
-	std::shared_ptr<Entity> ModelEntity = std::make_shared<Entity>(Entity(FTransform{{10.0f, 2.0f, 0.0f}, {-90, -90, 0}, {0.2f, 0.2f, 0.2f}}, EANCHOR::CENTER));
-	std::shared_ptr<Model> ModelEntityMesh = std::make_shared<Model>(Model({1.0f, 1.0f, 1.0f, 1.0f}, "Resources/Models/theDude.DAE"));
+	std::shared_ptr<Entity> ModelEntity(new Entity(FTransform{{10.0f, 2.0f, 0.0f}, {-90, -90, 0}, {0.2f, 0.2f, 0.2f}}, EANCHOR::CENTER));
+	std::shared_ptr<Model> ModelEntityMesh(new Model({1.0f, 1.0f, 1.0f, 1.0f}, "Resources/Models/theDude.DAE"));
 	ModelEntity->AddMesh(ModelEntityMesh);
 	ModelEntityMesh->SetLit(true);
 	ModelEntityMesh->SetReflection(true);
 	AddEntity(ModelEntity, true);
 	
-	std::shared_ptr<Entity> CubeEnty = std::make_shared<Entity>(Entity(FTransform{{10.0f, 4.0f, 4.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	std::shared_ptr<Cube> CubyMesh = std::make_shared<Cube>(Cube(3.0f, 3.0f, 3.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
+	std::shared_ptr<Entity> CubeEnty(new Entity(FTransform{{10.0f, 4.0f, 4.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	std::shared_ptr<Cube> CubyMesh(new Cube(3.0f, 3.0f, 3.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
 	CubeEnty->AddMesh(CubyMesh);
 	CubyMesh->SetLit(true);
 	CubyMesh->SetReflection(true);
 	AddEntity(CubeEnty, true);
 	
-	std::shared_ptr<Entity> PyramidEntity = std::make_shared<Entity>(Entity(FTransform{{10.0f, 4.0f, 8.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	std::shared_ptr<Pyramid> PyramidMesh = std::make_shared<Pyramid>(Pyramid(3.0f, 3.0f, 3.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
+	std::shared_ptr<Entity> PyramidEntity(new Entity(FTransform{{10.0f, 4.0f, 8.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	std::shared_ptr<Pyramid> PyramidMesh(new Pyramid(3.0f, 3.0f, 3.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
 	PyramidEntity->AddMesh(PyramidMesh);
 	// PyramidMesh->SetLit(false, true);
 	// TODO: Identify and fix pyramid lighting
@@ -131,15 +137,15 @@ void EditorScene::AddSampleEntities()
 	PyramidMesh->SetReflection(true);
 	AddEntity(PyramidEntity, true);
 	
-	std::shared_ptr<Entity> SphereEntity = std::make_shared<Entity>(Entity(FTransform{{10.0f, 4.0f, 12.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	std::shared_ptr<Sphere> SphereMesh = std::make_shared<Sphere>(Sphere(2.0f, 2.0f, 2.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
+	std::shared_ptr<Entity> SphereEntity(new Entity(FTransform{{10.0f, 4.0f, 12.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	std::shared_ptr<Sphere> SphereMesh(new Sphere(2.0f, 2.0f, 2.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
 	SphereEntity->AddMesh(SphereMesh);
 	SphereMesh->SetLit(true);
 	SphereMesh->SetReflection(true);
 	AddEntity(SphereEntity, true);
 	
-	std::shared_ptr<Entity> PlaneEntity = std::make_shared<Entity>(Entity(FTransform{{10.0f, 4.0f, 16.0f}, {-90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	std::shared_ptr<Plane> PlaneMesh = std::make_shared<Plane>(Plane(2.0f, 2.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
+	std::shared_ptr<Entity> PlaneEntity(new Entity(FTransform{{10.0f, 4.0f, 16.0f}, {-90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	std::shared_ptr<Plane> PlaneMesh(new Plane(2.0f, 2.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
 	PlaneEntity->AddMesh(PlaneMesh);
 	PlaneMesh->SetLit(true);
 	PlaneMesh->SetReflection(true);
@@ -198,7 +204,7 @@ void EditorScene::UpdateSelectedEntity()
 }
 
 void EditorScene::Update()
-{
+{	
 	Scene::Update();
 	LevelNameText->sText = SceneName;
 	CameraManager* CameraInstance = CameraManager::GetInstance();
@@ -370,7 +376,7 @@ void EditorScene::OpenFile()
 
 	std::vector<std::string> Lines;
 	std::string line;
-	std::ifstream OpenedFile("Resources/Levels/Example.slvl"); //SceneName + ".slvl"); //relative);// 
+	std::ifstream OpenedFile(SceneName == "Example" ? "Resources/Levels/Demo Scene.slvl" : "Resources/Levels/Example.slvl"); //SceneName + ".slvl"); //relative);// 
 	if (OpenedFile.is_open())
 	{
 		while (getline(OpenedFile, line))
@@ -388,59 +394,64 @@ void EditorScene::LoadLevel(std::vector<std::string> Lines)
 	std::string LevelName = Lines[0].substr(1, Lines[0].length() - 2);
 	SceneName = LevelName;
 
-	/*std::vector< std::shared_ptr<Entity>> EntitiesCopy = Entities;
+	std::vector< std::shared_ptr<Entity>> EntitiesCopy = Entities;
 	for (std::shared_ptr<Entity> CurrentEnt : EntitiesCopy)
 	{
+		if (CurrentEnt == LocationBox
+			|| CurrentEnt == LocationBox->XMoveTransform
+			|| CurrentEnt == LocationBox->YMoveTransform
+			|| CurrentEnt == LocationBox->ZMoveTransform)
+		{
+			continue;
+		}
+		
 		DestroyEntity(CurrentEnt);
-	}*/
-	// std::shared_ptr<Entity> GeomPlatform = std::make_shared<Entity>(Entity({{10, 5, 13}, {90, 0, 0}, {1, 1, 1}}, Utils::CENTER));
-	// std::shared_ptr<Plane> GoemPlatformMesh = std::make_shared<Plane>(Plane(1, 1, {0.4f, 0.5f, 0.7f, 1.0f}));
-	// GeomPlatform->AddMesh(GoemPlatformMesh);
-	// GoemPlatformMesh->SetLit(true, true);
-	// GoemPlatformMesh->LightProperties.fAmbientStrength = 1.0f;
-	// GoemPlatformMesh->bCullFace = false;
-	// AddEntity(GeomPlatform);//, true);
-	
-	// std::shared_ptr<ParticleSystem> ParticleBoy = std::make_shared<ParticleSystem>(ParticleSystem({{0, 20, 0}, {0, 0, 0}, {1, 1, 1}}));
-	// ParticleBoy->SetPositionRange({-110, 110}, {0, 0}, {-110, 110});
-	// ParticleBoy->SetDirectionRange({0, 0}, {-1, -1}, {0, 0});
-	// ParticleBoy->SetFalloffTime({100.0f, 100.0f});
-	// ParticleBoy->SetFalloffRange({30, 40});
-	// ParticleBoy->SetSpeedRange({10, 30});
-	// ParticleBoy->ParticleSize = 0.8f;
-	// ParticleBoy->Init(1000, "Resources/Images/raindrop.png");
-	// AddEntity(ParticleBoy, true);
+	}
 
 	for (std::string Line : Lines)
 	{
 		std::string IsEntity = Line.substr(0, 8);
 		if (IsEntity == "[Entity]")
 		{
-			std::shared_ptr<Entity> CubeEnty = std::make_shared<Entity>(Entity(Line));
-			//std::shared_ptr<Sphere> SphereMesh = std::make_shared<Sphere>(Sphere(2.0f, 2.0f, 2.0f, { 0.1f, 0.8f, 0.3f, 1.0f }));
-			std::shared_ptr<Cube> CubyMesh = std::make_shared<Cube>(Cube(3.0f, 3.0f, 3.0f, {0.7f, 0.4f, 0.3f, 1.0f}));
+			std::shared_ptr<Entity> CubeEnty(new Entity(Line));
+			//std::shared_ptr<Sphere> SphereMesh(Sphere(2.0f, 2.0f, 2.0f, { 0.1f, 0.8f, 0.3f, 1.0f }));
+			std::shared_ptr<Cube> CubyMesh(new Cube(3.0f, 3.0f, 3.0f, {0.7f, 0.4f, 0.3f, 1.0f}));
 
 			// TODO: Fix cube crashing on add/load
-			//CubeEnty->AddMesh(CubyMesh);
+			CubeEnty->AddMesh(CubyMesh);
+			CubeEnty->SetInitialEntity(true);
 			
-			std::shared_ptr<GeometryObject> GeomShape = std::make_shared<GeometryObject>(GeometryObject({0.0, 0.9f, 0.3f, 1.0f}));
-			CubeEnty->AddMesh(GeomShape);
+			//std::shared_ptr<GeometryObject> GeomShape(new GeometryObject({0.0, 0.9f, 0.3f, 1.0f}));
+			//CubeEnty->AddMesh(GeomShape);
 			
 			//CubyMesh->SetLit(true);
 			AddEntity(CubeEnty, true);
 		}
 	}
+	DestroyEntity(LocationBox);
+	DestroyEntity(LocationBox->XMoveTransform);
+	DestroyEntity(LocationBox->YMoveTransform);
+	DestroyEntity(LocationBox->ZMoveTransform);
+	AddEntity(LocationBox);
+	AddEntity(LocationBox->XMoveTransform);
+	AddEntity(LocationBox->YMoveTransform);
+	AddEntity(LocationBox->ZMoveTransform);
+	LocationBox->SetActive(true);
+	LocationBox->XMoveTransform->SetActive(true);
+	LocationBox->YMoveTransform->SetActive(true);
+	LocationBox->ZMoveTransform->SetActive(true);
+	
 
-	// TODO: Test broken vertex shader applying to spawned objects
-	// std::shared_ptr<ParticleSystem> ParticleBoy = std::make_shared<ParticleSystem>(ParticleSystem({{0, 20, 0}, {0, 0, 0}, {1, 1, 1}}));
-	// ParticleBoy->SetPositionRange({-110, 110}, {0, 0}, {-110, 110});
-	// ParticleBoy->SetDirectionRange({0, 0}, {-1, -1}, {0, 0});
-	// ParticleBoy->SetFalloffTime({100.0f, 100.0f});
-	// ParticleBoy->SetFalloffRange({30, 40});
-	// ParticleBoy->SetSpeedRange({10, 30});
-	// ParticleBoy->ParticleSize = 0.8f;
-	// ParticleBoy->Init(1000, "Resources/Images/raindrop.png");
-	// AddEntity(ParticleBoy, true);
+	// for (auto it = Entities.begin(); it != Entities.end(); ++it)
+	// {
+	// 	if (*it == LocationBox || *it == nullptr)
+	// 	{
+	// 		// Remove from entities list
+	// 		Entities.erase(it);
+	// 		break;
+	// 	}
+	// }
+	// Entities.push_back(LocationBox);
 }
 
 void EditorScene::SaveCurrentLevel()
@@ -450,6 +461,14 @@ void EditorScene::SaveCurrentLevel()
 	myfile << "[" + SceneName + "]\n";
 	for (std::shared_ptr<Entity> Entity : Entities)
 	{
+		if (Entity == LocationBox
+			|| Entity == LocationBox->XMoveTransform
+			|| Entity == LocationBox->YMoveTransform
+			|| Entity == LocationBox->ZMoveTransform)
+		{
+			continue;
+		}
+		
 		myfile << Entity->EntityToString() << "\n";
 	}
 

@@ -47,11 +47,11 @@ public:
 
 	virtual void Reset();
 
-	virtual void SetActive(bool _bIsActive, bool _bIsInitialState = false);
+	virtual void SetActive(bool _bIsActive);
 
 	bool IsActive() const { return bActive; }
 
-	virtual void SetVisible(bool _bIsVisible, bool _bIsInitialState = false);
+	virtual void SetVisible(bool _bIsVisible);
 
 	bool IsVisible() const { return bVisible; }
 
@@ -70,6 +70,8 @@ public:
 	std::shared_ptr<Mesh> EntityMesh;
 
 	int GetEntityValue() const { return iEntityID; }
+
+	// TODO: Remove?
 	void SetInitialEntity(bool IsInitial) { bIsInitialEntity = IsInitial; }
 	bool IsInitialEntity() const { return bIsInitialEntity; }
 
@@ -90,17 +92,6 @@ protected:
 	bool bIsInitialEntity = false;
 
 	int iEntityID;
-
-	struct InitialState
-	{
-		FTransform Transform;
-		EANCHOR EntityAnchor;
-		bool bActive;
-		bool bVisible;
-		int iEntityID;
-	};
-
-	InitialState EntityInitialState;
 };
 
 #endif

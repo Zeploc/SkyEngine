@@ -19,7 +19,6 @@ TessMesh::TessMesh(float fWidth, float fHeight, glm::vec4 _Colour)
 	BindTess();
 	program = Shader::Programs["TessProgram"];
 	UVCoords = glm::vec4(0, 1, 0, 1);
-	SetInitialStates();
 }
 
 TessMesh::~TessMesh()

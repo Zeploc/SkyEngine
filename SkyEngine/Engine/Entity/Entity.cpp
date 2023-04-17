@@ -41,12 +41,6 @@ Entity::Entity(FTransform _Transform, EANCHOR _Anchor) : Transform(_Transform), 
 {
 	iEntityID = Utils::AddEntityID();
 	LogManager::GetInstance()->DisplayLogMessage("New Entity created with ID #" + std::to_string(iEntityID));
-	// Set initial States
-	EntityInitialState.bActive = bActive;
-	EntityInitialState.bVisible = bVisible;
-	EntityInitialState.EntityAnchor = EntityAnchor;
-	EntityInitialState.iEntityID = iEntityID;
-	EntityInitialState.Transform = Transform;
 }
 
 /************************************************************
@@ -58,6 +52,7 @@ Entity::Entity(FTransform _Transform, EANCHOR _Anchor) : Transform(_Transform), 
 Entity::~Entity()
 {
 	EntityMesh = nullptr;
+	LogManager::GetInstance()->DisplayLogMessage("Entity " + std::to_string(iEntityID) + " destroyed!");	
 }
 
 void Entity::AddMesh(std::shared_ptr<Mesh> _NewMesh)
@@ -163,11 +158,6 @@ void Entity::OnDestroy()
 void Entity::Reset()
 {
 	// Reset all entity variables
-	bActive = EntityInitialState.bActive;
-	bVisible = EntityInitialState.bVisible;
-	EntityAnchor = EntityInitialState.EntityAnchor;
-	iEntityID = EntityInitialState.iEntityID;
-	Transform = EntityInitialState.Transform;
 	if (body)
 	{
 		body->SetTransform(b2Vec2(Transform.Position.X, Transform.Position.Y), (Transform.Rotation.Roll / 180) * b2_pi);
@@ -183,22 +173,14 @@ void Entity::Reset()
 	}
 }
 
-void Entity::SetActive(bool _bIsActive, bool _bIsInitialState)
+void Entity::SetActive(bool _bIsActive)
 {
 	bActive = _bIsActive;
-	if (_bIsInitialState)
-	{
-		EntityInitialState.bActive = bActive;
-	}
 }
 
-void Entity::SetVisible(bool _bIsVisible, bool _bIsInitialState)
+void Entity::SetVisible(bool _bIsVisible)
 {
 	bVisible = _bIsVisible;
-	if (_bIsInitialState)
-	{
-		EntityInitialState.bVisible = bVisible;
-	}
 }
 
 std::string Entity::EntityToString()

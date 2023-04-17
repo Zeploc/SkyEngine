@@ -25,8 +25,6 @@ GeometryObject::GeometryObject(glm::vec4 _Colour)
 	BindGeometryObject();
 	m_eShape = EMESHTYPE::GEOMETRY;
 	program = Shader::Programs["GeometryShader"];
-
-	SetInitialStates();
 }
 
 /************************************************************

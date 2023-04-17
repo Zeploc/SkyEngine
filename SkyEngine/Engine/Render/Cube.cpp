@@ -26,8 +26,6 @@ Cube::Cube(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour)
 	BindCube();
 	m_eShape = EMESHTYPE::CUBE;
 	program = Shader::Programs["BaseProgram"];
-
-	SetInitialStates();
 }
 
 /************************************************************
@@ -49,8 +47,6 @@ Cube::Cube(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, const c
 	BindCube();
 	m_eShape = EMESHTYPE::CUBE;
 	program = Shader::Programs["BaseProgram"];
-
-	SetInitialStates();
 }
 
 /************************************************************
@@ -190,12 +186,13 @@ void Cube::BindCube()
 ************************************************************/
 void Cube::Rebind()
 {
-	BindCube();
+	// glDeleteVertexArrays(1, &vao);
+	// BindCube();
 }
 
-void Cube::SetLit(bool _bIsLit, bool _bIsInitialState)
+void Cube::SetLit(bool _bIsLit)
 {
-	Mesh::SetLit(_bIsLit, _bIsInitialState);
+	Mesh::SetLit(_bIsLit);
 	// if (bIsLit)
 	// {
 	// 	program = Shader::Programs["LitTextureprogram"];

@@ -27,7 +27,6 @@ FrameBuffer::FrameBuffer()
 	BindFrameBuffer();
 	m_eShape = EMESHTYPE::PLANE;
 	program = Shader::Programs["FrameBuffer"];
-	SetInitialStates();
 }
 
 /************************************************************

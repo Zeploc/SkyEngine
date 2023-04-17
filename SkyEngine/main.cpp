@@ -58,6 +58,7 @@ void Init();
 void OnExit();
 
 void glfw_onError(int error, const char * description);
+// void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
 // GLFW
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -71,6 +72,19 @@ double dPrevTime = 0.0f;
 
 glm::vec2 MainWindowSize = glm::vec2(1920, 1080);
 glm::vec3 SkyColour = glm::vec3(0.3f, 0.8f, 0.9f);
+
+void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+{
+	std::string sourceStr, typeStr, severityStr;
+	// Convert GLenum parameters to strings
+
+
+	// printf("%s:%s[%s](%d): %s\n", sourceStr, typeStr, severityStr, id, message);
+
+	fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+		   ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+			type, severity, message );
+}
 
 /************************************************************
 #--Description--#: 	The main function of the program
@@ -86,6 +100,14 @@ int main(int argc, char **argv)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+	
+	// Enable debugging context
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+	glEnable(GL_DEBUG_OUTPUT);
+	glfwSetErrorCallback(glfw_onError);
+	// TODO: Debug messages
+	// glDebugMessageCallback(MessageCallback, NULL);
+	// glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
 
 	Lighting::m_v4FogColour = glm::vec4(SkyColour, 1.0f);
 
@@ -126,9 +148,9 @@ int main(int argc, char **argv)
 	
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	glfwSetErrorCallback(glfw_onError);
 	
 	glfwSetWindowFocusCallback(window, EditorWindowManager::FocusChanged);
+
 
 	// OpenGL init
 	glewInit();

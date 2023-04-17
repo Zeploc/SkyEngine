@@ -11,12 +11,12 @@
 TransformationWidget::TransformationWidget(FTransform _Transform, Scene* OwningScene) : Entity(_Transform, EANCHOR::CENTER)
 {
 	// TODO: Convert to components
-	XMoveTransform = std::make_shared<Entity>(Entity(_Transform, EANCHOR::CENTER));
-	YMoveTransform = std::make_shared<Entity>(Entity(_Transform, EANCHOR::CENTER));
-	ZMoveTransform = std::make_shared<Entity>(Entity(_Transform, EANCHOR::CENTER));
-	std::shared_ptr<Cube> XMoveTransformMesh = std::make_shared<Cube>(Cube(1.0f, 0.1f, 0.1f, {0.9f, 0.1f, 0.1f, 1.0f}));
-	std::shared_ptr<Cube> ZMoveTransformMesh = std::make_shared<Cube>(Cube(0.1f, 0.1f, 1.0f, {0.1f, 0.9f, 0.1f, 1.0f}));
-	std::shared_ptr<Cube> YMoveTransformMesh = std::make_shared<Cube>(Cube(0.1f, 1.0f, 0.1f, {0.1f, 0.1f, 0.9f, 1.0f}));
+	XMoveTransform = std::make_shared<Entity>(_Transform, EANCHOR::CENTER);
+	YMoveTransform = std::make_shared<Entity>(_Transform, EANCHOR::CENTER);
+	ZMoveTransform = std::make_shared<Entity>(_Transform, EANCHOR::CENTER);
+	std::shared_ptr<Cube> XMoveTransformMesh(new Cube(1.0f, 0.1f, 0.1f, {0.9f, 0.1f, 0.1f, 1.0f}));
+	std::shared_ptr<Cube> ZMoveTransformMesh(new Cube(0.1f, 0.1f, 1.0f, {0.1f, 0.9f, 0.1f, 1.0f}));
+	std::shared_ptr<Cube> YMoveTransformMesh(new Cube(0.1f, 1.0f, 0.1f, {0.1f, 0.1f, 0.9f, 1.0f}));
 	XMoveTransformMesh->bDepthTest = false;
 	ZMoveTransformMesh->bDepthTest = false;
 	YMoveTransformMesh->bDepthTest = false;
@@ -25,9 +25,9 @@ TransformationWidget::TransformationWidget(FTransform _Transform, Scene* OwningS
 	ZMoveTransformMesh->StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
 	YMoveTransformMesh->StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
 
-	XMoveTransformMesh->SetLit(false, true);
-	ZMoveTransformMesh->SetLit(false, true);
-	YMoveTransformMesh->SetLit(false, true);
+	XMoveTransformMesh->SetLit(false);
+	ZMoveTransformMesh->SetLit(false);
+	YMoveTransformMesh->SetLit(false);
 
 	XMoveTransform->AddMesh(XMoveTransformMesh);
 	YMoveTransform->AddMesh(YMoveTransformMesh);

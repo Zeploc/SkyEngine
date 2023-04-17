@@ -18,7 +18,7 @@ public:
 
 	void Rebind() override;
 
-	void SetLit(bool _bIsLit, bool _bIsInitialState = false) override;
+	void SetLit(bool _bIsLit) override;
 
 	void Render(FTransform Newtransform) override;
 

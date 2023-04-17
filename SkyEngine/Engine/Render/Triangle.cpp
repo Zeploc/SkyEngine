@@ -30,8 +30,6 @@ Triangle::Triangle(glm::vec3 _Point1, glm::vec3 _Point2, glm::vec3 _Point3, glm:
 	BindTriangle();
 	m_eShape = EMESHTYPE::TRIANGLE;
 	program = Shader::Programs["BaseProgram"];
-
-	SetInitialStates();
 }
 
 Triangle::Triangle(glm::vec3 CenterPoint, float Width, glm::vec4 _Colour)
@@ -49,8 +47,6 @@ Triangle::Triangle(glm::vec3 CenterPoint, float Width, glm::vec4 _Colour)
 	BindTriangle();
 	m_eShape = EMESHTYPE::TRIANGLE;
 	program = Shader::Programs["BaseProgram"];
-
-	SetInitialStates();
 }
 
 /************************************************************

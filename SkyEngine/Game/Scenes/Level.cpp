@@ -44,7 +44,7 @@ Level::Level(std::string sSceneName) : Scene(sSceneName)
 	std::shared_ptr<Entity> GeomPlatform = std::make_shared<Entity>(Entity({{10, 5, 13}, {90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
 	std::shared_ptr<Plane> GoemPlatformMesh = std::make_shared<Plane>(Plane(1, 1, {0.4f, 0.5f, 0.7f, 1.0f}));
 	GeomPlatform->AddMesh(GoemPlatformMesh);
-	GoemPlatformMesh->SetLit(true, true);
+	GoemPlatformMesh->SetLit(true);
 	GoemPlatformMesh->LightProperties.fAmbientStrength = 1.0f;
 	GoemPlatformMesh->bCullFace = false;
 	AddEntity(GeomPlatform, true);
