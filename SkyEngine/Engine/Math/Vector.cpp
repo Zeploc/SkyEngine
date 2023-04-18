@@ -2,8 +2,13 @@
 
 #include "Vector.h"
 
+#include <iostream>
+
 #include "Quaternion.h"
 #include "Rotator.h"
+
+#include <string>
+#include <sstream>
 
 Vector3 Vector3::Cross(const Vector3& V) const
 {
@@ -79,4 +84,30 @@ Rotator Vector3::ToRotator() const
 	NewRotator.Roll = 0;
 
 	return NewRotator;
+}
+
+std::ostream& operator<<(std::ostream& os, const Vector3& InVector)
+{
+	// TODO: Improve to not use to string
+	os << "(";
+	os << std::to_string(InVector.X) << std::string(" ");
+	os << std::to_string(InVector.Y) << std::string(" ");
+	os << std::to_string(InVector.Z);
+	os << ")";
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, Vector3& OutVector)
+{
+	std::string Empty;
+	// TODO: Improve bracket removal
+	// std::getline(is, Empty, '(');
+	std::string StringX, StringY, StringZ;
+	is >> StringX >> StringY >> StringZ;
+	// TODO: Improve from substring
+	OutVector.X = std::stof(StringX.substr(1, StringX.length() - 1));
+	OutVector.Y = std::stof(StringY.substr(0, StringY.length() - 1));
+	OutVector.Z = std::stof(StringZ.substr(0, StringZ.length() - 1));
+	// std::getline(is, Empty, ')');
+	return is;
 }

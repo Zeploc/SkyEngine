@@ -249,6 +249,9 @@ struct Vector3
 	{
 		printf("(%.02f, %.02f, %.02f)", X, Y, Z);
 	}
+	
+	friend std::ostream& operator<<(std::ostream& os, const Vector3& InVector);
+	friend std::istream& operator>>(std::istream& is, Vector3& OutVector);
 };
 
 inline Vector3 operator+(const Vector3& l, const Vector3& r)

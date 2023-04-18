@@ -192,6 +192,26 @@ std::string Entity::EntityToString()
 	return sEntity.str();
 }
 
+std::ostream& operator<<(std::ostream& os, const std::shared_ptr<Entity>& InEntity)
+{
+	// std::stringstream sEntity("");
+	os << "[Entity] ";
+	os << InEntity->iEntityID << " ";
+	os << InEntity->Transform;
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, std::shared_ptr<Entity>& InEntity)
+{
+	std::string Empty;
+	// TODO: Remove need for first space removal
+	std::getline(is, Empty, ' ');
+	is >> InEntity->iEntityID;
+	// std::getline(is, Empty, ' ');
+	is >> InEntity->Transform;
+	return is;
+}
+
 /************************************************************
 #--Description--#: 	Moves the position by adding on the movement
 #--Author--#: 		Alex Coultas

@@ -20,8 +20,9 @@ public:
 	
 	void OpenFile();
 
-	void LoadLevel(std::vector<std::string> Lines);
+	void LoadLevel(std::ifstream& OpenedLevelFile);
 
+	void SaveAsNew();
 	void SaveCurrentLevel();
 	
 	bool Wireframe = false;

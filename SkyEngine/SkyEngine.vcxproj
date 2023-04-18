@@ -4317,6 +4317,7 @@
   <ItemGroup>
     <Content Include="..\README.md" />
     <Content Include="Resources\Levels\Demo Scene.slvl" />
+    <Content Include="Resources\Levels\Example.slvl" />
     <Content Include="Resources\Levels\SingleItem.slvl" />
     <Content Include="Resources\Models\theDude.DAE" />
     <Content Include="Resources\Models\theDude.png" />

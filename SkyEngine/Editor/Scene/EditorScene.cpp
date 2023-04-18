@@ -23,6 +23,8 @@
 #include "Engine/Render/Pyramid.h"
 #include "Engine/Render/Sphere.h"
 
+#include <Windows.h>
+
 EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 {
 	std::shared_ptr<UIButton> QuitBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 20, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
@@ -35,13 +37,18 @@ EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 	SaveBtn->AddText("Save", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
 	SaveBtn->BindPress(this, &EditorScene::SaveCurrentLevel);
 	AddUIElement(SaveBtn);
+	
+	std::shared_ptr<UIButton> SaveAsNewBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 280, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
+	SaveAsNewBtn->AddText("Save As", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
+	SaveAsNewBtn->BindPress(this, &EditorScene::SaveAsNew);
+	AddUIElement(SaveAsNewBtn);
 
-	std::shared_ptr<UIButton> OpenBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 280, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
+	std::shared_ptr<UIButton> OpenBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 410, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
 	OpenBtn->AddText("Open", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
 	OpenBtn->BindPress(this, &EditorScene::OpenFile);
 	AddUIElement(OpenBtn);
 
-	LevelNameText = std::make_shared<UIText>(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 410, CameraManager::GetInstance()->SCR_HEIGHT - 15.0f), 0.0f, glm::vec4(0.3, 0.3, 0.3, 1.0f), "Level Name", "Resources/Fonts/Roboto-Regular.ttf", 20, EANCHOR::BOTTOM_RIGHT);
+	LevelNameText = std::make_shared<UIText>(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 540, CameraManager::GetInstance()->SCR_HEIGHT - 15.0f), 0.0f, glm::vec4(0.3, 0.3, 0.3, 1.0f), "Level Name", "Resources/Fonts/Roboto-Regular.ttf", 20, EANCHOR::BOTTOM_RIGHT);
 	AddUIElement(LevelNameText);
 
 	std::shared_ptr<UIText> TipText(new UIText({CameraManager::GetInstance()->SCR_WIDTH - 20, 15.0f}, 0, {0.3, 0.3, 0.3, 1.0f}, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 22, EANCHOR::TOP_RIGHT));
@@ -348,25 +355,29 @@ void EditorScene::RenderScene()
 
 void EditorScene::OpenFile()
 {
-	//OPENFILENAME ofn;
-	//ZeroMemory(&ofn, sizeof(ofn));
-	//char szFile[100];
-	//ofn.lStructSize = sizeof(ofn);
-	//ofn.hwndOwner = NULL;
-	//ofn.lpstrFile = szFile;
-	//ofn.lpstrFile[0] = '\0';
-	//ofn.nMaxFile = sizeof(szFile);
-	//ofn.lpstrFilter = "Level (*.slvl)\0*.slvl\0Text\0*.TXT\0";
-	//ofn.nFilterIndex = 1;
-	//ofn.lpstrFileTitle = NULL;
-	//ofn.nMaxFileTitle = 0;
-	//ofn.lpstrInitialDir = NULL;
-	//ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-	//if (!GetOpenFileNameA(&ofn))
-	//{
-	//	return;
-	//	//MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);
-	//}
+	// TODO: Open dialogue (Currently makes file not openable?)
+	// use IFileSaveDialog
+	// https://learn.microsoft.com/en-us/windows/win32/shell/common-file-dialog
+	
+	// OPENFILENAME ofn;
+	// ZeroMemory(&ofn, sizeof(ofn));
+	// char szFile[100];
+	// ofn.lStructSize = sizeof(ofn);
+	// ofn.hwndOwner = NULL; //CameraManager::GetInstance()->MainWindow
+	// ofn.lpstrFile = szFile;
+	// ofn.lpstrFile[0] = '\0';
+	// ofn.nMaxFile = sizeof(szFile);
+	// ofn.lpstrFilter = "Level (*.slvl)\0*.slvl\0Text\0*.TXT\0";
+	// ofn.nFilterIndex = 1;
+	// ofn.lpstrFileTitle = NULL;
+	// ofn.nMaxFileTitle = 0;
+	// ofn.lpstrInitialDir = "Resources/Levels/";
+	// ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+	// if (!GetOpenFileNameA(&ofn))
+	// {
+	// 	// MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);
+	// 	return;
+	// }
 
 	/*std::filesystem::path CurrentPath(szFile);
 	std::filesystem::path RootResources("D:\\Projects\\OpenGL\\Graphics Combination\\Graphics Combination\\");
@@ -374,25 +385,37 @@ void EditorScene::OpenFile()
 	std::string relative = relativePath.string();
 	std::replace(relative.begin(), relative.end(), '\\', '/');*/
 
-	std::vector<std::string> Lines;
+	std::string FileName = SceneName == "Example" ? "Resources/Levels/Demo Scene.slvl" : "Resources/Levels/Example.slvl";// = szFile;
 	std::string line;
-	std::ifstream OpenedFile(SceneName == "Example" ? "Resources/Levels/Demo Scene.slvl" : "Resources/Levels/Example.slvl"); //SceneName + ".slvl"); //relative);// 
-	if (OpenedFile.is_open())
+	std::ifstream OpenedFile(FileName);//szFile); //
+	if (!OpenedFile.is_open())
 	{
-		while (getline(OpenedFile, line))
-		{
-			Lines.push_back(line);
-			std::cout << line << '\n';
-		}
-		OpenedFile.close();
-		LoadLevel(Lines);
+		MessageBox(NULL, FileName.c_str(), "Failed to open", MB_OK);
+		return;
 	}
+
+	LoadLevel(OpenedFile);	
+	
+	OpenedFile.close();
+	
+	DestroyEntity(LocationBox);
+	DestroyEntity(LocationBox->XMoveTransform);
+	DestroyEntity(LocationBox->YMoveTransform);
+	DestroyEntity(LocationBox->ZMoveTransform);
+	AddEntity(LocationBox);
+	AddEntity(LocationBox->XMoveTransform);
+	AddEntity(LocationBox->YMoveTransform);
+	AddEntity(LocationBox->ZMoveTransform);
+	LocationBox->SetActive(true);
+	LocationBox->XMoveTransform->SetActive(true);
+	LocationBox->YMoveTransform->SetActive(true);
+	LocationBox->ZMoveTransform->SetActive(true);
 }
 
-void EditorScene::LoadLevel(std::vector<std::string> Lines)
+void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
 {
-	std::string LevelName = Lines[0].substr(1, Lines[0].length() - 2);
-	SceneName = LevelName;
+	// std::string LevelName = OpenedLevelFile[0].substr(1, OpenedLevelFile[0].length() - 2);
+	// SceneName = LevelName;
 
 	std::vector< std::shared_ptr<Entity>> EntitiesCopy = Entities;
 	for (std::shared_ptr<Entity> CurrentEnt : EntitiesCopy)
@@ -408,26 +431,46 @@ void EditorScene::LoadLevel(std::vector<std::string> Lines)
 		DestroyEntity(CurrentEnt);
 	}
 
-	for (std::string Line : Lines)
+	std::string Empty;
+	std::getline(OpenedLevelFile, Empty, '[');
+	std::getline(OpenedLevelFile, SceneName, ']');
+	std::getline(OpenedLevelFile, Empty, '\n');
+	
+	while(OpenedLevelFile.peek() != EOF )
 	{
-		std::string IsEntity = Line.substr(0, 8);
-		if (IsEntity == "[Entity]")
-		{
-			std::shared_ptr<Entity> CubeEnty(new Entity(Line));
-			//std::shared_ptr<Sphere> SphereMesh(Sphere(2.0f, 2.0f, 2.0f, { 0.1f, 0.8f, 0.3f, 1.0f }));
-			std::shared_ptr<Cube> CubyMesh(new Cube(3.0f, 3.0f, 3.0f, {0.7f, 0.4f, 0.3f, 1.0f}));
-
-			// TODO: Fix cube crashing on add/load
-			CubeEnty->AddMesh(CubyMesh);
-			CubeEnty->SetInitialEntity(true);
-			
-			//std::shared_ptr<GeometryObject> GeomShape(new GeometryObject({0.0, 0.9f, 0.3f, 1.0f}));
-			//CubeEnty->AddMesh(GeomShape);
-			
-			//CubyMesh->SetLit(true);
-			AddEntity(CubeEnty, true);
-		}
+		std::shared_ptr<Entity> NewEntity(new Entity(FTransform(), EANCHOR::CENTER));
+		OpenedLevelFile >> NewEntity;
+		std::getline(OpenedLevelFile, Empty, '\n');
+		
+		std::shared_ptr<Cube> CubeMesh(new Cube(3.0f, 3.0f, 3.0f, {0.7f, 0.4f, 0.3f, 1.0f}));
+		NewEntity->AddMesh(CubeMesh);
+		NewEntity->SetInitialEntity(true);
+		AddEntity(NewEntity, true);
 	}
+	
+	// for (std::string Line : OpenedLevelFile)
+	// {
+	// 	std::string IsEntity = Line.substr(0, 8);
+	// 	if (IsEntity == "[Entity]")
+	// 	{
+	// 		// std::shared_ptr<Entity> NewEntity;
+	// 		// IsEntity >> NewEntity;
+	// 		
+	// 		std::shared_ptr<Entity> CubeEnty(new Entity(Line));
+	// 		//std::shared_ptr<Sphere> SphereMesh(Sphere(2.0f, 2.0f, 2.0f, { 0.1f, 0.8f, 0.3f, 1.0f }));
+	// 		std::shared_ptr<Cube> CubyMesh(new Cube(3.0f, 3.0f, 3.0f, {0.7f, 0.4f, 0.3f, 1.0f}));
+	//
+	// 		CubeEnty->AddMesh(CubyMesh);
+	// 		CubeEnty->SetInitialEntity(true);
+	// 		
+	// 		//std::shared_ptr<GeometryObject> GeomShape(new GeometryObject({0.0, 0.9f, 0.3f, 1.0f}));
+	// 		//CubeEnty->AddMesh(GeomShape);
+	// 		
+	// 		//CubyMesh->SetLit(true);
+	// 		AddEntity(CubeEnty, true);
+	// 	}
+	// }
+	
 	DestroyEntity(LocationBox);
 	DestroyEntity(LocationBox->XMoveTransform);
 	DestroyEntity(LocationBox->YMoveTransform);
@@ -440,25 +483,45 @@ void EditorScene::LoadLevel(std::vector<std::string> Lines)
 	LocationBox->XMoveTransform->SetActive(true);
 	LocationBox->YMoveTransform->SetActive(true);
 	LocationBox->ZMoveTransform->SetActive(true);
-	
+}
 
-	// for (auto it = Entities.begin(); it != Entities.end(); ++it)
-	// {
-	// 	if (*it == LocationBox || *it == nullptr)
-	// 	{
-	// 		// Remove from entities list
-	// 		Entities.erase(it);
-	// 		break;
-	// 	}
-	// }
-	// Entities.push_back(LocationBox);
+void EditorScene::SaveAsNew()
+{
+	//IFileSaveDialog
+	
+	OPENFILENAME ofn;
+	ZeroMemory(&ofn, sizeof(ofn));
+	char szFile[100];
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = NULL;
+	ofn.lpstrFile = szFile;
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = "Level (*.slvl)\0*.slvl\0Text\0*.TXT\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = const_cast<LPSTR>("Untitled.slvl");
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = "Resources/Levels/";
+	ofn.Flags = OFN_PATHMUSTEXIST;// | OFN_FILEMUSTEXIST;
+	if (!GetSaveFileNameA(&ofn))
+	{
+		// MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);
+		return;
+	}
+	MessageBox(NULL, ofn.lpstrFile, "File Name (WIP)", MB_OK);
 }
 
 void EditorScene::SaveCurrentLevel()
 {
-	std::ofstream myfile;
-	myfile.open("Resources/Levels/" + SceneName + ".slvl");
-	myfile << "[" + SceneName + "]\n";
+	std::ofstream LevelFile;
+	std::string LevelPath = "Resources/Levels/" + SceneName + ".slvl";
+	LevelFile.open(LevelPath);
+	if (!LevelFile.is_open())
+    {
+    	MessageBox(NULL, LevelPath.c_str(), "Failed to edit", MB_OK);
+    	return;
+    }
+	LevelFile << "[" + SceneName + "]\n";
 	for (std::shared_ptr<Entity> Entity : Entities)
 	{
 		if (Entity == LocationBox
@@ -469,8 +532,8 @@ void EditorScene::SaveCurrentLevel()
 			continue;
 		}
 		
-		myfile << Entity->EntityToString() << "\n";
+		LevelFile << Entity << "\n";
 	}
 
-	myfile.close();
+	LevelFile.close();
 }

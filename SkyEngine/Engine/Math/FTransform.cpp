@@ -3,10 +3,11 @@
 #include "FTransform.h"
 
 #include <string>
+#include <sstream>
 
 #include "Engine/System/Utils.h"
 
-std::string FTransform::ToString()
+std::string FTransform::ToString() const
 {
 	std::string sTransform;
 	sTransform += Position.ToString() + " ";
@@ -24,4 +25,20 @@ void FTransform::FromString(std::string sTransform)
 		Rotation = Utils::StringToRotator(Seperated[1]);
 		Scale = Utils::StringToVec3(Seperated[2]);
 	}
+}
+
+std::ostream& operator<<(std::ostream& os, const FTransform& InTransform)
+{
+	os << "(" << InTransform.Position << " " << InTransform.Rotation << " " << InTransform.Scale << ")";
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, FTransform& OutTransform)
+{
+	std::string Empty;
+	// TODO: Improve bracket removal
+	std::getline(is, Empty, '(');
+	is >> OutTransform.Position >> OutTransform.Rotation >> OutTransform.Scale;
+	//std::getline(is, Empty, ')');
+	return is;
 }

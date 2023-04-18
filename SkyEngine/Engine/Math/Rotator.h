@@ -111,6 +111,9 @@ struct Rotator
 	{
 		printf("(%.02f, %.02f, %.02f)", Pitch, Yaw, Roll);
 	}
+	
+	friend std::ostream& operator<<(std::ostream& os, const Rotator& InRotator);
+	friend std::istream& operator>>(std::istream& is, Rotator& OutRotator);
 };
 
 inline Rotator operator+(const Rotator& l, const Rotator& r)
