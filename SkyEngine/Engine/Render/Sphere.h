@@ -23,4 +23,6 @@ public:
 	void Render(FTransform Newtransform) override;
 
 	void Update() override;
+	
+	bool CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, std::shared_ptr<Entity> EntityCheck) override;
 };

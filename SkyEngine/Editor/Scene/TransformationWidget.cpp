@@ -59,19 +59,19 @@ void TransformationWidget::Update()
 		Vector3 HitPos;
 		// TODO: Change hover to lighter colour
 		// TODO: Allow for multi axis (use plane/triangle check between axis)
-		if (Utils::CheckHit(rayStart, rayDirection, XMoveTransform, HitPos))
+		if (XMoveTransform->CheckHit(rayStart, rayDirection, HitPos))
 		{
 			XHit = true;
 			XMoveTransform->EntityMesh->bStencil = true;
 			HitPosition = HitPos;
 		}
-		if (Utils::CheckHit(rayStart, rayDirection, YMoveTransform, HitPos))
+		if (YMoveTransform->CheckHit(rayStart, rayDirection, HitPos))
 		{
 			YHit = true;
 			YMoveTransform->EntityMesh->bStencil = true;
 			HitPosition = HitPos;
 		}
-		if (Utils::CheckHit(rayStart, rayDirection, ZMoveTransform, HitPos))
+		if (ZMoveTransform->CheckHit(rayStart, rayDirection, HitPos))
 		{
 			ZHit = true;
 			ZMoveTransform->EntityMesh->bStencil = true;

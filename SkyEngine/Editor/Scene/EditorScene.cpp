@@ -176,7 +176,7 @@ void EditorScene::UpdateSelectedEntity()
 				continue; // Don't check for raycast
 			}
 			// TODO: Fix check hit for plane and pryamid
-			if (Utils::CheckHit(rayStart, RayDirection, Ent, HitPos))
+			if (Ent->CheckHit(rayStart, RayDirection, HitPos))
 			{
 				HitEntities.push_back(Ent);
 				HitPosition.push_back(HitPos);

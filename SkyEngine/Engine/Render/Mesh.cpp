@@ -172,7 +172,17 @@ void Mesh::Render(FTransform Newtransform)
 // 	}
 // 	return errorCode;
 // }
-// #define glCheckError() glCheckError_(__FILE__, __LINE__) 
+// #define glCheckError() glCheckError_(__FILE__, __LINE__)
+
+// TODO: Remove the need for entity passed through (use transforms/matrix)
+bool Mesh::CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, std::shared_ptr<Entity> EntityCheck)
+{
+	// TODO: Check against basic box bounds before considering
+	
+	LogManager::GetInstance()->DisplayLogMessage("No Check Hit for mesh ray hit check!");
+
+	return false;
+}
 
 void Mesh::Reset()
 {

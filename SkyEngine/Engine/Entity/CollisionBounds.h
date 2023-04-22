@@ -19,14 +19,7 @@ public:
 
 	void Reset();
 
-	void SetOffset(glm::vec3 _NewOffset, bool _bIsInitialState = false)
-	{
-		v3Offset = _NewOffset;
-		if (_bIsInitialState)
-		{
-			CollisionBoundsInitialState.v3Offset = v3Offset;
-		}
-	};
+	void SetOffset(glm::vec3 _NewOffset);
 
 	bool isColliding(std::shared_ptr<Entity> Entity2);
 
@@ -42,14 +35,4 @@ private:
 	float fWidth;
 	float fDepth;
 	glm::vec3 v3Offset = glm::vec3();
-
-	struct InitialState
-	{
-		float fHeight;
-		float fWidth;
-		float fDepth;
-		glm::vec3 v3Offset;
-	};
-
-	InitialState CollisionBoundsInitialState;
 };

@@ -322,41 +322,16 @@ Rotator Utils::StringToRotator(std::string _string)
 	return Rotator(x, y, z);
 }
 
-bool Utils::CheckHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos)
+// TODO: Change sphere center to sphere transform (account for rotation and scale)
+bool Utils::CheckSphereHit(Vector3 RayStart, Vector3 RayDirection, Vector3 SphereCenter, float SphereRadius, Vector3& HitPos)
 {
-	if (!EntityCheck->EntityMesh)
-	{
-		return false;
-	}
-	// TODO: Move to mesh class + Account for rotation
-	if (EntityCheck->EntityMesh->m_eShape == EMESHTYPE::SPHERE && std::dynamic_pointer_cast<Sphere>(EntityCheck->EntityMesh))
-	{
-		return CheckSphereEntityHit(RayStart, RayDirection, EntityCheck, HitPos);
-	}
-	if (EntityCheck->EntityMesh->m_eShape == EMESHTYPE::CUBE && std::dynamic_pointer_cast<Cube>(EntityCheck->EntityMesh))
-	{
-		return CheckCubeEntityHit(RayStart, RayDirection, EntityCheck, HitPos);
-	}
-	if (EntityCheck->EntityMesh->m_eShape == EMESHTYPE::PLANE && std::dynamic_pointer_cast<Plane>(EntityCheck->EntityMesh))
-	{
-		return CheckPlaneEntityHit(RayStart, RayDirection, EntityCheck, HitPos);
-	}
-	// LogManager::GetInstance()->DisplayLogMessage("Could not find mesh type to perform ray hit check!");
-	return false;
-}
-
-bool Utils::CheckSphereEntityHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos)
-{
-	// Vector3 PositionTemp(EntityCheck->Transform.Position);
-	// Vector3 V = PositionTemp - RayStart;
-
-	const Vector3 Offset = EntityCheck->Transform.Position - RayStart;
+	const Vector3 Offset = SphereCenter - RayStart;
 	// float a = RayDirection.Dot(RayDirection);
 	// float b = 2.0f * V.Dot(RayDirection);
 	// float c = V.Dot(V) - EntityCheck->EntityMesh->m_fWidth * EntityCheck->EntityMesh->m_fWidth;
 	float a = glm::dot(RayDirection.ToGLM(), RayDirection.ToGLM());
 	float b = 2.0f * Offset.Dot(RayDirection);
-	float c = Offset.Dot(Offset) - EntityCheck->EntityMesh->m_fWidth * EntityCheck->EntityMesh->m_fWidth;
+	float c = Offset.Dot(Offset) - SphereRadius * SphereRadius;
 	float d = b * b - 4 * a * c;
 
 	if (d > 0)
@@ -396,9 +371,10 @@ bool Utils::CheckSphereEntityHit(Vector3 RayStart, Vector3 RayDirection, std::sh
 	return false;
 }
 
-bool Utils::CheckCubeEntityHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos)
+// TODO: Change transform (account for rotation and scale)
+bool Utils::CheckCubeHit(Vector3 RayStart, Vector3 RayDirection, Vector3 CubeDimensions, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos)
 {
-	Vector3 HalfDimensionvec = Vector3(EntityCheck->EntityMesh->m_fWidth / 2.0f, EntityCheck->EntityMesh->m_fHeight / 2.0f, EntityCheck->EntityMesh->m_fDepth / 2.0f);
+	Vector3 HalfDimensionvec = Vector3(CubeDimensions.X / 2.0f, CubeDimensions.Y / 2.0f, CubeDimensions.Z / 2.0f);
 	std::vector<Vector3> HitPositions;
 	if (CheckFaceHit(Vector3(-HalfDimensionvec.X, -HalfDimensionvec.Y, HalfDimensionvec.Z), Vector3(HalfDimensionvec.X, HalfDimensionvec.Y, HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
 	{
@@ -465,6 +441,7 @@ Vector3 Utils::LinePlaneIntersect(Vector3 RayStart, Vector3 RayDirection, Vector
 	return RayStart - RayDirection * prod3;
 }
 
+// TODO: Remove need for entity (use transform/matrix)
 bool Utils::CheckFaceHit(Vector3 BottomLeftOffset, Vector3 TopRightOffset, Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos)
 {
 	Vector3 AnchoredPosition = GetAncoredPosition(EntityCheck->Transform.Position, glm::vec3(EntityCheck->EntityMesh->m_fWidth, EntityCheck->EntityMesh->m_fHeight, EntityCheck->EntityMesh->m_fDepth), EntityCheck->EntityAnchor);

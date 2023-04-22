@@ -11,11 +11,10 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CollisionBounds::CollisionBounds(float _fWidth, float _fHeight, float _fDepth, std::shared_ptr<Entity> _EntityRef) : EntityRef(_EntityRef), fHeight(_fHeight), fWidth(_fWidth), fDepth(_fDepth)
+CollisionBounds::CollisionBounds(float _fWidth, float _fHeight, float _fDepth, std::shared_ptr<Entity> _EntityRef)
+: EntityRef(_EntityRef), fHeight(_fHeight), fWidth(_fWidth), fDepth(_fDepth)
 {
-	CollisionBoundsInitialState.fHeight = fHeight;
-	CollisionBoundsInitialState.fWidth = fWidth;
-	CollisionBoundsInitialState.fDepth = fDepth;
+
 }
 
 /************************************************************
@@ -30,10 +29,12 @@ CollisionBounds::~CollisionBounds()
 
 void CollisionBounds::Reset()
 {
-	fHeight = CollisionBoundsInitialState.fHeight;
-	fWidth = CollisionBoundsInitialState.fWidth;
-	fDepth = CollisionBoundsInitialState.fDepth;
-	v3Offset = CollisionBoundsInitialState.v3Offset;
+
+}
+
+void CollisionBounds::SetOffset(glm::vec3 _NewOffset)
+{
+	v3Offset = _NewOffset;
 }
 
 bool CollisionBounds::isColliding(std::shared_ptr<Entity> Entity2)

@@ -53,7 +53,6 @@ A custom project for developing an engine and editor for experience purposes.
 - Collision Bounds
 
 # Next Steps
-- Rendering crash on runtime entity creation
 - Complete Saving/Loading entities from save
 - Move Hit check to mesh instead of entity and account for rotation
 - Fix/Complete translating entities in editor

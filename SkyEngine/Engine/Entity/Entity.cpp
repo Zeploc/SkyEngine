@@ -140,6 +140,16 @@ void Entity::Update()
 	}
 }
 
+bool Entity::CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos)
+{
+	if (!EntityMesh)
+	{
+		return false;
+	}
+
+	return EntityMesh->CheckHit(RayStart, RayDirection, HitPos, shared_from_this());
+}
+
 /************************************************************
 #--Description--#: 	Virtual function ran when the entity is destroyed
 #--Author--#: 		Alex Coultas

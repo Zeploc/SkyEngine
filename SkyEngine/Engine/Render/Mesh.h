@@ -24,19 +24,16 @@ public:
 	
 	virtual void Render(FTransform Newtransform);
 
-	virtual void Update()
-	{
-	}
+	virtual bool CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, std::shared_ptr<Entity> EntityCheck);
 
-	virtual void OnDestroy()
-	{
-	}
+	virtual void Update() {}
+
+	virtual void OnDestroy() {}
 
 	virtual void Reset();
 
-	virtual void Rebind()
-	{
-	}
+	virtual void Rebind() {}
+
 	// Will replace if texture exists
 	virtual void SetLit(bool _bIsLit);
 

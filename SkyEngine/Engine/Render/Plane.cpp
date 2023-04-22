@@ -343,3 +343,9 @@ void Plane::Update()
 		}
 	}
 }
+
+bool Plane::CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, std::shared_ptr<Entity> EntityCheck)
+{
+	glm::vec3 HalfDimensionvec = glm::vec3(m_fWidth / 2.0f, m_fHeight / 2.0f, m_fDepth / 2.0f);
+	return Utils::CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart.ToGLM(), RayDirection.ToGLM(), EntityCheck, HitPos);
+}

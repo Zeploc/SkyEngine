@@ -43,6 +43,8 @@ public:
 
 	virtual void Update();
 
+	virtual bool CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos);
+
 	virtual void OnDestroy();
 
 	virtual void Reset();

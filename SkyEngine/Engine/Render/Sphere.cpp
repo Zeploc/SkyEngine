@@ -9,6 +9,8 @@
 // OpenGL Library //
 #include <SOIL.h>
 
+#include "Engine/Entity/Entity.h"
+
 /************************************************************
 #--Description--#:  Constructor function
 #--Author--#: 		Alex Coultas
@@ -230,4 +232,9 @@ void Sphere::Render(FTransform Newtransform)
 ************************************************************/
 void Sphere::Update()
 {
+}
+
+bool Sphere::CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, std::shared_ptr<Entity> EntityCheck)
+{
+	return Utils::CheckSphereHit(RayStart, RayDirection, EntityCheck->Transform.Position, m_fWidth, HitPos);
 }

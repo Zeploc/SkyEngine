@@ -75,8 +75,6 @@ public:
 
 	static glm::vec2 GetDifference2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2);
 
-	static bool CheckHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
-
 	static int AddEntityID();
 
 	static std::vector<std::string> SeparateString(std::string _string, char _seperator);
@@ -87,15 +85,16 @@ public:
 
 	static bool CheckFaceHit(Vector3 BottomLeftOffset, Vector3 TopRightOffset, Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
 
+	static bool CheckSphereHit(Vector3 RayStart, Vector3 RayDirection, Vector3 SphereCenter, float SphereRadius, Vector3& HitPos);
+
+	static bool CheckCubeHit(Vector3 RayStart, Vector3 RayDirection, Vector3 CubeDimensions, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
+
+	static bool CheckPlaneEntityHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
+	
 	static std::shared_ptr<Entity> WorldCubeMap;
 
 private:
 	static int iEntityNumber;
 
-	static bool CheckSphereEntityHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
-
-	static bool CheckCubeEntityHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
-
-	static bool CheckPlaneEntityHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
 
 };
