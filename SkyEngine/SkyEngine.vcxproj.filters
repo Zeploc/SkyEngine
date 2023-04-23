@@ -215,10 +215,13 @@
     <ClCompile Include="Game\TessMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine/Camera/Camera.cpp">
+    <ClCompile Include="Engine\Camera\CameraManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Camera\CameraManager.cpp">
+    <ClCompile Include="Engine\Render\ModelMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\ModelObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

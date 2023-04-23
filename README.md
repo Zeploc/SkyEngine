@@ -2,6 +2,9 @@
 
 A custom project for developing an engine and editor for experience purposes.
 
+# Install
+- The static library of `assimp-vc143-mtd.lib` will need to be compiled and added to `\Engine\Dependencies\assimp`
+ 
 # Currently supports:
 ## Input
 - Key states
@@ -66,6 +69,11 @@ A custom project for developing an engine and editor for experience purposes.
 - Switch input to delegates
 - Pyramid Lighting fix
 - Play editor level
+- Static link external libs
+- Dynamic link engine (and game for editor) when working on project, static link when building the game as an exe
+- Link dependencies PDBs
+- Add binaries for debug 64, and release 32/64
+- Try finder lighter option for assimp static library
 
 # Further Development
 

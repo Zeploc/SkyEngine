@@ -11,7 +11,6 @@
 // https://github.com/mackron/GTGameEngine/blob/master/source/ModelDefinition_Assimp.cpp
 
 #include <glew.h>
-#include <freeglut.h>
 
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
