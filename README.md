@@ -3,7 +3,7 @@
 A custom project for developing an engine and editor for experience purposes.
 
 # Install
-- The static library of `assimp-vc143-mtd.lib` will need to be compiled and added to `\Engine\Dependencies\assimp`
+- The static library of `assimp-vc143-mtd.lib` will need to be compiled for wind64 and added to `\Engine\Dependencies\assimp`
  
 # Currently supports:
 ## Input
@@ -69,11 +69,16 @@ A custom project for developing an engine and editor for experience purposes.
 - Switch input to delegates
 - Pyramid Lighting fix
 - Play editor level
-- Static link external libs
+- Static link external libs - almost complete
 - Dynamic link engine (and game for editor) when working on project, static link when building the game as an exe
 - Link dependencies PDBs
-- Add binaries for debug 64, and release 32/64
+- Update dependencies to recent versions
+- Update VS project to latest
+- Add release binaries (Fix 32?)
+- Fix assimp model loading for DAE (update to fbx?)
 - Try finder lighter option for assimp static library
+- Confirm soil2 is a good option
+- Add back vld
 
 # Further Development
 
