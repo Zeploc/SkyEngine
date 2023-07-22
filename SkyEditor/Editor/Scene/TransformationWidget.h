@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Engine/Entity/Entity.h"
-#include "Engine/System/Utils.h"
+#include <Entity/Entity.h>
+#include <System/Utils.h>
 
 class TransformationWidget : public Entity
 {

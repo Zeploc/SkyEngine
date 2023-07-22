@@ -7,21 +7,21 @@
 #include <fstream>
 #include <iostream>
 
-#include "Engine/Camera/CameraManager.h"
-#include "Engine/Input/Input.h"
-#include "Engine/UI/UIText.h"
-#include "Engine/UI/UIButton.h"
+#include <Camera/CameraManager.h>
+#include <Input/Input.h>
+#include <UI/UIText.h>
+#include <UI/UIButton.h>
 
 #include "TransformationWidget.h"
 #include "Editor/Windows/EditorWindow.h"
 #include "Editor/Windows/EditorWindowManager.h"
-#include "Engine/Render/Cube.h"
-#include "Engine/Render/GeometryObject.h"
-#include "Engine/Render/Model.h"
-#include "Engine/Render/ParticleSystem.h"
-#include "Engine/Render/Plane.h"
-#include "Engine/Render/Pyramid.h"
-#include "Engine/Render/Sphere.h"
+#include <Render/Cube.h>
+#include <Render/GeometryObject.h>
+#include <Render/Model.h>
+#include <Render/ParticleSystem.h>
+#include <Render/Plane.h>
+#include <Render/Pyramid.h>
+#include <Render/Sphere.h>
 
 #include <Windows.h>
 
@@ -53,9 +53,10 @@ EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 
 	std::shared_ptr<UIText> TipText(new UIText({CameraManager::GetInstance()->SCR_WIDTH - 20, 15.0f}, 0, {0.3, 0.3, 0.3, 1.0f}, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 22, EANCHOR::TOP_RIGHT));
 	AddUIElement(TipText);
-	
-	Lighting::m_v3LightPosition = {5, 7, 5};
-	Lighting::m_v3SunDirection = {3, -1, 5};
+
+	// TODO:
+	// Lighting::LightPosition = {5, 7, 5};
+	// Lighting::SunDirection = {3, -1, 5};
 	
 	CameraManager::GetInstance()->SetCameraPos({-10, 10, 0});
 	CameraManager::GetInstance()->SetCameraForwardVector({0, -0.5, 1.0f});	
@@ -415,7 +416,8 @@ void EditorScene::OpenFile()
 
 void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
 {
-	// std::string LevelName = OpenedLevelFile[0].substr(1, OpenedLevelFile[0].length() - 2);
+	// TODO: Fix errors
+	/*// std::string LevelName = OpenedLevelFile[0].substr(1, OpenedLevelFile[0].length() - 2);
 	// SceneName = LevelName;
 
 	std::vector< std::shared_ptr<Entity>> EntitiesCopy = Entities;
@@ -483,7 +485,7 @@ void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
 	LocationBox->SetActive(true);
 	LocationBox->XMoveTransform->SetActive(true);
 	LocationBox->YMoveTransform->SetActive(true);
-	LocationBox->ZMoveTransform->SetActive(true);
+	LocationBox->ZMoveTransform->SetActive(true);*/
 }
 
 void EditorScene::SaveAsNew()
@@ -514,27 +516,28 @@ void EditorScene::SaveAsNew()
 
 void EditorScene::SaveCurrentLevel()
 {
-	std::ofstream LevelFile;
-	std::string LevelPath = "Resources/Levels/" + SceneName + ".slvl";
-	LevelFile.open(LevelPath);
-	if (!LevelFile.is_open())
-    {
-    	MessageBox(NULL, LevelPath.c_str(), "Failed to edit", MB_OK);
-    	return;
-    }
-	LevelFile << "[" + SceneName + "]\n";
-	for (std::shared_ptr<Entity> Entity : Entities)
-	{
-		if (Entity == LocationBox
-			|| Entity == LocationBox->XMoveTransform
-			|| Entity == LocationBox->YMoveTransform
-			|| Entity == LocationBox->ZMoveTransform)
-		{
-			continue;
-		}
-		
-		LevelFile << Entity << "\n";
-	}
+	// TODO: Fix errors
+	// std::ofstream LevelFile;
+	// std::string LevelPath = "Resources/Levels/" + SceneName + ".slvl";
+	// LevelFile.open(LevelPath);
+	// if (!LevelFile.is_open())
+ //    {
+ //    	MessageBox(NULL, LevelPath.c_str(), "Failed to edit", MB_OK);
+ //    	return;
+ //    }
+	// LevelFile << "[" + SceneName + "]\n";
+	// for (std::shared_ptr<Entity> Entity : Entities)
+	// {
+	// 	if (Entity == LocationBox
+	// 		|| Entity == LocationBox->XMoveTransform
+	// 		|| Entity == LocationBox->YMoveTransform
+	// 		|| Entity == LocationBox->ZMoveTransform)
+	// 	{
+	// 		continue;
+	// 	}
+	// 	
+	// 	LevelFile << Entity << "\n";
+	// }
 
-	LevelFile.close();
+	//LevelFile.close();
 }

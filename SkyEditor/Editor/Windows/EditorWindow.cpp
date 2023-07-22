@@ -4,58 +4,58 @@
 
 #include "EditorWindowManager.h"
 
-//#include <freeglut.h>
 #include <glew/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-#include "Engine/Camera/CameraManager.h"
-#include "Engine/Input/Input.h"
-#include "Engine/Render/Shader.h"
-#include "Engine/System/Utils.h"
-#include "Engine/UI/UIButton.h"
+#include <Camera/CameraManager.h>
+#include <Input/Input.h>
+#include <Render/Shader.h>
+#include <System/Utils.h>
+#include <UI/UIButton.h>
 
 EditorWindow::EditorWindow(std::string _WindowName, GLFWwindow* _ParentWindow, glm::vec2 _Size, glm::vec2 _Position) : WindowName(_WindowName), ParentWindow(_ParentWindow), Size(_Size), Position(_Position)
 {
-	if (!_ParentWindow)
-	{
-		ParentWindow = glfwCreateWindow(Size.X, Size.Y, WindowName.c_str(), nullptr, nullptr);
-		if (ParentWindow == nullptr)
-		{
-			std::cout << "Failed to create GLFW window" << std::endl;
-			return;
-		}
-		glfwMakeContextCurrent(ParentWindow);
-
-		glfwSetWindowPos(ParentWindow, Position.X, Position.Y);
-
-		glViewport(0, 0, Size.X, Size.Y);
-
-		// OpenGL init
-		glewInit();
-
-		// Settings Initialised
-		Shader::LoadAllDefaultShadersInCurrentContext();
-
-		glCullFace(GL_BACK); // Cull the Back faces
-		glFrontFace(GL_CW); // Front face is Clockwise order
-		glEnable(GL_CULL_FACE); // Turn on the back face culling
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		// The input function registration
-		Input::GetInstance()->Init(ParentWindow);
-	}
-	else
-	{
-	}
-
-	EditorWindowManager::NewWindowCreated(this);
-
-	SetupUI();
-
-	glfwMakeContextCurrent(EditorWindowManager::MainWindow);
+	// TODO: Fix errors
+	// if (!_ParentWindow)
+	// {
+	// 	ParentWindow = glfwCreateWindow(Size.X, Size.Y, WindowName.c_str(), nullptr, nullptr);
+	// 	if (ParentWindow == nullptr)
+	// 	{
+	// 		std::cout << "Failed to create GLFW window" << std::endl;
+	// 		return;
+	// 	}
+	// 	glfwMakeContextCurrent(ParentWindow);
+	//
+	// 	glfwSetWindowPos(ParentWindow, Position.X, Position.Y);
+	//
+	// 	glViewport(0, 0, Size.X, Size.Y);
+	//
+	// 	// OpenGL init
+	// 	glewInit();
+	//
+	// 	// Settings Initialised
+	// 	Shader::LoadAllDefaultShadersInCurrentContext();
+	//
+	// 	glCullFace(GL_BACK); // Cull the Back faces
+	// 	glFrontFace(GL_CW); // Front face is Clockwise order
+	// 	glEnable(GL_CULL_FACE); // Turn on the back face culling
+	//
+	// 	glEnable(GL_BLEND);
+	// 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//
+	// 	// The input function registration
+	// 	Input::GetInstance()->Init(ParentWindow);
+	// }
+	// else
+	// {
+	// }
+	//
+	// EditorWindowManager::NewWindowCreated(this);
+	//
+	// SetupUI();
+	//
+	// glfwMakeContextCurrent(EditorWindowManager::MainWindow);
 }
 
 void EditorWindow::SetupGlutBindings()
@@ -125,7 +125,8 @@ void EditorWindow::RenderWindow()
 
 void EditorWindow::PopOut()
 {
-	//EditorWindowManager::WindowRemoved(this);
+	// TODO: Fix
+	/*//EditorWindowManager::WindowRemoved(this);
 
 	ParentWindow = glfwCreateWindow(Size.X, Size.Y, WindowName.c_str(), nullptr, nullptr);
 	if (ParentWindow == nullptr)
@@ -185,7 +186,7 @@ void EditorWindow::PopOut()
 	//SetupGlutBindings();
 	//EditorWindowManager::NewWindowCreated(this);
 	//CameraManager::GetInstance()->Init(Size.x, Size.y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
-	//CameraManager::GetInstance()->SwitchProjection(CameraManager::Perspective);
+	//CameraManager::GetInstance()->SwitchProjection(CameraManager::Perspective);*/
 }
 
 void EditorWindow::PopIn()

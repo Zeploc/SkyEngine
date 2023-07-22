@@ -75,14 +75,24 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)Dependencies\include;$(ProjectDir);$(ProjectDir)Dependencies\include\freetype;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)Dependencies\lib\Win32;$(ProjectDir)Dependencies\lib\Win32\assimp;$(ProjectDir)Dependencies\lib\Win32\Box2D;$(ProjectDir)Dependencies\lib\Win32\FMOD;$(ProjectDir)Dependencies\lib\Win32\freetype;$(ProjectDir)Dependencies\lib\Win32\glew;$(ProjectDir)Dependencies\lib\Win32\GLFW;$(ProjectDir)Dependencies\lib\Win32\soil;$(ProjectDir)Dependencies\lib\Win32\vld;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)Dependencies\include;$(ProjectDir);$(ProjectDir)Dependencies\include\freetype;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)Dependencies\lib\Win64;$(ProjectDir)Dependencies\lib\Win64\assimp;$(ProjectDir)Dependencies\lib\Win64\Box2D;$(ProjectDir)Dependencies\lib\Win64\FMOD;$(ProjectDir)Dependencies\lib\Win64\freetype;$(ProjectDir)Dependencies\lib\Win64\glew;$(ProjectDir)Dependencies\lib\Win64\GLFW;$(ProjectDir)Dependencies\lib\Win64\soil;$(ProjectDir)Dependencies\lib\Win64\vld;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)Intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir)\Dependencies\freeglut;$(ProjectDir)\Dependencies\glew;$(ProjectDir)\Dependencies\soil;$(ProjectDir)\Dependencies\freetype;$(ProjectDir)\Dependencies\assimp;$(ProjectDir)\Dependencies\FMOD;$(ProjectDir)\Dependencies\vld\include;$(ProjectDir)\Dependencies\;$(ProjectDir)\Dependencies\Box2D;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\Dependencies\freeglut;$(ProjectDir)\Dependencies\glew;$(ProjectDir)\Dependencies\soil;$(ProjectDir)\Dependencies\freetype;$(ProjectDir)\Dependencies\assimp;$(ProjectDir)\Dependencies\FMOD;$(ProjectDir)\Dependencies\vld\lib\Win32;$(ProjectDir)\Dependencies\Box2D;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(ProjectDir)\Dependencies\freeglut;$(ProjectDir)\Dependencies\glew;$(ProjectDir)\Dependencies\soil;$(ProjectDir)\Dependencies\freetype;$(ProjectDir)\Dependencies\assimp;$(ProjectDir)\Dependencies\FMOD;$(ProjectDir)\Dependencies\vld\include;$(ProjectDir)\Dependencies\;$(ProjectDir)\Dependencies\Box2D;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\Dependencies\freeglut;$(ProjectDir)\Dependencies\glew;$(ProjectDir)\Dependencies\soil;$(ProjectDir)\Dependencies\freetype;$(ProjectDir)\Dependencies\assimp;$(ProjectDir)\Dependencies\FMOD;$(ProjectDir)\Dependencies\vld\lib\Win32;$(ProjectDir)\Dependencies\Box2D;$(LibraryPath)</LibraryPath>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -96,6 +106,8 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
+      <AdditionalDependencies>opengl32.lib;SOIL.lib;glew32s.lib;vld.lib;freetype.lib;assimp-vc143-mtd.lib;fmod_vc.lib;Box2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)Dependencies;$(ProjectDir)Dependencies\assimp;$(ProjectDir)Dependencies\Box2D;$(ProjectDir)Dependencies\FMOD;$(ProjectDir)Dependencies\freeglut;$(ProjectDir)Dependencies\freetype;$(ProjectDir)Dependencies\glew;$(ProjectDir)Dependencies\GLFW;$(ProjectDir)Dependencies\glm;$(ProjectDir)Dependencies\soil;$(ProjectDir)Dependencies\vld;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -106,11 +118,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;CPPDYNAMICLIBRARYTEMPLATE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SE_PLATFORM_WINDOWS;SE_BUILD_DLL;_DEBUG;CPPDYNAMICLIBRARYTEMPLATE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
+      <AdditionalDependencies>opengl32.lib;assimp-vc143-mtd.lib;zlibstaticd.lib;Box2D.lib;fmod64_vc.lib;freetype.lib;glew64s.lib;glfw3.lib;glfw3dll.lib;soil2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\Dependencies\boost</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -128,6 +142,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
+      <AdditionalDependencies>opengl32.lib;freeglut.lib;SOIL.lib;glew32.lib;vld.lib;freetype.lib;assimp-vc130-mtd.lib;fmod_vc.lib;Box2DRelease.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -151,10 +166,190 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;freeglut.lib;SOIL.lib;glew32.lib;vld.lib;freetype.lib;assimp-vc130-mtd.lib;fmod_vc.lib;Box2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Core\Application.cpp">
+      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>D:\[PROJECTS]\OpenGL\SkyEngine\Intermediate\Debug-x64\SkyEngine\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>D:\[PROJECTS]\OpenGL\SkyEngine\Intermediate\Debug-x64\SkyEngine\</BrowseInformationFile>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>true</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFuzzer>false</EnableFuzzer>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>D:\[PROJECTS]\OpenGL\SkyEngine\Intermediate\Debug-x64\SkyEngine\</ModuleDependenciesFile>
+      <ModuleOutputFile>D:\[PROJECTS]\OpenGL\SkyEngine\Intermediate\Debug-x64\SkyEngine\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ObjectFileName>D:\[PROJECTS]\OpenGL\SkyEngine\Intermediate\Debug-x64\SkyEngine\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>D:\[PROJECTS]\OpenGL\SkyEngine\Intermediate\Debug-x64\SkyEngine\vc143.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>D:\[PROJECTS]\OpenGL\SkyEngine\Intermediate\Debug-x64\SkyEngine\SkyEngine.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>D:\[PROJECTS]\OpenGL\SkyEngine\Intermediate\Debug-x64\SkyEngine\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TrackerLogDirectory>D:\[PROJECTS]\OpenGL\SkyEngine\Intermediate\Debug-x64\SkyEngine\SkyEngine.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <XMLDocumentationFileName>D:\[PROJECTS]\OpenGL\SkyEngine\Intermediate\Debug-x64\SkyEngine\</XMLDocumentationFileName>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <PreprocessorDefinitions>_DEBUG;CPPDYNAMICLIBRARYTEMPLATE_EXPORTS;_WINDOWS;_USRDLL;_WINDLL;_UNICODE;UNICODE;</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <LinkCompiled>true</LinkCompiled>
+    </ClCompile>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="Entity/2DParticleSystem.cpp" />
+    <ClCompile Include="Entity/Button3DEntity.cpp" />
+    <ClCompile Include="Entity/CollisionBounds.cpp" />
+    <ClCompile Include="Entity/Entity.cpp" />
+    <ClCompile Include="Input/CXBOXController.cpp" />
+    <ClCompile Include="Input/Input.cpp" />
+    <ClCompile Include="Render/AnimatedModel.cpp" />
+    <ClCompile Include="Render/Cube.cpp" />
+    <ClCompile Include="Render/CubeMap.cpp" />
+    <ClCompile Include="Render/FrameBuffer.cpp" />
+    <ClCompile Include="Render/GeometryObject.cpp" />
+    <ClCompile Include="Render/Lighting.cpp" />
+    <ClCompile Include="Render/Mesh.cpp" />
+    <ClCompile Include="Render/Model.cpp" />
+    <ClCompile Include="Render/Particle.cpp" />
+    <ClCompile Include="Render/ParticleSystem.cpp" />
+    <ClCompile Include="Render/ParticleSystemGPU.cpp" />
+    <ClCompile Include="Render/Plane.cpp" />
+    <ClCompile Include="Render/Pyramid.cpp" />
+    <ClCompile Include="Render/Shader.cpp" />
+    <ClCompile Include="Render/ShaderLoader.cpp" />
+    <ClCompile Include="Render/Sphere.cpp" />
+    <ClCompile Include="Render/Triangle.cpp" />
+    <ClCompile Include="Render\ssAnimatedModel.cpp" />
+    <ClCompile Include="Render\TessMesh.cpp" />
+    <ClCompile Include="Scene/Scene.cpp" />
+    <ClCompile Include="Scene/SceneManager.cpp" />
+    <ClCompile Include="Sound/SoundManager.cpp" />
+    <ClCompile Include="System/LogManager.cpp" />
+    <ClCompile Include="System/Time.cpp" />
+    <ClCompile Include="System/Utils.cpp" />
+    <ClCompile Include="UI/Cursor.cpp" />
+    <ClCompile Include="UI/Text.cpp" />
+    <ClCompile Include="UI/UIButton.cpp" />
+    <ClCompile Include="UI/UIElement.cpp" />
+    <ClCompile Include="UI/UIImage.cpp" />
+    <ClCompile Include="UI/UISlider.cpp" />
+    <ClCompile Include="UI/UIText.cpp" />
+    <ClCompile Include="UI/UITextField.cpp" />
+    <ClCompile Include="UI/Widget.cpp" />
+    <ClCompile Include="Camera/CameraManager.cpp" />
+    <ClCompile Include="Math/Matrix.cpp" />
+    <ClCompile Include="Math/Quaternion.cpp" />
+    <ClCompile Include="Math/FTransform.cpp" />
+    <ClCompile Include="Math/Rotator.cpp" />
+    <ClCompile Include="Math/Vector.cpp" />
+    <ClCompile Include="Render/ModelMesh.cpp" />
+    <ClCompile Include="Render/ModelObject.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera/CameraManager.h" />
+    <ClInclude Include="Core\Application.h" />
+    <ClInclude Include="Core\Core.h" />
+    <ClInclude Include="Core\Delegates.h" />
+    <ClInclude Include="Core\EntryPoint.h" />
+    <ClInclude Include="Entity/2DParticleSystem.h" />
+    <ClInclude Include="Entity/Button3DEntity.h" />
+    <ClInclude Include="Entity/CollisionBounds.h" />
+    <ClInclude Include="Entity/Entity.h" />
+    <ClInclude Include="Input/CXBOXController.h" />
+    <ClInclude Include="Input/Input.h" />
+    <ClInclude Include="Render/AnimatedModel.h" />
+    <ClInclude Include="Render/Cube.h" />
+    <ClInclude Include="Render/CubeMap.h" />
+    <ClInclude Include="Render/FrameBuffer.h" />
+    <ClInclude Include="Render/GeometryObject.h" />
+    <ClInclude Include="Render/Lighting.h" />
+    <ClInclude Include="Render/Mesh.h" />
+    <ClInclude Include="Render/Model.h" />
+    <ClInclude Include="Render/ModelMesh.h" />
+    <ClInclude Include="Render/ModelObject.h" />
+    <ClInclude Include="Render/Particle.h" />
+    <ClInclude Include="Render/ParticleSystem.h" />
+    <ClInclude Include="Render/ParticleSystemGPU.h" />
+    <ClInclude Include="Render/Plane.h" />
+    <ClInclude Include="Render/Pyramid.h" />
+    <ClInclude Include="Render/Shader.h" />
+    <ClInclude Include="Render/ShaderLoader.h" />
+    <ClInclude Include="Render/Sphere.h" />
+    <ClInclude Include="Render/Triangle.h" />
+    <ClInclude Include="Render\ssAnimatedModel.h" />
+    <ClInclude Include="Render\TessMesh.h" />
+    <ClInclude Include="Scene/Scene.h" />
+    <ClInclude Include="Scene/SceneManager.h" />
+    <ClInclude Include="SkyEngine.h" />
+    <ClInclude Include="Sound/SoundManager.h" />
+    <ClInclude Include="System/LogManager.h" />
+    <ClInclude Include="System/Math_3d.h" />
+    <ClInclude Include="System/Time.h" />
+    <ClInclude Include="System/Utils.h" />
+    <ClInclude Include="UI/Cursor.h" />
+    <ClInclude Include="UI/Text.h" />
+    <ClInclude Include="UI/UIButton.h" />
+    <ClInclude Include="UI/UIElement.h" />
+    <ClInclude Include="UI/UIImage.h" />
+    <ClInclude Include="UI/UISlider.h" />
+    <ClInclude Include="UI/UIText.h" />
+    <ClInclude Include="UI/UITextField.h" />
+    <ClInclude Include="UI/Widget.h" />
+    <ClInclude Include="Math/MathDefinitions.h" />
+    <ClInclude Include="Math/Matrix.h" />
+    <ClInclude Include="Math/Quaternion.h" />
+    <ClInclude Include="Math/FTransform.h" />
+    <ClInclude Include="Math/Rotator.h" />
+    <ClInclude Include="Math/Vector.h" />
+    <ClInclude Include="System/EnumTypes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

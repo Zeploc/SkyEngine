@@ -7,7 +7,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-#include "Engine/Math/Vector.h"
+#include <Math/Vector.h>
 
 class UIElement;
 class UIImage;
