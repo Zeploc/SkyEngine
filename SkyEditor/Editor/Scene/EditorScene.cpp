@@ -3,6 +3,8 @@
 // Library Includes //
 #include "EditorScene.h"
 
+#include "Render/Lighting.h"
+
 // Engine Includes //
 #include <fstream>
 #include <iostream>
@@ -25,12 +27,15 @@
 
 #include <Windows.h>
 
+#include "Core/Application.h"
+#include "Graphics/GraphicsWindow.h"
+
 EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 {
 	std::shared_ptr<UIButton> QuitBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 20, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
 	QuitBtn->AddText("Quit", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
 	// TODO: Let delegate allow derived class type when passing in "this"? - Auto cast check inside? Template type for derived types allowed?
-	QuitBtn->BindPress(static_cast<Scene*>(this), &Scene::QuitApplication);
+	QuitBtn->BindPress(GetApplication(), &SkyEngine::Application::Quit);
 	AddUIElement(QuitBtn);
 
 	std::shared_ptr<UIButton> SaveBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 150, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
@@ -54,17 +59,18 @@ EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 	std::shared_ptr<UIText> TipText(new UIText({CameraManager::GetInstance()->SCR_WIDTH - 20, 15.0f}, 0, {0.3, 0.3, 0.3, 1.0f}, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 22, EANCHOR::TOP_RIGHT));
 	AddUIElement(TipText);
 
-	// TODO:
-	// Lighting::LightPosition = {5, 7, 5};
-	// Lighting::SunDirection = {3, -1, 5};
+	Lighting::SetLightPosition({5, 7, 5});
+	Lighting::SetSunDirection({3, -1, 5});
 	
 	CameraManager::GetInstance()->SetCameraPos({-10, 10, 0});
-	CameraManager::GetInstance()->SetCameraForwardVector({0, -0.5, 1.0f});	
-	
-	EditorWindow* NewWindow = new EditorWindow("Outliner", EditorWindowManager::MainWindow, glm::vec2(300, 400), glm::vec2(0, 0));
+	CameraManager::GetInstance()->SetCameraForwardVector({0, -0.5, 1.0f});
+
+	const std::shared_ptr<EngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
+
+	EditorWindow* NewWindow = new EditorWindow("Outliner", ApplicationWindow, glm::vec2(300, 400), glm::vec2(0, 0));
 	NewWindow->SetBackColour(glm::vec3(0.2, 0.6, 0.8));
 		
-	EditorWindow* ContentWindow = new EditorWindow("Content", EditorWindowManager::MainWindow, glm::vec2(600, 150), glm::vec2(0, CameraManager::GetInstance()->SCR_HEIGHT - 150));
+	EditorWindow* ContentWindow = new EditorWindow("Content", ApplicationWindow, glm::vec2(600, 150), glm::vec2(0, CameraManager::GetInstance()->SCR_HEIGHT - 150));
 	ContentWindow->SetBackColour(glm::vec3(0.4, 0.4, 0.4));
 
 	//EditorWindow* ExternalWindow = new EditorWindow("External Test", nullptr, glm::vec2(500, 300), glm::vec2(100, 100));
@@ -287,7 +293,7 @@ void EditorScene::Update()
 				CameraInstance->SetCameraForwardVector(NewCameraForwardVector);
 			}
 			PreviousMousePosition = Input::GetInstance()->MousePos;
-			glfwSetCursorPos(CameraInstance->MainWindow, CenterScreen.X, CenterScreen.Y);
+			CameraInstance->MainWindow->GetGraphicsWindow()->SetCursorPosition(CenterScreen);
 		}
 		else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_HOLD)
 		{
@@ -300,7 +306,7 @@ void EditorScene::Update()
 				CurrentFocusDistance += Offset.Y * .3f;
 			}
 			PreviousMousePosition = Input::GetInstance()->MousePos;
-			glfwSetCursorPos(CameraInstance->MainWindow, CenterScreen.X, CenterScreen.Y);
+			CameraInstance->MainWindow->GetGraphicsWindow()->SetCursorPosition(CenterScreen);
 		}
 		else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_RELEASE)
 		{
@@ -330,7 +336,7 @@ void EditorScene::Update()
 				CameraInstance->SetCameraPos(NewCameraPosition);
 			}
 			PreviousMousePosition = Input::GetInstance()->MousePos;
-			glfwSetCursorPos(CameraInstance->MainWindow, CenterScreen.X, CenterScreen.Y);
+			CameraInstance->MainWindow->GetGraphicsWindow()->SetCursorPosition(CenterScreen);
 		}
 		else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_RELEASE)
 		{
@@ -416,8 +422,7 @@ void EditorScene::OpenFile()
 
 void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
 {
-	// TODO: Fix errors
-	/*// std::string LevelName = OpenedLevelFile[0].substr(1, OpenedLevelFile[0].length() - 2);
+	// std::string LevelName = OpenedLevelFile[0].substr(1, OpenedLevelFile[0].length() - 2);
 	// SceneName = LevelName;
 
 	std::vector< std::shared_ptr<Entity>> EntitiesCopy = Entities;
@@ -485,7 +490,7 @@ void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
 	LocationBox->SetActive(true);
 	LocationBox->XMoveTransform->SetActive(true);
 	LocationBox->YMoveTransform->SetActive(true);
-	LocationBox->ZMoveTransform->SetActive(true);*/
+	LocationBox->ZMoveTransform->SetActive(true);
 }
 
 void EditorScene::SaveAsNew()
@@ -516,28 +521,27 @@ void EditorScene::SaveAsNew()
 
 void EditorScene::SaveCurrentLevel()
 {
-	// TODO: Fix errors
-	// std::ofstream LevelFile;
-	// std::string LevelPath = "Resources/Levels/" + SceneName + ".slvl";
-	// LevelFile.open(LevelPath);
-	// if (!LevelFile.is_open())
- //    {
- //    	MessageBox(NULL, LevelPath.c_str(), "Failed to edit", MB_OK);
- //    	return;
- //    }
-	// LevelFile << "[" + SceneName + "]\n";
-	// for (std::shared_ptr<Entity> Entity : Entities)
-	// {
-	// 	if (Entity == LocationBox
-	// 		|| Entity == LocationBox->XMoveTransform
-	// 		|| Entity == LocationBox->YMoveTransform
-	// 		|| Entity == LocationBox->ZMoveTransform)
-	// 	{
-	// 		continue;
-	// 	}
-	// 	
-	// 	LevelFile << Entity << "\n";
-	// }
+	 std::ofstream LevelFile;
+	 std::string LevelPath = "Resources/Levels/" + SceneName + ".slvl";
+	 LevelFile.open(LevelPath);
+	 if (!LevelFile.is_open())
+     {
+     	MessageBox(NULL, LevelPath.c_str(), "Failed to edit", MB_OK);
+     	return;
+     }
+	 LevelFile << "[" + SceneName + "]\n";
+	 for (std::shared_ptr<Entity> Entity : Entities)
+	 {
+	 	if (Entity == LocationBox
+	 		|| Entity == LocationBox->XMoveTransform
+	 		|| Entity == LocationBox->YMoveTransform
+	 		|| Entity == LocationBox->ZMoveTransform)
+	 	{
+	 		continue;
+	 	}
+	 	
+	 	LevelFile << Entity << "\n";
+	 }
 
-	//LevelFile.close();
+	LevelFile.close();
 }

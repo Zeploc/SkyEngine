@@ -19,7 +19,7 @@ Terrain::Terrain(FTransform _Transform, EANCHOR _Anchor, InitInfo& _InitInfo) : 
 	LightProperties.fAmbientStrength = 0.4f;
 	LightProperties.fLightSpecStrength = 0.7f;
 	LightProperties.fShininess = 20.0f;
-	LightProperties.v3LightColour = {5, 5, 5};
+	LightProperties.LightColour = {5, 5, 5};
 
 	for (int i = 0; i < 256; i++)
 	{
@@ -150,9 +150,9 @@ void Terrain::DrawEntity()
 	if (bFog)
 	{
 		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, value_ptr(CameraManager::GetInstance()->GetCameraPosition().ToGLM()));
-		glUniform4fv(glGetUniformLocation(program, "vFogColor"), 1, value_ptr(Lighting::m_v4FogColour));
-		glUniform1f(glGetUniformLocation(program, "StartFog"), Lighting::StartFogDistance);
-		glUniform1f(glGetUniformLocation(program, "EndFog"), Lighting::EndFogDistance);
+		glUniform4fv(glGetUniformLocation(program, "vFogColor"), 1, value_ptr(Lighting::GetFogColour()));
+		glUniform1f(glGetUniformLocation(program, "StartFog"), Lighting::GetStartFogDistance());
+		glUniform1f(glGetUniformLocation(program, "EndFog"), Lighting::GetEndFogDistance());
 	}
 	glFrontFace(GL_CW);
 	glDisable(GL_CULL_FACE);

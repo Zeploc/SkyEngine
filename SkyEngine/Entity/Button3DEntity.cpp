@@ -70,6 +70,7 @@ bool Button3DEntity::CheckHit(glm::vec3 BottomLeftOffset, glm::vec3 TopRightOffs
 		TopRightOffset,
 		CameraManager::GetInstance()->GetCameraPosition(),
 		CameraManager::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos),
+
 		this->shared_from_this(), 
 		HitPos);
 	

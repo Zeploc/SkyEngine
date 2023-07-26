@@ -23,6 +23,7 @@ enum class EProjectionMode
 	Perspective
 };
 
+class EngineWindow;
 struct FTransform;
 
 class ENGINE_API CameraManager
@@ -80,7 +81,7 @@ public:
 	bool bSpectatorMovement = true;
 	float MouseSensitivity = 0.15f;
 
-	struct GLFWwindow* MainWindow;
+	std::shared_ptr<EngineWindow> MainWindow;
 
 protected:
 	

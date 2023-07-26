@@ -13,17 +13,16 @@
 class EditorApplication : public SkyEngine::Application
 {
 public:
-	EditorApplication() {}
-	~EditorApplication() {}
+	// Application* Application::EngineApplication = nullptr;
+	
+	EditorApplication() : Application() {}
+	~EditorApplication() {}	
 	
 	void ApplicationSetup() override
 	{
 		Application::ApplicationSetup();
-
-		EditorWindowManager::SetMainWindow(window);
-		
-		glfwSetWindowFocusCallback(window, EditorWindowManager::FocusChanged);
 	}
+	
 	void Update() override
 	{
 		Application::Update();

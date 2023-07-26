@@ -9,10 +9,11 @@
 //#include <freeglut.h>
 #include <iostream>
 
+#include "Core/Application.h"
+
 std::vector<EditorWindow*> EditorWindowManager::EditorWindows;
 std::vector<EditorWindow*> EditorWindowManager::EditorWindowsToRemove;
-GLFWwindow* EditorWindowManager::MainWindow = nullptr;
-GLFWwindow* EditorWindowManager::CurrentFocused = nullptr;
+std::shared_ptr<EngineWindow> EditorWindowManager::CurrentFocused = nullptr;
 
 EditorWindowManager::EditorWindowManager()
 {
@@ -20,6 +21,11 @@ EditorWindowManager::EditorWindowManager()
 
 EditorWindowManager::~EditorWindowManager()
 {
+}
+
+std::shared_ptr<EngineWindow> EditorWindowManager::GetMainWindow()
+{
+	return GetApplication()->GetApplicationWindow();
 }
 
 bool EditorWindowManager::IsRemovedID(EditorWindow* _Window)
@@ -34,13 +40,11 @@ bool EditorWindowManager::IsRemovedID(EditorWindow* _Window)
 	return false;
 }
 
-void EditorWindowManager::NewWindowCreated(EditorWindow* _window)
+void EditorWindowManager::NewWindowCreated(EditorWindow* InWindow)
 {
-	EditorWindows.push_back(_window);
-	if (_window->GetParentWindow() != MainWindow)
-	{
-		glfwSetWindowFocusCallback(_window->GetParentWindow(), FocusChanged);
-	}
+	EditorWindows.push_back(InWindow);
+	// TODO:
+	// InWindow->OnFocusChanged.Bind(this, &EditorWindowManager::FocusChanged);
 }
 
 void EditorWindowManager::WindowRemoved(EditorWindow* _Window)
@@ -117,16 +121,7 @@ void EditorWindowManager::MainWindowSizeChanged(int _w, int _h)
 	}
 }
 
-void EditorWindowManager::FocusChanged(GLFWwindow* window, int focused)
+void EditorWindowManager::FocusChanged()
 {
-	if (focused == GLFW_TRUE)
-	{
-		CurrentFocused = window;
-	}
-}
-
-void EditorWindowManager::SetMainWindow(GLFWwindow* _MainWindow)
-{
-	MainWindow = _MainWindow;
-	CurrentFocused = MainWindow;
+	// 	CurrentFocused = InWindow;
 }

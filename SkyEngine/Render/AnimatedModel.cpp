@@ -456,10 +456,10 @@ void AnimatedModel::setShaderEffectVariables()
 
 	// TODO:
 	GLuint lightPosLoc = glGetUniformLocation(program, "lightPos");
-	// glUniform3f(lightPosLoc, Lighting::LightPosition.X, Lighting::LightPosition.Y, Lighting::LightPosition.Z);
+	glUniform3f(lightPosLoc, Lighting::GetLightPosition().X, Lighting::GetLightPosition().Y, Lighting::GetLightPosition().Z);
 
 	GLuint lightColorLoc = glGetUniformLocation(program, "lightColor");
-	glUniform3f(lightColorLoc, ModelLightInfo.v3LightColour.x, ModelLightInfo.v3LightColour.y, ModelLightInfo.v3LightColour.z);
+	glUniform3f(lightColorLoc, ModelLightInfo.LightColour.X, ModelLightInfo.LightColour.Y, ModelLightInfo.LightColour.Z);
 
 	GLuint specularStrengthLoc = glGetUniformLocation(program, "specularStrength");
 	glUniform1f(specularStrengthLoc, 0.1f);

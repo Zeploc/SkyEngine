@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+#include "Camera/CameraManager.h"
 #include "Math/Vector.h"
 
 class ENGINE_API Input
@@ -45,7 +46,7 @@ public:
 
 	std::vector<class XBOXController*> Players;
 
-	void Init(struct GLFWwindow* Window);
+	void Init(std::shared_ptr<EngineWindow> Window);
 
 	void processNormalKeysDown(unsigned char key, int x, int y);
 

@@ -51,9 +51,9 @@ void TessMesh::Render(FTransform Newtransform)
 	if (bFog)
 	{
 		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, value_ptr(CameraManager::GetInstance()->GetCameraPosition().ToGLM()));
-		glUniform4fv(glGetUniformLocation(program, "vFogColor"), 1, value_ptr(Lighting::m_v4FogColour));
-		glUniform1f(glGetUniformLocation(program, "StartFog"), Lighting::StartFogDistance);
-		glUniform1f(glGetUniformLocation(program, "EndFog"), Lighting::EndFogDistance);
+		glUniform4fv(glGetUniformLocation(program, "vFogColor"), 1, value_ptr(Lighting::GetFogColour()));
+		glUniform1f(glGetUniformLocation(program, "StartFog"), Lighting::GetStartFogDistance());
+		glUniform1f(glGetUniformLocation(program, "EndFog"), Lighting::GetEndFogDistance());
 	}
 	if (bCullFace)
 	{

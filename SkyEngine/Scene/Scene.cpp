@@ -15,7 +15,9 @@
 #include <GLFW/glfw3.h>
 
 #include "Camera/CameraManager.h"
+#include "Core/Application.h"
 #include "Entity/Button3DEntity.h"
+#include "Graphics/GraphicsWindow.h"
 #include "Input/Input.h"
 
 /************************************************************
@@ -65,17 +67,8 @@ void Scene::DeleteScene()
 ************************************************************/
 void Scene::RenderScene()
 {
-	glEnable(GL_DEPTH_TEST);
-	for (unsigned int i = 0; i < Entities.size(); i++)
-	{
-		Entities[i]->DrawEntity();
-	}
-	glDisable(GL_DEPTH_TEST);
-	//glDisable(GL_CULL_FACE);
-	for (auto it : UIElements)
-	{
-		it->DrawUIElement();
-	}
+	// TODO: Properly link to graphics interface
+	GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->Render(Entities, UIElements);
 }
 
 /************************************************************
@@ -217,7 +210,7 @@ void Scene::Update()
 	{
 		if (Input::GetInstance()->KeyState[GLFW_KEY_LEFT_SHIFT] == Input::InputState::INPUT_HOLD)
 		{
-			QuitApplication();
+			GetApplication()->Quit();
 			return;
 		}
 	}
@@ -238,12 +231,6 @@ void Scene::OnLoadScene()
 			Ent->Reset();
 		}
 	}
-}
-
-void Scene::QuitApplication()
-{
-	// TODO: Change main window to not live in the editor
-	glfwSetWindowShouldClose(CameraManager::GetInstance()->MainWindow, true);
 }
 
 /************************************************************

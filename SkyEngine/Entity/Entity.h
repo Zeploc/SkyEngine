@@ -17,7 +17,6 @@
 #include "Render/Mesh.h"
 #include "System/EnumTypes.h"
 
-
 class ENGINE_API Entity : public std::enable_shared_from_this<Entity>
 {
 public:
@@ -58,8 +57,8 @@ public:
 
 	std::string EntityToString();
 
-	friend std::ostream& operator<<(std::ostream& os, const std::shared_ptr<Entity>& InEntity);
-	friend std::istream& operator>>(std::istream& is, std::shared_ptr<Entity>& InEntity);
+	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const std::shared_ptr<Entity>& InEntity);
+	ENGINE_API friend std::istream& operator>>(std::istream& is, std::shared_ptr<Entity>& InEntity);
 
 	void Translate(Vector3 _Movement);
 

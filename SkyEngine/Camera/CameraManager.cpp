@@ -11,6 +11,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 // Engine Includes //
+#include "Core/EngineWindow.h"
+#include "Graphics/GraphicsWindow.h"
 #include "Input/Input.h"
 #include "Math/FTransform.h"
 #include "Math/Matrix.h"
@@ -87,7 +89,7 @@ void CameraManager::MoveCamera(Vector3 _Movement)
 void CameraManager::EnableSpectatorControls(bool _bSpectatorControls)
 {
 	bUseSpectatorControls = _bSpectatorControls;
-	glfwSetCursorPos(MainWindow, static_cast<double>(SCR_WIDTH) * 0.5, static_cast<double>(SCR_HEIGHT) * 0.5);
+	MainWindow->GetGraphicsWindow()->SetCursorPosition({static_cast<float>(SCR_WIDTH) * 0.5f, static_cast<float>(SCR_HEIGHT) * 0.5f});
 }
 
 void CameraManager::SpectatorUpdate()
@@ -141,7 +143,7 @@ void CameraManager::SpectatorUpdate()
 			CameraPosition -= CameraUp * cameraSpeed * 0.025f;
 		}
 	}
-	glfwSetCursorPos(MainWindow, static_cast<double>(SCR_WIDTH) * 0.5, static_cast<double>(SCR_HEIGHT) * 0.5);
+	MainWindow->GetGraphicsWindow()->SetCursorPosition({static_cast<float>(SCR_WIDTH) * 0.5f, static_cast<float>(SCR_HEIGHT) * 0.5f});
 }
 
 /************************************************************

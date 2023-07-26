@@ -14,48 +14,29 @@
 #include <System/Utils.h>
 #include <UI/UIButton.h>
 
-EditorWindow::EditorWindow(std::string _WindowName, GLFWwindow* _ParentWindow, glm::vec2 _Size, glm::vec2 _Position) : WindowName(_WindowName), ParentWindow(_ParentWindow), Size(_Size), Position(_Position)
+#include "Graphics/GraphicsInstance.h"
+#include "Graphics/GraphicsWindow.h"
+
+void EditorWindow::CreateExternalWindow()
 {
-	// TODO: Fix errors
-	// if (!_ParentWindow)
-	// {
-	// 	ParentWindow = glfwCreateWindow(Size.X, Size.Y, WindowName.c_str(), nullptr, nullptr);
-	// 	if (ParentWindow == nullptr)
-	// 	{
-	// 		std::cout << "Failed to create GLFW window" << std::endl;
-	// 		return;
-	// 	}
-	// 	glfwMakeContextCurrent(ParentWindow);
-	//
-	// 	glfwSetWindowPos(ParentWindow, Position.X, Position.Y);
-	//
-	// 	glViewport(0, 0, Size.X, Size.Y);
-	//
-	// 	// OpenGL init
-	// 	glewInit();
-	//
-	// 	// Settings Initialised
-	// 	Shader::LoadAllDefaultShadersInCurrentContext();
-	//
-	// 	glCullFace(GL_BACK); // Cull the Back faces
-	// 	glFrontFace(GL_CW); // Front face is Clockwise order
-	// 	glEnable(GL_CULL_FACE); // Turn on the back face culling
-	//
-	// 	glEnable(GL_BLEND);
-	// 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//
-	// 	// The input function registration
-	// 	Input::GetInstance()->Init(ParentWindow);
-	// }
-	// else
-	// {
-	// }
-	//
-	// EditorWindowManager::NewWindowCreated(this);
-	//
-	// SetupUI();
-	//
-	// glfwMakeContextCurrent(EditorWindowManager::MainWindow);
+	LinkedWindow = EngineWindow::CreateEngineWindow(WindowName, Size, false);
+	LinkedWindow->SetWindowPosition(Position);
+	
+	// The input function registration
+	Input::GetInstance()->Init(LinkedWindow);
+}
+
+EditorWindow::EditorWindow(std::string InWindowName, std::shared_ptr<EngineWindow> InLinkedWindow, Vector2 InSize, Vector2 InPosition)
+: WindowName(InWindowName), LinkedWindow(InLinkedWindow), Size(InSize), Position(InPosition)
+{
+	if (!LinkedWindow)
+	{
+		CreateExternalWindow();
+	}
+	
+	EditorWindowManager::NewWindowCreated(this);
+	
+	SetupUI();
 }
 
 void EditorWindow::SetupGlutBindings()
@@ -65,7 +46,7 @@ void EditorWindow::SetupGlutBindings()
 
 void EditorWindow::SetupUI()
 {
-	if (ParentWindow == EditorWindowManager::MainWindow)
+	if (LinkedWindow == EditorWindowManager::GetMainWindow())
 	{
 		BackImage = std::make_shared<UIImage>(UIImage(glm::vec2(Size.X / 2.0f, Size.Y / 2.0f), EANCHOR::CENTER, 0.0f, glm::vec4(0.5f, 0.5f, 0.5f, 1.0f), Size.X, Size.Y));
 		//TestBtn->AddText("Test", "Resources/Fonts/Roboto-Thin.ttf", 30, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
@@ -92,80 +73,52 @@ EditorWindow::~EditorWindow()
 }
 
 void EditorWindow::RenderWindow()
-{
-	if (ParentWindow != EditorWindowManager::MainWindow) //seperate window
+{	
+	if (LinkedWindow != EditorWindowManager::GetMainWindow()) // Separate window
 	{
-		glfwMakeContextCurrent(ParentWindow);
-		glClearColor(BackColour.r, BackColour.g, BackColour.b, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		LinkedWindow->GetGraphicsWindow()->GetGraphicsInstance()->ClearColour = BackColour;
+		LinkedWindow->GetGraphicsWindow()->PreRender();
 	}
-	//glfwMakeContextCurrent(ParentWindow);
+	else
+	{
+		// Position viewport within existing main window
+		const Vector2 MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
+		glViewport(Position.X, MainWindowSize.Y - Position.Y - Size.Y, Size.X, Size.Y);
+	}
 
-	int width, height;
-	glfwGetWindowSize(ParentWindow, &width, &height);
-
-	glViewport(Position.X, height - Position.Y - Size.Y, Size.X, Size.Y);
 	CameraManager::GetInstance()->SCR_WIDTH = Size.X;
 	CameraManager::GetInstance()->SCR_HEIGHT = Size.Y;
 	CameraManager::GetInstance()->VIEWPORT_X = Position.X;
 	CameraManager::GetInstance()->VIEWPORT_Y = Position.Y;
 
-	glDisable(GL_DEPTH_TEST);
-
-	for (std::shared_ptr<UIElement> UIElement : UIElements)
+	LinkedWindow->GetGraphicsWindow()->Render({}, UIElements);
+	
+	if (LinkedWindow != EditorWindowManager::GetMainWindow()) // Separate window
 	{
-		UIElement->DrawUIElement();
-	}
-	if (ParentWindow != EditorWindowManager::MainWindow) //seperate window
-	{
-		glfwSwapBuffers(ParentWindow);
-		glfwMakeContextCurrent(EditorWindowManager::MainWindow);
+		LinkedWindow->GetGraphicsWindow()->PostRender();
 	}
 }
 
 void EditorWindow::PopOut()
 {
-	// TODO: Fix
-	/*//EditorWindowManager::WindowRemoved(this);
+	//EditorWindowManager::WindowRemoved(this);
 
-	ParentWindow = glfwCreateWindow(Size.X, Size.Y, WindowName.c_str(), nullptr, nullptr);
-	if (ParentWindow == nullptr)
+	CreateExternalWindow();
+	
+	if (LinkedWindow == nullptr)
 	{
-		std::cout << "Failed to create GLFW window" << std::endl;
+		std::cout << "Failed to create window" << std::endl;
 		return;
 	}
-	glfwMakeContextCurrent(ParentWindow);
 
-	int x, y;
-	glfwGetWindowPos(EditorWindowManager::MainWindow, &x, &y);
-
+	const Vector2 MainWindowPosition = EditorWindowManager::GetMainWindow()->GetPosition();
 	Position.Y += 30;
-	glfwSetWindowPos(ParentWindow, x + Position.X, y + Position.Y);
-
-	glViewport(0, 0, Size.X, Size.Y);
-
-	// OpenGL init
-	glewInit();
-
-	// Settings Initialised
-	Shader::LoadAllDefaultShadersInCurrentContext();
-
-	glCullFace(GL_BACK); // Cull the Back faces
-	glFrontFace(GL_CW); // Front face is Clockwise order
-	glEnable(GL_CULL_FACE); // Turn on the back face culling
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	// The input function registration
-	Input::GetInstance()->Init(ParentWindow);
+	LinkedWindow->SetWindowPosition(MainWindowPosition + Position);	
 
 	// FORCE SINCE RENDER DOESN'T WORK AFTER THIS LOL
 	UIElements.clear();
 
 	//EditorWindowManager::NewWindowCreated(this);
-
-	glfwMakeContextCurrent(EditorWindowManager::MainWindow);
 
 	bCanPopIn = false;
 
@@ -186,7 +139,7 @@ void EditorWindow::PopOut()
 	//SetupGlutBindings();
 	//EditorWindowManager::NewWindowCreated(this);
 	//CameraManager::GetInstance()->Init(Size.x, Size.y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
-	//CameraManager::GetInstance()->SwitchProjection(CameraManager::Perspective);*/
+	//CameraManager::GetInstance()->SwitchProjection(CameraManager::Perspective);
 }
 
 void EditorWindow::PopIn()
@@ -195,17 +148,16 @@ void EditorWindow::PopIn()
 	{
 		return;
 	}
-	if (ParentWindow == EditorWindowManager::MainWindow) //Same window
+	if (LinkedWindow == EditorWindowManager::GetMainWindow()) //Same window
 	{
 		return;
 	}
 
-	glfwDestroyWindow(ParentWindow);
-	ParentWindow = EditorWindowManager::MainWindow;
+	LinkedWindow.reset();
+	LinkedWindow = EditorWindowManager::GetMainWindow();
 
-	int MainX, MainY;
-	glfwGetWindowPos(ParentWindow, &MainX, &MainY);
-	Position -= glm::vec2(MainX, MainY);
+	const Vector2 MainWindowPosition = LinkedWindow->GetPosition();
+	Position -= MainWindowPosition;
 	Position.Y -= 30;
 
 	SetupUI();
@@ -256,15 +208,16 @@ void EditorWindow::SetBackColour(glm::vec3 _Colour)
 
 void EditorWindow::UpdateWindow()
 {
-	if (ParentWindow != EditorWindowManager::MainWindow) //seperate window
-	{
-		int MainX, MainY, MainWidth, MainHeight;
-		glfwGetWindowPos(EditorWindowManager::MainWindow, &MainX, &MainY);
-		glfwGetWindowSize(EditorWindowManager::MainWindow, &MainWidth, &MainHeight);
+	if (LinkedWindow != EditorWindowManager::GetMainWindow()) //seperate window
+	{		
+		const Vector2 MainWindowPosition = EditorWindowManager::GetMainWindow()->GetPosition();
+		const Vector2 MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
+		
 		// Update position
 		GetPosition();
 
-		if (Position.X + Size.X > MainX && Position.X < MainX + MainWidth && Position.Y > MainY && Position.Y < MainY + MainHeight)
+		if (Position.X + Size.X > MainWindowPosition.X && Position.X < MainWindowPosition.X + MainWindowSize.X &&
+			Position.Y > MainWindowPosition.Y && Position.Y < MainWindowPosition.Y + MainWindowSize.Y)
 		{
 			std::cout << "Window Pos: " << Position.ToString() << std::endl;
 			PopIn();
@@ -275,7 +228,7 @@ void EditorWindow::UpdateWindow()
 		}
 	}
 
-	glfwMakeContextCurrent(ParentWindow);
+	LinkedWindow->GetGraphicsWindow()->FocusWindow();
 
 	CameraManager::GetInstance()->SCR_WIDTH = Size.X;
 	CameraManager::GetInstance()->SCR_HEIGHT = Size.Y;
@@ -327,27 +280,25 @@ void EditorWindow::UpdateWindow()
 
 Vector2 EditorWindow::GetPosition()
 {
-	if (ParentWindow != EditorWindowManager::MainWindow)
+	if (LinkedWindow != EditorWindowManager::GetMainWindow())
 	{
-		int x, y;
-		glfwGetWindowPos(ParentWindow, &x, &y);
-		Position = glm::vec2(x, y);
+		Position = LinkedWindow->GetPosition();
 	}
 	return Position;
 }
 
 void EditorWindow::SetWindowPosition(Vector2 _position)
 {
-	if (ParentWindow != EditorWindowManager::MainWindow)
+	if (LinkedWindow != EditorWindowManager::GetMainWindow())
 	{
-		glfwSetWindowPos(ParentWindow, _position.X, _position.Y);
+		LinkedWindow->SetWindowPosition(_position);
 	}
 	Position = _position;
 }
 
 void EditorWindow::MainWindowSizeChanged(int _w, int _h)
 {
-	if (ParentWindow != EditorWindowManager::MainWindow) //seperate window
+	if (LinkedWindow != EditorWindowManager::GetMainWindow()) //seperate window
 	{
 		Size = glm::vec2(_w, _h);
 	}

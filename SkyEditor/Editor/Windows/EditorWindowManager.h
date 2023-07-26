@@ -4,6 +4,8 @@
 
 #include <vector>
 
+#include "Core/EngineWindow.h"
+
 class EditorWindowManager
 {
 public:
@@ -11,7 +13,7 @@ public:
 
 	~EditorWindowManager();
 
-	static void NewWindowCreated(class EditorWindow* _window);
+	static void NewWindowCreated(class EditorWindow* InWindow);
 
 	static void WindowRemoved(EditorWindow* _Window);
 
@@ -21,22 +23,22 @@ public:
 
 	static void MainWindowSizeChanged(int _w, int _h);
 
-	static void FocusChanged(struct GLFWwindow* window, int focused);
+	static void FocusChanged();
 
-	static GLFWwindow* GetCurrentFocus() { return CurrentFocused; };
+	static std::shared_ptr<EngineWindow> GetCurrentFocus() { return CurrentFocused; };
 
 	static std::vector<class EditorWindow*> GetWindows() { return EditorWindows; };
 
-	static void SetMainWindow(GLFWwindow* _MainWindow);
+	static std::shared_ptr<EngineWindow> GetMainWindow();	
 
 protected:
 	static bool IsRemovedID(EditorWindow* _Window);
 
 public:
-	static struct GLFWwindow* MainWindow;
 
 protected:
-	static struct GLFWwindow* CurrentFocused;
+	// TODO: Link focus
+	static std::shared_ptr<EngineWindow> CurrentFocused;
 
 	static std::vector<EditorWindow*> EditorWindows;
 	static std::vector<EditorWindow*> EditorWindowsToRemove;

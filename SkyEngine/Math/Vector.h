@@ -27,6 +27,7 @@ struct ENGINE_API Vector2
 
 	Vector2()
 	{
+		X = Y = 0.0f;
 	}
 
 	Vector2(float _x, float _y)
@@ -137,8 +138,7 @@ inline Vector2 operator/(float f, const Vector2& l)
 }
 
 struct ENGINE_API Vector3
-{
-	
+{	
 	union { float X, R; };
 	union { float Y, G; };
 	union { float Z, B; };

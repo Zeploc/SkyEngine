@@ -12,9 +12,9 @@
 #include "Camera/CameraManager.h"
 
 // Static variables //
-// Vector3 Lighting::LightPosition = {5, 10, 5};
-// Vector3 Lighting::SunDirection = {15, 2, 25};
-glm::vec4 Lighting::m_v4FogColour = {0.5f, 0.5f, 0.5f, 1.0f};
+Vector3 Lighting::LightPosition = {5, 10, 5};
+Vector3 Lighting::SunDirection = {15, 2, 25};
+glm::vec4 Lighting::FogColour = {0.5f, 0.5f, 0.5f, 1.0f};
 float Lighting::StartFogDistance = 30.0f;
 float Lighting::EndFogDistance = 45.0f;
 
@@ -48,11 +48,50 @@ void Lighting::PassLightingToShader(GLuint program, LightInfo _LightInfo, FTrans
 	glm::mat4 model = translate * rotation * scale;
 
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, value_ptr(model));
-	// TODO:
-	// glUniform3fv(glGetUniformLocation(program, "lightPos"), 1, value_ptr(LightPosition.ToGLM()));
+	glUniform3fv(glGetUniformLocation(program, "lightPos"), 1, value_ptr(LightPosition.ToGLM()));
 	glUniform3fv(glGetUniformLocation(program, "camPos"), 1, value_ptr(CameraManager::GetInstance()->GetCameraPosition().ToGLM()));
-	glUniform3fv(glGetUniformLocation(program, "lightColor"), 1, value_ptr(_LightInfo.v3LightColour));
+	glUniform3fv(glGetUniformLocation(program, "lightColor"), 1, value_ptr(_LightInfo.LightColour.ToGLM()));
 	glUniform1f(glGetUniformLocation(program, "ambientStr"), _LightInfo.fAmbientStrength);
 	glUniform1f(glGetUniformLocation(program, "lightSpecStr"), _LightInfo.fLightSpecStrength);
 	glUniform1f(glGetUniformLocation(program, "shininess"), _LightInfo.fShininess);
+}
+
+Vector3 Lighting::GetLightPosition()
+{
+	return LightPosition;
+}
+
+Vector3 Lighting::GetSunDirection()
+{
+	return SunDirection;
+}
+
+glm::vec4 Lighting::GetFogColour()
+{
+	return FogColour;
+}
+
+float Lighting::GetStartFogDistance()
+{
+	return StartFogDistance;
+}
+
+float Lighting::GetEndFogDistance()
+{
+	return EndFogDistance;
+}
+
+void Lighting::SetLightPosition(Vector3 InLightPosition)
+{
+	LightPosition = InLightPosition;
+}
+
+void Lighting::SetSunDirection(Vector3 InSunDirection)
+{
+	SunDirection = InSunDirection;
+}
+
+void Lighting::SetFogColour(glm::vec4 InFogColour)
+{
+	FogColour = InFogColour;
 }

@@ -9,13 +9,17 @@
 
 #include <Math/Vector.h>
 
+#include "Core/EngineWindow.h"
+
 class UIElement;
 class UIImage;
 
 class EditorWindow
 {
 public:
-	EditorWindow(std::string _WindowName, struct GLFWwindow* _ParentWindow = nullptr, glm::vec2 _Size = glm::vec2(100, 100), glm::vec2 _Position = glm::vec2(0, 0));
+	void CreateExternalWindow();
+
+	EditorWindow(std::string InWindowName, std::shared_ptr<EngineWindow> InLinkedWindow = nullptr, Vector2 InSize = Vector2(100, 100), Vector2 InPosition = Vector2(0, 0));
 
 	void SetupGlutBindings();
 
@@ -29,7 +33,7 @@ public:
 
 	void SetWindowPosition(Vector2 _position);
 
-	GLFWwindow* GetParentWindow() { return ParentWindow; }
+	std::shared_ptr<EngineWindow> GetParentWindow() { return LinkedWindow; }
 
 	void MainWindowSizeChanged(int _w, int _h);
 
@@ -55,7 +59,7 @@ protected:
 	glm::vec3 BackColour = glm::vec3(1, 1, 1);
 
 	std::string WindowName;
-	GLFWwindow* ParentWindow;
+	std::shared_ptr<EngineWindow> LinkedWindow;
 
 	std::shared_ptr<UIImage> BackImage;
 

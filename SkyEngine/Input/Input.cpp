@@ -12,6 +12,9 @@
 #include "UI/UIButton.h"
 
 #include "Camera/CameraManager.h"
+#include "Core/Application.h"
+#include "Core/EngineWindow.h"
+#include "Graphics/GLFW/GLFWWindow.h"
 
 // Static Variables //
 std::map<int, Input*> Input::m_pInputs;
@@ -97,11 +100,15 @@ void Input::DestoryInstance()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Input::Init(GLFWwindow* Window)
+void Input::Init(std::shared_ptr<EngineWindow> Window)
 {
-	glfwSetKeyCallback(Window, LprocessKeys);
-	glfwSetCursorPosCallback(Window, LMouseInput);
-	glfwSetMouseButtonCallback(Window, LMouseButton);
+	// TODO: Temp until input interface is made generic
+	std::shared_ptr<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(Window->GetGraphicsWindow());
+	GLFWwindow* glfwWindow = GlfwWindow->GetGlWindow();
+
+	glfwSetKeyCallback(glfwWindow, LprocessKeys);
+	glfwSetCursorPosCallback(glfwWindow, LMouseInput);
+	glfwSetMouseButtonCallback(glfwWindow, LMouseButton);
 	/*
 	glutSpecialFunc(Input::LprocessSpecialKeys);*/
 	//glutJoystickFunc(LJoystick, (float)GLUT_JOYSTICK_POLL_RATE / 100.0f);
@@ -348,13 +355,17 @@ std::string Input::InputStateString(unsigned int State)
 
 void Input::SetCursorVisible(bool _bIsVisible)
 {
+	// TODO: Temp until input interface is made generic	
+	std::shared_ptr<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(GetApplication()->GetApplicationWindow()->GetGraphicsWindow());
+	GLFWwindow* glfwWindow = GlfwWindow->GetGlWindow();
+	
 	if (_bIsVisible)
 	{
-		glfwSetInputMode(CameraManager::GetInstance()->MainWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 	else
 	{
-		glfwSetInputMode(CameraManager::GetInstance()->MainWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	}
 	bCursorVisible = _bIsVisible;
 }

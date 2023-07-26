@@ -18,6 +18,9 @@
 #include "System/Time.h"
 #include "System/LogManager.h"
 #include "Camera/CameraManager.h"
+#include "Graphics/GraphicsInstance.h"
+#include "Graphics/GraphicsWindow.h"
+#include "Graphics/GLFW/GLFWInterface.h"
 #include "Render/FrameBuffer.h"
 #include "Render/Shader.h"
 #include "Render/Lighting.h"
@@ -28,9 +31,12 @@
 
 namespace SkyEngine
 {
+	// TODO: Fix so not needed in derived projects
+	Application* Application::EngineApplication = nullptr;
 	
 	Application::Application()
 	{
+		EngineApplication = this;
 	}
 
 	Application::~Application()
@@ -44,8 +50,6 @@ namespace SkyEngine
 	#define CAM CameraManager::GetInstance() 
 	#define SM SceneManager::GetInstance()
 
-	void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-	void glfw_onError(int error, const char * description);
 	// void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
 	void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
@@ -62,80 +66,40 @@ namespace SkyEngine
 
 	void Application::ApplicationSetup()
 	{
+		// TODO: Temp setup as GLFW
+		GraphicsInterface = make_shared<GLFWInterface>();
+		
 		srand(unsigned int(time(NULL)));
 
-		glfwInit();
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-		
-		// Enable debugging context
-		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
-		glEnable(GL_DEBUG_OUTPUT);
-		glfwSetErrorCallback(glfw_onError);
-		// TODO: Debug messages
-		// glDebugMessageCallback(MessageCallback, NULL);
-		// glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
+		Lighting::SetFogColour(Vector4(SkyColour, 1.0f).ToGLM());
 
-		Lighting::m_v4FogColour = Vector4(SkyColour, 1.0f).ToGLM();
-
-		GLFWmonitor* FullscreenMonitor = nullptr;
-		Vector2 WindowPosition;
-		bool bFullScreen = false;
-		if (bFullScreen)
+		ApplicationWindow = EngineWindow::CreateEngineWindow("Application Window", MainWindowSize, false);
+		if (!ApplicationWindow)
 		{
-			int* MonitorCount = new int;
-			GLFWmonitor** GlfwGetMonitors = glfwGetMonitors(MonitorCount);
-			FullscreenMonitor = GlfwGetMonitors[0];
-		}
-		else
-		{
-			int MonitorCount;
-			GLFWmonitor** GlfwGetMonitors = glfwGetMonitors(&MonitorCount);
-			int x, y, width, height;
-			glfwGetMonitorWorkarea(GlfwGetMonitors[0], &x, &y, &width, &height);
-			WindowPosition.X = width / 2.0f - MainWindowSize.X / 2.0f;
-			WindowPosition.Y = height / 2.0f - MainWindowSize.Y / 2.0f;
-		}
-		window = glfwCreateWindow(MainWindowSize.X, MainWindowSize.Y, "Editor", FullscreenMonitor, NULL);
-		if (window == NULL)
-		{
-			std::cout << "Failed to create GLFW window" << std::endl;
-			glfwTerminate();
 			// TODO: Error management
-			return;// -1;
+			OnExit();
 		}
-		glfwMakeContextCurrent(window);
+		ApplicationWindow->GetGraphicsWindow()->FocusWindow();
+		ApplicationWindow->GetGraphicsWindow()->GetGraphicsInstance()->ClearColour = SkyColour;
 
 		CAM->Init(MainWindowSize.X, MainWindowSize.Y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
 		// CAM->SwitchProjection(EProjectionMode::Perspective);
-		CAM->MainWindow = window;
-
-		glViewport(0, 0, MainWindowSize.X, MainWindowSize.Y);
-		glfwSetWindowPos(window, WindowPosition.X, WindowPosition.Y);
+		CAM->MainWindow = ApplicationWindow;
 		
-		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);		
-
-		// OpenGL init
-		glewInit();
-
 		// Settings Initialised
 		Init();
 
+		// TODO: Move to window?
 		// The input function registration
-		SI->Init(window);
+		SI->Init(ApplicationWindow);
 	}
 
 	void Application::Run()
 	{
 		ApplicationSetup();
 
-		while (!glfwWindowShouldClose(window))
+		while (!ApplicationWindow->ShouldWindowClose())
 		{
-			// TODO: Create colour type
-			glClearColor(SkyColour.R, SkyColour.G, SkyColour.B, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glViewport(0, 0, MainWindowSize.X, MainWindowSize.Y);
 			CAM->SCR_WIDTH = MainWindowSize.X;
 			CAM->SCR_HEIGHT = MainWindowSize.Y;
 			CAM->VIEWPORT_X = 0;
@@ -148,22 +112,14 @@ namespace SkyEngine
 			CAM->VIEWPORT_Y = 0;
 
 			RenderScene();
-
-			glfwSwapBuffers(window);
-			glfwPollEvents();
 		}
-		glfwTerminate();
+		
 		OnExit();
 	}
 
-	void glfw_onError(int error, const char* description)
+	void Application::Quit()
 	{
-		// print message in Windows popup dialog box
-		MessageBox(NULL, LPCWSTR(description), LPCWSTR("GLFW error"), MB_OK);
-	}
-	void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-	{
-		glViewport(0, 0, width, height);
+		ApplicationWindow->GetGraphicsWindow()->CloseWindow();
 	}
 
 	void Application::Update()
@@ -196,9 +152,10 @@ namespace SkyEngine
 
 	void Application::RenderScene()
 	{
-		glfwMakeContextCurrent(CAM->MainWindow);
+		ApplicationWindow->GetGraphicsWindow()->PreRender();		
 		if (bLoading)
 		{
+			// TODO: Change to graphics instance
 			glClearColor(0.8f, 0.8f, 0.8f, 1.0); // clear grey
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			LogManager::GetInstance()->Render();
@@ -207,6 +164,7 @@ namespace SkyEngine
 		{
 			SM->RenderCurrentScene();
 		}
+		ApplicationWindow->GetGraphicsWindow()->PostRender();		
 	}
 
 	void Application::ChangeSize(int w, int h)
@@ -217,19 +175,13 @@ namespace SkyEngine
 	
 	void Application::Init()
 	{
-		Shader::LoadAllDefaultShadersInCurrentContext();
-		glCullFace(GL_BACK); // Cull the Back faces
-		glFrontFace(GL_CW); // Front face is Clockwise order
-		glEnable(GL_CULL_FACE); // Turn on the back face culling
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 		LogManager::GetInstance()->Init();
 	}
 
 	void Application::OnExit()
 	{
+		ApplicationWindow.reset();
+		GraphicsInterface.reset();
 		Shader::CleanUp();
 		SceneManager::DestoryInstance();
 		CameraManager::DestoryInstance();
@@ -237,5 +189,14 @@ namespace SkyEngine
 		SoundManager::DestoryInstance();
 		Text::Fonts.~vector();
 	}
+}
 
+SkyEngine::Application* SkyEngine::Application::GetApplication()
+{
+	return EngineApplication;
+}
+
+SkyEngine::Application* GetApplication()
+{
+	return SkyEngine::Application::GetApplication();
 }

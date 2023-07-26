@@ -50,8 +50,6 @@ public:
 		bIsPersistant = _bIsPersistant;
 	};
 
-	void QuitApplication();
-
 	bool operator==(const Scene& rhs) const;
 
 	std::string SceneName;

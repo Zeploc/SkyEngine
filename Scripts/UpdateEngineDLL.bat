@@ -1,0 +1,2 @@
+echo f | xcopy /y /s ..\Binaries\Debug-x64\SkyEngine\SkyEngine.dll ..\Binaries\Debug-x64\SkyEditor\SkyEngine.dll
+echo f | xcopy /y /s ..\Binaries\Debug-x64\SkyEngine\SkyEngine.dll ..\Binaries\Debug-x64\Sandbox\SkyEngine.dll
