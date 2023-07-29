@@ -74,7 +74,7 @@ bool Button3DEntity::CheckHit(glm::vec3 BottomLeftOffset, glm::vec3 TopRightOffs
 		this->shared_from_this(), 
 		HitPos);
 	
-	// glm::vec3 rayDirection = CameraManager::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos).ToGLM();
+	// glm::vec3 rayDirection = CameraManager::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos);
 	//
 	// glm::vec3 AnchoredPosition = Utils::GetAncoredPosition(Transform.Position, glm::vec3(EntityMesh->m_fWidth, EntityMesh->m_fHeight, EntityMesh->m_fDepth), EntityAnchor);
 	// glm::vec3 lb = BottomLeftOffset + AnchoredPosition;

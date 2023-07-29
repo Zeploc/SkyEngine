@@ -58,7 +58,7 @@ void UISlider::DrawUIElement()
 ************************************************************/
 void UISlider::Update()
 {
-	glm::vec2 MousePos = Input::GetInstance()->MousePos.ToGLM();
+	glm::vec2 MousePos = Input::GetInstance()->MousePos;
 
 	SliderBar.Update();
 	SliderHandle.Update();

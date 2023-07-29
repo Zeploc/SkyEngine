@@ -3,7 +3,10 @@
 A custom project for developing an engine and editor for experience purposes.
 
 # Install
-- The static library of `assimp-vc143-mtd.lib` will need to be compiled for wind64 and added to `\Engine\Dependencies\assimp`
+- Visual studio 2022 required with v143
+- The static library of `assimp-vc143-mtd.lib` will need to be compiled for wind64 and added to `\Engine\Dependencies\lib\Win64\assimp`
+- Download from: https://drive.google.com/file/d/195Gt-4vgENILfUUh3QUWRIc6iwf5Rtrc/view?usp=sharing
+- TODO: Include manual assimp compile steps (Uses CMake)
  
 # Currently supports:
 ## Input

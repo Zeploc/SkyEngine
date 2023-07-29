@@ -5,6 +5,7 @@
 
 #include "Delegates.h"
 #include "Math/Vector.h"
+#include "Math/Vector2.h"
 
 class IGraphicsWindow;
 

@@ -241,7 +241,7 @@ void Matrix4::SetOrthographicProjection(const OrthoProjInfo& P)
 
 Vector4 Matrix4::operator*(const Vector4& V) const
 {
-	glm::vec4 Vec4 = ToGLM() * V.ToGLM();
+	glm::vec4 Vec4 = ToGLM() * V;
 	return Vec4;
 
 	// TODO: Fix

@@ -8,7 +8,7 @@
 
 #include "Vector.h"
 
-Rotator::Rotator(Vector3 V)
+Rotator::Rotator(const Vector3& V)
 {
 	Pitch = V.X;
 	Yaw = V.Y;

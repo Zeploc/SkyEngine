@@ -108,7 +108,7 @@ void EditorScene::AddSampleEntities()
 	FloorEntity->AddMesh(FloorPlanMesh);
 	FloorPlanMesh->bCullFace = false;
 	AddEntity(FloorEntity, true);
-
+	
 	std::shared_ptr<ParticleSystem> ParticleBoy(new ParticleSystem({{20, 8, 10}, {0, 0, 0}, {1, 1, 1}}));
 	ParticleBoy->SetPositionRange({-5, 5}, {0, 0}, {-5, 5});
 	ParticleBoy->SetDirectionRange({0, 0}, {-1, -1}, {0, 0});
@@ -196,7 +196,7 @@ void EditorScene::UpdateSelectedEntity()
 			for (int i = 0; i < HitEntities.size(); i++)
 			{
 				// If new hit is closer
-				if ((rayStart - HitPosition[i]).Size() < (rayStart - HitPosition[ClosestHitID]).Size())
+				if (glm::length(rayStart - HitPosition[i]) < glm::length(rayStart - HitPosition[ClosestHitID]))
 				{
 					ClosestHitID = i;
 				}

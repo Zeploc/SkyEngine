@@ -2,6 +2,8 @@
 
 #include "Quaternion.h"
 
+#include "Vector.h"
+
 Quaternion::Quaternion(float _x, float _y, float _z, float _w)
 {
 	X = _x;

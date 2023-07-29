@@ -5,241 +5,92 @@
 
 #include "Core/Core.h"
 #include <string>
+#include <iostream>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Math/MathDefinitions.h"
 
 struct Rotator;
 
-struct Vector2i
-{
-	int x;
-	int y;
-};
-
-// TODO: Change to vector base
-// TODO: Template for type (float, int, double)
-// TODO: Use for loops for basic operations in base
-
-struct ENGINE_API Vector2
-{
-	float X;
-	float Y;
-
-	Vector2()
-	{
-		X = Y = 0.0f;
-	}
-
-	Vector2(float _x, float _y)
-	{
-		X = _x;
-		Y = _y;
-	}
-	Vector2(glm::vec2 V)
-	{
-		X = V.x;
-		Y = V.y;
-	}
-	glm::vec2 ToGLM() const
-	{
-		return glm::vec2(X, Y);
-	}
-	
-	std::string ToString() const
-	{
-		// TODO: Update c++
-		// std::format
-		char Str[1024];
-		sprintf_s(Str,"(%.02f, %.02f)", X, Y);
-		return Str;
-	}
-	
-	Vector2& operator+=(const Vector2& r)
-	{
-		X += r.X;
-		Y += r.Y;
-
-		return *this;
-	}
-
-	Vector2& operator-()
-	{
-		X *= -1;
-		Y *= -1;
-
-		return *this;
-	}
-
-	Vector2& operator-=(const Vector2& r)
-	{
-		X -= r.X;
-		Y -= r.Y;
-
-		return *this;
-	}
-
-	Vector2& operator*=(float f)
-	{
-		X *= f;
-		Y *= f;
-
-		return *this;
-	}
-	
-	Vector2 Cross(const Vector2& V) const;
-
-	float Dot(const Vector2& V) const;
-
-	Vector2 GetNormalized();
-	Vector2& Normalize();
-
-	float Size() const;
-};
-
-
-inline Vector2 operator+(const Vector2& l, const Vector2& r)
-{
-	Vector2 Ret(l.X + r.X,
-				 l.Y + r.Y);
-
-	return Ret;
-}
-
-inline Vector2 operator-(const Vector2& l, const Vector2& r)
-{
-	Vector2 Ret(l.X - r.X,
-				 l.Y - r.Y);
-
-	return Ret;
-}
-
-inline Vector2 operator*(const Vector2& l, float f)
-{
-	Vector2 Ret(l.X * f,
-				 l.Y * f);
-
-	return Ret;
-}
-
-inline Vector2 operator/(const Vector2& l, float f)
-{
-	Vector2 Ret(l.X / f,
-				 l.Y / f);
-
-	return Ret;
-}
-
-inline Vector2 operator/(float f, const Vector2& l)
-{
-	Vector2 Ret(f / l.X,
-				 f / l.Y);
-
-	return Ret;
-}
-
-struct ENGINE_API Vector3
+template <typename T = float>
+struct ENGINE_API Vector3x : glm::tvec3<T, glm::highp>
 {	
-	union { float X, R; };
-	union { float Y, G; };
-	union { float Z, B; };
-	// float X;
-	// float Y;
-	// float Z;
+	T& X = glm::tvec3<T>::x;
+	T& Y = glm::tvec3<T>::y;
+	T& Z = glm::tvec3<T>::z;	
+	T& R = glm::tvec3<T>::x;
+	T& G = glm::tvec3<T>::y;
+	T& B = glm::tvec3<T>::z;	
 
-	Vector3()
+	// TODO: Inherit constructors
+	// using glm::tvec3<T>::glm::tvec3;
+	
+	Vector3x()
+		: glm::tvec3<T>()
 	{
-		X = Y = Z = 0;
-	}
-
-	Vector3(float _x, float _y, float _z)
-	{
-		X = _x;
-		Y = _y;
-		Z = _z;
-	}
-
-	Vector3(const float* pFloat)
-	{
-		X = pFloat[0];
-		Y = pFloat[0];
-		Z = pFloat[0];
-	}
-
-	Vector3(float f)
-	{
-		X = Y = Z = f;
-	}
-
-	Vector3(Vector2 V, float _z)
-	{
-		X = V.X;
-		Y = V.Y;
-		Z = _z;
+		
 	}
 	
-	Vector3(glm::vec3 V)
+	Vector3x(const Vector3x& Other)
+		: glm::tvec3<T>(Other)
 	{
-		X = V.x;
-		Y = V.y;
-		Z = V.z;
+		
+	}
+	Vector3x(const glm::tvec3<T>& Other)
+		: glm::tvec3<T>(Other)
+	{
+		
+	}
+	Vector3x(const glm::tvec2<T>& V2, T Z)
+		: glm::tvec3<T>(V2, Z)
+	{
+		
+	}
+	
+	Vector3x(T InX, T InY, T InZ)
+	{
+		X = InX;
+		Y = InY;
+		Z = InZ;
+	}
+	
+	Vector3x & operator=(Vector3x const & v)
+	{
+		return *this = v;
+	}
+	
+	Vector3x Cross(const Vector3x& V) const
+	{
+		return glm::cross<T>(*this, V);
 	}
 
-	glm::vec3 ToGLM() const
+	float Dot(const Vector3x& V) const
 	{
-		return glm::vec3(X, Y, Z);
+		return glm::dot<T>(*this, V);
 	}
 
-	Vector3& operator+=(const Vector3& r)
+	Vector3x GetNormalized() const
 	{
-		X += r.X;
-		Y += r.Y;
-		Z += r.Z;
-
-		return *this;
+		return glm::normalize(*this);
 	}
 
-	Vector3& operator-()
+	Vector3x& Normalize()
 	{
-		X *= -1;
-		Y *= -1;
-		Z *= -1;
-
-		return *this;
+		return *this = glm::normalize(*this);
 	}
 
-	Vector3& operator-=(const Vector3& r)
+	T Size() const
 	{
-		X -= r.X;
-		Y -= r.Y;
-		Z -= r.Z;
-
-		return *this;
+		return glm::length(*this);
 	}
 
-	Vector3& operator*=(float f)
+	/* Vector rotated by an angle and axis */
+	void Rotate(T Angle, const Vector3x& Axis)
 	{
-		X *= f;
-		Y *= f;
-		Z *= f;
-
-		return *this;
+		glm::mat4 RotateMatrix = glm::rotate(glm::mat4(1), glm::radians(Angle), Axis);
+		*this = glm::vec4(*this, 1.0f) * RotateMatrix;
 	}
-
-	operator const float*() const
-	{
-		return &(X);
-	}
-
-	Vector3 Cross(const Vector3& V) const;
-
-	float Dot(const Vector3& V) const;
-
-	Vector3 GetNormalized() const;
-	Vector3& Normalize();
-
-	float Size() const;
-
-	void Rotate(float Angle, const Vector3& Axis);
+	/* Direction vector to a rotator */
 	Rotator ToRotator() const;
 	
 	std::string ToString() const
@@ -256,121 +107,53 @@ struct ENGINE_API Vector3
 		printf("(%.02f, %.02f, %.02f)", X, Y, Z);
 	}
 	
-	friend std::ostream& operator<<(std::ostream& os, const Vector3& InVector);
-	friend std::istream& operator>>(std::istream& is, Vector3& OutVector);
-};
-
-inline Vector3 operator+(const Vector3& l, const Vector3& r)
-{
-	Vector3 Ret(l.X + r.X,
-				 l.Y + r.Y,
-				 l.Z + r.Z);
-
-	return Ret;
-}
-
-inline Vector3 operator-(const Vector3& l, const Vector3& r)
-{
-	Vector3 Ret(l.X - r.X,
-				 l.Y - r.Y,
-				 l.Z - r.Z);
-
-	return Ret;
-}
-
-inline Vector3 operator*(const Vector3& l, float f)
-{
-	Vector3 Ret(l.X * f,
-				 l.Y * f,
-				 l.Z * f);
-
-	return Ret;
-}
-
-inline Vector3 operator/(const Vector3& l, float f)
-{
-	Vector3 Ret(l.X / f,
-				 l.Y / f,
-				 l.Z / f);
-
-	return Ret;
-}
-
-inline Vector3 operator/(float f, const Vector3& l)
-{
-	Vector3 Ret(f / l.X,
-				 f / l.Y,
-				 f / l.Z);
-
-	return Ret;
-}
-
-
-
-
-
-struct ENGINE_API Vector4
-{
-	float X;
-	float Y;
-	float Z;
-	float W;
-
-	Vector4()
+	friend std::ostream& operator<<(std::ostream& os, const Vector3x& InVector)
 	{
+		// TODO: Improve to not use to string
+		os << "(";
+		os << std::to_string(InVector.X) << std::string(" ");
+		os << std::to_string(InVector.Y) << std::string(" ");
+		os << std::to_string(InVector.Z);
+		os << ")";
+		return os;
 	}
-
-	Vector4(float _x, float _y, float _z, float _w)
+	friend std::istream& operator>>(std::istream& is, Vector3x& OutVector)
 	{
-		X = _x;
-		Y = _y;
-		Z = _z;
-		W = _w;
-	}
-
-	Vector4(glm::vec4 V)
-	{
-		X = V.x;
-		Y = V.y;
-		Z = V.z;
-		W = V.w;
-	}
-	
-	Vector4(Vector3 V, float _w)
-	{
-		X = V.X;
-		Y = V.Y;
-		Z = V.Z;
-		W = _w;
-	}
-	glm::vec4 ToGLM() const
-	{
-		return glm::vec4(X, Y, Z, W);
-	}
-	
-	void Print(bool endl = true) const
-	{
-		printf("(%.02f, %.02f, %.02f, %.02f)", X, Y, Z, W);
-
-		if (endl)
-		{
-			printf("\n");
-		}
-	}
-
-	Vector3 To3F() const
-	{
-		const Vector3 V(X, Y, Z);
-		return V;
+		std::string Empty;
+		// TODO: Improve bracket removal
+		// std::getline(is, Empty, '(');
+		std::string StringX, StringY, StringZ;
+		is >> StringX >> StringY >> StringZ;
+		// TODO: Improve from substring
+		OutVector.X = std::stof(StringX.substr(1, StringX.length() - 1));
+		OutVector.Y = std::stof(StringY.substr(0, StringY.length() - 1));
+		OutVector.Z = std::stof(StringZ.substr(0, StringZ.length() - 1));
+		// std::getline(is, Empty, ')');
+		return is;
 	}
 };
 
-inline Vector4 operator/(const Vector4& l, float f)
-{
-	Vector4 Ret(l.X / f,
-	             l.Y / f,
-	             l.Z / f,
-	             l.W / f);
+using Vector3 = Vector3x<float>;
+using Vector3i = Vector3x<int>;
 
-	return Ret;
+#include "Rotator.h"
+
+template <typename T>
+Rotator Vector3x<T>::ToRotator() const
+{
+	// Get Angle on the lateral plane (will be in radians)
+	const float YawAngle = atan2(X,Z);
+	// TODO: Do pitch correctly
+	// Get pitch based on Y (Up)
+	const float PitchAngle = Size() * sin(Y);
+
+	Rotator NewRotator;
+	NewRotator.Yaw = ToDegree(YawAngle);//Magnitude * cos(Angle));
+	NewRotator.Pitch = ToDegree(PitchAngle);//ToDegree(Magnitude * sin(Angle));
+
+	// Default roll to 0 ie Z up
+	NewRotator.Roll = 0;
+
+	return NewRotator;
 }
+

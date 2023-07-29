@@ -15,9 +15,9 @@ TransformationWidget::TransformationWidget(FTransform _Transform, Scene* OwningS
 	YMoveTransform = std::make_shared<Entity>(_Transform, EANCHOR::CENTER);
 	ZMoveTransform = std::make_shared<Entity>(_Transform, EANCHOR::CENTER);
 	XColour = {0.6f, 0.1f, 0.1f, 1.0f};
-	std::shared_ptr<Cube> XMoveTransformMesh(new Cube(1.0f, 0.1f, 0.1f, XColour.ToGLM()));
-	std::shared_ptr<Cube> ZMoveTransformMesh(new Cube(0.1f, 0.1f, 1.0f, ZColour.ToGLM()));
-	std::shared_ptr<Cube> YMoveTransformMesh(new Cube(0.1f, 1.0f, 0.1f, YColour.ToGLM()));
+	std::shared_ptr<Cube> XMoveTransformMesh(new Cube(1.0f, 0.1f, 0.1f, XColour));
+	std::shared_ptr<Cube> ZMoveTransformMesh(new Cube(0.1f, 0.1f, 1.0f, ZColour));
+	std::shared_ptr<Cube> YMoveTransformMesh(new Cube(0.1f, 1.0f, 0.1f, YColour));
 	XMoveTransformMesh->bDepthTest = false;
 	ZMoveTransformMesh->bDepthTest = false;
 	YMoveTransformMesh->bDepthTest = false;
@@ -145,15 +145,15 @@ void TransformationWidget::Update()
 
 	// TODO: Update so colour gets updated (only happens on bind
 	XMoveTransform->EntityMesh->bStencil = XHovered;
-	XMoveTransform->EntityMesh->Colour = XColour.ToGLM() * (XHovered ? 2.0f : 1.0f);
+	XMoveTransform->EntityMesh->Colour = XColour * (XHovered ? 2.0f : 1.0f);
 	//XMoveTransform->EntityMesh->Rebind();
 
 	YMoveTransform->EntityMesh->bStencil = YHovered;
-	YMoveTransform->EntityMesh->Colour = YColour.ToGLM() * (YHovered ? 2.0f : 1.0f);
+	YMoveTransform->EntityMesh->Colour = YColour * (YHovered ? 2.0f : 1.0f);
 	//YMoveTransform->EntityMesh->Rebind();
 
 	ZMoveTransform->EntityMesh->bStencil = ZHovered;
-	ZMoveTransform->EntityMesh->Colour = ZColour.ToGLM() * (ZHovered ? 2.0f : 1.0f);
+	ZMoveTransform->EntityMesh->Colour = ZColour * (ZHovered ? 2.0f : 1.0f);
 	//ZMoveTransform->EntityMesh->Rebind();
 
 	// Update child transforms

@@ -21,6 +21,7 @@
 #include "Graphics/GraphicsInstance.h"
 #include "Graphics/GraphicsWindow.h"
 #include "Graphics/GLFW/GLFWInterface.h"
+#include "Math/Vector4.h"
 #include "Render/FrameBuffer.h"
 #include "Render/Shader.h"
 #include "Render/Lighting.h"
@@ -71,7 +72,7 @@ namespace SkyEngine
 		
 		srand(unsigned int(time(NULL)));
 
-		Lighting::SetFogColour(Vector4(SkyColour, 1.0f).ToGLM());
+		Lighting::SetFogColour(Vector4(SkyColour, 1.0f));
 
 		ApplicationWindow = EngineWindow::CreateEngineWindow("Application Window", MainWindowSize, false);
 		if (!ApplicationWindow)

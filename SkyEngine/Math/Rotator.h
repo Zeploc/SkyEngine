@@ -7,7 +7,9 @@
 
 #include <string>
 
-struct Vector3;
+#include "Vector.h"
+
+struct Vector;
 
 struct ENGINE_API Rotator
 {
@@ -45,7 +47,7 @@ struct ENGINE_API Rotator
 		Yaw = V.y;
 		Roll = V.z;
 	}
-	Rotator(Vector3 V);
+	Rotator(const Vector3& V);
 
 	glm::vec3 ToGLM() const
 	{
@@ -161,3 +163,5 @@ inline Rotator operator/(float f, const Rotator& l)
 
 	return Ret;
 }
+
+#include "Vector.h"

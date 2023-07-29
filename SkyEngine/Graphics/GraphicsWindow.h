@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "Core/Delegates.h"
-#include "Math/Vector.h"
+#include "Math/Vector2.h"
 
 class UIElement;
 class Entity;

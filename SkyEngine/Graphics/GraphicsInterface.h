@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "Math/Vector.h"
+#include "Math/Vector2.h"
 
 class IGraphicsInstance;
 class UIElement;

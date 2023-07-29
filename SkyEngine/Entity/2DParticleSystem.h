@@ -10,6 +10,7 @@
 
 // Local Includes //
 #include "Entity.h"
+#include "Math/Vector2.h"
 #include "System/Utils.h"
 
 class ParticleSystem2D : public Entity

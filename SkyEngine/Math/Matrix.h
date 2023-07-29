@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Vector.h"
+#include "Vector4.h"
 #include "Core/Core.h"
 #include "Math/MathDefinitions.h"
 // #include <matrix3x3.h>
@@ -27,8 +29,6 @@ struct OrthoProjInfo
 	float ZFar;
 };
 
-struct Vector4;
-struct Vector3;
 struct Quaternion;
 
 class ENGINE_API Matrix4

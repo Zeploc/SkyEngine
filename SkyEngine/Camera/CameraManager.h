@@ -14,6 +14,7 @@
 // Engine Includes //
 // #include "Entity/2DParticleSystem.h"
 #include "Math/Matrix.h"
+#include "Math/Vector2.h"
 #include "System/Utils.h"
 
 // TODO: How does class affect this? 

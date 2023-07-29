@@ -2,6 +2,7 @@
 
 #pragma once
 #include <list>
+#include <functional>
 
 class DelegateBase
 {
@@ -28,12 +29,14 @@ public:
 
 };
 
+// using VoidFunc = std::function<void()>;
+
 template <class T>
 class VoidDelegate : public DelegateBase
 {
 public:
-	using fn = void(T::*)();
-
+	using VoidFunc = void(T::*)();//std::function<void(T*)>;
+	
 	VoidDelegate()
 	{
 		
@@ -44,7 +47,7 @@ public:
 		// TODO:
 	}
 	
-	VoidDelegate(T* trg, fn op) : m_rTarget(trg)
+	VoidDelegate(T* trg, VoidFunc op) : m_rTarget(trg)
 							   , m_Operation(op)
 	{
 	}
@@ -66,7 +69,7 @@ public:
 	//private:
 
 	T* m_rTarget;
-	fn m_Operation;
+	VoidFunc m_Operation;
 };
 
 class FDelegate
@@ -129,9 +132,11 @@ public:
 	}
 	
 	template <class T>
-	void Bind(T* Object, void(T::*Function)())
+	void Bind(std::function<void(T*)> Function)
 	{
-		Delegates.push_back(new VoidDelegate<T>(Object, Function));
+		using VoidFunc = std::function<void(T*)>;
+		Delegates.push_back(Function);
+		// Delegates.push_back(new VoidDelegate<T>(Object, Function));
 	}
 	
 	template <class T>

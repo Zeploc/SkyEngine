@@ -371,17 +371,17 @@ void ssAnimatedModel::setShaderEffectVariables(std::shared_ptr<Terrain> terrain)
 	
 	// glm::mat4 model;
 	//
-	// glm::mat4 t = translate(glm::mat4(), this->Transform.Position.ToGLM());
+	// glm::mat4 t = translate(glm::mat4(), this->Transform.Position);
 	// glm::mat4 r = glm::rotate(glm::mat4(), glm::radians(Transform.Rotation.Pitch), glm::vec3(0.0f, 1.0f, 0.0f));
-	// glm::mat4 s = glm::scale(glm::mat4(), this->Transform.Scale.ToGLM());
+	// glm::mat4 s = glm::scale(glm::mat4(), this->Transform.Scale);
 	//
 	// model = t * r * s;
 	//
 	// //glm::mat4 vp = CameraManager::GetInstance()->projection * CameraManager::GetInstance()->view;
 	// GLint vLoc = glGetUniformLocation(program, "view");
-	// glUniformMatrix4fv(vLoc, 1, GL_FALSE, value_ptr(CameraManager::GetInstance()->View.ToGLM()));
+	// glUniformMatrix4fv(vLoc, 1, GL_FALSE, value_ptr(CameraManager::GetInstance()->View));
 	// GLint pLoc = glGetUniformLocation(program, "proj");
-	// glUniformMatrix4fv(pLoc, 1, GL_FALSE, value_ptr(CameraManager::GetInstance()->Projection.ToGLM()));
+	// glUniformMatrix4fv(pLoc, 1, GL_FALSE, value_ptr(CameraManager::GetInstance()->Projection));
 	//
 	// GLint modelLoc = glGetUniformLocation(program, "model");
 	// glUniformMatrix4fv(modelLoc, 1, GL_FALSE, value_ptr(model));

@@ -84,7 +84,7 @@ void Mesh::Render(FTransform Newtransform)
 	}
 	if (bFog)
 	{
-		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, value_ptr(CameraManager::GetInstance()->GetCameraPosition().ToGLM()));
+		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, value_ptr(CameraManager::GetInstance()->GetCameraPosition()));
 		glUniform4fv(glGetUniformLocation(program, "vFogColor"), 1, value_ptr(Lighting::GetFogColour()));
 		glUniform1f(glGetUniformLocation(program, "StartFog"), Lighting::GetStartFogDistance());
 		glUniform1f(glGetUniformLocation(program, "EndFog"), Lighting::GetEndFogDistance());

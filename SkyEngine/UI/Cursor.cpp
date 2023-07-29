@@ -35,7 +35,7 @@ Cursor::~Cursor()
 ************************************************************/
 void Cursor::Update()
 {
-	position = glm::vec3(Input::GetInstance()->MousePos.ToGLM(), 0);
+	position = glm::vec3(Input::GetInstance()->MousePos, 0);
 	if ((position.x < m_v2InvisibleRange.x && position.y < m_v2InvisibleRange.y) ||
 		(position.x > m_v2VisibleRange.x || position.y > m_v2VisibleRange.y) && m_v2VisibleRange.x != 0 && m_v2VisibleRange.y != 0)
 	{

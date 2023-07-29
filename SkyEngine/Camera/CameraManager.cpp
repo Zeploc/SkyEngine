@@ -186,7 +186,7 @@ Vector3 CameraManager::ScreenToWorldPosition2D(Vector2 InScreenPosition)
 	Vector3 MouseDirection = ScreenToWorldDirection(InScreenPosition);
 	float t = -(CameraPosition.Dot(PlaneNormal) / MouseDirection.Dot(PlaneNormal));
 	t /= abs(CameraPosition.Z);
-	return (MouseDirection * t).ToGLM() + CameraPosition;
+	return (MouseDirection * t) + CameraPosition;
 }
 
 /************************************************************
@@ -197,8 +197,8 @@ Vector3 CameraManager::ScreenToWorldPosition2D(Vector2 InScreenPosition)
 ************************************************************/
 void CameraManager::SetMVP(FTransform InTransform, GLuint program)
 {
-	glm::mat4 translate = glm::translate(glm::mat4(), InTransform.Position.ToGLM());
-	glm::mat4 scale = glm::scale(glm::mat4(), InTransform.Scale.ToGLM());	
+	glm::mat4 translate = glm::translate(glm::mat4(), InTransform.Position);
+	glm::mat4 scale = glm::scale(glm::mat4(), InTransform.Scale);	
 	glm::mat4 rotation = glm::mat4();
 	rotation = rotate(rotation, glm::radians(InTransform.Rotation.Yaw), glm::vec3(0, 1, 0));
 	rotation = rotate(rotation, glm::radians(InTransform.Rotation.Pitch), glm::vec3(1, 0, 0));
@@ -206,10 +206,10 @@ void CameraManager::SetMVP(FTransform InTransform, GLuint program)
 
 	glm::mat4 model = translate * rotation * scale;
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, value_ptr(model));
-	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, glm::value_ptr(View.ToGLM()));//view));//
-	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_FALSE, glm::value_ptr(Projection.ToGLM()));
+	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, glm::value_ptr(View));//view));//
+	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_FALSE, glm::value_ptr(Projection));
 
-	glm::mat4 MVP = Projection.ToGLM() * View.ToGLM() * model;
+	glm::mat4 MVP = Projection * View * model;
 	GLint MVPLoc = glGetUniformLocation(program, "MVP");
 	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, value_ptr(MVP));
 }

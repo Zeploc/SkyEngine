@@ -10,104 +10,42 @@
 #include <string>
 #include <sstream>
 
-Vector3 Vector3::Cross(const Vector3& V) const
-{
-	const float _x = Y * V.Z - Z * V.Y;
-	const float _y = Z * V.X - X * V.Z;
-	const float _z = X * V.Y - Y * V.X;
 
-	return Vector3(_x, _y, _z);
-}
+// void Vector3::Rotate(float Angle, const Vector3& Axe)
+// {
+// 	const float SinHalfAngle = sinf(ToRadian(Angle/2));
+// 	const float CosHalfAngle = cosf(ToRadian(Angle/2));
+//
+// 	const float Rx = Axe.X * SinHalfAngle;
+// 	const float Ry = Axe.Y * SinHalfAngle;
+// 	const float Rz = Axe.Z * SinHalfAngle;
+// 	const float Rw = CosHalfAngle;
+// 	Quaternion RotationQ(Rx, Ry, Rz, Rw);
+//
+// 	Quaternion ConjugateQ = RotationQ.Conjugate();
+// 	//  ConjugateQ.Normalize();
+// 	Quaternion W = RotationQ * (*this) * ConjugateQ;
+//
+// 	X = W.X;
+// 	Y = W.Y;
+// 	Z = W.Z;
+// }
 
-float Vector3::Dot(const Vector3& V) const
-{
-	return X * V.X + Y * V.Y + Z * V.Z;
-}
+// Rotator Vector3::ToRotator() const
+// {
+// 	// Get Angle on the lateral plane (will be in radians)
+// 	const float YawAngle = atan2(X,Z);
+// 	// TODO: Do pitch correctly
+// 	// Get pitch based on Y (Up)
+// 	const float PitchAngle = Size() * sin(Y);
+//
+// 	Rotator NewRotator;
+// 	NewRotator.Yaw = ToDegree(YawAngle);//Magnitude * cos(Angle));
+// 	NewRotator.Pitch = ToDegree(PitchAngle);//ToDegree(Magnitude * sin(Angle));
+//
+// 	// Default roll to 0 ie Z up
+// 	NewRotator.Roll = 0;
+//
+// 	return NewRotator;
+// }
 
-Vector3 Vector3::GetNormalized() const
-{
-	Vector3 Normalised(*this);
-	Normalised.Normalize();
-
-	return Normalised;
-}
-
-Vector3& Vector3::Normalize()
-{
-	const float Length = sqrtf(X * X + Y * Y + Z * Z);
-
-	X /= Length;
-	Y /= Length;
-	Z /= Length;
-
-	return *this;
-}
-
-float Vector3::Size() const
-{
-	return sqrt(X * X + Y * Y + Z * Z);
-}
-
-void Vector3::Rotate(float Angle, const Vector3& Axe)
-{
-	const float SinHalfAngle = sinf(ToRadian(Angle/2));
-	const float CosHalfAngle = cosf(ToRadian(Angle/2));
-
-	const float Rx = Axe.X * SinHalfAngle;
-	const float Ry = Axe.Y * SinHalfAngle;
-	const float Rz = Axe.Z * SinHalfAngle;
-	const float Rw = CosHalfAngle;
-	Quaternion RotationQ(Rx, Ry, Rz, Rw);
-
-	Quaternion ConjugateQ = RotationQ.Conjugate();
-	//  ConjugateQ.Normalize();
-	Quaternion W = RotationQ * (*this) * ConjugateQ;
-
-	X = W.X;
-	Y = W.Y;
-	Z = W.Z;
-}
-
-Rotator Vector3::ToRotator() const
-{
-	// Get Angle on the lateral plane (will be in radians)
-	const float YawAngle = atan2(X,Z);
-	// TODO: Do pitch correctly
-	// Get pitch based on Y (Up)
-	const float PitchAngle = Size() * sin(Y);
-
-	Rotator NewRotator;
-	NewRotator.Yaw = ToDegree(YawAngle);//Magnitude * cos(Angle));
-	NewRotator.Pitch = ToDegree(PitchAngle);//ToDegree(Magnitude * sin(Angle));
-
-	// Default roll to 0 ie Z up
-	NewRotator.Roll = 0;
-
-	return NewRotator;
-}
-
-std::ostream& operator<<(std::ostream& os, const Vector3& InVector)
-{
-	// TODO: Improve to not use to string
-	os << "(";
-	os << std::to_string(InVector.X) << std::string(" ");
-	os << std::to_string(InVector.Y) << std::string(" ");
-	os << std::to_string(InVector.Z);
-	os << ")";
-	return os;
-}
-
-std::istream& operator>>(std::istream& is, Vector3& OutVector)
-{
-	std::string Empty;
-	// TODO: Improve bracket removal
-	// std::getline(is, Empty, '(');
-	std::string StringX, StringY, StringZ;
-	is >> StringX >> StringY >> StringZ;
-	// TODO: Improve from substring
-	OutVector.X = std::stof(StringX.substr(1, StringX.length() - 1));
-	OutVector.Y = std::stof(StringY.substr(0, StringY.length() - 1));
-	OutVector.Z = std::stof(StringZ.substr(0, StringZ.length() - 1));
-	// std::getline(is, Empty, ')');
-	return is;
-}

@@ -3,7 +3,8 @@
 #pragma once
 
 #include "Core/Core.h"
-#include "Vector.h"
+
+struct Vector3;
 
 struct ENGINE_API Quaternion
 {
