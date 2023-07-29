@@ -260,7 +260,7 @@ void ParticleSystemGPU::DrawEntity()
 	//glUniform3f(glGetUniformLocation(program, "vQuad2"), vQuad2.x, vQuad2.y,
 	//	vQuad2.z);*/
 
-	glUniformMatrix4fv(glGetUniformLocation(program, "vp"), 1, GL_FALSE, value_ptr(CameraManager::GetInstance()->Projection * CameraManager::GetInstance()->View));
+	glUniformMatrix4fv(glGetUniformLocation(program, "vp"), 1, GL_FALSE, glm::value_ptr(CameraManager::GetInstance()->Projection.ToGLM() * CameraManager::GetInstance()->View.ToGLM()));
 	////glUniform4f(glGetUniformLocation(program, "Colour"), Colour.r, Colour.g, Colour.b, Colour.a);
 	////glUniform1f(glGetUniformLocation(program, "Size"), ParticleSize);
 

@@ -12,7 +12,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CollisionBounds::CollisionBounds(float _fWidth, float _fHeight, float _fDepth, std::shared_ptr<Entity> _EntityRef)
+CollisionBounds::CollisionBounds(float _fWidth, float _fHeight, float _fDepth, Pointer<Entity> _EntityRef)
 : EntityRef(_EntityRef), fHeight(_fHeight), fWidth(_fWidth), fDepth(_fDepth)
 {
 
@@ -38,14 +38,14 @@ void CollisionBounds::SetOffset(glm::vec3 _NewOffset)
 	v3Offset = _NewOffset;
 }
 
-bool CollisionBounds::isColliding(std::shared_ptr<Entity> Entity2)
+bool CollisionBounds::isColliding(Pointer<Entity> Entity2)
 {
 	if (!Entity2)
 	{
 		return false;
 	}
-	std::shared_ptr<Mesh> Entity1Mesh = std::dynamic_pointer_cast<Mesh>(EntityRef->EntityMesh);
-	std::shared_ptr<Mesh> Entity2Mesh = std::dynamic_pointer_cast<Mesh>(Entity2->EntityMesh);
+	Pointer<Mesh> Entity1Mesh = std::dynamic_pointer_cast<Mesh>(EntityRef->EntityMesh);
+	Pointer<Mesh> Entity2Mesh = std::dynamic_pointer_cast<Mesh>(Entity2->EntityMesh);
 	float HalfWidth1 = (fWidth) / 2; // * * abs(EntityRef->Transform.Scale.x);
 	float HalfHeight1 = (fHeight) / 2; // * * abs(EntityRef->Transform.Scale.y);
 	float HalfDepth1 = (fDepth) / 2; // * * abs(EntityRef->Transform.Scale.z);
@@ -68,10 +68,10 @@ bool CollisionBounds::isColliding(std::shared_ptr<Entity> Entity2)
 	return false;
 }
 
-bool CollisionBounds::CheckCollision(std::shared_ptr<Entity> Entity2, glm::vec3 Movement)
+bool CollisionBounds::CheckCollision(Pointer<Entity> Entity2, glm::vec3 Movement)
 {
-	std::shared_ptr<Mesh> Entity1Mesh = std::dynamic_pointer_cast<Mesh>(EntityRef->EntityMesh);
-	std::shared_ptr<Mesh> Entity2Mesh = std::dynamic_pointer_cast<Mesh>(Entity2->EntityMesh);
+	Pointer<Mesh> Entity1Mesh = std::dynamic_pointer_cast<Mesh>(EntityRef->EntityMesh);
+	Pointer<Mesh> Entity2Mesh = std::dynamic_pointer_cast<Mesh>(Entity2->EntityMesh);
 	float HalfWidth1 = (fWidth) / 2; // *abs(EntityRef->Transform.Scale.x);
 	float HalfHeight1 = (fHeight) / 2; // *abs(EntityRef->Transform.Scale.y);
 	float HalfDepth1 = (fDepth) / 2; // *abs(EntityRef->Transform.Scale.z);
@@ -94,10 +94,10 @@ bool CollisionBounds::CheckCollision(std::shared_ptr<Entity> Entity2, glm::vec3 
 	return false;
 }
 
-glm::vec3 CollisionBounds::GetDistance(std::shared_ptr<Entity> Entity2)
+glm::vec3 CollisionBounds::GetDistance(Pointer<Entity> Entity2)
 {
-	std::shared_ptr<Mesh> Entity1Mesh = std::dynamic_pointer_cast<Mesh>(EntityRef->EntityMesh);
-	std::shared_ptr<Mesh> Entity2Mesh = std::dynamic_pointer_cast<Mesh>(Entity2->EntityMesh);
+	Pointer<Mesh> Entity1Mesh = std::dynamic_pointer_cast<Mesh>(EntityRef->EntityMesh);
+	Pointer<Mesh> Entity2Mesh = std::dynamic_pointer_cast<Mesh>(Entity2->EntityMesh);
 	glm::vec3 fDistance = glm::vec3(0, 0, 0);
 	float HalfWidth1 = (fWidth) / 2; // * * abs(EntityRef->Transform.Scale.x);
 	float HalfHeight1 = (fHeight) / 2; // * * abs(EntityRef->Transform.Scale.y);

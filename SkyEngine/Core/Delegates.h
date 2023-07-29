@@ -4,6 +4,8 @@
 #include <list>
 #include <functional>
 
+#include "Core.h"
+
 class DelegateBase
 {
 public:
@@ -118,7 +120,7 @@ private:
 };
 
 
-class FMulticastDelegate
+ENGINE_API class FMulticastDelegate
 {
 public:	
 	FMulticastDelegate()
@@ -132,11 +134,12 @@ public:
 	}
 	
 	template <class T>
-	void Bind(std::function<void(T*)> Function)
+	// void Bind(std::function<void(T*)> Function)
+	void Bind(T* Object, void(T::*Function)())
 	{
-		using VoidFunc = std::function<void(T*)>;
-		Delegates.push_back(Function);
-		// Delegates.push_back(new VoidDelegate<T>(Object, Function));
+		// using VoidFunc = std::function<void(T*)>;
+		// Delegates.push_back(Function);
+		Delegates.push_back(new VoidDelegate<T>(Object, Function));
 	}
 	
 	template <class T>

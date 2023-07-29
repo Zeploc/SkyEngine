@@ -454,7 +454,6 @@ void AnimatedModel::setShaderEffectVariables()
 	GLuint cameraPosLoc = glGetUniformLocation(program, "cameraPos");
 	glUniform3f(cameraPosLoc, CameraManager::GetInstance()->GetCameraPosition().X, CameraManager::GetInstance()->GetCameraPosition().Y, CameraManager::GetInstance()->GetCameraPosition().Z);
 
-	// TODO:
 	GLuint lightPosLoc = glGetUniformLocation(program, "lightPos");
 	glUniform3f(lightPosLoc, Lighting::GetLightPosition().X, Lighting::GetLightPosition().Y, Lighting::GetLightPosition().Z);
 
@@ -545,8 +544,8 @@ void AnimatedModel::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, 
 		NodeTransformation = TranslationM * RotationM * ScalingM;
 	}
 
-	Matrix4 modalAnimParentTransform = ParentTransform * //modalSpace parentBone animTransform
-		NodeTransformation; //boneSpace currentbone animTransform
+	Matrix4 modalAnimParentTransform = ParentTransform.ToGLM() * //modalSpace parentBone animTransform
+		NodeTransformation.ToGLM(); //boneSpace currentbone animTransform
 
 	if (m_BoneMapping.find(NodeName) != m_BoneMapping.end())
 	{

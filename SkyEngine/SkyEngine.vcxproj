@@ -371,8 +371,12 @@
     <ClCompile Include="Math/Matrix.cpp" />
     <ClCompile Include="Math/Quaternion.cpp" />
     <ClCompile Include="Math/FTransform.cpp" />
-    <ClCompile Include="Math/Rotator.cpp" />
-    <ClCompile Include="Math/Vector.cpp" />
+    <ClInclude Include="Math\Internal\Rotator.decl.h" />
+    <ClInclude Include="Math\Internal\Rotator.impl.hpp" />
+    <ClInclude Include="Math\Internal\Vector3.decl.h" />
+    <ClInclude Include="Math\Internal\Vector3.impl.hpp" />
+    <ClInclude Include="Math\Internal\Vector2.decl.h" />
+    <ClInclude Include="Math\Internal\Vector2.impl.hpp" />
     <ClCompile Include="Render/ModelMesh.cpp" />
     <ClCompile Include="Render/ModelObject.cpp" />
   </ItemGroup>
@@ -395,6 +399,7 @@
     <ClInclude Include="Graphics\GraphicsWindow.h" />
     <ClInclude Include="Input/CXBOXController.h" />
     <ClInclude Include="Input/Input.h" />
+    <ClInclude Include="Math\MathTypes.h" />
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Math\Vector4.h" />
     <ClInclude Include="Platform\PlatformInterface.h" />

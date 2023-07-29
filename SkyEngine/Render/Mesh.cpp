@@ -84,7 +84,7 @@ void Mesh::Render(FTransform Newtransform)
 	}
 	if (bFog)
 	{
-		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, value_ptr(CameraManager::GetInstance()->GetCameraPosition()));
+		glUniform3fv(glGetUniformLocation(program, "cameraPos"), 1, CameraManager::GetInstance()->GetCameraPosition().ToValuePtr());
 		glUniform4fv(glGetUniformLocation(program, "vFogColor"), 1, value_ptr(Lighting::GetFogColour()));
 		glUniform1f(glGetUniformLocation(program, "StartFog"), Lighting::GetStartFogDistance());
 		glUniform1f(glGetUniformLocation(program, "EndFog"), Lighting::GetEndFogDistance());
@@ -175,7 +175,7 @@ void Mesh::Render(FTransform Newtransform)
 // #define glCheckError() glCheckError_(__FILE__, __LINE__)
 
 // TODO: Remove the need for entity passed through (use transforms/matrix)
-bool Mesh::CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, std::shared_ptr<Entity> EntityCheck)
+bool Mesh::CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, Pointer<Entity> EntityCheck)
 {
 	// TODO: Check against basic box bounds before considering
 	
@@ -220,12 +220,12 @@ void Mesh::SetReflection(bool _bReflecting)
 	// }
 }
 
-void Mesh::AddCollisionBounds(float fWidth, float fHeight, float fDepth, std::shared_ptr<Entity> _EntityRef)
+void Mesh::AddCollisionBounds(float fWidth, float fHeight, float fDepth, Pointer<Entity> _EntityRef)
 {
 	MeshCollisionBounds = std::make_shared<CollisionBounds>(fWidth, fHeight, fDepth, _EntityRef);
 }
 
-void Mesh::AddCollisionBounds(std::shared_ptr<CollisionBounds> NewCollision)
+void Mesh::AddCollisionBounds(Pointer<CollisionBounds> NewCollision)
 {
 	MeshCollisionBounds = NewCollision;
 }

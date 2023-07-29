@@ -46,7 +46,7 @@ public:
 
 	struct Particle2D
 	{
-		std::shared_ptr<Entity> pEntity;
+		Pointer<Entity> pEntity;
 		float fSpeed;
 		Vector2 v2Direction;
 		float fFalloffDistance;

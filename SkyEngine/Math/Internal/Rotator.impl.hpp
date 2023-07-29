@@ -1,21 +1,21 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
-#include "Rotator.h"
+#pragma once
 
-#include <glm/detail/func_trigonometric.inl>
+#include "Rotator.decl.h"
+#include "../Vector.h"
+
 #include <string>
 #include <sstream>
 
-#include "Vector.h"
-
-Rotator::Rotator(const Vector3& V)
+inline Rotator::Rotator(const Vector3x<float>& V)
 {
 	Pitch = V.X;
 	Yaw = V.Y;
 	Roll = V.Z;
 }
 
-Vector3 Rotator::ToVector() const
+inline Vector3 Rotator::ToVector() const
 {
 	// TODO: Confirm correct
 	const Vector3 ForwardVector(-cos(glm::radians(Pitch)) * sin(glm::radians(Yaw)),
@@ -24,7 +24,7 @@ Vector3 Rotator::ToVector() const
 	return ForwardVector;
 }
 
-std::ostream& operator<<(std::ostream& os, const Rotator& InRotator)
+inline std::ostream& operator<<(std::ostream& os, const Rotator& InRotator)
 {
 	// TODO: Improve to not use to string
 	os << "(";
@@ -35,7 +35,7 @@ std::ostream& operator<<(std::ostream& os, const Rotator& InRotator)
 	return os;
 }
 
-std::istream& operator>>(std::istream& is, Rotator& OutRotator)
+inline std::istream& operator>>(std::istream& is, Rotator& OutRotator)
 {
 	std::string Empty;
 	// TODO: Improve bracket removal
@@ -48,4 +48,49 @@ std::istream& operator>>(std::istream& is, Rotator& OutRotator)
 	OutRotator.Roll = std::stof(StringZ.substr(0, StringZ.length() - 1));
 	// std::getline(is, Empty, ')');
 	return is;
+}
+
+inline Rotator operator+(const Rotator& l, const Rotator& r)
+{
+	Rotator Ret(l.Pitch + r.Pitch,
+				 l.Yaw + r.Yaw,
+				 l.Roll + r.Roll);
+
+	return Ret;
+}
+
+inline Rotator operator-(const Rotator& l, const Rotator& r)
+{
+	Rotator Ret(l.Pitch - r.Pitch,
+				 l.Yaw - r.Yaw,
+				 l.Roll - r.Roll);
+
+	return Ret;
+}
+
+inline Rotator operator*(const Rotator& l, float f)
+{
+	Rotator Ret(l.Pitch * f,
+				 l.Yaw * f,
+				 l.Roll * f);
+
+	return Ret;
+}
+
+inline Rotator operator/(const Rotator& l, float f)
+{
+	Rotator Ret(l.Pitch / f,
+				 l.Yaw / f,
+				 l.Roll / f);
+
+	return Ret;
+}
+
+inline Rotator operator/(float f, const Rotator& l)
+{
+	Rotator Ret(f / l.Pitch,
+				 f / l.Yaw,
+				 f / l.Roll);
+
+	return Ret;
 }

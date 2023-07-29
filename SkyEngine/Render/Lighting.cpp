@@ -48,9 +48,9 @@ void Lighting::PassLightingToShader(GLuint program, LightInfo _LightInfo, FTrans
 	glm::mat4 model = translate * rotation * scale;
 
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, value_ptr(model));
-	glUniform3fv(glGetUniformLocation(program, "lightPos"), 1, value_ptr(LightPosition));
-	glUniform3fv(glGetUniformLocation(program, "camPos"), 1, value_ptr(CameraManager::GetInstance()->GetCameraPosition()));
-	glUniform3fv(glGetUniformLocation(program, "lightColor"), 1, value_ptr(_LightInfo.LightColour));
+	glUniform3fv(glGetUniformLocation(program, "lightPos"), 1, LightPosition.ToValuePtr());
+	glUniform3fv(glGetUniformLocation(program, "camPos"), 1, CameraManager::GetInstance()->GetCameraPosition().ToValuePtr());
+	glUniform3fv(glGetUniformLocation(program, "lightColor"), 1, _LightInfo.LightColour.ToValuePtr());
 	glUniform1f(glGetUniformLocation(program, "ambientStr"), _LightInfo.fAmbientStrength);
 	glUniform1f(glGetUniformLocation(program, "lightSpecStr"), _LightInfo.fLightSpecStrength);
 	glUniform1f(glGetUniformLocation(program, "shininess"), _LightInfo.fShininess);

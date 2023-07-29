@@ -29,5 +29,5 @@ public:
 
 	void Update() override;
 
-	std::shared_ptr<ModelObject> pModelObject;
+	Pointer<ModelObject> pModelObject;
 };

@@ -46,7 +46,7 @@ public:
 
 	std::vector<class XBOXController*> Players;
 
-	void Init(std::shared_ptr<EngineWindow> Window);
+	void Init(Pointer<EngineWindow> Window);
 
 	void processNormalKeysDown(unsigned char key, int x, int y);
 

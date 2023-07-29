@@ -2,6 +2,7 @@
 
 #include "Quaternion.h"
 
+#include "MathDefinitions.h"
 #include "Vector.h"
 
 Quaternion::Quaternion(float _x, float _y, float _z, float _w)
@@ -64,5 +65,5 @@ Vector3 Quaternion::ToDegrees()
 	f[1] = ToDegree(f[1]);
 	f[2] = ToDegree(f[2]);
 
-	return Vector3(f);
+	return Vector3(f[0], f[1], f[2]);
 }

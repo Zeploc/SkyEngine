@@ -15,9 +15,9 @@ TransformationWidget::TransformationWidget(FTransform _Transform, Scene* OwningS
 	YMoveTransform = std::make_shared<Entity>(_Transform, EANCHOR::CENTER);
 	ZMoveTransform = std::make_shared<Entity>(_Transform, EANCHOR::CENTER);
 	XColour = {0.6f, 0.1f, 0.1f, 1.0f};
-	std::shared_ptr<Cube> XMoveTransformMesh(new Cube(1.0f, 0.1f, 0.1f, XColour));
-	std::shared_ptr<Cube> ZMoveTransformMesh(new Cube(0.1f, 0.1f, 1.0f, ZColour));
-	std::shared_ptr<Cube> YMoveTransformMesh(new Cube(0.1f, 1.0f, 0.1f, YColour));
+	Pointer<Cube> XMoveTransformMesh(new Cube(1.0f, 0.1f, 0.1f, XColour));
+	Pointer<Cube> ZMoveTransformMesh(new Cube(0.1f, 0.1f, 1.0f, ZColour));
+	Pointer<Cube> YMoveTransformMesh(new Cube(0.1f, 1.0f, 0.1f, YColour));
 	XMoveTransformMesh->bDepthTest = false;
 	ZMoveTransformMesh->bDepthTest = false;
 	YMoveTransformMesh->bDepthTest = false;

@@ -24,5 +24,5 @@ public:
 
 	void Update() override;
 	
-	bool CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, std::shared_ptr<Entity> EntityCheck) override;
+	bool CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, Pointer<Entity> EntityCheck) override;
 };

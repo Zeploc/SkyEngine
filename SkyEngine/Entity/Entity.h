@@ -31,7 +31,7 @@ public:
 	Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, glm::vec2 v2FrameCounts, int _iFPS);*/
 	~Entity();
 
-	void AddMesh(std::shared_ptr<Mesh> _NewMesh);
+	void AddMesh(Pointer<Mesh> _NewMesh);
 
 	//void AddMesh(Utils::ESHAPE _NewShape);
 
@@ -57,8 +57,8 @@ public:
 
 	std::string EntityToString();
 
-	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const std::shared_ptr<Entity>& InEntity);
-	ENGINE_API friend std::istream& operator>>(std::istream& is, std::shared_ptr<Entity>& InEntity);
+	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const Pointer<Entity>& InEntity);
+	ENGINE_API friend std::istream& operator>>(std::istream& is, Pointer<Entity>& InEntity);
 
 	void Translate(Vector3 _Movement);
 
@@ -70,7 +70,7 @@ public:
 
 	FTransform Transform;
 	EANCHOR EntityAnchor;
-	std::shared_ptr<Mesh> EntityMesh;
+	Pointer<Mesh> EntityMesh;
 
 	int GetEntityValue() const { return iEntityID; }
 

@@ -1,8 +1,9 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
-#include <memory>
-#include <vector>
+#include <string>
+
+#include "Core/Core.h"
 
 #include "Math/Vector2.h"
 
@@ -18,7 +19,6 @@ public:
 	
 	virtual std::string GetGraphicsDisplayName() = 0;
 	
-	virtual std::shared_ptr<IGraphicsWindow> CreateNewWindow(const std::string& InWindowName, Vector2 InWindowSize, bool bFullScreen) = 0;
-
+	virtual Pointer<IGraphicsWindow> CreateNewWindow(const std::string& InWindowName, Vector2 InWindowSize, bool bFullScreen) = 0;
 	
 };

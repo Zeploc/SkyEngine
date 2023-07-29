@@ -10,9 +10,9 @@ EngineWindow::~EngineWindow()
 	GraphicsWindow.reset();
 }
 
-std::shared_ptr<EngineWindow> EngineWindow::CreateEngineWindow(const std::string& InWindowName, Vector2 InWindowSize, bool bInFullScreen)
+Pointer<EngineWindow> EngineWindow::CreateEngineWindow(const std::string& InWindowName, Vector2 InWindowSize, bool bInFullScreen)
 {
-	std::shared_ptr<EngineWindow> NewWindow = std::make_shared<EngineWindow>(InWindowName, InWindowSize, bInFullScreen);
+	Pointer<EngineWindow> NewWindow = std::make_shared<EngineWindow>(InWindowName, InWindowSize, bInFullScreen);
 	if (!NewWindow->GetGraphicsWindow())
 	{
 		NewWindow.reset();

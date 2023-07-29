@@ -45,7 +45,7 @@ public:
 	static GLuint ModelProgramLit;
 	static GLuint ReflectionProgram;*/
 
-	static std::map<std::string, std::shared_ptr<ModelObject>> Models;
+	static std::map<std::string, Pointer<ModelObject>> Models;
 	static std::map<const char*, GLuint> Textures;
 	static std::map<std::string, GLuint> Programs;
 

@@ -61,7 +61,7 @@ void Model::BindModel()
 		}
 	}
 	pModelObject = std::make_shared<ModelObject>(TextureSource);
-	Shader::Models.insert(std::pair<std::string, std::shared_ptr<ModelObject>>(TextureSource, pModelObject));
+	Shader::Models.insert(std::pair<std::string, Pointer<ModelObject>>(TextureSource, pModelObject));
 }
 
 /************************************************************

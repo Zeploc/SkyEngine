@@ -68,7 +68,7 @@ void Scene::DeleteScene()
 void Scene::RenderScene()
 {
 	// TODO: Properly link to graphics interface
-	GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->Render(Entities, UIElements);
+	// GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->Render(Entities, UIElements);
 }
 
 /************************************************************
@@ -77,7 +77,7 @@ void Scene::RenderScene()
 #--Parameters--#: 	Entity to add
 #--Return--#: 		NA
 ************************************************************/
-void Scene::AddEntity(std::shared_ptr<Entity> _Entity, bool IsInitial)
+void Scene::AddEntity(Pointer<Entity> _Entity, bool IsInitial)
 {
 	Entities.push_back(_Entity);
 	_Entity->SetInitialEntity(IsInitial);
@@ -89,7 +89,7 @@ void Scene::AddEntity(std::shared_ptr<Entity> _Entity, bool IsInitial)
 #--Parameters--#: 	Entity to destroy
 #--Return--#: 		NA
 ************************************************************/
-void Scene::DestroyEntity(std::shared_ptr<Entity> _Entity)
+void Scene::DestroyEntity(Pointer<Entity> _Entity)
 {
 	if (_Entity->IsInitialEntity())
 	{
@@ -118,7 +118,7 @@ void Scene::DestroyEntity(std::shared_ptr<Entity> _Entity)
 #--Parameters--#: 	UI Element to add
 #--Return--#: 		NA
 ************************************************************/
-void Scene::AddUIElement(std::shared_ptr<UIElement> Element)
+void Scene::AddUIElement(Pointer<UIElement> Element)
 {
 	UIElements.push_back(Element);
 }
@@ -129,7 +129,7 @@ void Scene::AddUIElement(std::shared_ptr<UIElement> Element)
 #--Parameters--#: 	UI Text Element to add
 #--Return--#: 		NA
 ************************************************************/
-void Scene::AddUITextElement(std::shared_ptr<UIText> Element)
+void Scene::AddUITextElement(Pointer<UIText> Element)
 {
 	UIElements.push_back(Element);
 }
@@ -142,7 +142,7 @@ void Scene::AddUITextElement(std::shared_ptr<UIText> Element)
 ************************************************************/
 void Scene::AddUITextElement(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string font, int iPSize, EANCHOR _Anchor)
 {
-	std::shared_ptr<UIText> NewElement(new UIText(_Position, _fRotation, _Colour, _sText, font, iPSize, _Anchor));
+	Pointer<UIText> NewElement(new UIText(_Position, _fRotation, _Colour, _sText, font, iPSize, _Anchor));
 	UIElements.push_back(NewElement);
 }
 
@@ -152,7 +152,7 @@ void Scene::AddUITextElement(glm::vec2 _Position, float _fRotation, glm::vec4 _C
 #--Parameters--#: 	UI Text Element paramters to destroy
 #--Return--#: 		NA
 ************************************************************/
-void Scene::DestroyUIElement(std::shared_ptr<UIElement> _Element)
+void Scene::DestroyUIElement(Pointer<UIElement> _Element)
 {
 	UIElementsToBeDestroyed.push_back(_Element);
 	_Element->SetActive(false);

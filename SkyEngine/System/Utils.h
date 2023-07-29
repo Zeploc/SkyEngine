@@ -61,20 +61,20 @@ public:
 
 	static glm::vec3 GetTextAncoredPosition(glm::vec2 position, glm::vec2 Dimensions, EANCHOR _AnchorType);
 
-	static bool isColliding2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2);
+	static bool isColliding2D(Pointer<Entity> Entity1, Pointer<Entity> Entity2);
 
-	//static bool isColliding2D(Entity* Entity1, std::shared_ptr<Entity> Entity2);
+	//static bool isColliding2D(Entity* Entity1, Pointer<Entity> Entity2);
 
-	static bool CheckCollision2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2, glm::vec2 Movement);
+	static bool CheckCollision2D(Pointer<Entity> Entity1, Pointer<Entity> Entity2, glm::vec2 Movement);
 
-	//static bool CheckCollision2D(Entity* Entity1, std::shared_ptr<Entity> Entity2, glm::vec2 Movement);
+	//static bool CheckCollision2D(Entity* Entity1, Pointer<Entity> Entity2, glm::vec2 Movement);
 
-	static glm::vec2 GetDistance2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2);
+	static glm::vec2 GetDistance2D(Pointer<Entity> Entity1, Pointer<Entity> Entity2);
 
-	//static glm::vec2 GetDistance2D(Entity* Entity1, std::shared_ptr<Entity> Entity2);
+	//static glm::vec2 GetDistance2D(Entity* Entity1, Pointer<Entity> Entity2);
 	//static glm::vec2 FindTextDimenions(std::string text);
 
-	static glm::vec2 GetDifference2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2);
+	static glm::vec2 GetDifference2D(Pointer<Entity> Entity1, Pointer<Entity> Entity2);
 
 	static int AddEntityID();
 
@@ -84,15 +84,15 @@ public:
 	static Vector3 StringToVec3(std::string _string);
 	static Rotator StringToRotator(std::string _string);
 
-	static bool CheckFaceHit(Vector3 BottomLeftOffset, Vector3 TopRightOffset, Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
+	static bool CheckFaceHit(Vector3 BottomLeftOffset, Vector3 TopRightOffset, Vector3 RayStart, Vector3 RayDirection, Pointer<Entity> EntityCheck, Vector3& HitPos);
 
 	static bool CheckSphereHit(Vector3 RayStart, Vector3 RayDirection, Vector3 SphereCenter, float SphereRadius, Vector3& HitPos);
 
-	static bool CheckCubeHit(Vector3 RayStart, Vector3 RayDirection, Vector3 CubeDimensions, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
+	static bool CheckCubeHit(Vector3 RayStart, Vector3 RayDirection, Vector3 CubeDimensions, Pointer<Entity> EntityCheck, Vector3& HitPos);
 
-	static bool CheckPlaneEntityHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
+	static bool CheckPlaneEntityHit(Vector3 RayStart, Vector3 RayDirection, Pointer<Entity> EntityCheck, Vector3& HitPos);
 	
-	static std::shared_ptr<Entity> WorldCubeMap;
+	static Pointer<Entity> WorldCubeMap;
 
 private:
 	static int iEntityNumber;

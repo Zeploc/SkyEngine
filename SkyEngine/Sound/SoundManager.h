@@ -2,8 +2,9 @@
 
 #pragma once
 
+#include "Core/Core.h"
+
 // Library Includes //
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -53,14 +54,14 @@ private:
 
 	// Singleton
 public:
-	static std::shared_ptr<SoundManager> GetInstance();
+	static Pointer<SoundManager> GetInstance();
 
 	static void DestoryInstance();
 
 	~SoundManager(); // Shared pointer has to be able to call destructor so can't be private
 
 private:
-	static std::shared_ptr<SoundManager> m_pSoundManager;
+	static Pointer<SoundManager> m_pSoundManager;
 
 	SoundManager();
 

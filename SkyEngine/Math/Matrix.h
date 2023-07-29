@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "Vector.h"
-#include "Vector4.h"
 #include "Core/Core.h"
 #include "Math/MathDefinitions.h"
 // #include <matrix3x3.h>
@@ -30,6 +28,10 @@ struct OrthoProjInfo
 };
 
 struct Quaternion;
+template <typename T>
+struct Vector3x;
+template <typename T>
+struct Vector4x;
 
 class ENGINE_API Matrix4
 {
@@ -189,7 +191,7 @@ public:
 		M[3][3] = 1.0f;
 	}
 
-	Matrix4 operator*(const Matrix4& Right) const
+	Matrix4 operator*(const Matrix4& Right)
 	{
 		Matrix4 Ret;
 
@@ -207,7 +209,7 @@ public:
 		return Ret;
 	}
 
-	Vector4 operator*(const Vector4& V) const;
+	Vector4x<float> operator*(const Vector4x<float>& V) const;
 
 	operator const float*() const
 	{
@@ -222,11 +224,11 @@ public:
 
 	Matrix4 GetInverse();
 
-	Vector3 GetViewLocation() const;
-	Vector3 GetLocation() const;
-	Vector3 GetForward() const;
-	Vector3 GetRight() const;
-	Vector3 GetUp() const;
+	Vector3x<float> GetViewLocation() const;
+	Vector3x<float> GetLocation() const;
+	Vector3x<float> GetForward() const;
+	Vector3x<float> GetRight() const;
+	Vector3x<float> GetUp() const;
 
 	// TODO: Change all to not init but just apply (use identity first, default on construction?)
 	void InitScaleTransform(float ScaleX, float ScaleY, float ScaleZ);
@@ -236,13 +238,13 @@ public:
 
 	void InitRotateTransform(const Quaternion& quat);
 
-	void SetViewTranslation(const Vector3 Location);
-	void SetTranslationTransform(const Vector3 Location);
+	void SetViewTranslation(const Vector3x<float> Location);
+	void SetTranslationTransform(const Vector3x<float> Location);
 	void SetTranslationTransform(const float X, const float Y, const float Z);
 
-	void SetCameraOrientation(Vector3 Forward, Vector3 Up);
+	void SetCameraOrientation(Vector3x<float> Forward, Vector3x<float> Up);
 	
-	void SetLookAt(Vector3 Location, Vector3 Target, Vector3 Up);
+	void SetLookAt(Vector3x<float> Location, Vector3x<float> Target, Vector3x<float> Up);
 
 	void SetPerspectiveProjection(const PersProjInfo& P);
 

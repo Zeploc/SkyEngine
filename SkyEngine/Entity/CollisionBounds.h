@@ -13,7 +13,7 @@
 class CollisionBounds
 {
 public:
-	CollisionBounds(float fHeight, float fWidth, float fDepth, std::shared_ptr<Entity> _EntityRef);
+	CollisionBounds(float fHeight, float fWidth, float fDepth, Pointer<Entity> _EntityRef);
 
 	~CollisionBounds();
 
@@ -21,15 +21,15 @@ public:
 
 	void SetOffset(glm::vec3 _NewOffset);
 
-	bool isColliding(std::shared_ptr<Entity> Entity2);
+	bool isColliding(Pointer<Entity> Entity2);
 
-	bool CheckCollision(std::shared_ptr<Entity> Entity2, glm::vec3 Movement);
+	bool CheckCollision(Pointer<Entity> Entity2, glm::vec3 Movement);
 
-	glm::vec3 GetDistance(std::shared_ptr<Entity> Entity2);
+	glm::vec3 GetDistance(Pointer<Entity> Entity2);
 
 	glm::vec3 GetDimensions() { return glm::vec3(fWidth, fHeight, fDepth); };
 	glm::vec3 GetOffset() { return v3Offset; };
-	std::shared_ptr<Entity> EntityRef;
+	Pointer<Entity> EntityRef;
 private:
 	float fHeight;
 	float fWidth;

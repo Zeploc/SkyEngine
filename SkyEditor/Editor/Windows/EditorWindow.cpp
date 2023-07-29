@@ -26,7 +26,7 @@ void EditorWindow::CreateExternalWindow()
 	Input::GetInstance()->Init(LinkedWindow);
 }
 
-EditorWindow::EditorWindow(std::string InWindowName, std::shared_ptr<EngineWindow> InLinkedWindow, Vector2 InSize, Vector2 InPosition)
+EditorWindow::EditorWindow(std::string InWindowName, Pointer<EngineWindow> InLinkedWindow, Vector2 InSize, Vector2 InPosition)
 : WindowName(InWindowName), LinkedWindow(InLinkedWindow), Size(InSize), Position(InPosition)
 {
 	if (!LinkedWindow)
@@ -53,7 +53,7 @@ void EditorWindow::SetupUI()
 		UIElements.push_back(BackImage);
 
 		//20, Size.y - 20.0f
-		std::shared_ptr<UIButton> TestBtn(new UIButton(glm::vec2(0.0f, 0.0f), EANCHOR::TOP_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), Size.X - 35, 30, nullptr));
+		Pointer<UIButton> TestBtn(new UIButton(glm::vec2(0.0f, 0.0f), EANCHOR::TOP_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), Size.X - 35, 30, nullptr));
 
 		TestBtn->BindPress(this, &EditorWindow::StartDrag);
 		TestBtn->BindRelease(this, &EditorWindow::StopDrag);
@@ -61,7 +61,7 @@ void EditorWindow::SetupUI()
 		TestBtn->AddText(WindowName, "Resources/Fonts/Roboto-Thin.ttf", 20, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
 		UIElements.push_back(TestBtn);
 
-		std::shared_ptr<UIButton> PopoutButton(new UIButton(glm::vec2(Size.X, 0.0f), EANCHOR::TOP_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 30, 30, nullptr));
+		Pointer<UIButton> PopoutButton(new UIButton(glm::vec2(Size.X, 0.0f), EANCHOR::TOP_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 30, 30, nullptr));
 
 		PopoutButton->BindPress(this, &EditorWindow::PopOut);
 		UIElements.push_back(PopoutButton);
@@ -270,7 +270,7 @@ void EditorWindow::UpdateWindow()
 	//	
 	//}
 
-	for (std::shared_ptr<UIElement> UIElement : UIElements)
+	for (Pointer<UIElement> UIElement : UIElements)
 	{
 		UIElement->BaseUpdate();
 	}

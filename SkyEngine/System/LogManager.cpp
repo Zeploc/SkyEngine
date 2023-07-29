@@ -8,7 +8,7 @@
 #include <iostream>
 
 // Static Variables //
-std::shared_ptr<LogManager> LogManager::m_pLogManager;
+Pointer<LogManager> LogManager::m_pLogManager;
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -57,11 +57,11 @@ void LogManager::DisplayLogMessage(std::string _Message)
 #--Parameters--#:	NA
 #--Return--#: 		Returns static pointer to self
 ************************************************************/
-std::shared_ptr<LogManager> LogManager::GetInstance()
+Pointer<LogManager> LogManager::GetInstance()
 {
 	if (!m_pLogManager) // null or doesn't exist
 	{
-		m_pLogManager = std::shared_ptr<LogManager>(new LogManager());
+		m_pLogManager = Pointer<LogManager>(new LogManager());
 	}
 	return m_pLogManager;
 }

@@ -82,7 +82,7 @@ public:
 	bool bSpectatorMovement = true;
 	float MouseSensitivity = 0.15f;
 
-	std::shared_ptr<EngineWindow> MainWindow;
+	Pointer<EngineWindow> MainWindow;
 
 protected:
 	

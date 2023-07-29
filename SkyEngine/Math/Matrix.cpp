@@ -4,6 +4,7 @@
 
 #include "Quaternion.h"
 #include "Vector.h"
+#include "Vector4.h"
 
 void Matrix4::InitScaleTransform(float ScaleX, float ScaleY, float ScaleZ)
 {
@@ -163,7 +164,8 @@ void Matrix4::SetCameraOrientation(Vector3 Forward, Vector3 Up)
 
 void Matrix4::SetLookAt(Vector3 Location, Vector3 Target, Vector3 Up)
 {	
-	const Vector3 Forward((Target - Location).GetNormalized());
+	Vector3 Forward(Target - Location);
+	Forward.Normalize();
 	const Vector3 Right((Forward.Cross(Up)).GetNormalized());
 	const Vector3 NewUp(Right.Cross(Forward));
 

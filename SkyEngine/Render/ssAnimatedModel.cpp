@@ -363,7 +363,7 @@ void ssAnimatedModel::rotate(float rotSpeed)
 	currentRotationSpeed = rotSpeed;
 }
 
-void ssAnimatedModel::setShaderEffectVariables(std::shared_ptr<Terrain> terrain)
+void ssAnimatedModel::setShaderEffectVariables(Pointer<Terrain> terrain)
 {
 	glUseProgram(this->program);
 
@@ -409,7 +409,7 @@ void ssAnimatedModel::setShaderEffectVariables(std::shared_ptr<Terrain> terrain)
 	Lighting::PassLightingToShader(program, ModelLightInfo, Transform);
 }
 
-void ssAnimatedModel::render(std::shared_ptr<Terrain> terrain)
+void ssAnimatedModel::render(Pointer<Terrain> terrain)
 {
 	setShaderEffectVariables(terrain);
 
@@ -522,8 +522,8 @@ void ssAnimatedModel::ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode
 		NodeTransformation = TranslationM * RotationM * ScalingM;
 	}
 
-	Matrix4 modalAnimParentTransform = ParentTransform * //modalSpace parentBone animTransform
-		NodeTransformation; //boneSpace currentbone animTransform
+	Matrix4 modalAnimParentTransform = ParentTransform.ToGLM() * //modalSpace parentBone animTransform
+		NodeTransformation.ToGLM(); //boneSpace currentbone animTransform
 
 	if (m_BoneMapping.find(NodeName) != m_BoneMapping.end())
 	{

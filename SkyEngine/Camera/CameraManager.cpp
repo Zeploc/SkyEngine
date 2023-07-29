@@ -17,6 +17,7 @@
 #include "Math/FTransform.h"
 #include "Math/Matrix.h"
 #include "Math/Vector.h"
+#include "Math/Vector4.h"
 
 // Static Variables //
 std::map<int, CameraManager*> CameraManager::m_pCameras;
@@ -116,31 +117,34 @@ void CameraManager::SpectatorUpdate()
 
 	if (bSpectatorMovement)
 	{
+		const Vector3 ForwardMovement = CameraForward * cameraSpeed * 0.025f;
 		if (Input::GetInstance()->KeyState[GLFW_KEY_W] == Input::INPUT_HOLD)
 		{
-			CameraPosition += CameraForward * cameraSpeed * 0.025f;
+			CameraPosition += ForwardMovement;
 		}
 		else if (Input::GetInstance()->KeyState[GLFW_KEY_S] == Input::INPUT_HOLD)
 		{
-			CameraPosition -= CameraForward * cameraSpeed * 0.025f;
+			CameraPosition -= ForwardMovement;
 		}
 
+		const Vector3 RightMovement = GetCameraRightVector() * cameraSpeed * 0.025f;
 		if (Input::GetInstance()->KeyState[GLFW_KEY_A] == Input::INPUT_HOLD)
 		{
-			CameraPosition -= GetCameraRightVector() * cameraSpeed * 0.025f;
+			CameraPosition -= RightMovement;
 		}
 		else if (Input::GetInstance()->KeyState[GLFW_KEY_D] == Input::INPUT_HOLD)
 		{
-			CameraPosition += GetCameraRightVector() * cameraSpeed * 0.025f;
+			CameraPosition += RightMovement;
 		}
 
+		const Vector3 UpMovement = CameraUp * cameraSpeed * 0.025f;
 		if (Input::GetInstance()->KeyState[GLFW_KEY_E] == Input::INPUT_HOLD)
 		{
-			CameraPosition += CameraUp * cameraSpeed * 0.025f;
+			CameraPosition += UpMovement;
 		}
 		else if (Input::GetInstance()->KeyState[GLFW_KEY_Q] == Input::INPUT_HOLD)
 		{
-			CameraPosition -= CameraUp * cameraSpeed * 0.025f;
+			CameraPosition -= UpMovement;
 		}
 	}
 	MainWindow->GetGraphicsWindow()->SetCursorPosition({static_cast<float>(SCR_WIDTH) * 0.5f, static_cast<float>(SCR_HEIGHT) * 0.5f});
@@ -174,7 +178,7 @@ Vector3 CameraManager::ScreenToWorldDirection(Vector2 InScreenPosition)
 	Vector4 RayEye = Projection.GetInverse() * RayClip;
 	RayEye = Vector4(RayEye.X, RayEye.Y, -1.0f, 0.0f);
 
-	Vector3 RayWorld = (View.GetInverse() * RayEye).To3F();
+	Vector3 RayWorld = Vector3(View.GetInverse().ToGLM() * RayEye);
 
 	RayWorld = RayWorld.Normalize();
 	return RayWorld;
@@ -206,10 +210,10 @@ void CameraManager::SetMVP(FTransform InTransform, GLuint program)
 
 	glm::mat4 model = translate * rotation * scale;
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, value_ptr(model));
-	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, glm::value_ptr(View));//view));//
-	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_FALSE, glm::value_ptr(Projection));
+	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, glm::value_ptr(View.ToGLM()));//view));//
+	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_FALSE, glm::value_ptr(Projection.ToGLM()));
 
-	glm::mat4 MVP = Projection * View * model;
+	glm::mat4 MVP = Projection.ToGLM() * View.ToGLM() * model;
 	GLint MVPLoc = glGetUniformLocation(program, "MVP");
 	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, value_ptr(MVP));
 }

@@ -10,6 +10,6 @@ public:
 	~GLFWInterface() override;
 	std::string GetGraphicsDisplayName() override;
 	
-	std::shared_ptr<IGraphicsWindow> CreateNewWindow(const std::string& InWindowName, Vector2 InWindowSize, bool bFullScreen) override;
+	Pointer<IGraphicsWindow> CreateNewWindow(const std::string& InWindowName, Vector2 InWindowSize, bool bFullScreen) override;
 	
 };

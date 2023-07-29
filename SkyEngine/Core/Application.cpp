@@ -25,19 +25,19 @@
 #include "Render/FrameBuffer.h"
 #include "Render/Shader.h"
 #include "Render/Lighting.h"
-// #include "Game/Scenes/Level.h"
 
 // make sure the winsock lib is included...
 #pragma comment(lib,"ws2_32.lib")
 
 namespace SkyEngine
 {
-	// TODO: Fix so not needed in derived projects
 	Application* Application::EngineApplication = nullptr;
 	
 	Application::Application()
 	{
 		EngineApplication = this;
+		MainWindowSize = Vector2(1920, 1080);
+		SkyColour = Vector3(0.3f, 0.8f, 0.9f);
 	}
 
 	Application::~Application()
@@ -65,7 +65,7 @@ namespace SkyEngine
 				type, severity, message );
 	}
 
-	void Application::ApplicationSetup()
+	bool Application::ApplicationSetup()
 	{
 		// TODO: Temp setup as GLFW
 		GraphicsInterface = make_shared<GLFWInterface>();
@@ -78,7 +78,7 @@ namespace SkyEngine
 		if (!ApplicationWindow)
 		{
 			// TODO: Error management
-			OnExit();
+			return false;
 		}
 		ApplicationWindow->GetGraphicsWindow()->FocusWindow();
 		ApplicationWindow->GetGraphicsWindow()->GetGraphicsInstance()->ClearColour = SkyColour;
@@ -93,26 +93,32 @@ namespace SkyEngine
 		// TODO: Move to window?
 		// The input function registration
 		SI->Init(ApplicationWindow);
+		return true;
 	}
 
 	void Application::Run()
 	{
-		ApplicationSetup();
-
-		while (!ApplicationWindow->ShouldWindowClose())
+		if (ApplicationSetup())
 		{
-			CAM->SCR_WIDTH = MainWindowSize.X;
-			CAM->SCR_HEIGHT = MainWindowSize.Y;
-			CAM->VIEWPORT_X = 0;
-			CAM->VIEWPORT_Y = 0;
+			while (!ApplicationWindow->ShouldWindowClose())
+			{
+				CAM->SCR_WIDTH = MainWindowSize.X;
+				CAM->SCR_HEIGHT = MainWindowSize.Y;
+				CAM->VIEWPORT_X = 0;
+				CAM->VIEWPORT_Y = 0;
 
-			Update();
-			CAM->SCR_WIDTH = MainWindowSize.X;
-			CAM->SCR_HEIGHT = MainWindowSize.Y;
-			CAM->VIEWPORT_X = 0;
-			CAM->VIEWPORT_Y = 0;
+				Update();
+				CAM->SCR_WIDTH = MainWindowSize.X;
+				CAM->SCR_HEIGHT = MainWindowSize.Y;
+				CAM->VIEWPORT_X = 0;
+				CAM->VIEWPORT_Y = 0;
 
-			RenderScene();
+				RenderScene();
+			}
+		}
+		else
+		{
+			// TODO: Log error
 		}
 		
 		OnExit();
@@ -131,7 +137,7 @@ namespace SkyEngine
 
 			// TODO: Default scene defined elsewhere and loaded
 			
-			// std::shared_ptr<Level> LevelScene = std::shared_ptr<Level>(new Level("Demo Environment"));			
+			// Pointer<Level> LevelScene = Pointer<Level>(new Level("Demo Environment"));			
 			// SceneManager::GetInstance()->AddScene(LevelScene);
 		}
 		else

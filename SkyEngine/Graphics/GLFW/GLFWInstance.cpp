@@ -35,18 +35,18 @@ void glfw_onError(int error, const char* description)
 	MessageBox(NULL, LPCWSTR(description), LPCWSTR("GLFW error"), MB_OK);
 }
 
-void GLFWInstance::SwapBuffers(std::shared_ptr<IGraphicsWindow> GraphicsWindow)
+void GLFWInstance::SwapBuffers(Pointer<IGraphicsWindow> GraphicsWindow)
 {
-	std::shared_ptr<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(GraphicsWindow);
+	Pointer<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(GraphicsWindow);
 	GLFWwindow* GlfWwindow = GlfwWindow->GetGlWindow();
 	
 	glfwSwapBuffers(GlfWwindow);
 	glfwPollEvents();
 }
 
-void GLFWInstance::Render(std::shared_ptr<IGraphicsWindow> GraphicsWindow, std::vector<std::shared_ptr<Entity>> Entities, std::vector<std::shared_ptr<UIElement>> UIElements)
+void GLFWInstance::Render(Pointer<IGraphicsWindow> GraphicsWindow, std::vector<Pointer<Entity>> Entities, std::vector<Pointer<UIElement>> UIElements)
 {
-	std::shared_ptr<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(GraphicsWindow);
+	Pointer<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(GraphicsWindow);
 	GLFWwindow* GlfWwindow = GlfwWindow->GetGlWindow();
 	glfwMakeContextCurrent(GlfWwindow);
 	glEnable(GL_DEPTH_TEST);
@@ -62,9 +62,9 @@ void GLFWInstance::Render(std::shared_ptr<IGraphicsWindow> GraphicsWindow, std::
 	}
 }
 
-void GLFWInstance::PreRender(std::shared_ptr<IGraphicsWindow> GraphicsWindow)
+void GLFWInstance::PreRender(Pointer<IGraphicsWindow> GraphicsWindow)
 {
-	std::shared_ptr<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(GraphicsWindow);
+	Pointer<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(GraphicsWindow);
 	GLFWwindow* GlfWwindow = GlfwWindow->GetGlWindow();
 	glfwMakeContextCurrent(GlfWwindow);
 	glClearColor(ClearColour.R, ClearColour.G, ClearColour.B, 1.0f);
@@ -75,14 +75,14 @@ void GLFWInstance::PreRender(std::shared_ptr<IGraphicsWindow> GraphicsWindow)
 	glViewport(0, 0, WindowSize.X, WindowSize.Y);
 }
 
-void GLFWInstance::PostRender(std::shared_ptr<IGraphicsWindow> GraphicsWindow)
+void GLFWInstance::PostRender(Pointer<IGraphicsWindow> GraphicsWindow)
 {
 	SwapBuffers(GraphicsWindow);	
 }
 
-void GLFWInstance::WindowSetup(std::shared_ptr<IGraphicsWindow> InGraphicsWindow)
+void GLFWInstance::WindowSetup(Pointer<IGraphicsWindow> InGraphicsWindow)
 {
-	std::shared_ptr<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(InGraphicsWindow);
+	Pointer<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(InGraphicsWindow);
 	GLFWwindow* GLWindow = GlfwWindow->GetGlWindow();
 	glfwMakeContextCurrent(GLWindow);
 

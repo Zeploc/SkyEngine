@@ -55,7 +55,7 @@ Entity::~Entity()
 	LogManager::GetInstance()->DisplayLogMessage("Entity " + std::to_string(iEntityID) + " destroyed!");	
 }
 
-void Entity::AddMesh(std::shared_ptr<Mesh> _NewMesh)
+void Entity::AddMesh(Pointer<Mesh> _NewMesh)
 {
 	EntityMesh = _NewMesh;
 }
@@ -202,7 +202,7 @@ std::string Entity::EntityToString()
 	return sEntity.str();
 }
 
-std::ostream& operator<<(std::ostream& os, const std::shared_ptr<Entity>& InEntity)
+std::ostream& operator<<(std::ostream& os, const Pointer<Entity>& InEntity)
 {
 	// std::stringstream sEntity("");
 	os << "[Entity] ";
@@ -211,7 +211,7 @@ std::ostream& operator<<(std::ostream& os, const std::shared_ptr<Entity>& InEnti
 	return os;
 }
 
-std::istream& operator>>(std::istream& is, std::shared_ptr<Entity>& InEntity)
+std::istream& operator>>(std::istream& is, Pointer<Entity>& InEntity)
 {
 	std::string Empty;
 	// TODO: Remove need for first space removal

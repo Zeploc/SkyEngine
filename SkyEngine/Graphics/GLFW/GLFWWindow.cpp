@@ -9,7 +9,8 @@
 
 GLFWWindow::~GLFWWindow()
 {
-	
+	glfwDestroyWindow(GlWindow);
+	GlWindow = nullptr;
 }
 
 GLFWWindow::GLFWWindow(std::string InWindowName, Vector2 InWindowSize, bool bFullScreen): IGraphicsWindow(InWindowName, InWindowSize, bFullScreen)

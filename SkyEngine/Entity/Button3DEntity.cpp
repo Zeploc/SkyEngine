@@ -12,7 +12,7 @@ bool Button3DEntity::bButtonPressedThisFrame = false;
 
 Button3DEntity::Button3DEntity(FTransform _Transform, EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, void (*func)()) : Entity(_Transform, _Anchor)
 {
-	std::shared_ptr<Cube> ButtonCubeMesh = std::make_shared<Cube>(Cube(fWidth, fHeight, fDepth, _Colour));
+	Pointer<Cube> ButtonCubeMesh = std::make_shared<Cube>(Cube(fWidth, fHeight, fDepth, _Colour));
 	EntityMesh = ButtonCubeMesh;
 	btnColour = _Colour;
 	btnHighlightColour = _HightlightColour;
@@ -20,7 +20,7 @@ Button3DEntity::Button3DEntity(FTransform _Transform, EANCHOR _Anchor, float fWi
 
 Button3DEntity::Button3DEntity(FTransform _Transform, EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, const char* Texturepath, void (*func)()) : Entity(_Transform, _Anchor)
 {
-	std::shared_ptr<Cube> ButtonCubeMesh = std::make_shared<Cube>(Cube(fWidth, fHeight, fDepth, _Colour, Texturepath));
+	Pointer<Cube> ButtonCubeMesh = std::make_shared<Cube>(Cube(fWidth, fHeight, fDepth, _Colour, Texturepath));
 	EntityMesh = ButtonCubeMesh;
 	btnColour = _Colour;
 	btnHighlightColour = _HightlightColour;

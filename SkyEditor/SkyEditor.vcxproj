@@ -102,6 +102,18 @@
       <AdditionalDependencies>opengl32.lib;SOIL.lib;glew32s.lib;vld.lib;freetype.lib;assimp-vc143-mtd.lib;fmod_vc.lib;Box2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)Engine\Dependencies;$(ProjectDir)Engine\Dependencies\assimp;$(ProjectDir)Engine\Dependencies\Box2D;$(ProjectDir)Engine\Dependencies\FMOD;$(ProjectDir)Engine\Dependencies\freeglut;$(ProjectDir)Engine\Dependencies\freetype;$(ProjectDir)Engine\Dependencies\glew;$(ProjectDir)Engine\Dependencies\GLFW;$(ProjectDir)Engine\Dependencies\glm;$(ProjectDir)Engine\Dependencies\soil;$(ProjectDir)Engine\Dependencies\vld;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\SkyEngine\SkyEngine.dll $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\SkyEngine.dll</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Copying Engine DLL</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -117,6 +129,18 @@
       <AdditionalDependencies>opengl32.lib;glew64s.lib;glfw3.lib;glfw3dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)\Engine\Dependencies\boost</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\SkyEngine\SkyEngine.dll $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\SkyEngine.dll</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Copying Engine DLL</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -132,6 +156,18 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>opengl32.lib;freeglut.lib;SOIL.lib;glew32.lib;vld.lib;freetype.lib;assimp-vc130-mtd.lib;fmod_vc.lib;Box2DRelease.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\SkyEngine\SkyEngine.dll $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\SkyEngine.dll</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Copying Engine DLL</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -147,6 +183,18 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>opengl32.lib;freeglut.lib;SOIL.lib;glew32.lib;vld.lib;freetype.lib;assimp-vc130-mtd.lib;fmod_vc.lib;Box2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\SkyEngine\SkyEngine.dll $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\SkyEngine.dll</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Copying Engine DLL</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="EditorApp.cpp" />

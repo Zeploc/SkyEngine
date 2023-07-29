@@ -27,7 +27,7 @@
 //GLuint Shader::ModelProgramLit;
 //GLuint Shader::ReflectionProgram;
 
-std::map<std::string, std::shared_ptr<ModelObject>> Shader::Models;
+std::map<std::string, Pointer<ModelObject>> Shader::Models;
 std::map<const char*, GLuint> Shader::Textures;
 std::map<std::string, GLuint> Shader::Programs;
 

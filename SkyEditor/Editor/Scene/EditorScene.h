@@ -5,6 +5,8 @@
 #include <string>
 #include <Scene/Scene.h>
 
+#include "Math/Vector2.h"
+
 class UIText;
 class TransformationWidget;
 
@@ -28,9 +30,9 @@ public:
 	
 	bool Wireframe = false;
 	
-	std::shared_ptr<UIText> LevelNameText;
+	Pointer<UIText> LevelNameText;
 
-	std::shared_ptr<TransformationWidget> LocationBox;
+	Pointer<TransformationWidget> LocationBox;
 	
 	float CurrentFocusDistance = 7.0f;
 	Vector2 PreviousMousePosition;

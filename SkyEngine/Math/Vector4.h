@@ -18,18 +18,18 @@ struct ENGINE_API Vector4x : glm::tvec4<T, glm::highp>
 	T& W = glm::tvec4<T, glm::highp>::w;
 
 	Vector4x()
-		: glm::tvec4()
+		: glm::tvec4<T>()
 	{
 		
 	}
 	
-	Vector4x(const Vector4x& Other)
-		: glm::tvec4(Other)
+	Vector4x(const Vector4x<T>& Other)
+		: glm::tvec4<T>(Other)
 	{
 		
 	}
 	Vector4x(const glm::tvec4<T>& Other)
-		: glm::tvec4(Other)
+		: glm::tvec4<T>(Other)
 	{
 		
 	}
@@ -44,6 +44,12 @@ struct ENGINE_API Vector4x : glm::tvec4<T, glm::highp>
 		: glm::tvec4<T>(Vec3, InW)
 	{
 	}
+	
+	Vector4x& operator=(Vector4x const & v)
+	{
+		glm::vec4::operator=(v);
+		return *this;
+	}
 
 	Vector4x Cross(const Vector4x& V) const
 	{
@@ -57,12 +63,14 @@ struct ENGINE_API Vector4x : glm::tvec4<T, glm::highp>
 
 	Vector4x GetNormalized() const
 	{
-		return glm::normalize(*this);
+		GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'normalize' accepts only floating-point inputs");
+		return glm::normalize<T, glm::precision::highp>(*this);
 	}
 
 	Vector4x& Normalize()
 	{
-		return *this = glm::normalize(*this);
+		GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'normalize' accepts only floating-point inputs");
+		return *this = glm::normalize<T, glm::precision::highp>(*this);
 	}
 
 	T Size() const

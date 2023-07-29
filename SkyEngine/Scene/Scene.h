@@ -29,17 +29,17 @@ public:
 
 	virtual void RenderScene();
 
-	void AddEntity(std::shared_ptr<Entity> _Entity, bool IsInitial = false);
+	void AddEntity(Pointer<Entity> _Entity, bool IsInitial = false);
 
-	void DestroyEntity(std::shared_ptr<Entity> _Entity);
+	void DestroyEntity(Pointer<Entity> _Entity);
 
-	void AddUIElement(std::shared_ptr<UIElement> Element);
+	void AddUIElement(Pointer<UIElement> Element);
 
-	void AddUITextElement(std::shared_ptr<UIText> Element);
+	void AddUITextElement(Pointer<UIText> Element);
 
 	void AddUITextElement(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string font, int iPSize, EANCHOR _Anchor);
 
-	void DestroyUIElement(std::shared_ptr<UIElement> _Element);
+	void DestroyUIElement(Pointer<UIElement> _Element);
 
 	virtual void Update();
 
@@ -53,11 +53,11 @@ public:
 	bool operator==(const Scene& rhs) const;
 
 	std::string SceneName;
-	std::vector<std::shared_ptr<Entity>> Entities;
-	std::vector<std::shared_ptr<UIElement>> UIElements;
+	std::vector<Pointer<Entity>> Entities;
+	std::vector<Pointer<UIElement>> UIElements;
 protected:
-	std::vector<std::shared_ptr<Entity>> DestroyedEntities;
-	std::vector<std::shared_ptr<UIElement>> UIElementsToBeDestroyed;
+	std::vector<Pointer<Entity>> DestroyedEntities;
+	std::vector<Pointer<UIElement>> UIElementsToBeDestroyed;
 	bool bIsPersistant = false;
 
 private:

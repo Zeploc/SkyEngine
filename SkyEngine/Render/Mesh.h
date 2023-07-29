@@ -29,7 +29,7 @@ public:
 	
 	virtual void Render(FTransform Newtransform);
 
-	virtual bool CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, std::shared_ptr<Entity> EntityCheck);
+	virtual bool CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, Pointer<Entity> EntityCheck);
 
 	virtual void Update() {}
 
@@ -48,11 +48,11 @@ public:
 
 	bool IsReflecting() { return bReflection; }
 
-	void AddCollisionBounds(float fHeight, float fWidth, float fDepth, std::shared_ptr<Entity> _EntityRef);
+	void AddCollisionBounds(float fHeight, float fWidth, float fDepth, Pointer<Entity> _EntityRef);
 
-	void AddCollisionBounds(std::shared_ptr<CollisionBounds> NewCollision);
+	void AddCollisionBounds(Pointer<CollisionBounds> NewCollision);
 
-	std::shared_ptr<CollisionBounds> GetCollisionBounds()
+	Pointer<CollisionBounds> GetCollisionBounds()
 	{
 		return MeshCollisionBounds;
 	};
@@ -75,9 +75,9 @@ public:
 	// Stencil
 	bool bStencil = false;
 	glm::vec4 StencilColour = {0.5, 0.7, 0.8, 1.0f};
-	//std::shared_ptr<Entity> EntityRef;
+	//Pointer<Entity> EntityRef;
 protected:
-	std::shared_ptr<CollisionBounds> MeshCollisionBounds;
+	Pointer<CollisionBounds> MeshCollisionBounds;
 	bool bIsLit = true;
 	bool bReflection = false;
 	bool bFog = true;

@@ -20,5 +20,5 @@ public:
 
 	void SaveText(std::string WidgetName);
 
-	std::vector<std::shared_ptr<UIElement>> UIElements;
+	std::vector<Pointer<UIElement>> UIElements;
 };

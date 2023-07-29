@@ -8,12 +8,12 @@ class GLFWInstance : public IGraphicsInstance
 public:
 	GLFWInstance();
 	
-	void SwapBuffers(std::shared_ptr<IGraphicsWindow> GraphicsWindow) override;
+	void SwapBuffers(Pointer<IGraphicsWindow> GraphicsWindow) override;
 
-	void Render(std::shared_ptr<IGraphicsWindow> GraphicsWindow, std::vector<std::shared_ptr<Entity>> Entities, std::vector<std::shared_ptr<UIElement>> UIElements) override;
+	void Render(Pointer<IGraphicsWindow> GraphicsWindow, std::vector<Pointer<Entity>> Entities, std::vector<Pointer<UIElement>> UIElements) override;
 
-	void PreRender(std::shared_ptr<IGraphicsWindow> GraphicsWindow) override;
-	void PostRender(std::shared_ptr<IGraphicsWindow> GraphicsWindow) override;
+	void PreRender(Pointer<IGraphicsWindow> GraphicsWindow) override;
+	void PostRender(Pointer<IGraphicsWindow> GraphicsWindow) override;
 	
-	void WindowSetup(std::shared_ptr<IGraphicsWindow> InGraphicsWindow) override;
+	void WindowSetup(Pointer<IGraphicsWindow> InGraphicsWindow) override;
 };

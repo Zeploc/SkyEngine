@@ -12,15 +12,13 @@
 
 class EditorApplication : public SkyEngine::Application
 {
-public:
-	// Application* Application::EngineApplication = nullptr;
-	
+public:	
 	EditorApplication() : Application() {}
-	~EditorApplication() {}	
-	
-	void ApplicationSetup() override
+	~EditorApplication() {}
+
+	bool ApplicationSetup() override
 	{
-		Application::ApplicationSetup();
+		return Application::ApplicationSetup();
 	}
 	
 	void Update() override
@@ -29,10 +27,10 @@ public:
 
 		if (bLoading)
 		{
-			std::shared_ptr<EditorScene> NewScene = std::shared_ptr<EditorScene>(new EditorScene("Editor"));			
+			Pointer<EditorScene> NewScene = Pointer<EditorScene>(new EditorScene("Editor"));			
 			SceneManager::GetInstance()->AddScene(NewScene);
 			
-			// std::shared_ptr<Scene> NewScene = std::shared_ptr<Scene>(new Scene("Empty"));
+			// Pointer<Scene> NewScene = Pointer<Scene>(new Scene("Empty"));
 			// SceneManager::GetInstance()->AddScene(NewScene);
 			
 			bLoading = false;

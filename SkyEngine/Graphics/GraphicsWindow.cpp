@@ -7,7 +7,7 @@ void IGraphicsWindow::PreRender()
 	GraphicsInstance->PreRender(shared_from_this());
 }
 
-void IGraphicsWindow::Render(std::vector<std::shared_ptr<Entity>> Entities, std::vector<std::shared_ptr<UIElement>> UIElements)
+void IGraphicsWindow::Render(std::vector<Pointer<Entity>> Entities, std::vector<Pointer<UIElement>> UIElements)
 {
 	GraphicsInstance->Render(shared_from_this(), Entities, UIElements);
 }

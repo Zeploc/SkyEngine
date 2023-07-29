@@ -220,7 +220,7 @@ void Cube::Update()
 {
 }
 
-bool Cube::CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, std::shared_ptr<Entity> EntityCheck)
+bool Cube::CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, Pointer<Entity> EntityCheck)
 {
 	return Utils::CheckCubeHit(RayStart, RayDirection, {m_fWidth, m_fHeight, m_fDepth}, EntityCheck, HitPos);
 }

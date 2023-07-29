@@ -29,14 +29,14 @@ public:
 	virtual Vector2 GetWindowSize() = 0;
 	
 	virtual void PreRender();
-	void Render(std::vector<std::shared_ptr<Entity>> Entities, std::vector<std::shared_ptr<UIElement>> UIElements);
+	void Render(std::vector<Pointer<Entity>> Entities, std::vector<Pointer<UIElement>> UIElements);
 	virtual void PostRender();
 	
-	std::shared_ptr<IGraphicsInstance> GetGraphicsInstance() { return GraphicsInstance; }
+	Pointer<IGraphicsInstance> GetGraphicsInstance() { return GraphicsInstance; }
 
 	FDelegate OnFocusChanged;
 
 protected:
-	std::shared_ptr<IGraphicsInstance> GraphicsInstance;
+	Pointer<IGraphicsInstance> GraphicsInstance;
 };
 

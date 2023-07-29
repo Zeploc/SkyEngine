@@ -2,16 +2,14 @@
 
 #pragma once
 
-#include <glew/glew.h>
-#include <GLFW/glfw3.h>
-
 #include "EngineWindow.h"
 #include "Core/Core.h"
 #include "Graphics/GraphicsInterface.h"
 #include "Math/Vector.h"
+#include "Math/Vector2.h"
 
 namespace SkyEngine
-{
+{	
 	// TODO: Namespace? More defined name?
 	class ENGINE_API Application
 	{
@@ -19,7 +17,7 @@ namespace SkyEngine
 		Application();
 		virtual ~Application();
 
-		virtual void ApplicationSetup();
+		virtual bool ApplicationSetup();
 
 		void Run();
 		void Quit();
@@ -36,18 +34,18 @@ namespace SkyEngine
 		float TickRate = 60.0f;
 		double dPrevTime = 0.0f;
 
-		Vector2 MainWindowSize = Vector2(1920, 1080);
-		Vector3 SkyColour = Vector3(0.3f, 0.8f, 0.9f);
+		Vector2 MainWindowSize;
+		Vector3 SkyColour;
 
-		std::shared_ptr<IGraphicsInterface> GraphicsInterface;
+		Pointer<IGraphicsInterface> GraphicsInterface;
 
-		std::shared_ptr<EngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
+		Pointer<EngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
 		
 		static Application* GetApplication();
 	protected:
 		static Application* EngineApplication;
 
-		std::shared_ptr<EngineWindow> ApplicationWindow;
+		Pointer<EngineWindow> ApplicationWindow;
 	};
 
 	// To be defined in client

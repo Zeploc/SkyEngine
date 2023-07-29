@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <memory>
+
 #define SE_PLATFORM_WINDOWS
 #define SE_BUILD_DLL
 
@@ -13,5 +15,10 @@
 #else
 	#error SkyEngine only supports Windows!
 #endif
-		
+
+template<typename T>
+using Pointer = std::shared_ptr<T>;
+
+template<typename T>
+using Scope = std::unique_ptr<T>;
 

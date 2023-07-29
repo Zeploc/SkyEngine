@@ -5,6 +5,8 @@
 #include <Entity/Entity.h>
 #include <System/Utils.h>
 
+#include "Math/Vector4.h"
+
 class TransformationWidget : public Entity
 {
 public:
@@ -16,9 +18,9 @@ public:
 
 	void DrawEntity() override;
 
-	std::shared_ptr<Entity> XMoveTransform;
-	std::shared_ptr<Entity> YMoveTransform;
-	std::shared_ptr<Entity> ZMoveTransform;
+	Pointer<Entity> XMoveTransform;
+	Pointer<Entity> YMoveTransform;
+	Pointer<Entity> ZMoveTransform;
 
 	bool XHovered = false;
 	bool YHovered = false;
@@ -30,7 +32,7 @@ public:
 	float GrabOffset = 0.0f;
 
 	Vector3 HitPosition;
-	std::shared_ptr<Entity> SelectedEntity;
+	Pointer<Entity> SelectedEntity;
 	
 	Vector4 XColour = {0.6f, 0.1f, 0.1f, 1.0f};
 	Vector4 YColour = {0.1f, 0.6f, 0.1f, 1.0f};
