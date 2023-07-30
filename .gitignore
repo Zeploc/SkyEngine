@@ -263,3 +263,4 @@ __pycache__/
 *.pyc
 SkyEngine/Dependencies/lib/Win64/assimp/assimp-vc143-mtd.lib
 SkyEngine/Dependencies/lib/Win32/assimp/assimp-vc143-mtd.lib
+SkyEngine/Dependencies/lib/Win64/assimp/assimp-vc142-mtd.lib
