@@ -16,7 +16,7 @@ public:
 
 	void Update() override;
 
-	void DrawEntity() override;
+	std::vector<Pointer<Entity>> GetAdditionalEntitiesToRender() override;
 
 	Pointer<Entity> XMoveTransform;
 	Pointer<Entity> YMoveTransform;

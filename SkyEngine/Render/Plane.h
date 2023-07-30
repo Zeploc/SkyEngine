@@ -31,7 +31,8 @@ public:
 
 	void Reset() override;
 
-	void Render(FTransform Newtransform) override;
+	// TODO: Update to graphics instance
+	void Render(FTransform Newtransform);
 
 	void Update() override;
 	

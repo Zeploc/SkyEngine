@@ -214,17 +214,6 @@ void Sphere::SetLit(bool _bIsLit)
 }
 
 /************************************************************
-#--Description--#:	Render Current Mesh to the screen
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
-void Sphere::Render(FTransform Newtransform)
-{
-	Mesh::Render(Newtransform);
-}
-
-/************************************************************
 #--Description--#: 	Updated every frame
 #--Author--#: 		Alex Coultas
 #--Parameters--#: 	NA

@@ -124,17 +124,6 @@ void Pyramid::Rebind()
 }
 
 /************************************************************
-#--Description--#:	Render Current Mesh to the screen
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
-void Pyramid::Render(FTransform Newtransform)
-{
-	Mesh::Render(Newtransform);
-}
-
-/************************************************************
 #--Description--#: 	Updated every frame
 #--Author--#: 		Alex Coultas
 #--Parameters--#: 	NA

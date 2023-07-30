@@ -83,11 +83,6 @@ void Triangle::Rebind()
 	BindTriangle();
 }
 
-void Triangle::Render(FTransform Newtransform)
-{
-	Mesh::Render(Newtransform);
-}
-
 void Triangle::Update()
 {
 }

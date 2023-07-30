@@ -194,6 +194,11 @@ Vector3 CameraManager::ScreenToWorldPosition2D(Vector2 InScreenPosition)
 	return (MouseDirection * t) + CameraPosition;
 }
 
+glm::mat4 CameraManager::GetMVP(glm::mat4 model) const
+{
+	return Projection.ToGLM() * View.ToGLM() * model;
+}
+
 /************************************************************
 #--Description--#: 	Passes in the new mvp to the current program shader
 #--Author--#: 		Alex Coultas
@@ -202,19 +207,12 @@ Vector3 CameraManager::ScreenToWorldPosition2D(Vector2 InScreenPosition)
 ************************************************************/
 void CameraManager::SetMVP(FTransform InTransform, GLuint program)
 {
-	glm::mat4 translate = glm::translate(glm::mat4(), InTransform.Position);
-	glm::mat4 scale = glm::scale(glm::mat4(), InTransform.Scale);	
-	glm::mat4 rotation = glm::mat4();
-	rotation = rotate(rotation, glm::radians(InTransform.Rotation.Yaw), glm::vec3(0, 1, 0));
-	rotation = rotate(rotation, glm::radians(InTransform.Rotation.Pitch), glm::vec3(1, 0, 0));
-	rotation = rotate(rotation, glm::radians(InTransform.Rotation.Roll), glm::vec3(0, 0, 1));
-
-	glm::mat4 model = translate * rotation * scale;
+	glm::mat4 model = InTransform.GetModelMatrix();
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, value_ptr(model));
 	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, glm::value_ptr(View.ToGLM()));//view));//
 	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_FALSE, glm::value_ptr(Projection.ToGLM()));
 
-	glm::mat4 MVP = Projection.ToGLM() * View.ToGLM() * model;
+	glm::mat4 MVP = GetMVP(model);
 	GLint MVPLoc = glGetUniformLocation(program, "MVP");
 	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, value_ptr(MVP));
 }

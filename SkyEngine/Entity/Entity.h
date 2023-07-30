@@ -11,6 +11,8 @@
 // OpenGL Library Includes //
 
 // Engine Includes //
+#include <vector>
+
 #include "Math/FTransform.h"
 #include "Math/Matrix.h"
 #include "Math/Rotator.h"
@@ -35,7 +37,9 @@ public:
 
 	//void AddMesh(Utils::ESHAPE _NewShape);
 
-	virtual void DrawEntity();
+	virtual bool CanRender();
+	virtual std::vector<Pointer<Entity>> GetAdditionalEntitiesToRender() { return {}; }
+	virtual FTransform GetAnchoredTransform();
 
 	void BaseUpdate();
 

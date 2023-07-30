@@ -307,6 +307,7 @@ void Plane::Reset()
 ************************************************************/
 void Plane::Render(FTransform Newtransform)
 {
+	// TODO: move too renderer linking to plane
 	if (m_fFrameCheck > 0)
 	{
 		m_dFPSCounter += Time::dTimeDelta;
@@ -322,7 +323,7 @@ void Plane::Render(FTransform Newtransform)
 		GLint UVCoordsLoc = glGetUniformLocation(program, "uTexCoordOffset");
 		glUniform2f(UVCoordsLoc, AnimationInfo.v2CurrentFrame.x * AnimationInfo.v2FrameSize.x, AnimationInfo.v2CurrentFrame.y * AnimationInfo.v2FrameSize.y);
 	}
-	Mesh::Render(Newtransform);
+	// Mesh::Render(Newtransform);
 }
 
 /************************************************************

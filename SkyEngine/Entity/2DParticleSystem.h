@@ -42,7 +42,7 @@ public:
 
 	void Update() override;
 
-	void Render();
+	std::vector<Pointer<Entity>> GetAdditionalEntitiesToRender() override;
 
 	struct Particle2D
 	{

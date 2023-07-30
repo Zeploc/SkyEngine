@@ -6,10 +6,6 @@
 #include <iostream>
 #include <sstream>
 
-// OpenGL Library Includes //
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 // Engine Includes //
 #include "CollisionBounds.h"
 #include "Render/Mesh.h"
@@ -60,6 +56,15 @@ void Entity::AddMesh(Pointer<Mesh> _NewMesh)
 	EntityMesh = _NewMesh;
 }
 
+bool Entity::CanRender()
+{
+	if (!EntityMesh || !bVisible)
+	{
+		return false;
+	}
+	return true;
+}
+
 //void Entity::AddMesh(Utils::ESHAPE _NewShape)
 //{
 //	switch (_NewShape)
@@ -81,18 +86,8 @@ void Entity::AddMesh(Pointer<Mesh> _NewMesh)
 //	EntityMesh->EntityRef = this->shared_from_this();
 //}
 
-/************************************************************
-#--Description--#: 	Draws the entity on the screen at the using the Transform
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
-void Entity::DrawEntity()
+FTransform Entity::GetAnchoredTransform()
 {
-	if (!EntityMesh || !bVisible)
-	{
-		return;
-	}
 	FTransform AnchoredTransform = Transform;
 	if (EntityMesh->GetCollisionBounds())
 	{
@@ -102,7 +97,7 @@ void Entity::DrawEntity()
 	{
 		AnchoredTransform.Position = Utils::GetAncoredPosition(Transform.Position, glm::vec3(EntityMesh->m_fWidth, EntityMesh->m_fHeight, EntityMesh->m_fDepth), EntityAnchor);
 	}
-	EntityMesh->Render(AnchoredTransform);
+	return AnchoredTransform;
 }
 
 /************************************************************
@@ -257,14 +252,7 @@ void Entity::SetScale(Vector3 _NewScale)
 
 Matrix4 Entity::GetModel()
 {
-	glm::mat4 translate = glm::translate(glm::mat4(), Transform.Position);
-	glm::mat4 scale = glm::scale(glm::mat4(), Transform.Scale);
-	glm::mat4 rotation = glm::mat4();
-	rotation = rotate(rotation, glm::radians(Transform.Rotation.Yaw), glm::vec3(0, 1, 0));
-	rotation = rotate(rotation, glm::radians(Transform.Rotation.Pitch), glm::vec3(1, 0, 0));
-	rotation = rotate(rotation, glm::radians(Transform.Rotation.Roll), glm::vec3(0, 0, 1));
-
-	return translate * rotation * scale;
+	return Transform.GetModelMatrix();
 }
 
 void Entity::SetupB2BoxBody(b2World& Box2DWorld, b2BodyType BodyType, bool bCanRotate, bool bHasFixture, float Density, float Friction, bool IsBullet)

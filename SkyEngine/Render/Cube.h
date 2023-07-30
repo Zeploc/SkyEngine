@@ -20,8 +20,6 @@ public:
 
 	void SetLit(bool _bIsLit) override;
 
-	void Render(FTransform Newtransform) override;
-
 	void Update() override;
 	
 	bool CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, Pointer<Entity> EntityCheck) override;

@@ -163,11 +163,7 @@ void TransformationWidget::Update()
 	ZMoveTransform->Transform.Position = Transform.Position + glm::vec3(0, 0, ZMoveTransform->EntityMesh->m_fDepth / 2.0f);
 }
 
-void TransformationWidget::DrawEntity()
+std::vector<Pointer<Entity>> TransformationWidget::GetAdditionalEntitiesToRender()
 {
-	//Entity::DrawEntity();
-	if (!bVisible)
-	{
-		return;
-	}
+	return {};//{XMoveTransform, YMoveTransform, ZMoveTransform};
 }

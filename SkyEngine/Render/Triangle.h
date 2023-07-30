@@ -18,8 +18,6 @@ public:
 
 	void Rebind() override;
 
-	void Render(FTransform Newtransform) override;
-
 	void Update() override;
 
 	glm::vec3 Point1;

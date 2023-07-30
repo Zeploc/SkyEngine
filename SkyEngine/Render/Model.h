@@ -25,7 +25,8 @@ public:
 
 	void SetLit(bool _bIsLit);
 
-	void Render(FTransform Newtransform) override;
+	// TODO: Update to graphics instance
+	void Render(FTransform Newtransform);
 
 	void Update() override;
 

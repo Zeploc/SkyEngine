@@ -13,6 +13,12 @@
 
 // Engine Includes //
 // #include "Entity/2DParticleSystem.h"
+#include "Entity/2DParticleSystem.h"
+#include "Entity/2DParticleSystem.h"
+#include "Entity/2DParticleSystem.h"
+#include "Entity/2DParticleSystem.h"
+#include "Entity/2DParticleSystem.h"
+#include "Entity/2DParticleSystem.h"
 #include "Math/Matrix.h"
 #include "Math/Vector2.h"
 #include "System/Utils.h"
@@ -45,6 +51,7 @@ public:
 
 	virtual void SpectatorUpdate();
 
+	glm::mat4 GetMVP(glm::mat4 model) const;
 	void SetMVP(FTransform InTransform, GLuint program);
 
 	void SwitchProjection(EProjectionMode InMode);

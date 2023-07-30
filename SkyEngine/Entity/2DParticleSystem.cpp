@@ -229,16 +229,12 @@ void ParticleSystem2D::Update()
 	}
 }
 
-/************************************************************
-#--Description--#:	Render to the screen
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
-void ParticleSystem2D::Render()
+std::vector<Pointer<Entity>> ParticleSystem2D::GetAdditionalEntitiesToRender()
 {
+	std::vector<Pointer<Entity>> ParticleEntities;
 	for (auto it : m_vParticles)
 	{
-		it.pEntity->DrawEntity();
+		ParticleEntities.push_back(it.pEntity);
 	}
+	return ParticleEntities;
 }

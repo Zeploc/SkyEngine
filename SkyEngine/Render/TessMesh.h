@@ -12,7 +12,8 @@ public:
 
 	~TessMesh();
 
-	void Render(FTransform Newtransform) override;
+	// TODO: Update to graphics instance
+	void Render(FTransform Newtransform);
 
 	void Rebind() override; // Will replace if texture exists
 

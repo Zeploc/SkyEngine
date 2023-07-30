@@ -366,7 +366,6 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
     <ClCompile Include="Render/AnimatedModel.cpp" />
     <ClCompile Include="Render/Cube.cpp" />
     <ClCompile Include="Render/CubeMap.cpp" />
-    <ClCompile Include="Render/FrameBuffer.cpp" />
     <ClCompile Include="Render/GeometryObject.cpp" />
     <ClCompile Include="Render/Lighting.cpp" />
     <ClCompile Include="Render/Mesh.cpp" />
@@ -438,7 +437,6 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
     <ClInclude Include="Render/AnimatedModel.h" />
     <ClInclude Include="Render/Cube.h" />
     <ClInclude Include="Render/CubeMap.h" />
-    <ClInclude Include="Render/FrameBuffer.h" />
     <ClInclude Include="Render/GeometryObject.h" />
     <ClInclude Include="Render/Lighting.h" />
     <ClInclude Include="Render/Mesh.h" />

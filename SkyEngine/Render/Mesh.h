@@ -27,8 +27,6 @@ public:
 
 	~Mesh();
 	
-	virtual void Render(FTransform Newtransform);
-
 	virtual bool CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, Pointer<Entity> EntityCheck);
 
 	virtual void Update() {}
@@ -76,10 +74,10 @@ public:
 	bool bStencil = false;
 	glm::vec4 StencilColour = {0.5, 0.7, 0.8, 1.0f};
 	//Pointer<Entity> EntityRef;
-protected:
-	Pointer<CollisionBounds> MeshCollisionBounds;
 	bool bIsLit = true;
 	bool bReflection = false;
 	bool bFog = true;
+protected:
+	Pointer<CollisionBounds> MeshCollisionBounds;
 };
 

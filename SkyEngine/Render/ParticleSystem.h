@@ -44,7 +44,8 @@ public:
 
 	void Update() override;
 
-	void DrawEntity() override;
+	// TODO: Update to graphics instance
+	void DrawEntity();
 
 	glm::vec4 Colour;
 	float ParticleSize = 0.4f;

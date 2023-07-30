@@ -18,6 +18,8 @@ struct ENGINE_API FTransform
 	std::string ToString() const;
 	void FromString(std::string sTransform);
 	
+	glm::mat4 GetModelMatrix() const;
+	
 	friend std::ostream& operator<<(std::ostream& os, const FTransform& InTransform);
 	friend std::istream& operator>>(std::istream& is, FTransform& OutTransform);
 };

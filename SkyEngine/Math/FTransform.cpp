@@ -27,6 +27,18 @@ void FTransform::FromString(std::string sTransform)
 	}
 }
 
+glm::mat4 FTransform::GetModelMatrix() const
+{
+	glm::mat4 translate = glm::translate(glm::mat4(), Position);
+	glm::mat4 scale = glm::scale(glm::mat4(), Scale);
+	glm::mat4 rotation = glm::mat4();
+	rotation = rotate(rotation, glm::radians(Rotation.Yaw), glm::vec3(0, 1, 0));
+	rotation = rotate(rotation, glm::radians(Rotation.Pitch), glm::vec3(1, 0, 0));
+	rotation = rotate(rotation, glm::radians(Rotation.Roll), glm::vec3(0, 0, 1));
+
+	return translate * rotation * scale;
+}
+
 std::ostream& operator<<(std::ostream& os, const FTransform& InTransform)
 {
 	os << "(" << InTransform.Position << " " << InTransform.Rotation << " " << InTransform.Scale << ")";
