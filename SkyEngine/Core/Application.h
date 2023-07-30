@@ -30,10 +30,6 @@ namespace SkyEngine
 
 		bool bLoading = true;
 
-		float CurrentTimer = 0.0f;
-		float TickRate = 60.0f;
-		double dPrevTime = 0.0f;
-
 		Vector2 MainWindowSize;
 		Vector3 SkyColour;
 

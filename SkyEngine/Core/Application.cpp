@@ -25,6 +25,7 @@
 #include "Render/FrameBuffer.h"
 #include "Render/Shader.h"
 #include "Render/Lighting.h"
+#include "System/TimeManager.h"
 
 // make sure the winsock lib is included...
 #pragma comment(lib,"ws2_32.lib")
@@ -93,6 +94,8 @@ namespace SkyEngine
 		// TODO: Move to window?
 		// The input function registration
 		SI->Init(ApplicationWindow);
+		
+		TimeManager::Start();
 		return true;
 	}
 
@@ -142,32 +145,29 @@ namespace SkyEngine
 		}
 		else
 		{
-			double dCurrentTime = glfwGetTime();//glutGet(GLUT_ELAPSED_TIME);
-			double TimeDelta = (dCurrentTime - dPrevTime);// / 1000;
-			dPrevTime = glfwGetTime();//glutGet(GLUT_ELAPSED_TIME);
-			CurrentTimer += TimeDelta;
-			if (CurrentTimer > 1.0f / TickRate)
+			TimeManager::Update();
+			if (TimeManager::CanTickThisFrame())
 			{
 				SceneManager::GetInstance()->UpdateCurrentScene();
 				CameraManager::GetInstance()->UpdateViewMatrix();
 				Time::Update();
 				SI->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
-				CurrentTimer = 0.0f;
 			}
 		}
 	}
 
 	void Application::RenderScene()
 	{
-		ApplicationWindow->GetGraphicsWindow()->PreRender();		
-		if (bLoading)
-		{
-			// TODO: Change to graphics instance
-			glClearColor(0.8f, 0.8f, 0.8f, 1.0); // clear grey
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			LogManager::GetInstance()->Render();
-		}
-		else
+		ApplicationWindow->GetGraphicsWindow()->PreRender();
+		// TODO: Link loading
+		// if (bLoading)
+		// {
+		// 	// TODO: Change to graphics instance
+		// 	glClearColor(0.8f, 0.8f, 0.8f, 1.0); // clear grey
+		// 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// 	LogManager::GetInstance()->Render();
+		// }
+		// else
 		{
 			SM->RenderCurrentScene();
 		}

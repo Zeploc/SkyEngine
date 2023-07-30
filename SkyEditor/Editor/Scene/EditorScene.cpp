@@ -288,8 +288,8 @@ void EditorScene::Update()
 			else
 			{
 				Vector3 NewCameraForwardVector = CameraInstance->GetCameraForwardVector();
-				NewCameraForwardVector.Rotate(-Offset.X, Vector3(0,1,0));
-				NewCameraForwardVector.Rotate(-Offset.Y, CameraInstance->GetCameraRightVector());
+				NewCameraForwardVector.Rotate(Offset.X, Vector3(0,1,0));
+				NewCameraForwardVector.Rotate(Offset.Y, CameraInstance->GetCameraRightVector());
 				CameraInstance->SetCameraForwardVector(NewCameraForwardVector);
 			}
 			PreviousMousePosition = Input::GetInstance()->MousePos;
