@@ -401,6 +401,7 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
     <ClCompile Include="Math/Matrix.cpp" />
     <ClCompile Include="Math/Quaternion.cpp" />
     <ClCompile Include="Math/FTransform.cpp" />
+    <ClInclude Include="Graphics\GLFW\GLFWIncludes.h" />
     <ClInclude Include="Math\Internal\Rotator.decl.h" />
     <ClInclude Include="Math\Internal\Rotator.impl.hpp" />
     <ClInclude Include="Math\Internal\Vector3.decl.h" />
@@ -454,6 +455,7 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
     <ClInclude Include="Render/Triangle.h" />
     <ClInclude Include="Render\ssAnimatedModel.h" />
     <ClInclude Include="Render\TessMesh.h" />
+    <ClInclude Include="Render\Texture.h" />
     <ClInclude Include="Scene/Scene.h" />
     <ClInclude Include="Scene/SceneManager.h" />
     <ClInclude Include="SkyEngine.h" />

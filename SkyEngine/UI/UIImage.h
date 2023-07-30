@@ -7,6 +7,7 @@
 
 // Engine Includes //
 #include "UIElement.h"
+#include "Render/Texture.h"
 #include "System/Utils.h"
 
 class ENGINE_API UIImage : public UIElement
@@ -28,7 +29,7 @@ public:
 
 private:
 	GLuint VAO;
-	GLuint texture;
+	TextureData Texture;
 
 	bool bHasTexture = false;
 	EANCHOR ImageAnchor;

@@ -3,7 +3,6 @@
 #pragma once
 
 // Library Includes //
-#include <iostream>
 
 // OpenGL Library Includes //
 #include <glew/glew.h>

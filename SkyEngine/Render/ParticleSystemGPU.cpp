@@ -12,6 +12,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
+#include "Core/Application.h"
+
 /************************************************************
 #--Description--#:  Constructor function
 #--Author--#: 		Alex Coultas
@@ -67,7 +69,7 @@ void ParticleSystemGPU::BindParticleSystemGPU(const char* TexturePath)
 
 	program = Shader::Programs["GPUParticlesProgram"];
 
-	texture = Shader::GetTexture(TexturePath, true);
+	Texture = GetGraphicsAPI()->GetTexture(TexturePath, true);
 
 	// Position
 	glGenBuffers(1, &posVbo);

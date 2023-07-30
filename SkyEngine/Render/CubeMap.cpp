@@ -112,22 +112,24 @@ void CubeMap::BindCubeMap()
 		20, 21, 22,
 		20, 22, 23
 	};
+	
 	GLuint vbo;
 	GLuint ebo;
 
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+	// TODO: Link textures properly
+	glGenTextures(1, &Texture.TextureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, Texture.TextureID);
 
-	int width, height;
 	unsigned char* image;
 	for (GLuint i = 0; i < 6; i++)
 	{
 		std::string fullPathName = "Resources/Textures/CubeMap/";
 		fullPathName.append(TextureSources[i]);
-		image = SOIL_load_image(fullPathName.c_str(), &width, &height, nullptr, SOIL_LOAD_RGB);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+		Texture.Path = fullPathName;
+		image = SOIL_load_image(fullPathName.c_str(), &Texture.Width, &Texture.Height, nullptr, SOIL_LOAD_RGB);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, Texture.Width, Texture.Height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 		SOIL_free_image_data(image);
-	}
+	}	
 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -178,14 +180,14 @@ void CubeMap::Render(FTransform Newtransform)
 	//glDisable(GL_BLEND);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, Texture.TextureID);
 	glUniform1i(glGetUniformLocation(program, "cubeSampler"), 0);
 
 	CameraManager::GetInstance()->SetMVP(Newtransform, program);
 
 	glActiveTexture(GL_TEXTURE1);
 	glUniform1i(glGetUniformLocation(program, "skybox"), 1);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, Texture.TextureID);
 
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, m_iIndicies, GL_UNSIGNED_INT, nullptr);

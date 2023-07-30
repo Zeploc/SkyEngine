@@ -1,8 +1,8 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
-#include<fstream>
-#include<iostream>
-#include<vector>
+#include <fstream>
+#include <iostream>
+#include <vector>
 
 // OpenGL Library Includes //
 

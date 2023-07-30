@@ -181,3 +181,8 @@ SkyEngine::Application* GetApplication()
 {
 	return SkyEngine::Application::GetApplication();
 }
+
+Pointer<IGraphicsAPI> GetGraphicsAPI()
+{
+	return SkyEngine::Application::GetApplication()->GraphicsApi;
+}

@@ -9,6 +9,7 @@
 // OpenGL Library Includes //
 
 // Local Includes //
+#include "Texture.h"
 #include "Entity/Entity.h"
 
 #define NUM_PARTICLES 128 * 1000
@@ -77,7 +78,7 @@ private:
 	GLuint program;
 	GLuint vao;
 	GLuint vbo;
-	GLuint texture;
+	TextureData Texture;
 
 	GLuint posVbo;
 	GLuint velVbo;

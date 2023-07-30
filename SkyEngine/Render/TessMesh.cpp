@@ -7,6 +7,8 @@
 #include "Render/Shader.h"
 
 #include <glm/gtc/type_ptr.hpp>
+#include <glew/glew.h>
+#include <GLFW/glfw3.h>
 
 TessMesh::TessMesh(float fWidth, float fHeight, glm::vec4 _Colour)
 {
@@ -46,7 +48,7 @@ void TessMesh::Render(FTransform Newtransform)
 	if (bHasTexture)
 	{
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
+		glBindTexture(GL_TEXTURE_2D, Texture.TextureID);
 	}
 	if (bFog)
 	{

@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "Shader.h"
+#include "Core/Application.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -71,7 +72,7 @@ void Cube::BindCube()
 	float fHalfHeight = m_fHeight / 2;
 	float fHalfDepth = m_fDepth / 2;
 
-	GLfloat Texturedvertices[] = {
+	std::vector<float> Texturedvertices = {
 		// Positions								// Colors									// UV Cords		// Normals
 		// Front Face
 		-fHalfWidth, fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
@@ -105,7 +106,7 @@ void Cube::BindCube()
 		-fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f
 
 	};
-	GLfloat vertices[] = {
+	std::vector<float> vertices = {
 		// Positions								// Colors									// Normals
 		// Front Face
 		-fHalfWidth, fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 0.0f, 1.0f,
@@ -140,7 +141,7 @@ void Cube::BindCube()
 
 	};
 
-	GLuint indices[] = {
+	std::vector<uint32_t> indices = {
 		// Front Face
 		0, 1, 2,
 		0, 2, 3,
@@ -161,19 +162,11 @@ void Cube::BindCube()
 		20, 22, 23
 	};
 
-	vao = Shader::CreateBuffer(TextureSource, texture, true, true);
-	glBindVertexArray(vao);
-	if (TextureSource != "")
-	{
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Texturedvertices), Texturedvertices, GL_STATIC_DRAW);
-	}
-	else
-	{
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	}
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	glBindVertexArray(0);
+	vao = GetGraphicsAPI()->CreateBuffer(TextureSource, Texture, true, true);
+	// If no texture, texture source is equal to ""
+	const std::vector<float> VerticesToUse = TextureSource != "" ? Texturedvertices : vertices;
+	
+	GetGraphicsAPI()->BindArray(VerticesToUse, indices, vao, false);	
 
 	std::cout << "Cube vao: " << vao << std::endl;
 }

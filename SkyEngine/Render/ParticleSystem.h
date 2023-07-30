@@ -77,7 +77,7 @@ private:
 	GLuint program;
 	GLuint vao;
 	GLuint vbo;
-	GLuint texture;
+	TextureData Texture;
 
 	bool bHasTexture = false;
 };

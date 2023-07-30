@@ -22,6 +22,7 @@
 #include <map>
 #include <vector>
 
+#include "Texture.h"
 #include "Math/Matrix.h"
 #include "Render/Lighting.h"
 #include "System/Math_3d.h"
@@ -186,7 +187,7 @@ private:
 	GLuint m_Buffers[NUM_VBs];
 
 	std::vector<MeshEntry> m_Entries;
-	std::vector<GLuint> m_Textures;
+	std::vector<TextureData> m_Textures;
 
 	std::map<std::string, GLuint> m_BoneMapping;
 	std::map<std::string, aiNodeAnim*> boneHierarchy;

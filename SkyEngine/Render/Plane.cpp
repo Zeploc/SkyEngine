@@ -7,6 +7,7 @@
 
 // Engine Includes //
 #include "Shader.h"
+#include "Core/Application.h"
 #include "System/Time.h"
 
 /************************************************************
@@ -240,10 +241,7 @@ Plane::~Plane()
 ************************************************************/
 void Plane::BindPlane()
 {
-	float fHalfWidth = m_fWidth / 2;
-	float fHalfHeight = m_fHeight / 2;
-
-	GLfloat vertices[] = {
+	std::vector<float> vertices = {
 		// Positions						// Colors									// Tex Coords
 		Points[0].x, Points[0].y, Points[0].z, Colour.r, Colour.g, Colour.b, Colour.a, // Top Left
 		Points[1].x, Points[1].y, Points[1].z, Colour.r, Colour.g, Colour.b, Colour.a, // Top Right
@@ -251,7 +249,7 @@ void Plane::BindPlane()
 		Points[3].x, Points[3].y, Points[3].z, Colour.r, Colour.g, Colour.b, Colour.a, // Bottom Left
 	};
 
-	GLfloat Texturedvertices[] = {
+	std::vector<float> Texturedvertices = {
 		// Positions						// Colors									// Tex Coords
 		Points[0].x, Points[0].y, Points[0].z, Colour.r, Colour.g, Colour.b, Colour.a, UVCoords.x, UVCoords.z, // Top Left
 		Points[1].x, Points[1].y, Points[1].z, Colour.r, Colour.g, Colour.b, Colour.a, UVCoords.y, UVCoords.z, // Top Right
@@ -259,23 +257,17 @@ void Plane::BindPlane()
 		Points[3].x, Points[3].y, Points[3].z, Colour.r, Colour.g, Colour.b, Colour.a, UVCoords.x, UVCoords.w, // Bottom Left
 	};
 
-	GLuint indices[] = {
+	std::vector<uint32_t> indices = {
 		0, 1, 2, // First Triangle
 		0, 2, 3 // Second Triangle
 	};
-	// If no texture, texture source is equal to ""
-	vao = Shader::CreateBuffer(TextureSource, texture, true);
-	if (TextureSource != "")
-	{
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Texturedvertices), Texturedvertices, GL_STATIC_DRAW);
-	}
-	else
-	{
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	}
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	
+	vao = GetGraphicsAPI()->CreateBuffer(TextureSource, Texture, true);
 
-	glBindVertexArray(0);
+	// If no texture, texture source is equal to ""
+	std::vector<float> VerticesToUse = TextureSource != "" ? Texturedvertices : vertices;
+	
+	GetGraphicsAPI()->BindArray(VerticesToUse, indices, vao, false);
 }
 
 /************************************************************

@@ -8,6 +8,8 @@
 #include <soil/SOIL2.h>
 #include <glm/gtx/transform.hpp>
 
+#include "Core/Application.h"
+
 #define POSITION_LOCATION	  0
 #define TEX_COORD_LOCATION	  1
 #define NORMAL_LOCATION		  2
@@ -288,7 +290,7 @@ bool ssAnimatedModel::initMaterials(const aiScene* pScene, const std::string fil
 	{
 		const aiMaterial* pMaterial = pScene->mMaterials[i];
 
-		m_Textures[i] = NULL;
+		m_Textures[i] = TextureData();
 
 		if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0)
 		{
@@ -305,10 +307,10 @@ bool ssAnimatedModel::initMaterials(const aiScene* pScene, const std::string fil
 
 				std::string FullPath = Dir + "/" + p;
 
-				GLuint TextureID = Shader::GetTexture(FullPath.c_str(), true);
-				m_Textures[i] = TextureID;
+				TextureData Texture = GetGraphicsAPI()->GetTexture(FullPath.c_str(), true);
+				m_Textures[i] = Texture;
 
-				if (m_Textures[i] == 0)
+				if (!m_Textures[i].IsValid())
 				{
 					printf("Error loading texture '%s'\n", FullPath.c_str());
 				}
@@ -421,13 +423,13 @@ void ssAnimatedModel::render(Pointer<Terrain> terrain)
 
 		assert(MaterialIndex < m_Textures.size());
 
-		if (m_Textures[MaterialIndex])
+		if (m_Textures[MaterialIndex].IsValid())
 		{
 			//m_Textures[MaterialIndex]->Bind(GL_TEXTURE0);
 			//glBindTexture(GL_TEXTURE_2D, m_Textures[MaterialIndex]);
 
 			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, m_Textures[MaterialIndex]);
+			glBindTexture(GL_TEXTURE_2D, m_Textures[MaterialIndex].TextureID);
 			glUniform1i(glGetUniformLocation(program, "tex"), 0);
 		}
 

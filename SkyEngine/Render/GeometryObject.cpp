@@ -7,6 +7,7 @@
 // Engine Includes //
 #include "Shader.h"
 #include "Camera/CameraManager.h"
+#include "Core/Application.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -51,7 +52,7 @@ void GeometryObject::BindGeometryObject()
 	};
 
 	// If no texture, texture source is equal to ""
-	vao = Shader::CreateBuffer("", texture, true);
+	vao = GetGraphicsAPI()->CreateBuffer("", Texture, true);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 }
 

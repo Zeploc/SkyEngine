@@ -9,6 +9,9 @@
 #include <glm/gtc/type_ptr.hpp>
 #include FT_FREETYPE_H
 
+#include <glew/glew.h>
+#include <GLFW/glfw3.h>
+
 // Engine Includes //
 #include "Camera/CameraManager.h"
 #include "Render/Shader.h"

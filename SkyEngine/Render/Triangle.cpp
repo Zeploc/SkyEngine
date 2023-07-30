@@ -4,6 +4,7 @@
 
 // Engine Includes //
 #include "Shader.h"
+#include "Core/Application.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -73,7 +74,7 @@ void Triangle::BindTriangle()
 		0, 1, 2,
 	};
 
-	vao = Shader::CreateBuffer(TextureSource, texture, true, false);
+	vao = GetGraphicsAPI()->CreateBuffer(TextureSource, Texture, true, false);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }

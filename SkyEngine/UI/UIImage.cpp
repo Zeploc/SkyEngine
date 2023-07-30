@@ -33,7 +33,7 @@ UIImage::UIImage(glm::vec2 _Position, EANCHOR _anchor, float _fRotation, glm::ve
 ************************************************************/
 UIImage::UIImage(glm::vec2 _Position, EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, int _iWidth, int _iHeight, const char* TextureSource, int _DrawMode) : UIElement(_Position, _fRotation, _Colour), ImageAnchor(_anchor), iWidth(_iWidth), iHeight(_iHeight)
 {
-	VAO = Shader::BindUITextureArray(static_cast<float>(iWidth), static_cast<float>(iHeight), _Colour, TextureSource, texture, _DrawMode);
+	VAO = Shader::BindUITextureArray(static_cast<float>(iWidth), static_cast<float>(iHeight), _Colour, TextureSource, Texture, _DrawMode);
 	bHasTexture = true;
 }
 
@@ -62,7 +62,7 @@ void UIImage::DrawUIElement()
 	if (bHasTexture)
 	{
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
+		glBindTexture(GL_TEXTURE_2D, Texture.TextureID);
 	}
 	else
 	{

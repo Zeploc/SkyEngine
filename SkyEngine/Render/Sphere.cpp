@@ -9,6 +9,7 @@
 // OpenGL Library //
 #include <soil/SOIL2.h>
 
+#include "Core/Application.h"
 #include "Entity/Entity.h"
 
 /************************************************************
@@ -76,20 +77,20 @@ Sphere::~Sphere()
 ************************************************************/
 void Sphere::BindSphere()
 {
-	const int sections = 20;
-	const int vertexAttrib = 12;
-	const int indexPerQuad = 6;
+	constexpr uint64_t Sections = 20;
+	constexpr uint64_t VertexAttrib = 12;
+	constexpr uint64_t IndexPerQuad = 6;
 
 	double phi = 0;
 	double theta = 0;
 
-	float vertices[(sections) * (sections) * vertexAttrib];
+	std::vector<float> vertices(Sections * Sections * VertexAttrib);
 	int offset = 0;
-	for (int i = 0; i < sections; i++)
+	for (int i = 0; i < Sections; i++)
 	{
 		theta = 0;
 
-		for (int j = 0; j < sections; j++)
+		for (int j = 0; j < Sections; j++)
 		{
 			float x = static_cast<float>(cos(phi)) * static_cast<float>(sin(theta));
 			float y = static_cast<float>(cos(theta));
@@ -104,82 +105,41 @@ void Sphere::BindSphere()
 			vertices[offset++] = Colour.z;
 			vertices[offset++] = Colour.a;
 
-			vertices[offset++] = static_cast<float>(i) / (sections - 1);
-			vertices[offset++] = static_cast<float>(j) / (sections - 1);
+			vertices[offset++] = static_cast<float>(i) / (Sections - 1);
+			vertices[offset++] = static_cast<float>(j) / (Sections - 1);
 
 			vertices[offset++] = x;
 			vertices[offset++] = y;
 			vertices[offset++] = z;
 
-			theta += (3.14159265359 / (sections - 1));
+			theta += (3.14159265359 / (Sections - 1));
 			//theta += (M_PI / (sections - 1));
 		}
 
 		//phi += (2 * M_PI) / (sections - 1);
-		phi += (2 * 3.14159265359) / (sections - 1);
+		phi += (2 * 3.14159265359) / (Sections - 1);
 	}
 
-	GLuint indices[(sections) * (sections) * indexPerQuad];
+	std::vector<uint32_t> indices(Sections * Sections * IndexPerQuad);
 	offset = 0;
-	for (int i = 0; i < sections; i++)
+	for (int i = 0; i < Sections; i++)
 	{
-		for (int j = 0; j < sections; j++)
+		for (int j = 0; j < Sections; j++)
 		{
-			indices[offset++] = (((i + 1) % sections) * sections) + ((j + 1) % sections);
-			indices[offset++] = (((i + 1) % sections) * sections) + (j);
-			indices[offset++] = (i * sections) + (j);
+			indices[offset++] = (((i + 1) % Sections) * Sections) + ((j + 1) % Sections);
+			indices[offset++] = (((i + 1) % Sections) * Sections) + (j);
+			indices[offset++] = (i * Sections) + (j);
 
-			indices[offset++] = (i * sections) + ((j + 1) % sections);
-			indices[offset++] = (((i + 1) % sections) * sections) + ((j + 1) % sections);
-			indices[offset++] = (i * sections) + (j);
+			indices[offset++] = (i * Sections) + ((j + 1) % Sections);
+			indices[offset++] = (((i + 1) % Sections) * Sections) + ((j + 1) % Sections);
+			indices[offset++] = (i * Sections) + (j);
 		}
 	}
+	
+	vao = GetGraphicsAPI()->CreateBuffer(TextureSource, Texture, true, true);
+	GetGraphicsAPI()->BindArray(vertices, indices, vao, false);
 
-	GLuint VBO, EBO;
-
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glGenBuffers(1, &EBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, vertexAttrib * sizeof(GLfloat), static_cast<void*>(0));
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, vertexAttrib * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
-
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, vertexAttrib * sizeof(GLfloat), (void*)(7 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(2);
-
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, vertexAttrib * sizeof(GLfloat), (void*)(9 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(3);
-
-	m_iIndicies = sizeof(indices) / sizeof(GLuint);
-
-	if (TextureSource != "")
-	{
-		glGenTextures(1, &texture);
-		glBindTexture(GL_TEXTURE_2D, texture);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		int width, height;
-		unsigned char* image = SOIL_load_image(TextureSource, &width, &height, nullptr, SOIL_LOAD_RGBA);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-
-		glGenerateMipmap(GL_TEXTURE_2D);
-		SOIL_free_image_data(image);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
+	m_iIndicies = static_cast<int>(indices.size());
 }
 
 /************************************************************

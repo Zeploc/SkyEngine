@@ -6,14 +6,13 @@
 
 // Library Includes //
 #include <map>
-#include <memory>
 #include <string>
 
-// OpenGL Library Includes //
-#define GLEW_STATIC // This must be defined when statically linking to GLEW
-#include <glew/glew.h>
-
 // Engine Includes //
+#include "Texture.h"
+#include "Entity/2DParticleSystem.h"
+#include "Entity/2DParticleSystem.h"
+#include "Entity/2DParticleSystem.h"
 #include "UI/Text.h"
 
 class ModelObject;
@@ -36,18 +35,13 @@ public:
 	static void AddComputeProgram(std::string ComputePath, std::string ShaderName);
 
 	static std::map<std::string, Pointer<ModelObject>> Models;
-	static std::map<const char*, GLuint> Textures;
-	static std::map<std::string, GLuint> Programs;
+	static std::map<const char*, TextureData> Textures;
+	static std::map<std::string, unsigned int> Programs;
 
-	static GLuint BindArray(float fWidth, float fHeight, glm::vec4 Colour);
+	static unsigned int BindArray(float fWidth, float fHeight, glm::vec4 Colour);
 
-	static GLuint BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour, const char* TextureSource, GLuint& Texture, int _DrawMode);
+	static unsigned int BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour, const char* TextureSource, TextureData& Texture, int _DrawMode);
 
 	static Text::cFont AddFont(std::string fontPath, int iPSize);
-
-	static GLuint CreateBuffer(const char* TextureSource, GLuint& Texture, bool bAA, bool bHasNormals = false);
-
-	static GLuint GetTexture(const char* TextureSource, bool bAA);
-
 private:
 };

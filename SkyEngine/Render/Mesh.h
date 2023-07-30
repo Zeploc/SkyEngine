@@ -15,6 +15,7 @@
 // Library Include //
 #include <memory>
 
+#include "Texture.h"
 #include "System/EnumTypes.h"
 
 class Entity;
@@ -63,7 +64,7 @@ public:
 	glm::vec4 Colour;
 	GLuint program;
 	GLuint vao;
-	GLuint texture;
+	TextureData Texture;
 	const char* TextureSource;
 	glm::vec4 UVCoords;
 	bool bHasTexture = false;

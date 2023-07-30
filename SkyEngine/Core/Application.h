@@ -49,4 +49,5 @@ namespace SkyEngine
 }
 
 ENGINE_API SkyEngine::Application* GetApplication();
+ENGINE_API Pointer<IGraphicsAPI> GetGraphicsAPI();
 

@@ -5,6 +5,8 @@
 // Library Includes //
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <glew/glew.h>
+#include <GLFW/glfw3.h>
 
 // Engine Includes //
 #include "Particle.h"
@@ -13,6 +15,8 @@
 
 // This Includes //
 #include "ParticleSystem.h"
+
+#include "Core/Application.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -67,7 +71,7 @@ void ParticleSystem::BindParticleSystem(const char* TexturePath)
 
 	program = Shader::Programs["ParticleShader"];
 
-	texture = Shader::GetTexture(TexturePath, true);
+	Texture = GetGraphicsAPI()->GetTexture(TexturePath, true);
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
@@ -241,7 +245,7 @@ void ParticleSystem::DrawEntity()
 	glUniform1f(glGetUniformLocation(program, "Size"), ParticleSize);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(GL_TEXTURE_2D, Texture.TextureID);
 	glUniform1i(glGetUniformLocation(program, "Texture"), 0);
 
 	glDisable(GL_CULL_FACE);

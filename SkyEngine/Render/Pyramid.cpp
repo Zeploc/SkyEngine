@@ -4,6 +4,7 @@
 
 // Engine Includes //
 #include "Shader.h"
+#include "Core/Application.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -69,7 +70,7 @@ void Pyramid::BindPyramid()
 	float fHalfHeight = m_fHeight / 2;
 	float fHalfDepth = m_fDepth / 2;
 
-	GLfloat Texturedvertices[] = {
+	std::vector<float> Texturedvertices = {
 		// Positions								// Colors			
 		-fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, UVCoords.x, UVCoords.z,
 		fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, UVCoords.y, UVCoords.z,
@@ -77,9 +78,9 @@ void Pyramid::BindPyramid()
 		-fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, UVCoords.x, UVCoords.w,
 
 		0, fHalfHeight, 0, Colour.r, Colour.g, Colour.b, Colour.a, UVCoords.y / 2, UVCoords.w, // Top Point
-
 	};
-	GLfloat vertices[] = {
+	
+	std::vector<float> vertices = {
 		// Positions								// Colors			
 		-fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a,
 		fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a,
@@ -87,10 +88,9 @@ void Pyramid::BindPyramid()
 		-fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a,
 
 		0, fHalfHeight, 0, Colour.r, Colour.g, Colour.b, Colour.a
-
 	};
 
-	GLuint indices[] = {
+	std::vector<uint32_t> indices = {
 		0, 4, 3, // Side 1
 		3, 4, 2, // Side 2
 		2, 4, 1, // Side 3
@@ -100,16 +100,11 @@ void Pyramid::BindPyramid()
 		3, 1, 0 // Bottom Triangle 1
 	};
 
-	vao = Shader::CreateBuffer(TextureSource, texture, true);
-	if (TextureSource != "")
-	{
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Texturedvertices), Texturedvertices, GL_STATIC_DRAW);
-	}
-	else
-	{
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	}
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	vao = GetGraphicsAPI()->CreateBuffer(TextureSource, Texture, true);
+	// If no texture, texture source is equal to ""
+	const std::vector<float> VerticesToUse = TextureSource != "" ? Texturedvertices : vertices;
+	
+	GetGraphicsAPI()->BindArray(VerticesToUse, indices, vao, false);
 }
 
 /************************************************************

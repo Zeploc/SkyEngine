@@ -1,7 +1,7 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
-#include <glew/glew.h>
+#include "GLFWIncludes.h"
 
 #include "Graphics/GraphicsInstance.h"
 
@@ -22,5 +22,5 @@ public:
 	void WindowSetup(Pointer<IGraphicsWindow> InGraphicsWindow) override;
 
 protected:
-	void StoreMVP(FTransform Transform, GLuint Program);
+	void StoreMVP(FTransform Transform, unsigned int Program);
 };

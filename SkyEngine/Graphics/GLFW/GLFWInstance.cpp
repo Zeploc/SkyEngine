@@ -24,7 +24,7 @@ GLFWInstance::GLFWInstance()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-		
+	
 	// Enable debugging context
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 	glEnable(GL_DEBUG_OUTPUT);
@@ -115,7 +115,7 @@ void GLFWInstance::RenderMesh(const Pointer<Mesh> Mesh, const FTransform Transfo
 	if (Mesh->bHasTexture)
 	{
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, Mesh->texture);
+		glBindTexture(GL_TEXTURE_2D, Mesh->Texture.TextureID);
 	}
 	if (Mesh->bReflection)
 	{
@@ -124,7 +124,7 @@ void GLFWInstance::RenderMesh(const Pointer<Mesh> Mesh, const FTransform Transfo
 		{
 			glActiveTexture(GL_TEXTURE1);
 			glUniform1i(glGetUniformLocation(Program, "skybox"), 1);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, Utils::WorldCubeMap->EntityMesh->texture);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, Utils::WorldCubeMap->EntityMesh->Texture.TextureID);
 			glUniform1f(glGetUniformLocation(Program, "ReflectionSize"), 0.1f);
 		}
 	}

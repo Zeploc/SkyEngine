@@ -7,6 +7,8 @@
 #include "Shader.h"
 #include "Lighting.h"
 #include <soil/SOIL2.h>
+#include <glew/glew.h>
+#include <GLFW/glfw3.h>
 
 #include "Camera/CameraManager.h"
 

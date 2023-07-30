@@ -48,7 +48,7 @@ void TimeManager::Update()
 	LastSystemTime = SystemTime;
 	DeltaTime = static_cast<float>(DoubleDeltaTime);
 	
-	LogManager::GetInstance()->DisplayLogMessage("delta time " + std::to_string(DeltaTime));
+	// LogManager::GetInstance()->DisplayLogMessage("delta time " + std::to_string(DeltaTime));
 }
 
 double TimeManager::GetElapsedEngineTime()
