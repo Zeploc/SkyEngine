@@ -24,7 +24,7 @@ public:
 	virtual bool ShouldWindowClose() const { return false; }
 	virtual bool CloseWindow() = 0;
 	virtual void FocusWindow() const = 0;
-	virtual void SetCursorPosition(Vector2 InCursorPosition) = 0;
+	virtual void SetCursorPosition(Vector2 InCursorPosition);
 	virtual void SetWindowPosition(Vector2 InWindowPosition) = 0;
 	virtual Vector2 GetWindowPosition() = 0;
 	virtual Vector2 GetWindowSize() = 0;

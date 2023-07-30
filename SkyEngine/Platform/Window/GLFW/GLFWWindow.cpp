@@ -98,7 +98,9 @@ void GLFWWindow::FocusWindow() const
 }
 
 void GLFWWindow::SetCursorPosition(Vector2 InCursorPosition)
-{	
+{
+	IGraphicsWindow::SetCursorPosition(InCursorPosition);
+	
 	glfwSetCursorPos(GlWindow, InCursorPosition.X, InCursorPosition.Y);
 }
 

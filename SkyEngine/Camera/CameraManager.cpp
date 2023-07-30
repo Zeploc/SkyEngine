@@ -88,10 +88,23 @@ void CameraManager::MoveCamera(Vector3 _Movement)
 	//SetMVP(FTransform());
 }
 
+Vector2 CameraManager::GetScreenCenter() const
+{
+	return {static_cast<float>(SCR_WIDTH) * 0.5f, static_cast<float>(SCR_HEIGHT) * 0.5f};
+}
+
 void CameraManager::EnableSpectatorControls(bool _bSpectatorControls)
 {
 	bUseSpectatorControls = _bSpectatorControls;
-	MainWindow->GetGraphicsWindow()->SetCursorPosition({static_cast<float>(SCR_WIDTH) * 0.5f, static_cast<float>(SCR_HEIGHT) * 0.5f});
+	if (bUseSpectatorControls)
+	{
+		PreviousMousePosition = Input::GetInstance()->MousePos;
+		MainWindow->GetGraphicsWindow()->SetCursorPosition(GetScreenCenter());
+	}
+	else
+	{		
+		MainWindow->GetGraphicsWindow()->SetCursorPosition(PreviousMousePosition);
+	}
 }
 
 void CameraManager::SpectatorUpdate()
@@ -100,8 +113,8 @@ void CameraManager::SpectatorUpdate()
 	{
 		return;
 	}
-	
-	Vector2 Offset = Input::GetInstance()->MousePos - Vector2(static_cast<float>(SCR_WIDTH) * 0.5f, static_cast<float>(SCR_HEIGHT) * 0.5f);
+
+	Vector2 Offset = Input::GetInstance()->MousePos - GetScreenCenter();
 	Offset *= MouseSensitivity;
 	CameraForward.Rotate(Offset.X, Vector3(0,1,0));
 	CameraForward.Rotate(Offset.Y, GetCameraRightVector());
@@ -113,8 +126,7 @@ void CameraManager::SpectatorUpdate()
 	//
 	// // CameraRotation.Pitch = glm::clamp(CameraRotation.Pitch, -89.0f, 89.0f);
 	// const Vector3 ForwardVector = CameraRotation.ToVector();
-	// CameraForward = ForwardVector.GetNormalized();
-	
+	// CameraForward = ForwardVector.GetNormalized();	
 
 	if (bSpectatorMovement)
 	{
@@ -148,7 +160,7 @@ void CameraManager::SpectatorUpdate()
 			CameraPosition -= UpMovement;
 		}
 	}
-	MainWindow->GetGraphicsWindow()->SetCursorPosition({static_cast<float>(SCR_WIDTH) * 0.5f, static_cast<float>(SCR_HEIGHT) * 0.5f});
+	MainWindow->GetGraphicsWindow()->SetCursorPosition(GetScreenCenter());
 }
 
 /************************************************************

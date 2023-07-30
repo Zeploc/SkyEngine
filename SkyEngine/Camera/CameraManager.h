@@ -65,7 +65,7 @@ public:
 	Vector3 ScreenToWorldDirection(Vector2 InScreenPosition);
 
 	Vector3 ScreenToWorldPosition2D(Vector2 InScreenPosition);
-	
+		
 	// Getters
 	Vector3 GetCameraPosition() const { return CameraPosition; }
 	Vector3 GetCameraForwardVector() const { return CameraForward; }
@@ -78,6 +78,7 @@ public:
 	void SetCameraPos(Vector3 NewPos);
 
 	void MoveCamera(Vector3 _Movement);
+	Vector2 GetScreenCenter() const;
 
 	void EnableSpectatorControls(bool _bSpectatorControls);
 
@@ -96,6 +97,8 @@ protected:
 private:
 	// FPS CONTROLS
 	bool bUseSpectatorControls = false;
+
+	Vector2 PreviousMousePosition;
 
 	float CameraSpeed = 12.0f;
 	GLfloat Yaw = 0.0f;

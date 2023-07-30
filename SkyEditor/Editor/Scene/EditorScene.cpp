@@ -253,6 +253,7 @@ void EditorScene::Update()
 	{
 		Input::GetInstance()->SetCursorVisible(true);
 		CameraInstance->EnableSpectatorControls(false);
+		GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->SetCursorPosition(PreviousMousePosition);
 		// glfwSetCursorPos(CameraInstance->MainWindow, PreviousMousePosition.X, PreviousMousePosition.Y);
 	}
 	if (Input::GetInstance()->KeyState[GLFW_KEY_G] == Input::INPUT_FIRST_PRESS)
@@ -284,6 +285,7 @@ void EditorScene::Update()
 			if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_PRESS)
 			{
 				Input::GetInstance()->SetCursorVisible(false);
+				PreviousMousePosition = Input::GetInstance()->MousePos;
 			}
 			else
 			{
@@ -292,7 +294,6 @@ void EditorScene::Update()
 				NewCameraForwardVector.Rotate(Offset.Y, CameraInstance->GetCameraRightVector());
 				CameraInstance->SetCameraForwardVector(NewCameraForwardVector);
 			}
-			PreviousMousePosition = Input::GetInstance()->MousePos;
 			CameraInstance->MainWindow->GetGraphicsWindow()->SetCursorPosition(CenterScreen);
 		}
 		else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_HOLD)
@@ -300,17 +301,18 @@ void EditorScene::Update()
 			if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_FIRST_PRESS)
 			{
 				Input::GetInstance()->SetCursorVisible(false);
+				PreviousMousePosition = Input::GetInstance()->MousePos;
 			}
 			else
 			{
 				CurrentFocusDistance += Offset.Y * .3f;
 			}
-			PreviousMousePosition = Input::GetInstance()->MousePos;
 			CameraInstance->MainWindow->GetGraphicsWindow()->SetCursorPosition(CenterScreen);
 		}
 		else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_RELEASE)
 		{
 			Input::GetInstance()->SetCursorVisible(true);
+			GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->SetCursorPosition(PreviousMousePosition);
 		}
 		CameraInstance->SetCameraPos(CameraPivotPoint + (-CameraInstance->GetCameraForwardVector() * CurrentFocusDistance));
 	}
@@ -318,6 +320,7 @@ void EditorScene::Update()
 	else if (Input::GetInstance()->KeyState[GLFW_KEY_LEFT_ALT] == Input::INPUT_FIRST_RELEASE)
 	{
 		Input::GetInstance()->SetCursorVisible(true);
+		GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->SetCursorPosition(PreviousMousePosition);
 		// glfwSetCursorPos(CameraInstance->MainWindow, PreviousMousePosition.X, PreviousMousePosition.Y);
 	}
 	if (bShiftDown)
@@ -327,15 +330,15 @@ void EditorScene::Update()
 			if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_PRESS)
 			{
 				Input::GetInstance()->SetCursorVisible(false);
+				PreviousMousePosition = Input::GetInstance()->MousePos;
 			}
 			else
 			{
 				Vector3 NewCameraPosition = CameraInstance->GetCameraPosition();
-				NewCameraPosition += -CameraInstance->GetCameraRightVector() * Offset.X * CameraInstance->MouseSensitivity;
-				NewCameraPosition += CameraInstance->GetCameraUpVector() * Offset.Y * CameraInstance->MouseSensitivity;
+				NewCameraPosition += CameraInstance->GetCameraRightVector() * Offset.X * CameraInstance->MouseSensitivity;
+				NewCameraPosition += -CameraInstance->GetCameraUpVector() * Offset.Y * CameraInstance->MouseSensitivity;
 				CameraInstance->SetCameraPos(NewCameraPosition);
 			}
-			PreviousMousePosition = Input::GetInstance()->MousePos;
 			CameraInstance->MainWindow->GetGraphicsWindow()->SetCursorPosition(CenterScreen);
 		}
 		else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_RELEASE)

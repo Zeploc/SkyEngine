@@ -2,6 +2,7 @@
 
 #include "Core/Application.h"
 #include "Graphics/GraphicsInstance.h"
+#include "Input/Input.h"
 
 IGraphicsWindow::IGraphicsWindow(std::string InWindowName, Vector2 InWindowSize, bool bFullScreen)
 {
@@ -10,6 +11,11 @@ IGraphicsWindow::IGraphicsWindow(std::string InWindowName, Vector2 InWindowSize,
 void IGraphicsWindow::CreateGraphicsInstance()
 {
 	GraphicsInstance = GetGraphicsAPI()->CreateNewInstance();
+}
+
+void IGraphicsWindow::SetCursorPosition(Vector2 InCursorPosition)
+{
+	Input::GetInstance()->MouseInput(InCursorPosition.x, InCursorPosition.y);
 }
 
 void IGraphicsWindow::PreRender()
