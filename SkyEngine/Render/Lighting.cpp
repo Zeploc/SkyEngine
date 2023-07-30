@@ -40,12 +40,7 @@ Lighting::~Lighting()
 
 void Lighting::PassLightingToShader(GLuint program, LightInfo _LightInfo, FTransform ModelTransform)
 {
-	glm::mat4 translate = glm::translate(glm::mat4(), ModelTransform.Position);
-	glm::mat4 scale = glm::scale(glm::mat4(), ModelTransform.Scale);
-	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(ModelTransform.Rotation.Pitch), glm::vec3(1, 0, 0));
-	rotation = rotate(rotation, glm::radians(ModelTransform.Rotation.Yaw), glm::vec3(0, 1, 0));
-	rotation = rotate(rotation, glm::radians(ModelTransform.Rotation.Roll), glm::vec3(0, 0, 1));
-	glm::mat4 model = translate * rotation * scale;
+	glm::mat4 model = ModelTransform.GetModelMatrix();
 
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, value_ptr(model));
 	glUniform3fv(glGetUniformLocation(program, "lightPos"), 1, LightPosition.ToValuePtr());

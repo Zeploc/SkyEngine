@@ -11,8 +11,6 @@
 // Engine Includes //
 #include "Texture.h"
 #include "Entity/2DParticleSystem.h"
-#include "Entity/2DParticleSystem.h"
-#include "Entity/2DParticleSystem.h"
 #include "UI/Text.h"
 
 class ModelObject;
@@ -43,5 +41,4 @@ public:
 	static unsigned int BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour, const char* TextureSource, TextureData& Texture, int _DrawMode);
 
 	static Text::cFont AddFont(std::string fontPath, int iPSize);
-private:
 };

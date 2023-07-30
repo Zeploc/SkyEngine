@@ -35,4 +35,11 @@ public:
 	virtual TextureData GetTexture(const char* TextureSource, bool bAA) = 0;
 	/* Create a new VAO if -1, otherwise will use it  */
 	virtual void BindArray(const std::vector<float>& vertices, const std::vector<uint32_t>& indices, unsigned& vao, bool bCreateVAO) = 0;
+	
+	virtual unsigned int CreateProgram(const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* GeometryShaderFilename) = 0;
+
+	virtual unsigned int CreateTessProgram(const char* VertexShaderFilename, const char* FragmentShaderFilename,
+								const char* TessControlShaderFilename, const char* TessEvalShaderFilename) = 0;
+
+	virtual unsigned int CreateComputeProgram(const char* ComputeShaderFilename) = 0;
 };

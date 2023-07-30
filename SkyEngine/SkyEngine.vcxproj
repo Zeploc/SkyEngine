@@ -447,7 +447,6 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
     <ClCompile Include="Render/Plane.cpp" />
     <ClCompile Include="Render/Pyramid.cpp" />
     <ClCompile Include="Render/Shader.cpp" />
-    <ClCompile Include="Render/ShaderLoader.cpp" />
     <ClCompile Include="Render/Sphere.cpp" />
     <ClCompile Include="Render/Triangle.cpp" />
     <ClCompile Include="Render\ssAnimatedModel.cpp" />
@@ -521,7 +520,6 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
     <ClInclude Include="Render/Plane.h" />
     <ClInclude Include="Render/Pyramid.h" />
     <ClInclude Include="Render/Shader.h" />
-    <ClInclude Include="Render/ShaderLoader.h" />
     <ClInclude Include="Render/Sphere.h" />
     <ClInclude Include="Render/Triangle.h" />
     <ClInclude Include="Render\ssAnimatedModel.h" />

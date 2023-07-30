@@ -11,7 +11,6 @@
 
 // Engine Includes //
 #include "ModelObject.h"
-#include "ShaderLoader.h"
 #include "Core/Application.h"
 #include "System/LogManager.h"
 
@@ -75,22 +74,19 @@ void Shader::LoadAllDefaultShadersInCurrentContext()
 
 void Shader::AddProgram(std::string VertexShaderPath, std::string FragmentShaderPath, std::string ShaderName, std::string GeometryShaderPath)
 {
-	ShaderLoader loader;
-	Programs.insert(std::pair<std::string, GLuint>(ShaderName, loader.CreateProgram(VertexShaderPath.c_str(), FragmentShaderPath.c_str(), GeometryShaderPath.c_str())));
+	Programs.insert(std::pair<std::string, GLuint>(ShaderName, GetGraphicsAPI()->CreateProgram(VertexShaderPath.c_str(), FragmentShaderPath.c_str(), GeometryShaderPath.c_str())));
 	LogManager::GetInstance()->DisplayLogMessage("Loading Shader \"" + ShaderName + "\"");
 }
 
 void Shader::AddTessProgram(std::string VertexShaderPath, std::string FragmentShaderPath, std::string TessControlShaderPath, std::string TessEvalShaderPath, std::string ShaderName)
 {
-	ShaderLoader loader;
-	Programs.insert(std::pair<std::string, GLuint>(ShaderName, loader.CreateTessProgram(VertexShaderPath.c_str(), FragmentShaderPath.c_str(), TessControlShaderPath.c_str(), TessEvalShaderPath.c_str())));
+	Programs.insert(std::pair<std::string, GLuint>(ShaderName, GetGraphicsAPI()->CreateTessProgram(VertexShaderPath.c_str(), FragmentShaderPath.c_str(), TessControlShaderPath.c_str(), TessEvalShaderPath.c_str())));
 	LogManager::GetInstance()->DisplayLogMessage("Loading Shader \"" + ShaderName + "\"");
 }
 
 void Shader::AddComputeProgram(std::string ComputePath, std::string ShaderName)
 {
-	ShaderLoader loader;
-	Programs.insert(std::pair<std::string, GLuint>(ShaderName, loader.CreateComputeProgram(ComputePath.c_str())));
+	Programs.insert(std::pair<std::string, GLuint>(ShaderName, GetGraphicsAPI()->CreateComputeProgram(ComputePath.c_str())));
 	LogManager::GetInstance()->DisplayLogMessage("Loading Shader \"" + ShaderName + "\"");
 }
 
@@ -111,7 +107,6 @@ GLuint Shader::BindArray(float fWidth, float fHeight, glm::vec4 Colour)
 		fHalfWidth, fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
 		fHalfWidth, -fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
 		-fHalfWidth, -fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
-
 	};
 
 	const std::vector<uint32_t> indices = {
