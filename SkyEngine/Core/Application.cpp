@@ -65,6 +65,7 @@ namespace SkyEngine
 			return false;
 		}
 		ApplicationWindow->GetGraphicsWindow()->FocusWindow();
+		// TODO: Move sky colour to scene
 		ApplicationWindow->GetGraphicsWindow()->GetGraphicsInstance()->ClearColour = SkyColour;
 
 		TimeManager::Start();
@@ -82,6 +83,7 @@ namespace SkyEngine
 		{
 			while (!ApplicationWindow->ShouldWindowClose())
 			{
+				// TODO: odd... find reason and remove
 				CAM->SCR_WIDTH = MainWindowSize.X;
 				CAM->SCR_HEIGHT = MainWindowSize.Y;
 				CAM->VIEWPORT_X = 0;
@@ -153,6 +155,7 @@ namespace SkyEngine
 
 	void Application::ChangeSize(int w, int h)
 	{
+		// TODO: Move to relevant place
 		CAM->SCR_HEIGHT = h;
 		CAM->SCR_WIDTH = w;
 	}

@@ -1,5 +1,6 @@
 ﻿#include "GLFWInstance.h"
 
+#include <format>
 #include <glew/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -7,11 +8,13 @@
 #include "Entity/Entity.h"
 #include "Input/CXBOXController.h"
 #include "Render/Shader.h"
+#include "System/LogManager.h"
 #include "UI/UIElement.h"
 
 void glfw_onError(int error, const char * description);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void FocusChanged(struct GLFWwindow* window, int focused);
+void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
 GLFWInstance::GLFWInstance()
 {
@@ -25,7 +28,7 @@ GLFWInstance::GLFWInstance()
 	glEnable(GL_DEBUG_OUTPUT);
 	glfwSetErrorCallback(glfw_onError);
 	// TODO: Debug messages
-	// glDebugMessageCallback(MessageCallback, NULL);
+	//glDebugMessageCallback(MessageCallback, NULL);
 	// glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
 }
 
@@ -125,7 +128,12 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum se
 
 	// printf("%s:%s[%s](%d): %s\n", sourceStr, typeStr, severityStr, id, message);
 
+
+	const std::string OutputString = std::format("GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+	                                             ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+	                                             type, severity, message);
+	LogManager::GetInstance()->DisplayLogMessage(OutputString);
 	fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-		   ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-			type, severity, message );
+	         ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+	         type, severity, message );
 }

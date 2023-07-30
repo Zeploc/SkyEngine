@@ -7,7 +7,7 @@ class TimeManager
 public:
 	static void Start();
 	static void Update();
-	static double GetDeltaTime() { return DeltaTime; }
+	static float GetDeltaTime() { return DeltaTime; }
 	static bool CanTickThisFrame() { return bCanTickThisFrame; }
 	static double GetTickRate() { return TickRate; }
 	static double GetSystemTime() { return SystemTime; }
@@ -21,9 +21,10 @@ protected:
 	static double StartSystemTime;
 	static double LastSystemTime;
 	static double SystemTime;
-	static double DeltaTime;
+	static float DeltaTime;
 
 	static double TickRate;
 
 	static bool bCanTickThisFrame;
+	static bool bTickRateEnabled;
 };

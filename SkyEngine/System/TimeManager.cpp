@@ -12,11 +12,12 @@ double TimeManager::CurrentFrameTime = 0.0;
 double TimeManager::StartSystemTime = 0.0;
 double TimeManager::LastSystemTime = 0.0;
 double TimeManager::SystemTime = 0.0;
-double TimeManager::DeltaTime = 0.0;
+float TimeManager::DeltaTime = 0.0;
 
 double TimeManager::TickRate = 60.0;
 
 bool TimeManager::bCanTickThisFrame = true;
+bool TimeManager::bTickRateEnabled = false;
 
 void TimeManager::Start()
 {		
@@ -26,17 +27,28 @@ void TimeManager::Start()
 
 void TimeManager::Update()
 {
-	SystemTime = InternalGetSystemTime();
-	DeltaTime = (SystemTime - LastSystemTime);// / 1000;
-	LastSystemTime = SystemTime;//glutGet(GLUT_ELAPSED_TIME);
-	CurrentFrameTime += DeltaTime;
-	bCanTickThisFrame = false;
-	if (CurrentFrameTime > 1.0 / TickRate)
+	const double DoubleDeltaTime = InternalGetSystemTime() - LastSystemTime;
+	CurrentFrameTime += DoubleDeltaTime;
+
+	if (bTickRateEnabled)
 	{
-		CurrentFrameTime = 0.0;
-		bCanTickThisFrame = true;
+		bCanTickThisFrame = false;
+		if (CurrentFrameTime > 1.0 / TickRate)
+		{
+			CurrentFrameTime = 0.0;
+			bCanTickThisFrame = true;
+		}
+		else
+		{
+			return;
+		}
 	}
-	LogManager::GetInstance()->DisplayLogMessage("Current time " + std::to_string(GetElapsedEngineTime()));
+	
+	SystemTime = InternalGetSystemTime();
+	LastSystemTime = SystemTime;
+	DeltaTime = static_cast<float>(DoubleDeltaTime);
+	
+	LogManager::GetInstance()->DisplayLogMessage("delta time " + std::to_string(DeltaTime));
 }
 
 double TimeManager::GetElapsedEngineTime()

@@ -18,6 +18,7 @@
 #include "Math/Matrix.h"
 #include "Math/Vector.h"
 #include "Math/Vector4.h"
+#include "System/TimeManager.h"
 
 // Static Variables //
 std::map<int, CameraManager*> CameraManager::m_pCameras;
@@ -117,7 +118,7 @@ void CameraManager::SpectatorUpdate()
 
 	if (bSpectatorMovement)
 	{
-		const Vector3 ForwardMovement = CameraForward * cameraSpeed * 0.025f;
+		const Vector3 ForwardMovement = CameraForward * CameraSpeed * TimeManager::GetDeltaTime();
 		if (Input::GetInstance()->KeyState[GLFW_KEY_W] == Input::INPUT_HOLD)
 		{
 			CameraPosition += ForwardMovement;
@@ -127,7 +128,7 @@ void CameraManager::SpectatorUpdate()
 			CameraPosition -= ForwardMovement;
 		}
 
-		const Vector3 RightMovement = GetCameraRightVector() * cameraSpeed * 0.025f;
+		const Vector3 RightMovement = GetCameraRightVector() * CameraSpeed * TimeManager::GetDeltaTime();
 		if (Input::GetInstance()->KeyState[GLFW_KEY_A] == Input::INPUT_HOLD)
 		{
 			CameraPosition -= RightMovement;
@@ -137,7 +138,7 @@ void CameraManager::SpectatorUpdate()
 			CameraPosition += RightMovement;
 		}
 
-		const Vector3 UpMovement = CameraUp * cameraSpeed * 0.025f;
+		const Vector3 UpMovement = CameraUp * CameraSpeed * TimeManager::GetDeltaTime();
 		if (Input::GetInstance()->KeyState[GLFW_KEY_E] == Input::INPUT_HOLD)
 		{
 			CameraPosition += UpMovement;

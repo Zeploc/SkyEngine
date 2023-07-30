@@ -90,7 +90,7 @@ private:
 	// FPS CONTROLS
 	bool bUseSpectatorControls = false;
 
-	float cameraSpeed = 5.0f;
+	float CameraSpeed = 12.0f;
 	GLfloat Yaw = 0.0f;
 	GLfloat Pitch = 0.0f;
 
