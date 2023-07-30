@@ -2,8 +2,8 @@
 
 #include "Application.h"
 #include "Graphics/GraphicsAPI.h"
-#include "Graphics/GraphicsWindow.h"
 #include "Input/Input.h"
+#include "Platform/Window/GraphicsWindow.h"
 
 EngineWindow::~EngineWindow()
 {
@@ -56,6 +56,7 @@ EngineWindow::EngineWindow(const std::string& InWindowName, Vector2 InWindowSize
 	WindowSize = InWindowSize;
 	bFullscreen = bInFullScreen;
 	
-	GraphicsWindow = GetApplication()->GraphicsApi->CreateNewWindow(InWindowName, WindowSize, bInFullScreen);
+	GraphicsWindow = GetApplication()->PlatformInterface->CreateNewWindow(InWindowName, WindowSize, bInFullScreen);
+	GraphicsWindow->CreateGraphicsInstance();
 	GraphicsWindow->OnFocusChanged.Bind(this, &EngineWindow::OnFocusedChanged);		
 }

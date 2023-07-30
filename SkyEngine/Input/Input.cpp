@@ -14,7 +14,7 @@
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"
 #include "Core/EngineWindow.h"
-#include "Graphics/GLFW/GLFWWindow.h"
+#include "Platform/Window/GLFW/GLFWWindow.h"
 
 // Static Variables //
 std::map<int, Input*> Input::m_pInputs;

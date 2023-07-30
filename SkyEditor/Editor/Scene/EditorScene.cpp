@@ -28,7 +28,7 @@
 #include <Windows.h>
 
 #include "Core/Application.h"
-#include "Graphics/GraphicsWindow.h"
+#include "Platform/Window/GraphicsWindow.h"
 
 EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 {

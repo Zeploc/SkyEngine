@@ -17,9 +17,9 @@
 #include "System/LogManager.h"
 #include "Camera/CameraManager.h"
 #include "Graphics/GraphicsInstance.h"
-#include "Graphics/GraphicsWindow.h"
-#include "Graphics/GLFW/GLFWAPI.h"
 #include "Math/Vector4.h"
+#include "Platform/Window/GraphicsWindow.h"
+#include "Platform/Windows/WindowsPlatform.h"
 #include "Render/Shader.h"
 #include "Render/Lighting.h"
 #include "System/TimeManager.h"
@@ -36,7 +36,7 @@ namespace SkyEngine
 		EngineApplication = this;
 		MainWindowSize = Vector2(1920, 1080);
 		SkyColour = Vector3(0.3f, 0.8f, 0.9f);
-		GraphicsApiType = EGraphicsAPI::GLFW;
+		GraphicsApiType = EGraphicsAPI::OPENGL;
 	}
 
 	Application::~Application()
@@ -52,6 +52,7 @@ namespace SkyEngine
 
 	bool Application::ApplicationSetup()
 	{
+		PlatformInterface = std::make_shared<WindowsPlatform>();
 		LogManager::GetInstance()->Init();
 		GraphicsApi = IGraphicsAPI::CreateGraphicsAPI(GraphicsApiType);
 

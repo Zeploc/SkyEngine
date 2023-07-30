@@ -12,12 +12,12 @@
 
 // Engine Includes //
 #include "Core/EngineWindow.h"
-#include "Graphics/GraphicsWindow.h"
 #include "Input/Input.h"
 #include "Math/FTransform.h"
 #include "Math/Matrix.h"
 #include "Math/Vector.h"
 #include "Math/Vector4.h"
+#include "Platform/Window/GraphicsWindow.h"
 #include "System/TimeManager.h"
 
 // Static Variables //

@@ -1,58 +1,30 @@
-﻿#include "GLFWInstance.h"
+﻿#include "GLInstance.h"
 
 #include <format>
 #include <glew/glew.h>
-#include <GLFW/glfw3.h>
 #include <glm/gtc/type_ptr.inl>
 
-#include "GLFWWindow.h"
 #include "Camera/CameraManager.h"
 #include "Entity/Entity.h"
 #include "Input/CXBOXController.h"
+#include "Platform/Window/GraphicsWindow.h"
 #include "Render/Shader.h"
 #include "System/LogManager.h"
 #include "UI/UIElement.h"
 
-void glfw_onError(int error, const char * description);
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void FocusChanged(struct GLFWwindow* window, int focused);
 void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
-GLFWInstance::GLFWInstance()
-{
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-	
-	// Enable debugging context
-	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+GLInstance::GLInstance()
+{	
 	glEnable(GL_DEBUG_OUTPUT);
-	glfwSetErrorCallback(glfw_onError);
 	// TODO: Debug messages
 	//glDebugMessageCallback(MessageCallback, NULL);
 	// glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
-}
-
-void glfw_onError(int error, const char* description)
-{
-	// print message in Windows popup dialog box
-	MessageBox(NULL, LPCWSTR(description), LPCWSTR("GLFW error"), MB_OK);
-}
-
-void GLFWInstance::WindowSetup(Pointer<IGraphicsWindow> InGraphicsWindow)
-{
-	Pointer<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(InGraphicsWindow);
-	GLFWwindow* GLWindow = GlfwWindow->GetGlWindow();
-	glfwMakeContextCurrent(GLWindow);
-
+	
 	// OpenGL init
 	glewInit();
 
-	// TODO: link properly
-	glfwSetFramebufferSizeCallback(GLWindow, framebuffer_size_callback);	
-	glfwSetWindowFocusCallback(GLWindow, FocusChanged);
-	
+	// TODO: Move to more relevant
 	// Settings Initialised
 	Shader::LoadAllDefaultShadersInCurrentContext();
 		
@@ -64,11 +36,8 @@ void GLFWInstance::WindowSetup(Pointer<IGraphicsWindow> InGraphicsWindow)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void GLFWInstance::PreRender(Pointer<IGraphicsWindow> GraphicsWindow)
+void GLInstance::PreRender(Pointer<IGraphicsWindow> GraphicsWindow)
 {
-	Pointer<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(GraphicsWindow);
-	GLFWwindow* GlfWwindow = GlfwWindow->GetGlWindow();
-	glfwMakeContextCurrent(GlfWwindow);
 	glClearColor(ClearColour.R, ClearColour.G, ClearColour.B, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	const Vector2 WindowSize = GraphicsWindow->GetWindowSize();
@@ -77,7 +46,7 @@ void GLFWInstance::PreRender(Pointer<IGraphicsWindow> GraphicsWindow)
 	glViewport(0, 0, WindowSize.X, WindowSize.Y);
 }
 
-void GLFWInstance::StoreMVP(FTransform Transform, GLuint Program)
+void GLInstance::StoreMVP(FTransform Transform, GLuint Program)
 {
 	const CameraManager* CameraInstance = CameraManager::GetInstance();
 	glm::mat4 ModelMatrix = Transform.GetModelMatrix();
@@ -90,7 +59,7 @@ void GLFWInstance::StoreMVP(FTransform Transform, GLuint Program)
 	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, value_ptr(MVP));
 }
 
-void GLFWInstance::RenderMesh(const Pointer<Mesh> Mesh, const FTransform Transform)
+void GLInstance::RenderMesh(const Pointer<Mesh> Mesh, const FTransform Transform)
 {
 	const GLuint Program = Mesh->program;
 	glUseProgram(Program);
@@ -221,12 +190,12 @@ void GLFWInstance::RenderMesh(const Pointer<Mesh> Mesh, const FTransform Transfo
 // }
 // #define glCheckError() glCheckError_(__FILE__, __LINE__)
 
-void GLFWInstance::RenderUIElement(Pointer<UIElement> UserInterfaceItem)
+void GLInstance::RenderUIElement(Pointer<UIElement> UserInterfaceItem)
 {
 	UserInterfaceItem->DrawUIElement();
 }
 
-void GLFWInstance::CleanupMesh(Pointer<Mesh> Mesh)
+void GLInstance::CleanupMesh(Pointer<Mesh> Mesh)
 {
 	if (!Mesh)
 	{
@@ -236,32 +205,8 @@ void GLFWInstance::CleanupMesh(Pointer<Mesh> Mesh)
 	// TODO: Look into further cleanup
 }
 
-void GLFWInstance::PostRender(Pointer<IGraphicsWindow> GraphicsWindow)
-{
-	SwapBuffers(GraphicsWindow);	
-}
-
-void GLFWInstance::SwapBuffers(Pointer<IGraphicsWindow> GraphicsWindow)
-{
-	Pointer<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(GraphicsWindow);
-	GLFWwindow* GlfWwindow = GlfwWindow->GetGlWindow();
-	
-	glfwSwapBuffers(GlfWwindow);
-	glfwPollEvents();
-}
-
-void FocusChanged(GLFWwindow* window, int focused)
-{
-	if (focused == GLFW_TRUE)
-	{
-		// TODO: Focus changed link
-		//OnFocusChanged.Broadcast();
-	}
-}
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
+void GLInstance::PostRender(Pointer<IGraphicsWindow> GraphicsWindow)
+{	
 }
 
 void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)

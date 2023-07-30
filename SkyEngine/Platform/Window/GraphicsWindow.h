@@ -17,7 +17,8 @@ public:
 	virtual ~IGraphicsWindow() = default;
 
 	// TODO: Convert to Vector2i
-	IGraphicsWindow(std::string InWindowName, Vector2 InWindowSize, bool bFullScreen) {}
+	IGraphicsWindow(std::string InWindowName, Vector2 InWindowSize, bool bFullScreen);
+	virtual void CreateGraphicsInstance();
 
 	virtual void SetWindowFullScreen(bool bFullScreen) = 0;
 	virtual bool ShouldWindowClose() const { return false; }
@@ -31,7 +32,7 @@ public:
 	virtual void PreRender();
 	void Render(std::vector<Pointer<Entity>> Entities, std::vector<Pointer<UIElement>> UIElements);
 	virtual void PostRender();
-	
+
 	Pointer<IGraphicsInstance> GetGraphicsInstance() { return GraphicsInstance; }
 
 	FDelegate OnFocusChanged;

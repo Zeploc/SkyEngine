@@ -7,6 +7,7 @@
 #include "Graphics/GraphicsAPI.h"
 #include "Math/Vector.h"
 #include "Math/Vector2.h"
+#include "Platform/PlatformInterface.h"
 
 namespace SkyEngine
 {	
@@ -33,6 +34,7 @@ namespace SkyEngine
 		Vector3 SkyColour;
 
 		Pointer<IGraphicsAPI> GraphicsApi;
+		Pointer<IPlatformInterface> PlatformInterface;
 		EGraphicsAPI GraphicsApiType;
 
 		Pointer<EngineWindow> GetApplicationWindow() const { return ApplicationWindow; }

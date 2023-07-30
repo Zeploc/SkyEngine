@@ -281,12 +281,87 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
     <ClCompile Include="Entity/Button3DEntity.cpp" />
     <ClCompile Include="Entity/CollisionBounds.cpp" />
     <ClCompile Include="Entity/Entity.cpp" />
-    <ClCompile Include="Graphics\GLFW\GLFWInstance.cpp" />
-    <ClCompile Include="Graphics\GLFW\GLFWAPI.cpp" />
-    <ClCompile Include="Graphics\GLFW\GLFWWindow.cpp" />
+    <ClCompile Include="Graphics\GLFW\GLInstance.cpp" />
+    <ClCompile Include="Graphics\GLFW\GLAPI.cpp" />
     <ClCompile Include="Graphics\GraphicsInstance.cpp" />
     <ClCompile Include="Graphics\GraphicsAPI.cpp" />
-    <ClCompile Include="Graphics\GraphicsWindow.cpp">
+    <ClCompile Include="Input/CXBOXController.cpp" />
+    <ClCompile Include="Input/Input.cpp" />
+    <ClCompile Include="Platform\PlatformInterface.cpp" />
+    <ClCompile Include="Platform\Windows\WindowsPlatform.cpp" />
+    <ClCompile Include="Platform\Window\GLFW\GLFWWindow.cpp">
+      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>C:\Projects\SkyEngine\Intermediate\Debug-x64\SkyEngine\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>C:\Projects\SkyEngine\Intermediate\Debug-x64\SkyEngine\</BrowseInformationFile>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>true</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>C:\Projects\SkyEngine\Intermediate\Debug-x64\SkyEngine\</ModuleDependenciesFile>
+      <ModuleOutputFile>C:\Projects\SkyEngine\Intermediate\Debug-x64\SkyEngine\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ObjectFileName>C:\Projects\SkyEngine\Intermediate\Debug-x64\SkyEngine\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>C:\Projects\SkyEngine\Intermediate\Debug-x64\SkyEngine\vc142.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>C:\Projects\SkyEngine\Intermediate\Debug-x64\SkyEngine\SkyEngine.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>C:\Projects\SkyEngine\Intermediate\Debug-x64\SkyEngine\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TrackerLogDirectory>C:\Projects\SkyEngine\Intermediate\Debug-x64\SkyEngine\SkyEngine.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <XMLDocumentationFileName>C:\Projects\SkyEngine\Intermediate\Debug-x64\SkyEngine\</XMLDocumentationFileName>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <PreprocessorDefinitions>SE_PLATFORM_WINDOWS;SE_BUILD_DLL;_DEBUG;CPPDYNAMICLIBRARYTEMPLATE_EXPORTS;_WINDOWS;_USRDLL;_WINDLL;_UNICODE;UNICODE;</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <LinkCompiled>true</LinkCompiled>
+    </ClCompile>
+    <ClCompile Include="Platform\Window\GraphicsWindow.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <Optimization>Disabled</Optimization>
@@ -304,7 +379,6 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
       <ExpandAttributedSource>false</ExpandAttributedSource>
       <ExceptionHandling>Sync</ExceptionHandling>
       <EnableASAN>false</EnableASAN>
-      <EnableFuzzer>false</EnableFuzzer>
       <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <FloatingPointModel>Precise</FloatingPointModel>
@@ -358,11 +432,8 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
       <PreprocessorDefinitions>SE_PLATFORM_WINDOWS;SE_BUILD_DLL;_DEBUG;CPPDYNAMICLIBRARYTEMPLATE_EXPORTS;_WINDOWS;_USRDLL;_WINDLL;_UNICODE;UNICODE;</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
+      <EnableFuzzer>false</EnableFuzzer>
     </ClCompile>
-    <ClCompile Include="Input/CXBOXController.cpp" />
-    <ClCompile Include="Input/Input.cpp" />
-    <ClCompile Include="Platform\PlatformInterface.cpp" />
-    <ClCompile Include="Platform\Windows\WindowsPlatform.cpp" />
     <ClCompile Include="Render/AnimatedModel.cpp" />
     <ClCompile Include="Render/Cube.cpp" />
     <ClCompile Include="Render/CubeMap.cpp" />
@@ -401,7 +472,7 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
     <ClCompile Include="Math/Matrix.cpp" />
     <ClCompile Include="Math/Quaternion.cpp" />
     <ClCompile Include="Math/FTransform.cpp" />
-    <ClInclude Include="Graphics\GLFW\GLFWIncludes.h" />
+    <ClInclude Include="Graphics\GLFW\GLIncludes.h" />
     <ClInclude Include="Math\Internal\Rotator.decl.h" />
     <ClInclude Include="Math\Internal\Rotator.impl.hpp" />
     <ClInclude Include="Math\Internal\Vector3.decl.h" />
@@ -422,12 +493,10 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
     <ClInclude Include="Entity/Button3DEntity.h" />
     <ClInclude Include="Entity/CollisionBounds.h" />
     <ClInclude Include="Entity/Entity.h" />
-    <ClInclude Include="Graphics\GLFW\GLFWInstance.h" />
-    <ClInclude Include="Graphics\GLFW\GLFWAPI.h" />
-    <ClInclude Include="Graphics\GLFW\GLFWWindow.h" />
+    <ClInclude Include="Graphics\GLFW\GLInstance.h" />
+    <ClInclude Include="Graphics\GLFW\GLAPI.h" />
     <ClInclude Include="Graphics\GraphicsInstance.h" />
     <ClInclude Include="Graphics\GraphicsAPI.h" />
-    <ClInclude Include="Graphics\GraphicsWindow.h" />
     <ClInclude Include="Input/CXBOXController.h" />
     <ClInclude Include="Input/Input.h" />
     <ClInclude Include="Math\MathTypes.h" />
@@ -435,6 +504,8 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
     <ClInclude Include="Math\Vector4.h" />
     <ClInclude Include="Platform\PlatformInterface.h" />
     <ClInclude Include="Platform\Windows\WindowsPlatform.h" />
+    <ClInclude Include="Platform\Window\GLFW\GLFWWindow.h" />
+    <ClInclude Include="Platform\Window\GraphicsWindow.h" />
     <ClInclude Include="Render/AnimatedModel.h" />
     <ClInclude Include="Render/Cube.h" />
     <ClInclude Include="Render/CubeMap.h" />

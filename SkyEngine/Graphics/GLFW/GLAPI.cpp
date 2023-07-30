@@ -1,39 +1,27 @@
-﻿#include "GLFWAPI.h"
+﻿#include "GLAPI.h"
 
 #include <soil/SOIL2.h>
 
-#include "GLFWInstance.h"
-#include "GLFWWindow.h"
+#include "GLInstance.h"
+#include "Platform/Window/GraphicsWindow.h"
 #include "Render/Shader.h"
 #include "System/LogManager.h"
 
-IGLFWAPI::IGLFWAPI()
+IGLAPI::IGLAPI()
 {	
 }
 
-IGLFWAPI::~IGLFWAPI()
+IGLAPI::~IGLAPI()
 {	
 	glfwTerminate();
 }
 
-std::string IGLFWAPI::GetGraphicsDisplayName()
+std::string IGLAPI::GetGraphicsDisplayName()
 {
-	return "GLFW";
+	return "OpenGL";
 }
 
-Pointer<IGraphicsWindow> IGLFWAPI::CreateNewWindow(const std::string& InWindowName, Vector2 InWindowSize, bool bFullScreen)
-{
-	Pointer<GLFWWindow> NewWindow = std::make_shared<GLFWWindow>(InWindowName, InWindowSize, bFullScreen);
-	if (!NewWindow->GetGlWindow())
-	{
-		NewWindow.reset();
-	}
-
-	NewWindow->GetGraphicsInstance()->WindowSetup(NewWindow);
-	return NewWindow;
-}
-
-unsigned IGLFWAPI::CreateBuffer(const char* TextureSource, TextureData& Texture, bool bAA, bool bHasNormals)
+unsigned IGLAPI::CreateBuffer(const char* TextureSource, TextureData& Texture, bool bAA, bool bHasNormals)
 {
 	GLuint vao;
 	GLuint vbo;
@@ -97,7 +85,7 @@ unsigned IGLFWAPI::CreateBuffer(const char* TextureSource, TextureData& Texture,
 	return vao;
 }
 
-TextureData IGLFWAPI::GetTexture(const char* TextureSource, bool bAA)
+TextureData IGLAPI::GetTexture(const char* TextureSource, bool bAA)
 {
 	TextureData Texture;
 
@@ -151,7 +139,7 @@ TextureData IGLFWAPI::GetTexture(const char* TextureSource, bool bAA)
 	return Texture;	
 }
 
-void IGLFWAPI::BindArray(const std::vector<float>& Vertices, const std::vector<uint32_t>& Indices, unsigned& Vao, bool bCreateVAO)
+void IGLAPI::BindArray(const std::vector<float>& Vertices, const std::vector<uint32_t>& Indices, unsigned& Vao, bool bCreateVAO)
 {	
 	TextureData TempTexture;
 	if (bCreateVAO)
@@ -163,4 +151,10 @@ void IGLFWAPI::BindArray(const std::vector<float>& Vertices, const std::vector<u
 	glBufferData(GL_ARRAY_BUFFER, Vertices.size() * sizeof(float), Vertices.data(), GL_STATIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(uint32_t), Indices.data(), GL_STATIC_DRAW);
 	glBindVertexArray(0);
+}
+
+Pointer<IGraphicsInstance> IGLAPI::CreateNewInstance()
+{
+	// Create instance for basic setup before window
+	return std::make_shared<GLInstance>();
 }

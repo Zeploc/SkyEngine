@@ -1,6 +1,16 @@
 ﻿#include "GraphicsWindow.h"
 
-#include "GraphicsInstance.h"
+#include "Core/Application.h"
+#include "Graphics/GraphicsInstance.h"
+
+IGraphicsWindow::IGraphicsWindow(std::string InWindowName, Vector2 InWindowSize, bool bFullScreen)
+{
+}
+
+void IGraphicsWindow::CreateGraphicsInstance()
+{
+	GraphicsInstance = GetGraphicsAPI()->CreateNewInstance();
+}
 
 void IGraphicsWindow::PreRender()
 {

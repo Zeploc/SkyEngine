@@ -16,7 +16,7 @@ class IGraphicsWindow;
 
 enum class EGraphicsAPI
 {
-	GLFW,
+	OPENGL,
 	VULKAN
 };
 
@@ -26,10 +26,10 @@ public:
 	virtual ~IGraphicsAPI() = default;
 	
 	virtual std::string GetGraphicsDisplayName() = 0;
-	
-	virtual Pointer<IGraphicsWindow> CreateNewWindow(const std::string& InWindowName, Vector2 InWindowSize, bool bFullScreen) = 0;
 
 	static Pointer<IGraphicsAPI> CreateGraphicsAPI(EGraphicsAPI APIType);
+
+	virtual Pointer<IGraphicsInstance> CreateNewInstance() = 0;
 	
 	virtual unsigned int CreateBuffer(const char* TextureSource, TextureData& Texture, bool bAA, bool bHasNormals = false) = 0;
 	virtual TextureData GetTexture(const char* TextureSource, bool bAA) = 0;

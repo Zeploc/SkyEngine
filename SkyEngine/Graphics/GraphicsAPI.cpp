@@ -1,14 +1,14 @@
 ﻿#include "GraphicsAPI.h"
 
-#include "GLFW/GLFWAPI.h"
+#include "GLFW/GLAPI.h"
 #include "System/LogManager.h"
 
 Pointer<IGraphicsAPI> IGraphicsAPI::CreateGraphicsAPI(EGraphicsAPI APIType)
 {
 	switch (APIType)
 	{
-	case EGraphicsAPI::GLFW:
-		return std::make_shared<IGLFWAPI>();
+	case EGraphicsAPI::OPENGL:
+		return std::make_shared<IGLAPI>();
 	case EGraphicsAPI::VULKAN:
 		break;
 	default: ;

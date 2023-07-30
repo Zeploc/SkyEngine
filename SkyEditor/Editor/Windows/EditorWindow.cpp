@@ -15,7 +15,7 @@
 #include <UI/UIButton.h>
 
 #include "Graphics/GraphicsInstance.h"
-#include "Graphics/GraphicsWindow.h"
+#include "Platform/Window/GraphicsWindow.h"
 
 void EditorWindow::CreateExternalWindow()
 {

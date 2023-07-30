@@ -5,16 +5,21 @@
 #include <glew/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "Graphics/GraphicsWindow.h"
+#include "Platform/Window/GraphicsWindow.h"
 
 class GLFWWindow : public IGraphicsWindow
 {
 public:
 	~GLFWWindow() override;
 	GLFWWindow(std::string InWindowName, Vector2 InWindowSize, bool bFullScreen);
+	void CreateGraphicsInstance() override;
+	
 	void SetWindowFullScreen(bool bFullScreen) override;
 	bool ShouldWindowClose() const override;
 
+	void PreRender() override;
+	void PostRender() override;
+	
 	// TODO: Remove once systems moved to interfaces/not glfw specific
 	GLFWwindow* GetGlWindow() const { return GlWindow; }
 
@@ -29,7 +34,7 @@ public:
 	void SetWindowPosition(Vector2 InWindowPosition) override;
 
 	Vector2 GetWindowSize() override;
-	
+
 
 protected:
 	

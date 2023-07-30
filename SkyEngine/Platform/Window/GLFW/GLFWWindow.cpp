@@ -4,8 +4,12 @@
 #include <glew/glew.h>
 #include <Render/Shader.h>
 
-#include "GLFWInstance.h"
+#include "Input/CXBOXController.h"
 #include "Input/Input.h"
+
+void glfw_onError(int error, const char * description);
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void FocusChanged(struct GLFWwindow* window, int focused);
 
 GLFWWindow::~GLFWWindow()
 {
@@ -13,10 +17,16 @@ GLFWWindow::~GLFWWindow()
 	GlWindow = nullptr;
 }
 
-GLFWWindow::GLFWWindow(std::string InWindowName, Vector2 InWindowSize, bool bFullScreen): IGraphicsWindow(InWindowName, InWindowSize, bFullScreen)
-{
-	// Create instance for basic setup before window
-	GraphicsInstance = std::make_shared<GLFWInstance>();
+GLFWWindow::GLFWWindow(std::string InWindowName, Vector2 InWindowSize, bool bFullScreen) : IGraphicsWindow(InWindowName, InWindowSize, bFullScreen)
+{	
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+	
+	// Enable debugging context
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+	glfwSetErrorCallback(glfw_onError);
 	
 	GLFWmonitor* FullscreenMonitor = nullptr;
 	Vector2 WindowPosition;
@@ -46,7 +56,16 @@ GLFWWindow::GLFWWindow(std::string InWindowName, Vector2 InWindowSize, bool bFul
 	{
 		glfwSetWindowPos(GlWindow, WindowPosition.X, WindowPosition.Y);
 	}
-	glViewport(0, 0, InWindowSize.X, InWindowSize.Y);	
+	
+	// TODO: link properly
+	glfwSetFramebufferSizeCallback(GlWindow, framebuffer_size_callback);	
+	glfwSetWindowFocusCallback(GlWindow, FocusChanged);
+}
+
+void GLFWWindow::CreateGraphicsInstance()
+{
+	glfwMakeContextCurrent(GlWindow);
+	IGraphicsWindow::CreateGraphicsInstance();
 }
 
 void GLFWWindow::SetWindowFullScreen(bool bFullscreen)
@@ -59,10 +78,23 @@ bool GLFWWindow::ShouldWindowClose() const
 	return glfwWindowShouldClose(GlWindow);
 }
 
+void GLFWWindow::PreRender()
+{
+	glfwMakeContextCurrent(GlWindow);	
+	IGraphicsWindow::PreRender();
+}
+
+void GLFWWindow::PostRender()
+{
+	IGraphicsWindow::PostRender();
+	glfwSwapBuffers(GlWindow);
+	glfwPollEvents();
+}
+
 void GLFWWindow::FocusWindow() const
 {
 	// TODO: Is this correct?
-	glfwMakeContextCurrent(GlWindow);
+	
 }
 
 void GLFWWindow::SetCursorPosition(Vector2 InCursorPosition)
@@ -95,4 +127,24 @@ Vector2 GLFWWindow::GetWindowSize()
 	int WindowWidth, WindowHeight;
 	glfwGetWindowSize(GlWindow, &WindowWidth, &WindowHeight);
 	return {static_cast<float>(WindowWidth), static_cast<float>(WindowHeight)};
+}
+
+void glfw_onError(int error, const char* description)
+{
+	// print message in Windows popup dialog box
+	MessageBox(NULL, LPCWSTR(description), LPCWSTR("GLFW error"), MB_OK);
+}
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+}
+
+void FocusChanged(GLFWwindow* window, int focused)
+{
+	if (focused == GLFW_TRUE)
+	{
+		// TODO: Focus changed link
+		//OnFocusChanged.Broadcast();
+	}
 }

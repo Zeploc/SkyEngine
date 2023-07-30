@@ -17,10 +17,6 @@ class IGraphicsInstance
 public:
 	virtual ~IGraphicsInstance() = default;
 
-	virtual void WindowSetup(Pointer<IGraphicsWindow> InGraphicsWindow) = 0;
-
-	virtual void SwapBuffers(Pointer<IGraphicsWindow> GraphicsWindow) = 0;
-
 	virtual void Render(Pointer<IGraphicsWindow> GraphicsWindow, std::vector<Pointer<Entity>> Entities, std::vector<Pointer<UIElement>> UIElements);
 	virtual void RenderEntity(Pointer<Entity> Entity);
 	virtual void RenderMesh(Pointer<Mesh> Mesh, FTransform Transform) = 0;

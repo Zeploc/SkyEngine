@@ -12,13 +12,11 @@
 // This Includes //
 #include "Scene.h"
 
-#include <GLFW/glfw3.h>
-
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"
 #include "Entity/Button3DEntity.h"
-#include "Graphics/GraphicsWindow.h"
 #include "Input/Input.h"
+#include "Platform/Window/GraphicsWindow.h"
 
 /************************************************************
 #--Description--#:  Constructor function
