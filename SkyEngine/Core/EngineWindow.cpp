@@ -1,7 +1,7 @@
 ﻿#include "EngineWindow.h"
 
 #include "Application.h"
-#include "Graphics/GraphicsInterface.h"
+#include "Graphics/GraphicsAPI.h"
 #include "Graphics/GraphicsWindow.h"
 #include "Input/Input.h"
 

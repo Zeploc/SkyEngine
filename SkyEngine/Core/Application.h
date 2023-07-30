@@ -4,7 +4,7 @@
 
 #include "EngineWindow.h"
 #include "Core/Core.h"
-#include "Graphics/GraphicsInterface.h"
+#include "Graphics/GraphicsAPI.h"
 #include "Math/Vector.h"
 #include "Math/Vector2.h"
 
@@ -33,7 +33,7 @@ namespace SkyEngine
 		Vector2 MainWindowSize;
 		Vector3 SkyColour;
 
-		Pointer<IGraphicsInterface> GraphicsInterface;
+		Pointer<IGraphicsAPI> GraphicsInterface;
 
 		Pointer<EngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
 		

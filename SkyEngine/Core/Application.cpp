@@ -9,8 +9,6 @@
 #include <Box2D/Box2D.h>
 //#include <vld.h>
 
-// OpenGL Library Includes //
-
 // Engine Includes //
 #include "Input/Input.h"
 #include "Scene/SceneManager.h"
@@ -20,7 +18,7 @@
 #include "Camera/CameraManager.h"
 #include "Graphics/GraphicsInstance.h"
 #include "Graphics/GraphicsWindow.h"
-#include "Graphics/GLFW/GLFWInterface.h"
+#include "Graphics/GLFW/GLFWAPI.h"
 #include "Math/Vector4.h"
 #include "Render/FrameBuffer.h"
 #include "Render/Shader.h"
@@ -52,24 +50,10 @@ namespace SkyEngine
 	#define CAM CameraManager::GetInstance() 
 	#define SM SceneManager::GetInstance()
 
-	// void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
-
-	void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
-	{
-		std::string sourceStr, typeStr, severityStr;
-		// Convert GLenum parameters to strings
-
-		// printf("%s:%s[%s](%d): %s\n", sourceStr, typeStr, severityStr, id, message);
-
-		fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-			   ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-				type, severity, message );
-	}
-
 	bool Application::ApplicationSetup()
 	{
 		// TODO: Temp setup as GLFW
-		GraphicsInterface = make_shared<GLFWInterface>();
+		GraphicsInterface = make_shared<IGLFWAPI>();
 		
 		srand(unsigned int(time(NULL)));
 

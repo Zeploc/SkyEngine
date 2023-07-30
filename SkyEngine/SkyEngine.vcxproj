@@ -282,10 +282,10 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
     <ClCompile Include="Entity/CollisionBounds.cpp" />
     <ClCompile Include="Entity/Entity.cpp" />
     <ClCompile Include="Graphics\GLFW\GLFWInstance.cpp" />
-    <ClCompile Include="Graphics\GLFW\GLFWInterface.cpp" />
+    <ClCompile Include="Graphics\GLFW\GLFWAPI.cpp" />
     <ClCompile Include="Graphics\GLFW\GLFWWindow.cpp" />
     <ClCompile Include="Graphics\GraphicsInstance.cpp" />
-    <ClCompile Include="Graphics\GraphicsInterface.cpp" />
+    <ClCompile Include="Graphics\GraphicsAPI.cpp" />
     <ClCompile Include="Graphics\GraphicsWindow.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -423,10 +423,10 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
     <ClInclude Include="Entity/CollisionBounds.h" />
     <ClInclude Include="Entity/Entity.h" />
     <ClInclude Include="Graphics\GLFW\GLFWInstance.h" />
-    <ClInclude Include="Graphics\GLFW\GLFWInterface.h" />
+    <ClInclude Include="Graphics\GLFW\GLFWAPI.h" />
     <ClInclude Include="Graphics\GLFW\GLFWWindow.h" />
     <ClInclude Include="Graphics\GraphicsInstance.h" />
-    <ClInclude Include="Graphics\GraphicsInterface.h" />
+    <ClInclude Include="Graphics\GraphicsAPI.h" />
     <ClInclude Include="Graphics\GraphicsWindow.h" />
     <ClInclude Include="Input/CXBOXController.h" />
     <ClInclude Include="Input/Input.h" />

@@ -12,10 +12,10 @@ class UIElement;
 class Entity;
 class IGraphicsWindow;
 
-class ENGINE_API IGraphicsInterface
+class ENGINE_API IGraphicsAPI
 {
 public:
-	virtual ~IGraphicsInterface() = default;
+	virtual ~IGraphicsAPI() = default;
 	
 	virtual std::string GetGraphicsDisplayName() = 0;
 	
