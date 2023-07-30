@@ -25,15 +25,15 @@ namespace SkyEngine
 		virtual void Update();
 		virtual void RenderScene();
 		virtual void ChangeSize(int w, int h);
-		virtual void Init();
 		virtual void OnExit();
-
+		
 		bool bLoading = true;
 
 		Vector2 MainWindowSize;
 		Vector3 SkyColour;
 
-		Pointer<IGraphicsAPI> GraphicsInterface;
+		Pointer<IGraphicsAPI> GraphicsApi;
+		EGraphicsAPI GraphicsApiType;
 
 		Pointer<EngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
 		

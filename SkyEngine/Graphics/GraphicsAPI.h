@@ -12,6 +12,12 @@ class UIElement;
 class Entity;
 class IGraphicsWindow;
 
+enum class EGraphicsAPI
+{
+	GLFW,
+	VULKAN
+};
+
 class ENGINE_API IGraphicsAPI
 {
 public:
@@ -20,5 +26,6 @@ public:
 	virtual std::string GetGraphicsDisplayName() = 0;
 	
 	virtual Pointer<IGraphicsWindow> CreateNewWindow(const std::string& InWindowName, Vector2 InWindowSize, bool bFullScreen) = 0;
-	
+
+	static Pointer<IGraphicsAPI> CreateGraphicsAPI(EGraphicsAPI APIType);
 };

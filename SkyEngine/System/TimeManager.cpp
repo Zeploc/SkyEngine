@@ -19,7 +19,8 @@ double TimeManager::TickRate = 60.0;
 bool TimeManager::bCanTickThisFrame = true;
 
 void TimeManager::Start()
-{
+{		
+	srand(unsigned int(time(NULL)));
 	StartSystemTime = InternalGetSystemTime();
 }
 

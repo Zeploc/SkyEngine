@@ -37,6 +37,7 @@ namespace SkyEngine
 		EngineApplication = this;
 		MainWindowSize = Vector2(1920, 1080);
 		SkyColour = Vector3(0.3f, 0.8f, 0.9f);
+		GraphicsApiType = EGraphicsAPI::GLFW;
 	}
 
 	Application::~Application()
@@ -52,10 +53,8 @@ namespace SkyEngine
 
 	bool Application::ApplicationSetup()
 	{
-		// TODO: Temp setup as GLFW
-		GraphicsInterface = make_shared<IGLFWAPI>();
-		
-		srand(unsigned int(time(NULL)));
+		LogManager::GetInstance()->Init();
+		GraphicsApi = IGraphicsAPI::CreateGraphicsAPI(GraphicsApiType);
 
 		Lighting::SetFogColour(Vector4(SkyColour, 1.0f));
 
@@ -68,18 +67,12 @@ namespace SkyEngine
 		ApplicationWindow->GetGraphicsWindow()->FocusWindow();
 		ApplicationWindow->GetGraphicsWindow()->GetGraphicsInstance()->ClearColour = SkyColour;
 
+		TimeManager::Start();
+
+		// TODO: Change from singleton to graphics instance
 		CAM->Init(MainWindowSize.X, MainWindowSize.Y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
-		// CAM->SwitchProjection(EProjectionMode::Perspective);
 		CAM->MainWindow = ApplicationWindow;
 		
-		// Settings Initialised
-		Init();
-
-		// TODO: Move to window?
-		// The input function registration
-		SI->Init(ApplicationWindow);
-		
-		TimeManager::Start();
 		return true;
 	}
 
@@ -163,16 +156,11 @@ namespace SkyEngine
 		CAM->SCR_HEIGHT = h;
 		CAM->SCR_WIDTH = w;
 	}
-	
-	void Application::Init()
-	{
-		LogManager::GetInstance()->Init();
-	}
 
 	void Application::OnExit()
 	{
 		ApplicationWindow.reset();
-		GraphicsInterface.reset();
+		GraphicsApi.reset();
 		Shader::CleanUp();
 		SceneManager::DestoryInstance();
 		CameraManager::DestoryInstance();

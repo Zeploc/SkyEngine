@@ -56,6 +56,6 @@ EngineWindow::EngineWindow(const std::string& InWindowName, Vector2 InWindowSize
 	WindowSize = InWindowSize;
 	bFullscreen = bInFullScreen;
 	
-	GraphicsWindow = GetApplication()->GraphicsInterface->CreateNewWindow(InWindowName, WindowSize, bInFullScreen);
+	GraphicsWindow = GetApplication()->GraphicsApi->CreateNewWindow(InWindowName, WindowSize, bInFullScreen);
 	GraphicsWindow->OnFocusChanged.Bind(this, &EngineWindow::OnFocusedChanged);		
 }
