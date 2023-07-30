@@ -111,6 +111,13 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(ProjectName).dll $(SolutionDir)Binaries\$(Configuration)-$(Platform)\SkyEditor\SkyEngine.dll
+copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(ProjectName).dll $(SolutionDir)Binaries\$(Configuration)-$(Platform)\Sandbox\SkyEngine.dll</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy Engine DLL</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -129,6 +136,13 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(ProjectName).dll $(SolutionDir)Binaries\$(Configuration)-$(Platform)\SkyEditor\SkyEngine.dll
+copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(ProjectName).dll $(SolutionDir)Binaries\$(Configuration)-$(Platform)\Sandbox\SkyEngine.dll</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy Engine DLL</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -149,6 +163,13 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(ProjectName).dll $(SolutionDir)Binaries\$(Configuration)-$(Platform)\SkyEditor\SkyEngine.dll
+copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(ProjectName).dll $(SolutionDir)Binaries\$(Configuration)-$(Platform)\Sandbox\SkyEngine.dll</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy Engine DLL</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -170,6 +191,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;freeglut.lib;SOIL.lib;glew32.lib;vld.lib;freetype.lib;assimp-vc130-mtd.lib;fmod_vc.lib;Box2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(ProjectName).dll $(SolutionDir)Binaries\$(Configuration)-$(Platform)\SkyEditor\SkyEngine.dll
+copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(ProjectName).dll $(SolutionDir)Binaries\$(Configuration)-$(Platform)\Sandbox\SkyEngine.dll</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy Engine DLL</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core\Application.cpp">

@@ -43,9 +43,7 @@ template <typename T>
 void Vector3x<T>::Rotate(T Angle, const Vector3x& Axis)
 {
 	glm::mat4 RotateMatrix = glm::rotate(glm::mat4(1), glm::radians(Angle), Axis);
-	glm::vec4 Highp_Vec4 = glm::vec4(*this, 1.0f);
-	glm::vec4 Tvec4 = Highp_Vec4 * RotateMatrix;
-	*this = Tvec4;
+	*this = glm::vec4(*this, 1.0f) * RotateMatrix;
 }
 
 template <typename T>

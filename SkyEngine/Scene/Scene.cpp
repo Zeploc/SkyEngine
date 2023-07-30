@@ -68,7 +68,7 @@ void Scene::DeleteScene()
 void Scene::RenderScene()
 {
 	// TODO: Properly link to graphics interface
-	// GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->Render(Entities, UIElements);
+	GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->Render(Entities, UIElements);
 }
 
 /************************************************************

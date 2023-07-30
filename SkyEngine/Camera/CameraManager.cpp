@@ -102,8 +102,8 @@ void CameraManager::SpectatorUpdate()
 	
 	Vector2 Offset = Input::GetInstance()->MousePos - Vector2(static_cast<float>(SCR_WIDTH) * 0.5f, static_cast<float>(SCR_HEIGHT) * 0.5f);
 	Offset *= MouseSensitivity;
-	CameraForward.Rotate(-Offset.X, Vector3(0,1,0));
-	CameraForward.Rotate(-Offset.Y, GetCameraRightVector());
+	CameraForward.Rotate(Offset.X, Vector3(0,1,0));
+	CameraForward.Rotate(Offset.Y, GetCameraRightVector());
 	// Needs Clamp
 	// GetCameraForwardVector().Rotate(Offset.Y, Vector3(1,0,0));
 	// Rotator CameraRotation = GetCameraForwardVector().ToRotator();
