@@ -22,13 +22,13 @@ std::string IGLAPI::GetGraphicsDisplayName()
 	return "OpenGL";
 }
 
-unsigned IGLAPI::CreateBuffer(const char* TextureSource, TextureData& Texture, bool bAA, bool bHasNormals)
+unsigned IGLAPI::CreateBuffer(TextureData& Texture, bool bAA, bool bHasNormals)
 {
 	GLuint vao;
 	GLuint vbo;
 	GLuint ebo;
 
-	Texture = GetTexture(TextureSource, bAA);
+	Texture = GetTexture(Texture.Path.c_str(), bAA);
 
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
@@ -37,7 +37,7 @@ unsigned IGLAPI::CreateBuffer(const char* TextureSource, TextureData& Texture, b
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	if (TextureSource != "")
+	if (!Texture.Path.empty())
 	{
 		if (bHasNormals)
 		{
@@ -106,6 +106,7 @@ TextureData IGLAPI::GetTexture(const char* TextureSource, bool bAA)
 		{
 			glGenTextures(1, &Texture.TextureID);
 			glBindTexture(GL_TEXTURE_2D, Texture.TextureID);
+			Texture.bBound = true;
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -145,7 +146,7 @@ void IGLAPI::BindArray(const std::vector<float>& Vertices, const std::vector<uin
 	TextureData TempTexture;
 	if (bCreateVAO)
 	{
-		Vao = CreateBuffer("", TempTexture, true);
+		Vao = CreateBuffer(TempTexture, true);
 	}
 
 	glBindVertexArray(Vao);

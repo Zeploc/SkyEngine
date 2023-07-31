@@ -10,7 +10,7 @@
 #include FT_FREETYPE_H
 
 // Engine Includes //
-#include "ModelObject.h"
+#include "Meshes/Model/ModelObject.h"
 #include "Core/Application.h"
 #include "System/LogManager.h"
 
@@ -126,7 +126,7 @@ GLuint Shader::BindArray(float fWidth, float fHeight, glm::vec4 Colour)
 ************************************************************/
 unsigned Shader::BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour, const char* TextureSource, TextureData& Texture, int _DrawMode)
 {
-	unsigned int vao = GetGraphicsAPI()->CreateBuffer(TextureSource, Texture, false, false);
+	unsigned int vao = GetGraphicsAPI()->CreateBuffer(Texture, false, false);
 
 	glm::vec4 UVCoords = glm::vec4(0, 1, 0, 1);
 	if (_DrawMode == 1)

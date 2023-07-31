@@ -7,12 +7,31 @@
 struct TextureData
 {
 	std::string Path;
-	unsigned int TextureID = 0;
 	int Width = 0;
 	int Height = 0;
+	uint32_t TextureID = 0;
+	bool bBound = false;
+
+	TextureData() {}
+	TextureData(const std::string InPath)
+	{
+		Path = InPath;
+	}
 
 	bool IsValid() const
 	{
-		return !Path.empty();
+		return !Path.empty() && IsBound();
 	}
+	bool IsBound() const
+	{
+		return bBound;
+	}
+	void Bind(const uint32_t InTextureID)
+	{
+		TextureID = InTextureID;
+		bBound = true;
+	}
+
+protected:
+	
 };

@@ -16,7 +16,7 @@
 #include "Math/FTransform.h"
 #include "Math/Matrix.h"
 #include "Math/Rotator.h"
-#include "Render/Mesh.h"
+#include "Render/Meshes/Mesh.h"
 #include "System/EnumTypes.h"
 
 class ENGINE_API Entity : public std::enable_shared_from_this<Entity>

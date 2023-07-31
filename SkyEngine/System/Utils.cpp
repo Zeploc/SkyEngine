@@ -10,8 +10,8 @@
 #include "LogManager.h"
 #include "Entity/Entity.h"
 #include "Math/Vector4.h"
-#include "Render/Cube.h"
-#include "Render/Plane.h"
+#include "Render/Meshes/Basic/Cube.h"
+#include "Render/Meshes/Basic/Plane.h"
 
 // Local Includes //
 

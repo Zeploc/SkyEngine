@@ -8,7 +8,7 @@
 
 // Engine Includes //
 #include "CollisionBounds.h"
-#include "Render/Mesh.h"
+#include "Render/Meshes/Mesh.h"
 #include "System/LogManager.h"
 #include "System/Utils.h"
 

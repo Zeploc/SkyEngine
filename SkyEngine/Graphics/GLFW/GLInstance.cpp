@@ -61,10 +61,12 @@ void GLInstance::StoreMVP(FTransform Transform, GLuint Program)
 
 void GLInstance::RenderMesh(const Pointer<Mesh> Mesh, const FTransform Transform)
 {
-	const GLuint Program = Mesh->program;
+	const Material MeshMaterial = Mesh->MeshMaterial;
+	const TextureData TextureData = MeshMaterial.Texture;
+	const GLuint Program = MeshMaterial.ShaderProgram;
 	glUseProgram(Program);
 	glFrontFace(GL_CW);	
-	if (Mesh->bHasTexture)
+	if (TextureData.IsValid())
 	{
 		glEnable(GL_BLEND);
 	}
@@ -76,35 +78,35 @@ void GLInstance::RenderMesh(const Pointer<Mesh> Mesh, const FTransform Transform
 	FTransform ScaledUpTransform = Transform;
 	ScaledUpTransform.Scale *= 1.1f;
 	// ABOVE CALLED FROM DERIVED RENDER
-	glUniform1i(glGetUniformLocation(Program, "bIsTex"), Mesh->bHasTexture);
-	glUniform1i(glGetUniformLocation(Program, "bFog"), Mesh->bFog);
-	glUniform1i(glGetUniformLocation(Program, "bIsLit"), Mesh->bIsLit);
+	glUniform1i(glGetUniformLocation(Program, "bIsTex"), TextureData.IsValid());
+	glUniform1i(glGetUniformLocation(Program, "bFog"), MeshMaterial.bFog);
+	glUniform1i(glGetUniformLocation(Program, "bIsLit"), MeshMaterial.bIsLit);
 	// TODO: Only pass in information if bIsLit? Is info still used elsewhere/otherwise
-	Lighting::PassLightingToShader(Program, Mesh->LightProperties, Transform);
-	if (Mesh->bHasTexture)
+	Lighting::PassLightingToShader(Program, MeshMaterial.LightProperties, Transform);
+	if (TextureData.IsValid())
 	{
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, Mesh->Texture.TextureID);
+		glBindTexture(GL_TEXTURE_2D, TextureData.TextureID);
 	}
-	if (Mesh->bReflection)
+	if (MeshMaterial.bReflect)
 	{
 		// TODO: Make cubemap and test
 		if (Utils::WorldCubeMap)
 		{
 			glActiveTexture(GL_TEXTURE1);
 			glUniform1i(glGetUniformLocation(Program, "skybox"), 1);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, Utils::WorldCubeMap->EntityMesh->Texture.TextureID);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, Utils::WorldCubeMap->EntityMesh->MeshMaterial.Texture.TextureID);
 			glUniform1f(glGetUniformLocation(Program, "ReflectionSize"), 0.1f);
 		}
 	}
-	if (Mesh->bFog)
+	if (MeshMaterial.bFog)
 	{
 		glUniform3fv(glGetUniformLocation(Program, "cameraPos"), 1, CameraManager::GetInstance()->GetCameraPosition().ToValuePtr());
 		glUniform4fv(glGetUniformLocation(Program, "vFogColor"), 1, value_ptr(Lighting::GetFogColour()));
 		glUniform1f(glGetUniformLocation(Program, "StartFog"), Lighting::GetStartFogDistance());
 		glUniform1f(glGetUniformLocation(Program, "EndFog"), Lighting::GetEndFogDistance());
 	}
-	if (Mesh->bCullFace)
+	if (MeshMaterial.bCullFace)
 	{
 		glEnable(GL_CULL_FACE);
 	}
@@ -112,7 +114,7 @@ void GLInstance::RenderMesh(const Pointer<Mesh> Mesh, const FTransform Transform
 	{
 		glDisable(GL_CULL_FACE);
 	}
-	if (Mesh->bDepthTest)
+	if (MeshMaterial.bDepthTest)
 	{
 		glEnable(GL_DEPTH_TEST);
 	}
@@ -122,7 +124,7 @@ void GLInstance::RenderMesh(const Pointer<Mesh> Mesh, const FTransform Transform
 	}
 
 	//enable stencil and set stencil operation
-	if (Mesh->bStencil)
+	if (MeshMaterial.bStencil)
 	{
 		glEnable(GL_STENCIL_TEST);
 		//glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
@@ -144,7 +146,7 @@ void GLInstance::RenderMesh(const Pointer<Mesh> Mesh, const FTransform Transform
 	glBindVertexArray(Mesh->vao);
 	glDrawElements(GL_TRIANGLES, Mesh->m_iIndicies, GL_UNSIGNED_INT, nullptr);
 
-	if (Mesh->bStencil)
+	if (MeshMaterial.bStencil)
 	{
 		// ** 2nd pass **
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);

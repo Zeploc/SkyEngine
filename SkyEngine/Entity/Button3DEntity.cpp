@@ -5,7 +5,7 @@
 // Engine Includes //
 #include "Camera/CameraManager.h"
 #include "Input/Input.h"
-#include "Render/Cube.h"
+#include "Render/Meshes/Basic/Cube.h"
 
 // Static Variables //
 bool Button3DEntity::bButtonPressedThisFrame = false;
@@ -46,7 +46,7 @@ void Button3DEntity::Update()
 
 	if (bHit)
 	{
-		EntityMesh->bStencil = true;
+		EntityMesh->MeshMaterial.bStencil = true;
 		if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
 		{
 			bPressed = true;
@@ -54,12 +54,12 @@ void Button3DEntity::Update()
 			bButtonPressedThisFrame = true;
 			PressDelegate.Broadcast();
 		}
-		EntityMesh->Colour = btnHighlightColour;
+		EntityMesh->MeshMaterial.Colour = btnHighlightColour;
 	}
 	else
 	{
-		EntityMesh->Colour = btnColour;
-		EntityMesh->bStencil = false;
+		EntityMesh->MeshMaterial.Colour = btnColour;
+		EntityMesh->MeshMaterial.bStencil = false;
 	}
 }
 

@@ -17,13 +17,13 @@
 #include "TransformationWidget.h"
 #include "Editor/Windows/EditorWindow.h"
 #include "Editor/Windows/EditorWindowManager.h"
-#include <Render/Cube.h>
-#include <Render/GeometryObject.h>
-#include <Render/Model.h>
-#include <Render/ParticleSystem.h>
-#include <Render/Plane.h>
-#include <Render/Pyramid.h>
-#include <Render/Sphere.h>
+#include <Render/Meshes/Basic/Cube.h>
+#include <Render/Meshes/Advanced/GeometryObject.h>
+#include <Render/Meshes/Model/Model.h>
+#include <Render/Particle/ParticleSystem.h>
+#include <Render/Meshes/Basic/Plane.h>
+#include <Render/Meshes/Basic/Pyramid.h>
+#include <Render/Meshes/Basic/Sphere.h>
 
 #include <Windows.h>
 
@@ -106,7 +106,7 @@ void EditorScene::AddSampleEntities()
 	//glm::vec3 Points[4] = { {-10, 10, 1}, {10, 10, -1 }, { 10, -10, 0 }, { -10, -10, -3 } };
 	Pointer<Plane> FloorPlanMesh(new Plane(50, 50, {0.5f, 0.5f, 0.5f, 1.0f}));
 	FloorEntity->AddMesh(FloorPlanMesh);
-	FloorPlanMesh->bCullFace = false;
+	FloorPlanMesh->MeshMaterial.bCullFace = false;
 	AddEntity(FloorEntity, true);
 	
 	Pointer<ParticleSystem> ParticleBoy(new ParticleSystem({{20, 8, 10}, {0, 0, 0}, {1, 1, 1}}));
@@ -164,7 +164,7 @@ void EditorScene::AddSampleEntities()
 	PlaneEntity->AddMesh(PlaneMesh);
 	PlaneMesh->SetLit(true);
 	PlaneMesh->SetReflection(true);
-	PlaneMesh->bCullFace = false;
+	PlaneMesh->MeshMaterial.bCullFace = false;
 	AddEntity(PlaneEntity, true);
 }
 
