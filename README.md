@@ -1,4 +1,4 @@
-# Graphics-Combination
+# Sky Engine 
 
 A custom project for developing an engine and editor for experience purposes.
 
@@ -38,6 +38,7 @@ A custom project for developing an engine and editor for experience purposes.
 - Void Delegates
 - Log system [Rudimentary]
 ## Math
+- Vector templated: Vector2, Vector3, Vector 4 with types int, float and double
 - Vector [Rudimentary]
 - Transform [Rudimentary]
 - Matrix
@@ -64,7 +65,6 @@ A custom project for developing an engine and editor for experience purposes.
 - Fix/Complete translating entities in editor
 - Rotate + Scale entities in editor
 - Change editor movement/look to state based input + Improve "Spectator" controls structure
-- Switch Vector to template and add: Vector2, Vector3 with types int, float and double
 - Complete basic Vector/ Rotator and Quat math functions
 - Add Transform math functions
 - Link up cubemap
@@ -72,7 +72,6 @@ A custom project for developing an engine and editor for experience purposes.
 - Switch input to delegates
 - Pyramid Lighting fix
 - Play editor level
-- Static link external libs - almost complete
 - Dynamic link engine (and game for editor) when working on project, static link when building the game as an exe
 - Link dependencies PDBs
 - Update dependencies to recent versions
@@ -85,8 +84,6 @@ A custom project for developing an engine and editor for experience purposes.
 
 # Further Development
 
-- Split up projects within solution into: Engine, Editor and Game
-
 ## Editor
 - Content Panel
 - Open and Save level
@@ -94,7 +91,6 @@ A custom project for developing an engine and editor for experience purposes.
 - Details panel
 - Rotate
 - Fix up translate gizmo movement
-- Gizmo always draw infront
 - Scale
 - Shader/Material editor
 - Editor Settings
@@ -112,8 +108,7 @@ A custom project for developing an engine and editor for experience purposes.
 - 2D Collision
 - 2D Particles
 ## Production Cycle
-- Seperate editor and project (Seperate dlls)
-- Ability to inject game into editor when playing
+- Ability to inject (hot reload) game into editor when playing
 - Differientate development vs shipping
 ## Systems
 - Custom Pointer Wrapper type
@@ -121,20 +116,18 @@ A custom project for developing an engine and editor for experience purposes.
 - Delegates create multiple parameters with templates
 - Create macro to define custom multi param delegates
 ## UI
-- UI Editor
-- Widget system
+- UI Editor - creator for ImGui
+- Widget system -ImGui
 - Save and load widgets
 ## Save and Loading
 - Save Mesh Type
 - Save Specific properties
  - Save Particles
 ## Rendering
-- Abstract rendering to back end
-- Split open gl to one rendering pipeline
 - Setup placeholder for DirectX and Vulkan
 - Generic shader system to use across rendering pipeline
 - No Depth test render order
-- Live shader compiling/editing
+- Live shader compiling/editing (hot reload shaders)
 ## Component system
 - Base Component
 - Mesh Component
@@ -144,7 +137,6 @@ A custom project for developing an engine and editor for experience purposes.
 - Quaternion operations
 - Rotator operations
 - Vector math Helpers (project point, plane, etc)
-- Switch vector to templated system for type with base functions
 ## Memory Management
 - Custom memory allocation
 - Memory types
