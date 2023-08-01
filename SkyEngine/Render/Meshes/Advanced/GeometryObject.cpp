@@ -19,11 +19,11 @@ GeometryObject::GeometryObject(glm::vec4 _Colour)
 {
 	m_fWidth = 1;
 	m_fHeight = 1;
-	m_iIndicies = 1;
-	MeshMaterial.Colour = _Colour;
+	IndicesCount = 1;
+	
+	MeshMaterial = std::make_shared<Material>("GeometryShader");
+	MeshMaterial->Colour = _Colour;
 	BindGeometryObject();
-	m_eShape = EMESHTYPE::GEOMETRY;
-	MeshMaterial.ShaderProgram = Shader::Programs["GeometryShader"];
 }
 
 /************************************************************
@@ -44,14 +44,15 @@ GeometryObject::~GeometryObject()
 ************************************************************/
 void GeometryObject::BindGeometryObject()
 {
-	GLfloat vertices[] = {
-		// Position						// Color		
-		0.0f, 0.0f, 0.0f, MeshMaterial.Colour.r, MeshMaterial.Colour.g, MeshMaterial.Colour.b, MeshMaterial.Colour.a, //passing in 1 point
-	};
-
-	// If no texture, texture source is equal to ""
-	vao = GetGraphicsAPI()->CreateBuffer(MeshMaterial.Texture, true);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	// TODO: Geo object
+	// GLfloat vertices[] = {
+	// 	// Position						// Color		
+	// 	0.0f, 0.0f, 0.0f, MeshMaterial.Colour.r, MeshMaterial.Colour.g, MeshMaterial.Colour.b, MeshMaterial.Colour.a, //passing in 1 point
+	// };
+	//
+	// // If no texture, texture source is equal to ""
+	// vao = GetGraphicsAPI()->CreateBuffer(MeshMaterial.Texture, true);
+	// glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 }
 
 /************************************************************
@@ -73,22 +74,32 @@ void GeometryObject::Rebind()
 ************************************************************/
 void GeometryObject::Render(FTransform Newtransform)
 {
-	glUseProgram(MeshMaterial.ShaderProgram);
-	if (MeshMaterial.Texture.IsValid())
-	{
-		glEnable(GL_BLEND);
-	}
-	else
-	{
-		glDisable(GL_BLEND);
-	}
-	glFrontFace(GL_CW);
-	glDisable(GL_CULL_FACE);
-	//Mesh::Render(Newtransform);
+	// TODO: Geo object
+	// glUseProgram(MeshMaterial.ShaderProgram);
+	// if (MeshMaterial.Texture.IsValid())
+	// {
+	// 	glEnable(GL_BLEND);
+	// }
+	// else
+	// {
+	// 	glDisable(GL_BLEND);
+	// }
+	// glFrontFace(GL_CW);
+	// glDisable(GL_CULL_FACE);
+	// //Mesh::Render(Newtransform);
+	//
+	// CameraManager::GetInstance()->SetMVP(Newtransform, MeshMaterial.ShaderProgram);
+	//
+	// glBindVertexArray(vao);
+	// glDrawArrays(GL_POINTS, 0, 1);
+	// glBindVertexArray(0);
+}
 
-	CameraManager::GetInstance()->SetMVP(Newtransform, MeshMaterial.ShaderProgram);
-
-	glBindVertexArray(vao);
-	glDrawArrays(GL_POINTS, 0, 1);
-	glBindVertexArray(0);
+MeshData GeometryObject::GetMeshData()
+{
+	const std::vector<float> VertexPositions;
+	const std::vector<float> Normals;
+	const std::vector<uint32_t> Indices;
+	// TODO:
+	return MeshData(VertexPositions, Indices, Normals);
 }

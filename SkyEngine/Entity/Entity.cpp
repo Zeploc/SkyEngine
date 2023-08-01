@@ -54,6 +54,8 @@ Entity::~Entity()
 void Entity::AddMesh(Pointer<Mesh> _NewMesh)
 {
 	EntityMesh = _NewMesh;
+	// TODO: Currently binds here when added to entity, should restructure this
+	EntityMesh->BindMeshData();
 }
 
 bool Entity::CanRender()

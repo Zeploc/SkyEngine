@@ -14,6 +14,7 @@
 // Library Include //
 #include <memory>
 
+#include "MeshData.h"
 #include "Render/Material.h"
 #include "System/EnumTypes.h"
 
@@ -24,8 +25,10 @@ class ENGINE_API Mesh
 {
 public:
 	Mesh();
+	Mesh(float InWidth, float InHeight, float InDepth, glm::vec4 InColour);
+	Mesh(float InWidth, float InHeight, float InDepth, glm::vec4 InColour, const char* InTextureSource);
 
-	~Mesh();
+	virtual ~Mesh();
 	
 	virtual bool CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, Pointer<Entity> EntityCheck);
 
@@ -35,16 +38,13 @@ public:
 
 	virtual void Reset();
 
+	void BindMeshData();
 	virtual void Rebind() {}
 
 	// Will replace if texture exists
 	virtual void SetLit(bool _bIsLit);
 
-	bool IsLit() { return MeshMaterial.bIsLit; }
-
 	void SetReflection(bool _bReflecting);
-
-	bool IsReflecting() { return MeshMaterial.bReflect; }
 
 	void AddCollisionBounds(float fHeight, float fWidth, float fDepth, Pointer<Entity> _EntityRef);
 
@@ -55,15 +55,16 @@ public:
 		return MeshCollisionBounds;
 	};
 
-	Material MeshMaterial;
-	EMESHTYPE m_eShape;
+	Pointer<Material> MeshMaterial;
 	float m_fWidth;
 	float m_fHeight;
 	float m_fDepth = 0;
 	GLuint vao;
-	glm::vec4 UVCoords;
-	int m_iIndicies;
+	int IndicesCount;
+	
 protected:
+	virtual MeshData GetMeshData()= 0;
+	
 	Pointer<CollisionBounds> MeshCollisionBounds;
 };
 

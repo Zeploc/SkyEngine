@@ -36,13 +36,13 @@ void AnimatedModel::VertexBoneData::addBoneData(int BoneID, float Weight)
 
 AnimatedModel::AnimatedModel(std::string modelFilename, std::string texFilename)
 {
-	MeshMaterial.ShaderProgram = Shader::Programs["AnimatedModel"]; // _program;
+	MeshMaterial = std::make_shared<Material>("AnimatedModel");
+	MeshMaterial->SetTexture(texFilename);
 
 	vao = 0;
 	ZERO_MEM(m_Buffers);
 	m_NumBones = 0;
 	m_pScene = nullptr;
-	MeshMaterial.Texture.Path = texFilename.c_str();
 
 	BindMesh(modelFilename);
 }
@@ -53,40 +53,41 @@ AnimatedModel::~AnimatedModel()
 
 void AnimatedModel::Render(FTransform Newtransform)
 {
-	//return;
-	setShaderEffectVariables();
-	glEnable(GL_BLEND);
-
-	glBindVertexArray(vao);
-	CameraManager::GetInstance()->SetMVP(Newtransform, MeshMaterial.ShaderProgram);
-
-	for (GLuint i = 0; i < m_Entries.size(); i++)
-	{
-		GLuint MaterialIndex = m_Entries[i].MaterialIndex;
-
-		assert(MaterialIndex < m_Textures.size());
-
-		if (m_Textures[MaterialIndex])
-		{
-			//m_Textures[MaterialIndex]->Bind(GL_TEXTURE0);
-			//glBindTexture(GL_TEXTURE_2D, m_Textures[MaterialIndex]);
-
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, m_Textures[MaterialIndex]);
-			//glUniform1i(glGetUniformLocation(program, "Texture"), MaterialIndex);
-		}
-
-		//glDrawElementsBaseVertex(GL_TRIANGLES,
-		//						m_Entries[i].NumIndices, 
-		//						GL_UNSIGNED_INT,
-		//						(void*)(sizeof(GLuint) * m_Entries[i].BaseIndex),
-		//						m_Entries[i].BaseVertex);
-
-		glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, nullptr);
-	}
-
-	// Make sure the VAO is not changed from the outside    
-	glBindVertexArray(0);
+	// TODO:
+	// //return;
+	// setShaderEffectVariables();
+	// glEnable(GL_BLEND);
+	//
+	// glBindVertexArray(vao);
+	// CameraManager::GetInstance()->SetMVP(Newtransform, MeshMaterial.ShaderProgram);
+	//
+	// for (GLuint i = 0; i < m_Entries.size(); i++)
+	// {
+	// 	GLuint MaterialIndex = m_Entries[i].MaterialIndex;
+	//
+	// 	assert(MaterialIndex < m_Textures.size());
+	//
+	// 	if (m_Textures[MaterialIndex])
+	// 	{
+	// 		//m_Textures[MaterialIndex]->Bind(GL_TEXTURE0);
+	// 		//glBindTexture(GL_TEXTURE_2D, m_Textures[MaterialIndex]);
+	//
+	// 		glActiveTexture(GL_TEXTURE0);
+	// 		glBindTexture(GL_TEXTURE_2D, m_Textures[MaterialIndex]);
+	// 		//glUniform1i(glGetUniformLocation(program, "Texture"), MaterialIndex);
+	// 	}
+	//
+	// 	//glDrawElementsBaseVertex(GL_TRIANGLES,
+	// 	//						m_Entries[i].NumIndices, 
+	// 	//						GL_UNSIGNED_INT,
+	// 	//						(void*)(sizeof(GLuint) * m_Entries[i].BaseIndex),
+	// 	//						m_Entries[i].BaseVertex);
+	//
+	// 	glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, nullptr);
+	// }
+	//
+	// // Make sure the VAO is not changed from the outside    
+	// glBindVertexArray(0);
 }
 
 void AnimatedModel::Update()
@@ -394,79 +395,80 @@ void AnimatedModel::loadBones(int meshIndex, const aiMesh* pMesh, std::vector<Ve
 
 void AnimatedModel::setShaderEffectVariables()
 {
-	glUseProgram(MeshMaterial.ShaderProgram);
-
-	//if(bIsTextureSet)
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, textureID);
-	//glUniform1i(glGetUniformLocation(program, "Texture"), 0);
-
-	//glm::mat4 model;
-
-	//rotation.y += currentRotationSpeed * .016f;
-
-	//float distance = currentPlayerSpeed * .016f;
-
-	//printf("speed %f, \n", currentRotationSpeed);
-
-	//float dx = (float)(distance * sin(ToRadian(rotation.y)));
-	//float dz = (float)(distance * cos(ToRadian(rotation.y)));
-
-	//this->position.x += dx;
-	//this->position.z += dz;
-
-	////this->position.y = terrain->GetYPosition({ position.x, position.z });
-
-	//glm::mat4 t = glm::translate(glm::mat4(), this->position);
-	//glm::mat4 r = glm::rotate(glm::mat4(), glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-	//glm::mat4 s = glm::scale(glm::mat4(), this->scale);
-
-	//model = t * r * s;
-
-	//glm::mat4 vp = CameraManager::GetInstance()->projection * CameraManager::GetInstance()->view;
-	//GLint vpLoc = glGetUniformLocation(program, "vp");
-	//glUniformMatrix4fv(vpLoc, 1, GL_FALSE, glm::value_ptr(vp));
-
-	//GLint modelLoc = glGetUniformLocation(program, "model");
-	//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-	// get uniform location for transforms
-	for (unsigned int i = 0; i < ARRAY_SIZE(m_boneLocation); i++)
-	{
-		char name[128];
-		memset(name, 0, sizeof(name));
-		sprintf_s(name, "jointTransforms[%d]", i);
-		m_boneLocation[i] = glGetUniformLocation(MeshMaterial.ShaderProgram, name);
-	}
-
-	std::vector<Matrix4> transforms; // = getJointTransforms();
-
-	boneTransforms(transforms);
-
-	for (int i = 0; i < transforms.size(); i++)
-	{
-		Matrix4 Transform = transforms[i];
-		glUniformMatrix4fv(m_boneLocation[i], 1, GL_TRUE, static_cast<const GLfloat*>(Transform));
-	}
-
-	// lighting calculations
-	GLint colorLoc = glGetUniformLocation(MeshMaterial.ShaderProgram, "objectColor");
-	glUniform3f(colorLoc, 1.0f, 1.0f, 1.0f);
-
-	GLuint cameraPosLoc = glGetUniformLocation(MeshMaterial.ShaderProgram, "cameraPos");
-	glUniform3f(cameraPosLoc, CameraManager::GetInstance()->GetCameraPosition().X, CameraManager::GetInstance()->GetCameraPosition().Y, CameraManager::GetInstance()->GetCameraPosition().Z);
-
-	GLuint lightPosLoc = glGetUniformLocation(MeshMaterial.ShaderProgram, "lightPos");
-	glUniform3f(lightPosLoc, Lighting::GetLightPosition().X, Lighting::GetLightPosition().Y, Lighting::GetLightPosition().Z);
-
-	GLuint lightColorLoc = glGetUniformLocation(MeshMaterial.ShaderProgram, "lightColor");
-	glUniform3f(lightColorLoc, ModelLightInfo.LightColour.X, ModelLightInfo.LightColour.Y, ModelLightInfo.LightColour.Z);
-
-	GLuint specularStrengthLoc = glGetUniformLocation(MeshMaterial.ShaderProgram, "specularStrength");
-	glUniform1f(specularStrengthLoc, 0.1f);
-
-	GLuint ambientStrengthLoc = glGetUniformLocation(MeshMaterial.ShaderProgram, "ambientStrength");
-	glUniform1f(ambientStrengthLoc, 0.5f);
+	// TODO:
+	// glUseProgram(MeshMaterial.ShaderProgram);
+	//
+	// //if(bIsTextureSet)
+	// //glActiveTexture(GL_TEXTURE0);
+	// //glBindTexture(GL_TEXTURE_2D, textureID);
+	// //glUniform1i(glGetUniformLocation(program, "Texture"), 0);
+	//
+	// //glm::mat4 model;
+	//
+	// //rotation.y += currentRotationSpeed * .016f;
+	//
+	// //float distance = currentPlayerSpeed * .016f;
+	//
+	// //printf("speed %f, \n", currentRotationSpeed);
+	//
+	// //float dx = (float)(distance * sin(ToRadian(rotation.y)));
+	// //float dz = (float)(distance * cos(ToRadian(rotation.y)));
+	//
+	// //this->position.x += dx;
+	// //this->position.z += dz;
+	//
+	// ////this->position.y = terrain->GetYPosition({ position.x, position.z });
+	//
+	// //glm::mat4 t = glm::translate(glm::mat4(), this->position);
+	// //glm::mat4 r = glm::rotate(glm::mat4(), glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	// //glm::mat4 s = glm::scale(glm::mat4(), this->scale);
+	//
+	// //model = t * r * s;
+	//
+	// //glm::mat4 vp = CameraManager::GetInstance()->projection * CameraManager::GetInstance()->view;
+	// //GLint vpLoc = glGetUniformLocation(program, "vp");
+	// //glUniformMatrix4fv(vpLoc, 1, GL_FALSE, glm::value_ptr(vp));
+	//
+	// //GLint modelLoc = glGetUniformLocation(program, "model");
+	// //glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	//
+	// // get uniform location for transforms
+	// for (unsigned int i = 0; i < ARRAY_SIZE(m_boneLocation); i++)
+	// {
+	// 	char name[128];
+	// 	memset(name, 0, sizeof(name));
+	// 	sprintf_s(name, "jointTransforms[%d]", i);
+	// 	m_boneLocation[i] = glGetUniformLocation(MeshMaterial.ShaderProgram, name);
+	// }
+	//
+	// std::vector<Matrix4> transforms; // = getJointTransforms();
+	//
+	// boneTransforms(transforms);
+	//
+	// for (int i = 0; i < transforms.size(); i++)
+	// {
+	// 	Matrix4 Transform = transforms[i];
+	// 	glUniformMatrix4fv(m_boneLocation[i], 1, GL_TRUE, static_cast<const GLfloat*>(Transform));
+	// }
+	//
+	// // lighting calculations
+	// GLint colorLoc = glGetUniformLocation(MeshMaterial.ShaderProgram, "objectColor");
+	// glUniform3f(colorLoc, 1.0f, 1.0f, 1.0f);
+	//
+	// GLuint cameraPosLoc = glGetUniformLocation(MeshMaterial.ShaderProgram, "cameraPos");
+	// glUniform3f(cameraPosLoc, CameraManager::GetInstance()->GetCameraPosition().X, CameraManager::GetInstance()->GetCameraPosition().Y, CameraManager::GetInstance()->GetCameraPosition().Z);
+	//
+	// GLuint lightPosLoc = glGetUniformLocation(MeshMaterial.ShaderProgram, "lightPos");
+	// glUniform3f(lightPosLoc, Lighting::GetLightPosition().X, Lighting::GetLightPosition().Y, Lighting::GetLightPosition().Z);
+	//
+	// GLuint lightColorLoc = glGetUniformLocation(MeshMaterial.ShaderProgram, "lightColor");
+	// glUniform3f(lightColorLoc, ModelLightInfo.LightColour.X, ModelLightInfo.LightColour.Y, ModelLightInfo.LightColour.Z);
+	//
+	// GLuint specularStrengthLoc = glGetUniformLocation(MeshMaterial.ShaderProgram, "specularStrength");
+	// glUniform1f(specularStrengthLoc, 0.1f);
+	//
+	// GLuint ambientStrengthLoc = glGetUniformLocation(MeshMaterial.ShaderProgram, "ambientStrength");
+	// glUniform1f(ambientStrengthLoc, 0.5f);
 }
 
 void AnimatedModel::boneTransforms(std::vector<Matrix4>& transforms)

@@ -1,147 +1,117 @@
-// Copyright Skyward Studios, Inc. All Rights Reserved.
+﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #include "Cube.h"
 
 // Engine Includes //
-#include <iostream>
-
 #include "Render/Shader.h"
 #include "Core/Application.h"
 
-/************************************************************
-#--Description--#:  Constructor function
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	Takes contructor values
-#--Return--#: 		NA
-************************************************************/
-Cube::Cube(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour)
-{
-	m_fWidth = fWidth;
-	m_fHeight = fHeight;
-	m_fDepth = fDepth;
-	MeshMaterial.Colour = _Colour;
-	UVCoords = glm::vec4(0, 1, 0, 1);
-	MeshMaterial.Texture.Path = "";
-	m_iIndicies = 36;
-	BindCube();
-	m_eShape = EMESHTYPE::CUBE;
-	MeshMaterial.ShaderProgram = Shader::Programs["BaseProgram"];
-}
-
-/************************************************************
-#--Description--#:  Constructor function
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	Takes contructor values
-#--Return--#: 		NA
-************************************************************/
-Cube::Cube(float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, const char* _TextureSource, glm::vec4 _UVCoords)
-{
-	m_fWidth = fWidth;
-	m_fHeight = fHeight;
-	m_fDepth = fDepth;
-	MeshMaterial.Colour = _Colour;
-	MeshMaterial.Texture.Path = _TextureSource;
-	UVCoords = _UVCoords;
-	m_iIndicies = 36;
-	BindCube();
-	m_eShape = EMESHTYPE::CUBE;
-	MeshMaterial.ShaderProgram = Shader::Programs["BaseProgram"];
-}
-
-/************************************************************
-#--Description--#:  Destructor function
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	NA
-#--Return--#: 		NA
-************************************************************/
 Cube::~Cube()
 {
 }
 
-/************************************************************
-#--Description--#: 	Binds pyramid with sepcified attributes
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
-void Cube::BindCube()
+MeshData Cube::GetMeshData()
 {
-	float fHalfWidth = m_fWidth / 2;
-	float fHalfHeight = m_fHeight / 2;
-	float fHalfDepth = m_fDepth / 2;
+	const float HalfWidth = m_fWidth / 2;
+	const float HalfHeight = m_fHeight / 2;
+	const float HalfDepth = m_fDepth / 2;
 
-	const Vector4 Colour = MeshMaterial.Colour;
-
-	std::vector<float> Texturedvertices = {
-		// Positions								// Colors									// UV Cords		// Normals
+	const std::vector<float> VertexPositions = {
 		// Front Face
-		-fHalfWidth, fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-		fHalfWidth, fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-		fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		-fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		-HalfWidth, HalfHeight, HalfDepth, 
+		HalfWidth, HalfHeight, HalfDepth, 
+		HalfWidth, -HalfHeight, HalfDepth,
+		-HalfWidth, -HalfHeight, HalfDepth,
 		// Right Face
-		fHalfWidth, fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-		fHalfWidth, fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-		fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-		fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+		HalfWidth, HalfHeight, HalfDepth, 
+		HalfWidth, HalfHeight, -HalfDepth,
+		HalfWidth, -HalfHeight, -HalfDepth,
+		HalfWidth, -HalfHeight, HalfDepth,
 		// Back Face
-		fHalfWidth, fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f,
-		-fHalfWidth, fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f,
-		-fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,
-		fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f,
+		HalfWidth, HalfHeight, -HalfDepth, 
+		-HalfWidth, HalfHeight, -HalfDepth,
+		-HalfWidth, -HalfHeight, -HalfDepth,
+		HalfWidth, -HalfHeight, -HalfDepth,
 		// Left Face
-		-fHalfWidth, fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
-		-fHalfWidth, fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f,
-		-fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-		-fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f,
+		-HalfWidth, HalfHeight, -HalfDepth,
+		-HalfWidth, HalfHeight, HalfDepth, 
+		-HalfWidth, -HalfHeight, HalfDepth,
+		-HalfWidth, -HalfHeight, -HalfDepth,
 		// Top Face
-		-fHalfWidth, fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-		fHalfWidth, fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-		fHalfWidth, fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-		-fHalfWidth, fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		-HalfWidth, HalfHeight, -HalfDepth,
+		HalfWidth, HalfHeight, -HalfDepth, 
+		HalfWidth, HalfHeight, HalfDepth,
+		-HalfWidth, HalfHeight, HalfDepth, 
 		// Bottom Face
-		-fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-		fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-		fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-		-fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f
-
+		-HalfWidth, -HalfHeight, HalfDepth,
+		HalfWidth, -HalfHeight, HalfDepth, 
+		HalfWidth, -HalfHeight, -HalfDepth,
+		-HalfWidth, -HalfHeight, -HalfDepth,
 	};
-	std::vector<float> vertices = {
-		// Positions								// Colors									// Normals
-		// Front Face
-		-fHalfWidth, fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 0.0f, 1.0f,
-		fHalfWidth, fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 0.0f, 1.0f,
-		fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 0.0f, 1.0f,
-		-fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 0.0f, 1.0f,
-		// Right Face
-		fHalfWidth, fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 0.0f, 0.0f,
-		fHalfWidth, fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 0.0f, 0.0f,
-		fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 0.0f, 0.0f,
-		fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 1.0f, 0.0f, 0.0f,
-		// Back Face
-		fHalfWidth, fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 0.0f, -1.0f,
-		-fHalfWidth, fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 0.0f, -1.0f,
-		-fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 0.0f, -1.0f,
-		fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 0.0f, -1.0f,
-		// Left Face
-		-fHalfWidth, fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, -1.0f, 0.0f, 0.0f,
-		-fHalfWidth, fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, -1.0f, 0.0f, 0.0f,
-		-fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, -1.0f, 0.0f, 0.0f,
-		-fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, -1.0f, 0.0f, 0.0f,
-		// Top Face
-		-fHalfWidth, fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 1.0f, 0.0f,
-		fHalfWidth, fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 1.0f, 0.0f,
-		fHalfWidth, fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 1.0f, 0.0f,
-		-fHalfWidth, fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, 1.0f, 0.0f,
-		// Bottom Face
-		-fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, -1.0f, 0.0f,
-		fHalfWidth, -fHalfHeight, fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, -1.0f, 0.0f,
-		fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, -1.0f, 0.0f,
-		-fHalfWidth, -fHalfHeight, -fHalfDepth, Colour.r, Colour.g, Colour.b, Colour.a, 0.0f, -1.0f, 0.0f
-
+	const std::vector<float> UVCoords = {
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		1.0f, 1.0f,
+		0.0f, 1.0f,
+		
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		1.0f, 1.0f,
+		0.0f, 1.0f,
+		
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		1.0f, 1.0f,
+		0.0f, 1.0f,
+		
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		1.0f, 1.0f,
+		0.0f, 1.0f,
+		
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		1.0f, 1.0f,
+		0.0f, 1.0f,
+		
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		1.0f, 1.0f,
+		0.0f, 1.0f,
 	};
-
-	std::vector<uint32_t> indices = {
+	const std::vector<float> Normals = {
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,
+		
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		
+		0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f, -1.0f,
+		
+		-1.0f, 0.0f, 0.0f,
+		-1.0f, 0.0f, 0.0f,
+		-1.0f, 0.0f, 0.0f,
+		-1.0f, 0.0f, 0.0f,
+		
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		
+		0.0f, -1.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+		0.0f, -1.0f, 0.0f
+	};
+	
+	const std::vector<uint32_t> Indices = {
 		// Front Face
 		0, 1, 2,
 		0, 2, 3,
@@ -162,44 +132,12 @@ void Cube::BindCube()
 		20, 22, 23
 	};
 
-	vao = GetGraphicsAPI()->CreateBuffer(MeshMaterial.Texture, true, true);
-	// If no texture, texture source is equal to ""
-	const std::vector<float> VerticesToUse = MeshMaterial.Texture.IsValid() ? Texturedvertices : vertices;
-	
-	GetGraphicsAPI()->BindArray(VerticesToUse, indices, vao, false);	
-
-	std::cout << "Cube vao: " << vao << std::endl;
-}
-
-/************************************************************
-#--Description--#: 	Rebinds the vao with the colour (not texture)
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
-void Cube::Rebind()
-{
-	// glDeleteVertexArrays(1, &vao);
-	// BindCube();
-}
-
-void Cube::SetLit(bool _bIsLit)
-{
-	Mesh::SetLit(_bIsLit);
-	// if (bIsLit)
-	// {
-	// 	program = Shader::Programs["LitTextureprogram"];
-	// }
-}
-
-/************************************************************
-#--Description--#: 	Updated every frame
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
-void Cube::Update()
-{
+	MeshData CubeMeshData(VertexPositions, Indices, Normals);
+	if (MeshMaterial->HasTexture())
+	{
+		CubeMeshData.SetUVs(UVCoords);
+	}
+	return CubeMeshData;
 }
 
 bool Cube::CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, Pointer<Entity> EntityCheck)

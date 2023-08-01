@@ -5,7 +5,9 @@
 #include <vector>
 
 #include "Math/FTransform.h"
+#include "Math/Matrix.h"
 #include "Math/Vector.h"
+#include "Math/Vector4.h"
 
 class UIElement;
 class Entity;
@@ -26,6 +28,23 @@ public:
 	virtual void PreRender(Pointer<IGraphicsWindow> GraphicsWindow) {}
 	virtual void PostRender(Pointer<IGraphicsWindow> GraphicsWindow) {}
 	
+	template <typename T>
+	void PassAttributeToShader(int32_t ShaderLocation, T Attribute);
+	
 	// TODO: Create colour type
-	Vector3 ClearColour = Vector3(0.3f, 0.8f, 0.9f);
+	Vector3 ClearColour = Vector3(0.3f, 0.8f, 0.9f);	
+
+protected:
+	virtual void PassAttributeToShader(int32_t ShaderLocation, float Attribute) = 0;
+	virtual void PassAttributeToShader(int32_t ShaderLocation, int Attribute) = 0;
+	virtual void PassAttributeToShader(int32_t ShaderLocation, bool Attribute) = 0;
+	virtual void PassAttributeToShader(int32_t ShaderLocation, Vector3 Attribute) = 0;
+	virtual void PassAttributeToShader(int32_t ShaderLocation, Vector4 Attribute) = 0;
+	virtual void PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute) = 0;
 };
+
+template <typename T>
+void IGraphicsInstance::PassAttributeToShader(int32_t ShaderLocation, T Attribute)
+{
+	PassAttributeToShader(ShaderLocation, Attribute);
+}

@@ -31,4 +31,6 @@ public:
 	void Update() override;
 
 	Pointer<ModelObject> pModelObject;
+
+	std::string ModelPath;
 };

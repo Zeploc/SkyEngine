@@ -8,19 +8,10 @@
 class ENGINE_API Cube : public Mesh
 {
 public:
-	Cube(float fWidth, float fHeight, float fDepth, glm::vec4 Colour);
-
-	Cube(float fWidth, float fHeight, float fDepth, glm::vec4 Colour, const char* TextureSource, glm::vec4 UVCoords = glm::vec4(0, 1, 0, 1));
-
+	using Mesh::Mesh;
 	~Cube();
-
-	void BindCube();
-
-	void Rebind() override;
-
-	void SetLit(bool _bIsLit) override;
-
-	void Update() override;
 	
 	bool CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, Pointer<Entity> EntityCheck) override;
+protected:
+	MeshData GetMeshData() override;
 };

@@ -18,4 +18,6 @@ public:
 
 	// TODO: Update to graphics instance
 	void Render(FTransform Newtransform);
+protected:
+	MeshData GetMeshData() override;
 };

@@ -37,7 +37,7 @@ EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 	// TODO: Let delegate allow derived class type when passing in "this"? - Auto cast check inside? Template type for derived types allowed?
 	QuitBtn->BindPress(GetApplication(), &SkyEngine::Application::Quit);
 	AddUIElement(QuitBtn);
-
+	
 	Pointer<UIButton> SaveBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 150, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
 	SaveBtn->AddText("Save", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
 	SaveBtn->BindPress(this, &EditorScene::SaveCurrentLevel);
@@ -59,7 +59,7 @@ EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 	Pointer<UIText> TipText(new UIText({CameraManager::GetInstance()->SCR_WIDTH - 20, 15.0f}, 0, {0.3, 0.3, 0.3, 1.0f}, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 22, EANCHOR::TOP_RIGHT));
 	AddUIElement(TipText);
 
-	Lighting::SetLightPosition({5, 7, 5});
+	Lighting::SetLightPosition({5, 5, 5});
 	Lighting::SetSunDirection({3, -1, 5});
 	
 	CameraManager::GetInstance()->SetCameraPos({-10, 10, 0});
@@ -101,12 +101,12 @@ void EditorScene::AddSampleEntities()
 	SphereRaycastMesh->SetLit(true);
 	SphereRaycastMesh->SetReflection(true);
 	AddEntity(SphereRaycastTest, true);
-	
-	Pointer<Entity> FloorEntity(new Entity({{0, 0, 0}, {90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+			
+	Pointer<Entity> FloorEntity(new Entity({{0, 0, 0}, {-90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
 	//glm::vec3 Points[4] = { {-10, 10, 1}, {10, 10, -1 }, { 10, -10, 0 }, { -10, -10, -3 } };
 	Pointer<Plane> FloorPlanMesh(new Plane(50, 50, {0.5f, 0.5f, 0.5f, 1.0f}));
 	FloorEntity->AddMesh(FloorPlanMesh);
-	FloorPlanMesh->MeshMaterial.bCullFace = false;
+	FloorPlanMesh->MeshMaterial->bTwoSided = true;
 	AddEntity(FloorEntity, true);
 	
 	Pointer<ParticleSystem> ParticleBoy(new ParticleSystem({{20, 8, 10}, {0, 0, 0}, {1, 1, 1}}));
@@ -164,7 +164,7 @@ void EditorScene::AddSampleEntities()
 	PlaneEntity->AddMesh(PlaneMesh);
 	PlaneMesh->SetLit(true);
 	PlaneMesh->SetReflection(true);
-	PlaneMesh->MeshMaterial.bCullFace = false;
+	PlaneMesh->MeshMaterial->bTwoSided = true;
 	AddEntity(PlaneEntity, true);
 }
 

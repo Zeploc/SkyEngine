@@ -275,6 +275,7 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Core\EngineWindow.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Entity/2DParticleSystem.cpp" />
@@ -1086,6 +1087,7 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Render\Meshes\MeshData.cpp" />
     <ClCompile Include="Render\Meshes\Model\AnimatedModel.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -1727,6 +1729,7 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
     <ClInclude Include="Render\Meshes\Basic\Sphere.h" />
     <ClInclude Include="Render\Meshes\Basic\Triangle.h" />
     <ClInclude Include="Render\Meshes\Mesh.h" />
+    <ClInclude Include="Render\Meshes\MeshData.h" />
     <ClInclude Include="Render\Meshes\Model\AnimatedModel.h" />
     <ClInclude Include="Render\Meshes\Model\Model.h" />
     <ClInclude Include="Render\Meshes\Model\ModelMesh.h" />

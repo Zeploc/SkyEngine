@@ -26,13 +26,12 @@ CubeMap::CubeMap(float fWidth, float fHeight, float fDepth, char* _TextureSource
 	TextureSources[3] = _TextureSources[3];
 	TextureSources[4] = _TextureSources[4];
 	TextureSources[5] = _TextureSources[5];
-	m_iIndicies = 36;
 	m_fWidth = fWidth;
 	m_fHeight = fHeight;
 	m_fDepth = fDepth;
-	m_eShape = EMESHTYPE::CUBE;
+	
+	MeshMaterial = std::make_shared<Material>("CubeMapProgram");
 	BindCubeMap();
-	MeshMaterial.ShaderProgram = Shader::Programs["CubeMapProgram"];
 }
 
 /************************************************************
@@ -112,46 +111,48 @@ void CubeMap::BindCubeMap()
 		20, 22, 23
 	};
 	
+	IndicesCount = 36;
+	
 	GLuint vbo;
 	GLuint ebo;
 
 	// TODO: Link textures properly
-	glGenTextures(1, &MeshMaterial.Texture.TextureID);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, MeshMaterial.Texture.TextureID);
-
-	unsigned char* image;
-	for (GLuint i = 0; i < 6; i++)
-	{
-		std::string fullPathName = "Resources/Textures/CubeMap/";
-		fullPathName.append(TextureSources[i]);
-		MeshMaterial.Texture.Path = fullPathName;
-		image = SOIL_load_image(fullPathName.c_str(), &MeshMaterial.Texture.Width, &MeshMaterial.Texture.Height, nullptr, SOIL_LOAD_RGB);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, MeshMaterial.Texture.Width, MeshMaterial.Texture.Height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-		SOIL_free_image_data(image);
-	}	
-
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
-	glGenBuffers(1, &ebo);
-
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), static_cast<GLvoid*>(0));
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	// glGenTextures(1, &MeshMaterial->GetTextureData().TextureID);
+	// glBindTexture(GL_TEXTURE_CUBE_MAP, MeshMaterial.Texture.TextureID);
+	//
+	// unsigned char* image;
+	// for (GLuint i = 0; i < 6; i++)
+	// {
+	// 	std::string fullPathName = "Resources/Textures/CubeMap/";
+	// 	fullPathName.append(TextureSources[i]);
+	// 	MeshMaterial.Texture.Path = fullPathName;
+	// 	image = SOIL_load_image(fullPathName.c_str(), &MeshMaterial.Texture.Width, &MeshMaterial.Texture.Height, nullptr, SOIL_LOAD_RGB);
+	// 	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, MeshMaterial.Texture.Width, MeshMaterial.Texture.Height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	// 	SOIL_free_image_data(image);
+	// }	
+	//
+	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//
+	// glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+	// glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	//
+	// glGenVertexArrays(1, &vao);
+	// glGenBuffers(1, &vbo);
+	// glGenBuffers(1, &ebo);
+	//
+	// glBindVertexArray(vao);
+	// glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	//
+	// glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), static_cast<GLvoid*>(0));
+	// glEnableVertexAttribArray(0);
+	//
+	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	// glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	// glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }
 
 /************************************************************
@@ -173,25 +174,26 @@ void CubeMap::Rebind()
 ************************************************************/
 void CubeMap::Render(FTransform Newtransform)
 {
-	glUseProgram(MeshMaterial.ShaderProgram);
-	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-	glDisable(GL_CULL_FACE);
-	//glDisable(GL_BLEND);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, MeshMaterial.Texture.TextureID);
-	glUniform1i(glGetUniformLocation(MeshMaterial.ShaderProgram, "cubeSampler"), 0);
-
-	CameraManager::GetInstance()->SetMVP(Newtransform, MeshMaterial.ShaderProgram);
-
-	glActiveTexture(GL_TEXTURE1);
-	glUniform1i(glGetUniformLocation(MeshMaterial.ShaderProgram, "skybox"), 1);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, MeshMaterial.Texture.TextureID);
-
-	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, m_iIndicies, GL_UNSIGNED_INT, nullptr);
-	glBindVertexArray(0);
-	glDisable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+	// TODO: Cubemap
+	// glUseProgram(MeshMaterial.ShaderProgram);
+	// glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+	// glDisable(GL_CULL_FACE);
+	// //glDisable(GL_BLEND);
+	//
+	// glActiveTexture(GL_TEXTURE0);
+	// glBindTexture(GL_TEXTURE_CUBE_MAP, MeshMaterial.Texture.TextureID);
+	// glUniform1i(glGetUniformLocation(MeshMaterial.ShaderProgram, "cubeSampler"), 0);
+	//
+	// CameraManager::GetInstance()->SetMVP(Newtransform, MeshMaterial.ShaderProgram);
+	//
+	// glActiveTexture(GL_TEXTURE1);
+	// glUniform1i(glGetUniformLocation(MeshMaterial.ShaderProgram, "skybox"), 1);
+	// glBindTexture(GL_TEXTURE_CUBE_MAP, MeshMaterial.Texture.TextureID);
+	//
+	// glBindVertexArray(vao);
+	// glDrawElements(GL_TRIANGLES, IndicesCount, GL_UNSIGNED_INT, nullptr);
+	// glBindVertexArray(0);
+	// glDisable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 }
 
 /************************************************************

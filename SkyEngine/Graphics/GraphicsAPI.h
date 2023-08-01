@@ -8,11 +8,13 @@
 
 #include "Math/Vector2.h"
 #include "Render/Texture.h"
+#include "Render/Meshes/MeshData.h"
 
 class IGraphicsInstance;
 class UIElement;
 class Entity;
 class IGraphicsWindow;
+class Material;
 
 enum class EGraphicsAPI
 {
@@ -31,10 +33,10 @@ public:
 
 	virtual Pointer<IGraphicsInstance> CreateNewInstance() = 0;
 	
-	virtual unsigned int CreateBuffer(TextureData& Texture, bool bAA, bool bHasNormals = false) = 0;
+	virtual unsigned int CreateBuffer(Pointer<Material> Material) = 0;
 	virtual TextureData GetTexture(const char* TextureSource, bool bAA) = 0;
 	/* Create a new VAO if -1, otherwise will use it  */
-	virtual void BindArray(const std::vector<float>& vertices, const std::vector<uint32_t>& indices, unsigned& vao, bool bCreateVAO) = 0;
+	virtual void BindArray(const std::vector<float>& vertices, const std::vector<uint32_t>& indices, unsigned& vao) = 0;
 	
 	virtual unsigned int CreateProgram(const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* GeometryShaderFilename) = 0;
 

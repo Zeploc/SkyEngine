@@ -18,13 +18,13 @@ TransformationWidget::TransformationWidget(FTransform _Transform, Scene* OwningS
 	Pointer<Cube> XMoveTransformMesh(new Cube(1.0f, 0.1f, 0.1f, XColour));
 	Pointer<Cube> ZMoveTransformMesh(new Cube(0.1f, 0.1f, 1.0f, ZColour));
 	Pointer<Cube> YMoveTransformMesh(new Cube(0.1f, 1.0f, 0.1f, YColour));
-	XMoveTransformMesh->MeshMaterial.bDepthTest = false;
-	ZMoveTransformMesh->MeshMaterial.bDepthTest = false;
-	YMoveTransformMesh->MeshMaterial.bDepthTest = false;
+	XMoveTransformMesh->MeshMaterial->bDepthTest = false;
+	ZMoveTransformMesh->MeshMaterial->bDepthTest = false;
+	YMoveTransformMesh->MeshMaterial->bDepthTest = false;
 
-	XMoveTransformMesh->MeshMaterial.StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
-	ZMoveTransformMesh->MeshMaterial.StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
-	YMoveTransformMesh->MeshMaterial.StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
+	XMoveTransformMesh->MeshMaterial->StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
+	ZMoveTransformMesh->MeshMaterial->StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
+	YMoveTransformMesh->MeshMaterial->StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
 
 	XMoveTransformMesh->SetLit(false);
 	ZMoveTransformMesh->SetLit(false);
@@ -144,16 +144,16 @@ void TransformationWidget::Update()
 	}
 
 	// TODO: Update so colour gets updated (only happens on bind
-	XMoveTransform->EntityMesh->MeshMaterial.bStencil = XHovered;
-	XMoveTransform->EntityMesh->MeshMaterial.Colour = XColour * (XHovered ? 2.0f : 1.0f);
+	XMoveTransform->EntityMesh->MeshMaterial->bStencil = XHovered;
+	XMoveTransform->EntityMesh->MeshMaterial->Colour = XColour * (XHovered ? 2.0f : 1.0f);
 	//XMoveTransform->EntityMesh->Rebind();
 
-	YMoveTransform->EntityMesh->MeshMaterial.bStencil = YHovered;
-	YMoveTransform->EntityMesh->MeshMaterial.Colour = YColour * (YHovered ? 2.0f : 1.0f);
+	YMoveTransform->EntityMesh->MeshMaterial->bStencil = YHovered;
+	YMoveTransform->EntityMesh->MeshMaterial->Colour = YColour * (YHovered ? 2.0f : 1.0f);
 	//YMoveTransform->EntityMesh->Rebind();
 
-	ZMoveTransform->EntityMesh->MeshMaterial.bStencil = ZHovered;
-	ZMoveTransform->EntityMesh->MeshMaterial.Colour = ZColour * (ZHovered ? 2.0f : 1.0f);
+	ZMoveTransform->EntityMesh->MeshMaterial->bStencil = ZHovered;
+	ZMoveTransform->EntityMesh->MeshMaterial->Colour = ZColour * (ZHovered ? 2.0f : 1.0f);
 	//ZMoveTransform->EntityMesh->Rebind();
 
 	// Update child transforms

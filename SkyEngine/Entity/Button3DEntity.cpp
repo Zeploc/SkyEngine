@@ -46,7 +46,10 @@ void Button3DEntity::Update()
 
 	if (bHit)
 	{
-		EntityMesh->MeshMaterial.bStencil = true;
+		if (EntityMesh->MeshMaterial)
+		{
+			EntityMesh->MeshMaterial->bStencil = true;
+		}
 		if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
 		{
 			bPressed = true;
@@ -54,12 +57,18 @@ void Button3DEntity::Update()
 			bButtonPressedThisFrame = true;
 			PressDelegate.Broadcast();
 		}
-		EntityMesh->MeshMaterial.Colour = btnHighlightColour;
+		if (EntityMesh->MeshMaterial)
+		{
+			EntityMesh->MeshMaterial->Colour = btnHighlightColour;
+		}
 	}
 	else
 	{
-		EntityMesh->MeshMaterial.Colour = btnColour;
-		EntityMesh->MeshMaterial.bStencil = false;
+		if (EntityMesh->MeshMaterial)
+		{
+			EntityMesh->MeshMaterial->Colour = btnColour;
+			EntityMesh->MeshMaterial->bStencil = false;
+		}
 	}
 }
 

@@ -12,9 +12,9 @@ public:
 	~IGLAPI() override;
 	std::string GetGraphicsDisplayName() override;
 	
-	unsigned int CreateBuffer(TextureData& Texture, bool bAA, bool bHasNormals = false) override;
+	unsigned int CreateBuffer(Pointer<Material> Material) override;
 	TextureData GetTexture(const char* TextureSource, bool bAA) override;
-	void BindArray(const std::vector<float>& Vertices, const std::vector<uint32_t>& Indices, unsigned& Vao, bool bCreateVAO) override;
+	void BindArray(const std::vector<float>& Vertices, const std::vector<uint32_t>& Indices, unsigned& Vao) override;
 	Pointer<IGraphicsInstance> CreateNewInstance() override;
 	unsigned CreateProgram(const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* GeometryShaderFilename) override;
 	unsigned CreateTessProgram(const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename) override;

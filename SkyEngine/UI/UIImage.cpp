@@ -22,7 +22,8 @@
 ************************************************************/
 UIImage::UIImage(glm::vec2 _Position, EANCHOR _anchor, float _fRotation, glm::vec4 _Colour, int _iWidth, int _iHeight) : UIElement(_Position, _fRotation, _Colour), ImageAnchor(_anchor), iWidth(_iWidth), iHeight(_iHeight)
 {
-	VAO = Shader::BindArray(static_cast<float>(iWidth), static_cast<float>(iHeight), _Colour);
+	// TODO: Link to material
+	// VAO = Shader::BindArray(static_cast<float>(iWidth), static_cast<float>(iHeight), _Colour);
 }
 
 /************************************************************

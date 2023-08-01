@@ -16,6 +16,10 @@ struct ENGINE_API Vector4x : glm::tvec4<T, glm::highp>
 	T& Y = glm::tvec4<T, glm::highp>::y;
 	T& Z = glm::tvec4<T, glm::highp>::z;
 	T& W = glm::tvec4<T, glm::highp>::w;
+	T& R = glm::tvec4<T, glm::highp>::x;
+	T& G = glm::tvec4<T, glm::highp>::y;
+	T& B = glm::tvec4<T, glm::highp>::z;
+	T& A = glm::tvec4<T, glm::highp>::w;
 
 	Vector4x()
 		: glm::tvec4<T>()
@@ -76,6 +80,12 @@ struct ENGINE_API Vector4x : glm::tvec4<T, glm::highp>
 	T Size() const
 	{
 		return glm::length(*this);
+	}
+	
+	// TODO: Fix this vector not working with glm::value_ptr()
+	const float* ToValuePtr() const
+	{
+		return &X;
 	}
 	
 	std::string ToString() const

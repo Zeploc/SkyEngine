@@ -98,23 +98,24 @@ void Shader::AddComputeProgram(std::string ComputePath, std::string ShaderName)
 //************************************************************/
 GLuint Shader::BindArray(float fWidth, float fHeight, glm::vec4 Colour)
 {
-	float fHalfWidth = fWidth / 2;
-	float fHalfHeight = fHeight / 2;
-
-	const std::vector<float> vertices = {
-		// Positions						// Colors			
-		-fHalfWidth, fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
-		fHalfWidth, fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
-		fHalfWidth, -fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
-		-fHalfWidth, -fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
-	};
-
-	const std::vector<uint32_t> indices = {
-		0, 1, 2, // First Triangle
-		0, 2, 3 // Second Triangle
-	};
-	unsigned int Vao;
-	GetGraphicsAPI()->BindArray(vertices, indices, Vao, true);
+	// TODO: Remove need (should use material)
+	// float fHalfWidth = fWidth / 2;
+	// float fHalfHeight = fHeight / 2;
+	//
+	// const std::vector<float> vertices = {
+	// 	// Positions						// Colors			
+	// 	-fHalfWidth, fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
+	// 	fHalfWidth, fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
+	// 	fHalfWidth, -fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
+	// 	-fHalfWidth, -fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
+	// };
+	//
+	// const std::vector<uint32_t> indices = {
+	// 	0, 1, 2, // First Triangle
+	// 	0, 2, 3 // Second Triangle
+	// };
+	unsigned int Vao = 0;
+	// GetGraphicsAPI()->BindArray(vertices, indices, Vao, true);
 	return Vao;
 }
 
@@ -126,37 +127,38 @@ GLuint Shader::BindArray(float fWidth, float fHeight, glm::vec4 Colour)
 ************************************************************/
 unsigned Shader::BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour, const char* TextureSource, TextureData& Texture, int _DrawMode)
 {
-	unsigned int vao = GetGraphicsAPI()->CreateBuffer(Texture, false, false);
+	// TODO: Link with material
+	// unsigned int vao = GetGraphicsAPI()->CreateBuffer(Texture, false, false);
 
-	glm::vec4 UVCoords = glm::vec4(0, 1, 0, 1);
-	if (_DrawMode == 1)
-	{
-		float yValue = (Texture.Height / Texture.Width) * (static_cast<float>(Texture.Width) / static_cast<float>(Texture.Height));
-		UVCoords = glm::vec4(0, 1, 0, yValue);
-	}
-	else if (_DrawMode == 2)
-	{
-		float xValue = (Texture.Width / Texture.Height) * (static_cast<float>(Texture.Height) / static_cast<float>(Texture.Width));
-		UVCoords = glm::vec4(0, xValue, 0, 1);
-	}
-	float fHalfWidth = fWidth / 2;
-	float fHalfHeight = fHeight / 2;
+	// glm::vec4 UVCoords = glm::vec4(0, 1, 0, 1);
+	// if (_DrawMode == 1)
+	// {
+	// 	float yValue = (Texture.Height / Texture.Width) * (static_cast<float>(Texture.Width) / static_cast<float>(Texture.Height));
+	// 	UVCoords = glm::vec4(0, 1, 0, yValue);
+	// }
+	// else if (_DrawMode == 2)
+	// {
+	// 	float xValue = (Texture.Width / Texture.Height) * (static_cast<float>(Texture.Height) / static_cast<float>(Texture.Width));
+	// 	UVCoords = glm::vec4(0, xValue, 0, 1);
+	// }
+	// float fHalfWidth = fWidth / 2;
+	// float fHalfHeight = fHeight / 2;
+	//
+	// std::vector<float> vertices = {
+	// 	// Positions				// Tex Coords
+	// 	-fHalfWidth, fHalfHeight, UVCoords.x, UVCoords.z, // Top Left
+	// 	fHalfWidth, fHalfHeight, UVCoords.y, UVCoords.z, // Top Right
+	// 	fHalfWidth, -fHalfHeight, UVCoords.y, UVCoords.w, // Bottom Right
+	// 	-fHalfWidth, -fHalfHeight, UVCoords.x, UVCoords.w, // Bottom Left
+	// };
+	// std::vector<uint32_t> indices = {
+	// 	0, 1, 2, // First Triangle
+	// 	0, 2, 3 // Second Triangle
+	// };
+	//
+	// GetGraphicsAPI()->BindArray(vertices, indices, vao);
 
-	std::vector<float> vertices = {
-		// Positions				// Tex Coords
-		-fHalfWidth, fHalfHeight, UVCoords.x, UVCoords.z, // Top Left
-		fHalfWidth, fHalfHeight, UVCoords.y, UVCoords.z, // Top Right
-		fHalfWidth, -fHalfHeight, UVCoords.y, UVCoords.w, // Bottom Right
-		-fHalfWidth, -fHalfHeight, UVCoords.x, UVCoords.w, // Bottom Left
-	};
-	std::vector<uint32_t> indices = {
-		0, 1, 2, // First Triangle
-		0, 2, 3 // Second Triangle
-	};
-
-	GetGraphicsAPI()->BindArray(vertices, indices, vao, false);
-
-	return vao;
+	return 0;//vao;
 }
 
 /************************************************************

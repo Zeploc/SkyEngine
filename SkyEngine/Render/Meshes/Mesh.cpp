@@ -6,6 +6,7 @@
 #include "Render/Shader.h"
 
 #include "Camera/CameraManager.h"
+#include "Core/Application.h"
 #include "Entity/CollisionBounds.h"
 #include "Entity/Entity.h"
 #include "System/LogManager.h"
@@ -19,6 +20,25 @@
 Mesh::Mesh()
 {
 
+}
+
+Mesh::Mesh(float InWidth, float InHeight, float InDepth, glm::vec4 InColour)
+{
+	m_fWidth = InWidth;
+	m_fHeight = InHeight;
+	m_fDepth = InDepth;
+	MeshMaterial = std::make_shared<Material>("BaseProgram");
+	MeshMaterial->Colour = InColour;
+}
+
+Mesh::Mesh(float InWidth, float InHeight, float InDepth, glm::vec4 InColour, const char* InTextureSource)
+{
+	m_fWidth = InWidth;
+	m_fHeight = InHeight;
+	m_fDepth = InDepth;
+	MeshMaterial = std::make_shared<Material>("BaseProgram");
+	MeshMaterial->SetTexture(InTextureSource);
+	MeshMaterial->Colour = InColour;
 }
 
 /************************************************************
@@ -56,29 +76,30 @@ void Mesh::Reset()
 	}
 }
 
+void Mesh::BindMeshData()
+{
+	MeshData MeshData = GetMeshData();
+	MeshData.Colour = MeshMaterial->Colour;
+	IndicesCount = MeshData.GetIndicesCount();
+	vao = GetGraphicsAPI()->CreateBuffer(MeshMaterial);
+	MeshData.BindData(vao);
+	std::cout << "Created mesh with vao: " << vao << std::endl;
+}
+
 void Mesh::SetLit(bool _bIsLit)
 {
-	MeshMaterial.bIsLit = _bIsLit;
+	if (MeshMaterial)
+	{
+		MeshMaterial->bIsLit = _bIsLit;
+	}
 }
 
 void Mesh::SetReflection(bool _bReflecting)
 {
-	MeshMaterial.bReflect = _bReflecting;
-	// if (bReflection)
-	// {
-	// 	program = Shader::Programs["ReflectionProgram"];
-	// }
-	// else
-	// {
-	// 	if (bIsLit)
-	// 	{
-	// 		program = Shader::Programs["LitTextureprogram"];
-	// 	}
-	// 	else
-	// 	{
-	// 		program = Shader::Programs["BaseProgram"];
-	// 	}
-	// }
+	if (MeshMaterial)
+	{
+		MeshMaterial->bReflect = _bReflecting;
+	}
 }
 
 void Mesh::AddCollisionBounds(float fWidth, float fHeight, float fDepth, Pointer<Entity> _EntityRef)

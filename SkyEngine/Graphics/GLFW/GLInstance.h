@@ -20,4 +20,10 @@ public:
 
 protected:
 	void StoreMVP(FTransform Transform, unsigned int Program);
+	void PassAttributeToShader(int32_t ShaderID, float Attribute) override;
+	void PassAttributeToShader(int32_t ShaderID, int Attribute) override;
+	void PassAttributeToShader(int32_t ShaderID, bool Attribute) override;
+	void PassAttributeToShader(int32_t ShaderID, Vector3 Attribute) override;
+	void PassAttributeToShader(int32_t ShaderID, Vector4 Attribute) override;
+	void PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute) override;
 };

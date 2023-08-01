@@ -22,13 +22,11 @@ std::string IGLAPI::GetGraphicsDisplayName()
 	return "OpenGL";
 }
 
-unsigned IGLAPI::CreateBuffer(TextureData& Texture, bool bAA, bool bHasNormals)
+unsigned IGLAPI::CreateBuffer(Pointer<Material> Material)
 {
 	GLuint vao;
 	GLuint vbo;
 	GLuint ebo;
-
-	Texture = GetTexture(Texture.Path.c_str(), bAA);
 
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
@@ -37,9 +35,11 @@ unsigned IGLAPI::CreateBuffer(TextureData& Texture, bool bAA, bool bHasNormals)
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	if (!Texture.Path.empty())
+	const bool bHasTexture = Material->HasTexture();
+
+	if (bHasTexture)
 	{
-		if (bHasNormals)
+		if (true)
 		{
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat), static_cast<GLvoid*>(0));
 			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
@@ -62,7 +62,7 @@ unsigned IGLAPI::CreateBuffer(TextureData& Texture, bool bAA, bool bHasNormals)
 	}
 	else
 	{
-		if (bHasNormals)
+		if (true)
 		{
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), static_cast<GLvoid*>(0));
 			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
@@ -79,6 +79,25 @@ unsigned IGLAPI::CreateBuffer(TextureData& Texture, bool bAA, bool bHasNormals)
 			glEnableVertexAttribArray(1);
 		}
 	}
+	
+	// const GLsizei StrideSize = bHasTexture ? 12 : 10;
+	// glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, StrideSize * sizeof(GLfloat), static_cast<GLvoid*>(nullptr));
+	// glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, StrideSize * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	// glEnableVertexAttribArray(0);
+	// glEnableVertexAttribArray(1);
+	//
+	// if (bHasTexture)
+	// {
+	// 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, StrideSize * sizeof(GLfloat), (GLvoid*)(7 * sizeof(GLfloat)));
+	// 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, StrideSize * sizeof(GLfloat), (GLvoid*)(9 * sizeof(GLfloat)));
+	// 	glEnableVertexAttribArray(2);
+	// 	glEnableVertexAttribArray(3);
+	// }
+	// else
+	// {
+	// 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, StrideSize * sizeof(GLfloat), (GLvoid*)(7 * sizeof(GLfloat)));
+	// 	glEnableVertexAttribArray(3);
+	// }
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBindVertexArray(0);
@@ -141,14 +160,8 @@ TextureData IGLAPI::GetTexture(const char* TextureSource, bool bAA)
 	return Texture;	
 }
 
-void IGLAPI::BindArray(const std::vector<float>& Vertices, const std::vector<uint32_t>& Indices, unsigned& Vao, bool bCreateVAO)
-{	
-	TextureData TempTexture;
-	if (bCreateVAO)
-	{
-		Vao = CreateBuffer(TempTexture, true);
-	}
-
+void IGLAPI::BindArray(const std::vector<float>& Vertices, const std::vector<uint32_t>& Indices, unsigned& Vao)
+{
 	glBindVertexArray(Vao);
 	glBufferData(GL_ARRAY_BUFFER, Vertices.size() * sizeof(float), Vertices.data(), GL_STATIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(uint32_t), Indices.data(), GL_STATIC_DRAW);

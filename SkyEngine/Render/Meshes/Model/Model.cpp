@@ -23,13 +23,11 @@ Model::Model(glm::vec4 _Colour, const char* ModelSource)
 	m_fWidth = 0; // fWidth;
 	m_fHeight = 0; // fHeight;
 	m_fDepth = 0; // fDepth;
-	MeshMaterial.Colour = _Colour;
-	MeshMaterial.Texture.Path = ModelSource;
-	// NOTE: Not currently used when drawing this model
-	MeshMaterial.ShaderProgram = Shader::Programs["BaseProgram"];//Shader::Programs["ModelProgram"];// 
-	//m_iIndicies = 36;
+	ModelPath = ModelSource;
+	
+	MeshMaterial = std::make_shared<Material>("BaseProgram");
+	MeshMaterial->Colour = _Colour;
 	BindModel();
-	m_eShape = EMESHTYPE::MODEL;
 }
 
 /************************************************************
@@ -53,14 +51,14 @@ void Model::BindModel()
 {
 	for (auto& it : Shader::Models)
 	{
-		if (it.first == MeshMaterial.Texture.Path)
+		if (it.first == MeshMaterial->GetTextureData().Path)
 		{
 			pModelObject = it.second;
 			return;
 		}
 	}
-	pModelObject = std::make_shared<ModelObject>(MeshMaterial.Texture.Path);
-	Shader::Models.insert(std::pair<std::string, Pointer<ModelObject>>(MeshMaterial.Texture.Path, pModelObject));
+	pModelObject = std::make_shared<ModelObject>(MeshMaterial->GetTextureData().Path);
+	Shader::Models.insert(std::pair<std::string, Pointer<ModelObject>>(ModelPath, pModelObject));
 }
 
 /************************************************************
@@ -77,17 +75,6 @@ void Model::Rebind()
 void Model::SetLit(bool _bIsLit)
 {
 	Mesh::SetLit(_bIsLit);
-	// TODO: Not currently used properly
-	if (MeshMaterial.bIsLit)
-	{
-		MeshMaterial.ShaderProgram = Shader::Programs["ModelProgramLit"];
-		pModelObject->program = MeshMaterial.ShaderProgram;
-	}
-	else
-	{
-		MeshMaterial.ShaderProgram = Shader::Programs["ModelProgram"];
-		pModelObject->program = MeshMaterial.ShaderProgram;
-	}
 }
 
 /************************************************************
@@ -99,15 +86,15 @@ void Model::SetLit(bool _bIsLit)
 void Model::Render(FTransform Newtransform)
 {
 	// TODO: Review/improve
-	glFrontFace(GL_CCW);
-	glUseProgram(MeshMaterial.ShaderProgram);
-	if (MeshMaterial.bIsLit)
-	{
-		Lighting::PassLightingToShader(MeshMaterial.ShaderProgram, MeshMaterial.LightProperties, Newtransform);
-	}
-	glm::vec4 Vec = MeshMaterial.Colour;
-	glUniform4fv(glGetUniformLocation(MeshMaterial.ShaderProgram, "fragcolor"), 1, value_ptr(Vec));
-	pModelObject->Render(Newtransform);
+	// glFrontFace(GL_CCW);
+	// glUseProgram(MeshMaterial.ShaderProgram);
+	// if (MeshMaterial.bIsLit)
+	// {
+	// 	Lighting::PassLightingToShader(MeshMaterial.ShaderProgram, MeshMaterial.LightProperties, Newtransform);
+	// }
+	// glm::vec4 Vec = MeshMaterial.Colour;
+	// glUniform4fv(glGetUniformLocation(MeshMaterial.ShaderProgram, "fragcolor"), 1, value_ptr(Vec));
+	// pModelObject->Render(Newtransform);
 }
 
 /************************************************************

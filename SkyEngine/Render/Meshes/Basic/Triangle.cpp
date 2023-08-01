@@ -6,12 +6,6 @@
 #include "Render/Shader.h"
 #include "Core/Application.h"
 
-/************************************************************
-#--Description--#:  Constructor function
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	Takes contructor values
-#--Return--#: 		NA
-************************************************************/
 Triangle::Triangle(glm::vec3 _Point1, glm::vec3 _Point2, glm::vec3 _Point3, glm::vec4 _Colour)
 {
 	Point1 = _Point1;
@@ -24,11 +18,9 @@ Triangle::Triangle(glm::vec3 _Point1, glm::vec3 _Point2, glm::vec3 _Point3, glm:
 	m_fWidth = length(CenterPoint - Point1);
 	m_fHeight = m_fWidth;
 	m_fDepth = 0;
-	MeshMaterial.Colour = _Colour;
-	m_iIndicies = 3;
-	BindTriangle();
-	m_eShape = EMESHTYPE::TRIANGLE;
-	MeshMaterial.ShaderProgram = Shader::Programs["BaseProgram"];
+	MeshMaterial = std::make_shared<Material>("BaseProgram");
+	MeshMaterial->Colour = _Colour;
+	BindMeshData();
 }
 
 Triangle::Triangle(glm::vec3 CenterPoint, float Width, glm::vec4 _Colour)
@@ -39,48 +31,39 @@ Triangle::Triangle(glm::vec3 CenterPoint, float Width, glm::vec4 _Colour)
 	m_fWidth = Width;
 	m_fHeight = Width;
 	m_fDepth = 0;
-	MeshMaterial.Colour = _Colour;
-	m_iIndicies = 3;
-	BindTriangle();
-	m_eShape = EMESHTYPE::TRIANGLE;
-	MeshMaterial.ShaderProgram = Shader::Programs["BaseProgram"];
+	MeshMaterial = std::make_shared<Material>("BaseProgram");
+	MeshMaterial->Colour = _Colour;
+	BindMeshData();
 }
 
-/************************************************************
-#--Description--#:  Destructor function
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	NA
-#--Return--#: 		NA
-************************************************************/
 Triangle::~Triangle()
 {
 }
 
-void Triangle::BindTriangle()
+MeshData Triangle::GetMeshData()
 {
-	const Vector4 Colour = MeshMaterial.Colour;
-	GLfloat vertices[] = {
-		// Positions								// Colors									// Normals
-		Point1.x, Point1.y, Point1.z, Colour.r, Colour.g, Colour.b, Colour.a, //		1.0f, 0.0f, 1.0f,
-		Point2.x, Point2.y, Point2.z, Colour.r, Colour.g, Colour.b, Colour.a, //		0.0f, 0.0f, 1.0f,
-		Point3.x, Point3.y, Point3.z, Colour.r, Colour.g, Colour.b, Colour.a, //	0.0f, 0.0f, 1.0f,
+	const std::vector<float> VertexPositions = {
+		// Front Face
+		Point1.x, Point1.y, Point1.z, 
+		Point2.x, Point2.y, Point2.z, 
+		Point3.x, Point3.y, Point3.z,
+	};
+	const std::vector<float> Normals = {
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,	
+	};	
+	const std::vector<uint32_t> Indices = {
+		0, 1, 2, // Triangle
 	};
 
-	GLuint indices[] =
+	MeshData TriangleMeshData(VertexPositions, Indices, Normals);
+
+	// TODO: Triangle doesn't support texture/UVs
+	assert(!MeshMaterial->HasTexture());
+	if (MeshMaterial->HasTexture())
 	{
-		0, 1, 2,
-	};
-
-	vao = GetGraphicsAPI()->CreateBuffer(MeshMaterial.Texture, true, false);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-}
-
-void Triangle::Rebind()
-{
-	BindTriangle();
-}
-
-void Triangle::Update()
-{
+		// PlaneMeshData.SetUVs(UVCoords);
+	}
+	return TriangleMeshData;
 }
