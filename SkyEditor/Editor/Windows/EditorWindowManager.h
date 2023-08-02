@@ -25,11 +25,11 @@ public:
 
 	static void FocusChanged();
 
-	static Pointer<EngineWindow> GetCurrentFocus() { return CurrentFocused; };
+	static TPointer<EngineWindow> GetCurrentFocus() { return CurrentFocused; };
 
 	static std::vector<class EditorWindow*> GetWindows() { return EditorWindows; };
 
-	static Pointer<EngineWindow> GetMainWindow();	
+	static TPointer<EngineWindow> GetMainWindow();	
 
 protected:
 	static bool IsRemovedID(EditorWindow* _Window);
@@ -38,7 +38,7 @@ public:
 
 protected:
 	// TODO: Link focus
-	static Pointer<EngineWindow> CurrentFocused;
+	static TPointer<EngineWindow> CurrentFocused;
 
 	static std::vector<EditorWindow*> EditorWindows;
 	static std::vector<EditorWindow*> EditorWindowsToRemove;

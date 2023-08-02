@@ -29,9 +29,9 @@ struct OrthoProjInfo
 
 struct Quaternion;
 template <typename T>
-struct Vector3x;
+struct TVector3;
 template <typename T>
-struct Vector4x;
+struct TVector4;
 
 class ENGINE_API Matrix4
 {
@@ -209,7 +209,7 @@ public:
 		return Ret;
 	}
 
-	Vector4x<float> operator*(const Vector4x<float>& V) const;
+	TVector4<float> operator*(const TVector4<float>& V) const;
 
 	operator const float*() const
 	{
@@ -224,11 +224,11 @@ public:
 
 	Matrix4 GetInverse();
 
-	Vector3x<float> GetViewLocation() const;
-	Vector3x<float> GetLocation() const;
-	Vector3x<float> GetForward() const;
-	Vector3x<float> GetRight() const;
-	Vector3x<float> GetUp() const;
+	TVector3<float> GetViewLocation() const;
+	TVector3<float> GetLocation() const;
+	TVector3<float> GetForward() const;
+	TVector3<float> GetRight() const;
+	TVector3<float> GetUp() const;
 
 	// TODO: Change all to not init but just apply (use identity first, default on construction?)
 	void InitScaleTransform(float ScaleX, float ScaleY, float ScaleZ);
@@ -238,13 +238,13 @@ public:
 
 	void InitRotateTransform(const Quaternion& quat);
 
-	void SetViewTranslation(const Vector3x<float> Location);
-	void SetTranslationTransform(const Vector3x<float> Location);
+	void SetViewTranslation(const TVector3<float> Location);
+	void SetTranslationTransform(const TVector3<float> Location);
 	void SetTranslationTransform(const float X, const float Y, const float Z);
 
-	void SetCameraOrientation(Vector3x<float> Forward, Vector3x<float> Up);
+	void SetCameraOrientation(TVector3<float> Forward, TVector3<float> Up);
 	
-	void SetLookAt(Vector3x<float> Location, Vector3x<float> Target, Vector3x<float> Up);
+	void SetLookAt(TVector3<float> Location, TVector3<float> Target, TVector3<float> Up);
 
 	void SetPerspectiveProjection(const PersProjInfo& P);
 

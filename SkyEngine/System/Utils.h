@@ -53,46 +53,46 @@ public:
 		glm::vec2 v2Offset = glm::vec2();
 	};
 
-	static Vector3 LinePlaneIntersect(Vector3 RayStart, Vector3 RayDirection, Vector3 PlanePos, Vector3 PlaneNormal);
+	static SVector LinePlaneIntersect(SVector RayStart, SVector RayDirection, SVector PlanePos, SVector PlaneNormal);
 
-	static glm::vec3 GetAncoredPosition(Vector3 position, Vector3 Dimensions, EANCHOR _AnchorType);
+	static glm::vec3 GetAncoredPosition(SVector position, SVector Dimensions, EANCHOR _AnchorType);
 
 	static glm::vec3 GetAncoredPosition2D(glm::vec2 position, glm::vec2 Dimensions, EANCHOR _AnchorType);
 
 	static glm::vec3 GetTextAncoredPosition(glm::vec2 position, glm::vec2 Dimensions, EANCHOR _AnchorType);
 
-	static bool isColliding2D(Pointer<Entity> Entity1, Pointer<Entity> Entity2);
+	static bool isColliding2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2);
 
 	//static bool isColliding2D(Entity* Entity1, Pointer<Entity> Entity2);
 
-	static bool CheckCollision2D(Pointer<Entity> Entity1, Pointer<Entity> Entity2, glm::vec2 Movement);
+	static bool CheckCollision2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2, glm::vec2 Movement);
 
 	//static bool CheckCollision2D(Entity* Entity1, Pointer<Entity> Entity2, glm::vec2 Movement);
 
-	static glm::vec2 GetDistance2D(Pointer<Entity> Entity1, Pointer<Entity> Entity2);
+	static glm::vec2 GetDistance2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2);
 
 	//static glm::vec2 GetDistance2D(Entity* Entity1, Pointer<Entity> Entity2);
 	//static glm::vec2 FindTextDimenions(std::string text);
 
-	static glm::vec2 GetDifference2D(Pointer<Entity> Entity1, Pointer<Entity> Entity2);
+	static glm::vec2 GetDifference2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2);
 
 	static int AddEntityID();
 
 	static std::vector<std::string> SeparateString(std::string _string, char _seperator);
 
 	// TODO: Convert to type from string
-	static Vector3 StringToVec3(std::string _string);
-	static Rotator StringToRotator(std::string _string);
+	static SVector StringToVec3(std::string _string);
+	static SRotator StringToRotator(std::string _string);
 
-	static bool CheckFaceHit(Vector3 BottomLeftOffset, Vector3 TopRightOffset, Vector3 RayStart, Vector3 RayDirection, Pointer<Entity> EntityCheck, Vector3& HitPos);
+	static bool CheckFaceHit(SVector BottomLeftOffset, SVector TopRightOffset, SVector RayStart, SVector RayDirection, TPointer<Entity> EntityCheck, SVector& HitPos);
 
-	static bool CheckSphereHit(Vector3 RayStart, Vector3 RayDirection, Vector3 SphereCenter, float SphereRadius, Vector3& HitPos);
+	static bool CheckSphereHit(SVector RayStart, SVector RayDirection, SVector SphereCenter, float SphereRadius, SVector& HitPos);
 
-	static bool CheckCubeHit(Vector3 RayStart, Vector3 RayDirection, Vector3 CubeDimensions, Pointer<Entity> EntityCheck, Vector3& HitPos);
+	static bool CheckCubeHit(SVector RayStart, SVector RayDirection, SVector CubeDimensions, TPointer<Entity> EntityCheck, SVector& HitPos);
 
-	static bool CheckPlaneEntityHit(Vector3 RayStart, Vector3 RayDirection, Pointer<Entity> EntityCheck, Vector3& HitPos);
+	static bool CheckPlaneEntityHit(SVector RayStart, SVector RayDirection, TPointer<Entity> EntityCheck, SVector& HitPos);
 	
-	static Pointer<Entity> WorldCubeMap;
+	static TPointer<Entity> WorldCubeMap;
 
 private:
 	static int iEntityNumber;

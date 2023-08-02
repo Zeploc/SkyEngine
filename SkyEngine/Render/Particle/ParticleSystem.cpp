@@ -10,13 +10,14 @@
 
 // Engine Includes //
 #include "Particle.h"
-#include "Render/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 #include "Camera/CameraManager.h"
 
 // This Includes //
 #include "ParticleSystem.h"
 
 #include "Core/Application.h"
+#include "Render/Shaders/Shader.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -24,7 +25,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-ParticleSystem::ParticleSystem(FTransform _Transform) : Entity(_Transform, EANCHOR::CENTER)
+ParticleSystem::ParticleSystem(STransform _Transform) : Entity(_Transform, EANCHOR::CENTER)
 {
 	Colour = glm::vec4(123.0f / 255.0f, 173.0f / 255.0f, 203.0f / 255.0f, 2.0f);
 }
@@ -69,7 +70,7 @@ void ParticleSystem::BindParticleSystem(const char* TexturePath)
 		m_vPosition.push_back(part.position);
 	}
 
-	program = Shader::Programs["ParticleShader"];
+	program = ShaderManager::GetShader("ParticleShader")->GetShaderProgram();
 
 	Texture = GetGraphicsAPI()->GetTexture(TexturePath, true);
 

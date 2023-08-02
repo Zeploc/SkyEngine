@@ -34,7 +34,7 @@ public:
 		MOUSE_RIGHT,
 	};
 
-	Vector2 MousePos;
+	SVector2 MousePos;
 	unsigned int KeyState[350]; //255
 	unsigned int MouseState[3];
 
@@ -42,11 +42,11 @@ public:
 	unsigned int MouseCTRL = INPUT_RELEASED;
 	unsigned int MouseALT = INPUT_RELEASED;
 
-	Vector3 Axis = {0, 0, 0};
+	SVector Axis = {0, 0, 0};
 
 	std::vector<class XBOXController*> Players;
 
-	void Init(Pointer<EngineWindow> Window);
+	void Init(TPointer<EngineWindow> Window);
 
 	void processNormalKeysDown(unsigned char key, int x, int y);
 

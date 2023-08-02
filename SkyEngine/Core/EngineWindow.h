@@ -12,20 +12,20 @@ class IGraphicsWindow;
 class ENGINE_API EngineWindow : public std::enable_shared_from_this<EngineWindow>
 {
 public:
-	EngineWindow(const std::string& InWindowName, Vector2 InWindowSize, bool bInFullScreen);
+	EngineWindow(const std::string& InWindowName, SVector2 InWindowSize, bool bInFullScreen);
 	~EngineWindow();
-	static Pointer<EngineWindow> CreateEngineWindow(const std::string& InWindowName, Vector2 InWindowSize, bool bInFullScreen = false);
+	static TPointer<EngineWindow> CreateEngineWindow(const std::string& InWindowName, SVector2 InWindowSize, bool bInFullScreen = false);
 
-	Pointer<IGraphicsWindow> GetGraphicsWindow() const { return GraphicsWindow; }
+	TPointer<IGraphicsWindow> GetGraphicsWindow() const { return GraphicsWindow; }
 
 	bool ShouldWindowClose() const;
 	
 	std::string GetWindowName() { return WindowName; }
 
-	Vector2 GetSize();
+	SVector2 GetSize();
 	
-	Vector2 GetPosition();
-	void SetWindowPosition(Vector2 InPosition);
+	SVector2 GetPosition();
+	void SetWindowPosition(SVector2 InPosition);
 
 	// TODO: Pass in window in delegate
 	FMulticastDelegate OnFocusChanged;
@@ -34,10 +34,10 @@ protected:
 	void OnFocusedChanged();
 	
 	std::string WindowName;
-	Vector2 WindowSize;
-	Vector2 WindowPosition;
+	SVector2 WindowSize;
+	SVector2 WindowPosition;
 	bool bFullscreen = false;
 
-	Pointer<IGraphicsWindow> GraphicsWindow;
+	TPointer<IGraphicsWindow> GraphicsWindow;
 	
 };

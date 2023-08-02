@@ -4,19 +4,19 @@
 
 #include "Math/Vector.h"
 
-// OpenGL Includes //
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 // Local Includes //
 #include "Camera/CameraManager.h"
+#include "Graphics/GraphicsInstance.h"
+#include "Shaders/Shader.h"
 
 // Static variables //
-Vector3 Lighting::LightPosition = {5, 10, 5};
-Vector3 Lighting::SunDirection = {15, 2, 25};
-glm::vec4 Lighting::FogColour = {0.5f, 0.5f, 0.5f, 1.0f};
+SVector Lighting::LightPosition = {5, 10, 5};
+SVector Lighting::LightColour = SVector(1.0f, 1.0f, 1.0f);
+SVector Lighting::SunDirection = {15, 2, 25};
+SVector4 Lighting::FogColour = {0.5f, 0.5f, 0.5f, 1.0f};
 float Lighting::StartFogDistance = 30.0f;
 float Lighting::EndFogDistance = 45.0f;
+float Lighting::AmbientStrength = 0.1f;
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -38,25 +38,25 @@ Lighting::~Lighting()
 {
 }
 
-void Lighting::PassLightingToShader(GLuint program, LightInfo _LightInfo, FTransform ModelTransform)
+void Lighting::PassLightingToShader(const TPointer<IGraphicsInstance>& GraphicsInstance)
 {
-	glm::mat4 model = ModelTransform.GetModelMatrix();
-
-	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, value_ptr(model));
-	glUniform3fv(glGetUniformLocation(program, "lightPos"), 1, LightPosition.ToValuePtr());
-	glUniform3fv(glGetUniformLocation(program, "camPos"), 1, CameraManager::GetInstance()->GetCameraPosition().ToValuePtr());
-	glUniform3fv(glGetUniformLocation(program, "lightColor"), 1, _LightInfo.LightColour.ToValuePtr());
-	glUniform1f(glGetUniformLocation(program, "ambientStr"), _LightInfo.fAmbientStrength);
-	glUniform1f(glGetUniformLocation(program, "lightSpecStr"), _LightInfo.fLightSpecStrength);
-	glUniform1f(glGetUniformLocation(program, "shininess"), _LightInfo.fShininess);
+	// TODO: Store uniform locations at beginning for shader
+	const uint32_t ShaderProgram = GraphicsInstance->ActiveShader->GetShaderProgram();
+	GraphicsInstance->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "LightPosition"), LightPosition);
+	GraphicsInstance->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "LightColour"), LightColour);
+	GraphicsInstance->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "LightDirection"), SunDirection);
+	GraphicsInstance->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "FogColor"), FogColour);
+	GraphicsInstance->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "StartFog"), StartFogDistance);
+	GraphicsInstance->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "EndFog"), EndFogDistance);
+	GraphicsInstance->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "AmbientStrength"), AmbientStrength);
 }
 
-Vector3 Lighting::GetLightPosition()
+SVector Lighting::GetLightPosition()
 {
 	return LightPosition;
 }
 
-Vector3 Lighting::GetSunDirection()
+SVector Lighting::GetSunDirection()
 {
 	return SunDirection;
 }
@@ -76,12 +76,12 @@ float Lighting::GetEndFogDistance()
 	return EndFogDistance;
 }
 
-void Lighting::SetLightPosition(Vector3 InLightPosition)
+void Lighting::SetLightPosition(SVector InLightPosition)
 {
 	LightPosition = InLightPosition;
 }
 
-void Lighting::SetSunDirection(Vector3 InSunDirection)
+void Lighting::SetSunDirection(SVector InSunDirection)
 {
 	SunDirection = InSunDirection;
 }

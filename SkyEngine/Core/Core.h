@@ -17,7 +17,7 @@
 #endif
 
 template<typename T>
-using Pointer = std::shared_ptr<T>;
+using TPointer = std::shared_ptr<T>;
 
 template<typename T>
 using Scope = std::unique_ptr<T>;

@@ -6,27 +6,25 @@
 #include "Render/Meshes/Mesh.h"
 #include "System/Utils.h"
 
-class ENGINE_API Plane : public Mesh
+class ENGINE_API CPlane : public CMeshComponent
 {
 public:
-	Plane(float fWidth, float fHeight, glm::vec4 Colour);
+	CPlane(const TPointer<Entity>& InOwner, float fWidth, float fHeight, TPointer<CMaterial> InMaterial = nullptr);
 
-	Plane(float fWidth, float fHeight, glm::vec4 Colour, const char* TextureSource);
+	CPlane(const TPointer<Entity>& InOwner, float InWidth, float InHeight, TPointer<CMaterial> InMaterial, glm::vec2 v2FrameCounts, int _iFPS);
 
-	Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char* TextureSource, glm::vec2 v2FrameCounts, int _iFPS);
+	CPlane(const TPointer<Entity>& InOwner, float _fWidth, float _fHeight, TPointer<CMaterial> InMaterial, int iCount, bool bHorizontal);
 
-	Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char* TextureSource, int iCount, bool bHorizontal);
-
-	~Plane();
+	~CPlane();
 
 	void Reset() override;
 
 	// TODO: Update to graphics instance
-	void Render(FTransform Newtransform);
+	void Render(STransform Newtransform);
 
 	void Update() override;
 	
-	bool CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, Pointer<Entity> EntityCheck) override;
+	bool CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos, TPointer<Entity> EntityCheck) override;
 
 	Utils::AnimInfo AnimationInfo;
 	double m_dFPSCounter = 0;

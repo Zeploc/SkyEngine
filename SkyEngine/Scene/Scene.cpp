@@ -75,7 +75,7 @@ void Scene::RenderScene()
 #--Parameters--#: 	Entity to add
 #--Return--#: 		NA
 ************************************************************/
-void Scene::AddEntity(Pointer<Entity> _Entity, bool IsInitial)
+void Scene::AddEntity(TPointer<Entity> _Entity, bool IsInitial)
 {
 	Entities.push_back(_Entity);
 	_Entity->SetInitialEntity(IsInitial);
@@ -87,7 +87,7 @@ void Scene::AddEntity(Pointer<Entity> _Entity, bool IsInitial)
 #--Parameters--#: 	Entity to destroy
 #--Return--#: 		NA
 ************************************************************/
-void Scene::DestroyEntity(Pointer<Entity> _Entity)
+void Scene::DestroyEntity(TPointer<Entity> _Entity)
 {
 	if (_Entity->IsInitialEntity())
 	{
@@ -116,7 +116,7 @@ void Scene::DestroyEntity(Pointer<Entity> _Entity)
 #--Parameters--#: 	UI Element to add
 #--Return--#: 		NA
 ************************************************************/
-void Scene::AddUIElement(Pointer<UIElement> Element)
+void Scene::AddUIElement(TPointer<UIElement> Element)
 {
 	UIElements.push_back(Element);
 }
@@ -127,7 +127,7 @@ void Scene::AddUIElement(Pointer<UIElement> Element)
 #--Parameters--#: 	UI Text Element to add
 #--Return--#: 		NA
 ************************************************************/
-void Scene::AddUITextElement(Pointer<UIText> Element)
+void Scene::AddUITextElement(TPointer<UIText> Element)
 {
 	UIElements.push_back(Element);
 }
@@ -140,7 +140,7 @@ void Scene::AddUITextElement(Pointer<UIText> Element)
 ************************************************************/
 void Scene::AddUITextElement(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string font, int iPSize, EANCHOR _Anchor)
 {
-	Pointer<UIText> NewElement(new UIText(_Position, _fRotation, _Colour, _sText, font, iPSize, _Anchor));
+	TPointer<UIText> NewElement(new UIText(_Position, _fRotation, _Colour, _sText, font, iPSize, _Anchor));
 	UIElements.push_back(NewElement);
 }
 
@@ -150,7 +150,7 @@ void Scene::AddUITextElement(glm::vec2 _Position, float _fRotation, glm::vec4 _C
 #--Parameters--#: 	UI Text Element paramters to destroy
 #--Return--#: 		NA
 ************************************************************/
-void Scene::DestroyUIElement(Pointer<UIElement> _Element)
+void Scene::DestroyUIElement(TPointer<UIElement> _Element)
 {
 	UIElementsToBeDestroyed.push_back(_Element);
 	_Element->SetActive(false);

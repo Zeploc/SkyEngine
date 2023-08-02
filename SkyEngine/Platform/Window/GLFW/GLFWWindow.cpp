@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <glew/glew.h>
-#include <Render/Shader.h>
+#include <Render/Shaders/ShaderManager.h>
 
 #include "Input/CXBOXController.h"
 #include "Input/Input.h"
@@ -17,7 +17,7 @@ GLFWWindow::~GLFWWindow()
 	GlWindow = nullptr;
 }
 
-GLFWWindow::GLFWWindow(std::string InWindowName, Vector2 InWindowSize, bool bFullScreen) : IGraphicsWindow(InWindowName, InWindowSize, bFullScreen)
+GLFWWindow::GLFWWindow(std::string InWindowName, SVector2 InWindowSize, bool bFullScreen) : IGraphicsWindow(InWindowName, InWindowSize, bFullScreen)
 {	
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -29,7 +29,7 @@ GLFWWindow::GLFWWindow(std::string InWindowName, Vector2 InWindowSize, bool bFul
 	glfwSetErrorCallback(glfw_onError);
 	
 	GLFWmonitor* FullscreenMonitor = nullptr;
-	Vector2 WindowPosition;
+	SVector2 WindowPosition;
 	if (bFullScreen)
 	{
 		int* MonitorCount = new int;
@@ -97,7 +97,7 @@ void GLFWWindow::FocusWindow() const
 	
 }
 
-void GLFWWindow::SetCursorPosition(Vector2 InCursorPosition)
+void GLFWWindow::SetCursorPosition(SVector2 InCursorPosition)
 {
 	IGraphicsWindow::SetCursorPosition(InCursorPosition);
 	
@@ -110,7 +110,7 @@ bool GLFWWindow::CloseWindow()
 	return true;
 }
 
-Vector2 GLFWWindow::GetWindowPosition()
+SVector2 GLFWWindow::GetWindowPosition()
 {
 	// TODO: Swap to Vector2i
 	int x, y;
@@ -118,12 +118,12 @@ Vector2 GLFWWindow::GetWindowPosition()
 	return {static_cast<float>(x), static_cast<float>(y)};
 }
 
-void GLFWWindow::SetWindowPosition(Vector2 InWindowPosition)
+void GLFWWindow::SetWindowPosition(SVector2 InWindowPosition)
 {
 	glfwSetWindowPos(GlWindow, InWindowPosition.X, InWindowPosition.Y);
 }
 
-Vector2 GLFWWindow::GetWindowSize()
+SVector2 GLFWWindow::GetWindowSize()
 {
 	// TODO: Swap to Vector2i
 	int WindowWidth, WindowHeight;

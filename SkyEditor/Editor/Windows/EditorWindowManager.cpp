@@ -13,7 +13,7 @@
 
 std::vector<EditorWindow*> EditorWindowManager::EditorWindows;
 std::vector<EditorWindow*> EditorWindowManager::EditorWindowsToRemove;
-Pointer<EngineWindow> EditorWindowManager::CurrentFocused = nullptr;
+TPointer<EngineWindow> EditorWindowManager::CurrentFocused = nullptr;
 
 EditorWindowManager::EditorWindowManager()
 {
@@ -23,7 +23,7 @@ EditorWindowManager::~EditorWindowManager()
 {
 }
 
-Pointer<EngineWindow> EditorWindowManager::GetMainWindow()
+TPointer<EngineWindow> EditorWindowManager::GetMainWindow()
 {
 	return GetApplication()->GetApplicationWindow();
 }

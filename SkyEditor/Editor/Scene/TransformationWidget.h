@@ -10,17 +10,17 @@
 class TransformationWidget : public Entity
 {
 public:
-	TransformationWidget(FTransform _Transform, class Scene* OwningScene);
+	TransformationWidget(STransform _Transform, class Scene* OwningScene);
 
 	~TransformationWidget();
 
 	void Update() override;
 
-	std::vector<Pointer<Entity>> GetAdditionalEntitiesToRender() override;
+	std::vector<TPointer<Entity>> GetAdditionalEntitiesToRender() override;
 
-	Pointer<Entity> XMoveTransform;
-	Pointer<Entity> YMoveTransform;
-	Pointer<Entity> ZMoveTransform;
+	TPointer<Entity> XMoveTransform;
+	TPointer<Entity> YMoveTransform;
+	TPointer<Entity> ZMoveTransform;
 
 	bool XHovered = false;
 	bool YHovered = false;
@@ -31,10 +31,10 @@ public:
 
 	float GrabOffset = 0.0f;
 
-	Vector3 HitPosition;
-	Pointer<Entity> SelectedEntity;
+	SVector HitPosition;
+	TPointer<Entity> SelectedEntity;
 	
-	Vector4 XColour = {0.6f, 0.1f, 0.1f, 1.0f};
-	Vector4 YColour = {0.1f, 0.6f, 0.1f, 1.0f};
-	Vector4 ZColour = {0.1f, 0.1f, 0.6f, 1.0f};
+	SVector4 XColour = {0.6f, 0.1f, 0.1f, 1.0f};
+	SVector4 YColour = {0.1f, 0.6f, 0.1f, 1.0f};
+	SVector4 ZColour = {0.1f, 0.1f, 0.6f, 1.0f};
 };

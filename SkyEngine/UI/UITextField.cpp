@@ -4,7 +4,8 @@
 
 // Engine Includes //
 #include "Input/Input.h"
-#include "Render/Shader.h"
+#include "Render/Shaders/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 #include "System/Time.h"
 
 // Library Includes //
@@ -67,7 +68,7 @@ void UITextField::DrawUIElement()
 	{
 		return;
 	}
-	glUseProgram(Shader::Programs["TextUIprogram"]);
+	glUseProgram(ShaderManager::GetShader("TextUIprogram")->GetShaderProgram());
 	BackImage.DrawUIElement();
 	FieldText.DrawUIElement();
 }

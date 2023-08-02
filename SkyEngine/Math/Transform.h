@@ -9,17 +9,17 @@
 #include <string>
 #include <sstream>
 
-struct ENGINE_API FTransform
+struct ENGINE_API STransform
 {
-	Vector3 Position;
-	Rotator Rotation;
-	Vector3 Scale;
+	SVector Position;
+	SRotator Rotation;
+	SVector Scale;
 
 	std::string ToString() const;
 	void FromString(std::string sTransform);
 	
 	glm::mat4 GetModelMatrix() const;
 	
-	friend std::ostream& operator<<(std::ostream& os, const FTransform& InTransform);
-	friend std::istream& operator>>(std::istream& is, FTransform& OutTransform);
+	friend std::ostream& operator<<(std::ostream& os, const STransform& InTransform);
+	friend std::istream& operator>>(std::istream& is, STransform& OutTransform);
 };

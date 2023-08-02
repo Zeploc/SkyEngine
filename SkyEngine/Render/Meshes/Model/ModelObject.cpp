@@ -6,14 +6,15 @@
 #include <assimp/postprocess.h>
 #include <soil/SOIL2.h>
 
-#include "Render/Shader.h"
-#include "Math/FTransform.h"
+#include "Render/Shaders/ShaderManager.h"
+#include "Math/Transform.h"
+#include "Render/Shaders/Shader.h"
 #include "System/LogManager.h"
 
 ModelObject::ModelObject(std::string path)
 {
 	// TODO: Convert to use same base program
-	this->program = Shader::Programs["ModelProgram"];//Shader::Programs["BaseProgram"];//
+	this->program = ShaderManager::GetShader("ModelProgram")->GetShaderProgram();//Shader::Programs["BaseProgram"];//
 	this->loadModel(path);
 }
 
@@ -23,7 +24,7 @@ ModelObject::~ModelObject()
 	textures_loaded.clear();
 }
 
-void ModelObject::Render(FTransform MeshTransform)
+void ModelObject::Render(STransform MeshTransform)
 {
 	for (GLuint i = 0; i < this->meshes.size(); i++)
 	{

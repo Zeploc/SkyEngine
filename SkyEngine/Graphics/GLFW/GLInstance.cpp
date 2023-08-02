@@ -1,14 +1,15 @@
 ﻿#include "GLInstance.h"
 
 #include <format>
-#include <glew/glew.h>
+#include "GLIncludes.h"
 #include <glm/gtc/type_ptr.inl>
 
 #include "Camera/CameraManager.h"
 #include "Entity/Entity.h"
 #include "Input/CXBOXController.h"
 #include "Platform/Window/GraphicsWindow.h"
-#include "Render/Shader.h"
+#include "Render/Shaders/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 #include "System/LogManager.h"
 #include "UI/UIElement.h"
 
@@ -26,7 +27,7 @@ GLInstance::GLInstance()
 
 	// TODO: Move to more relevant
 	// Settings Initialised
-	Shader::LoadAllDefaultShadersInCurrentContext();
+	ShaderManager::LoadAllDefaultShadersInCurrentContext();
 		
 	glCullFace(GL_BACK); // Cull the Back faces
 	glFrontFace(GL_CW); // Front face is Clockwise order
@@ -36,17 +37,59 @@ GLInstance::GLInstance()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void GLInstance::PreRender(Pointer<IGraphicsWindow> GraphicsWindow)
+void GLInstance::PreRender(TPointer<IGraphicsWindow> GraphicsWindow)
 {
 	glClearColor(ClearColour.R, ClearColour.G, ClearColour.B, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	const Vector2 WindowSize = GraphicsWindow->GetWindowSize();
+	const SVector2 WindowSize = GraphicsWindow->GetWindowSize();
 	// TODO: Option to expoose/override viewport position
 	// Fill whole window with viewport by default
 	glViewport(0, 0, WindowSize.X, WindowSize.Y);
 }
 
-void GLInstance::StoreMVP(FTransform Transform, GLuint Program)
+void GLInstance::InternalPassAttributeToShader(int32_t ShaderID, float Attribute)
+{
+	glUniform1f(ShaderID, Attribute);
+}
+
+void GLInstance::InternalPassAttributeToShader(int32_t ShaderID, int Attribute)
+{
+	glUniform1i(ShaderID, Attribute);
+}
+
+void GLInstance::InternalPassAttributeToShader(int32_t ShaderID, bool Attribute)
+{
+	glUniform1i(ShaderID, Attribute);
+}
+
+void GLInstance::InternalPassAttributeToShader(int32_t ShaderID, SVector Attribute)
+{
+	glUniform3fv(ShaderID, 1, Attribute.ToValuePtr());
+}
+
+void GLInstance::InternalPassAttributeToShader(int32_t ShaderID, SVector4 Attribute)
+{
+	glUniform4fv(ShaderID, 1, Attribute.ToValuePtr());
+}
+
+void GLInstance::InternalPassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute)
+{
+	glUniformMatrix4fv(ShaderLocation, 1, GL_FALSE, value_ptr(Attribute.ToGLM()));
+}
+
+void GLInstance::BindShader(uint32_t ShaderProgramID)
+{
+	// TODO: Check if overhead and not change if current shader program is active
+	glUseProgram(ShaderProgramID);	
+	glFrontFace(GL_CW);
+	// TODO: properly work out where blending should be changed
+	// In case it was enabled
+	glDisable(GL_BLEND);
+	// Clear previous texture?
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void GLInstance::StoreMVP(STransform Transform, GLuint Program)
 {
 	const CameraManager* CameraInstance = CameraManager::GetInstance();
 	glm::mat4 ModelMatrix = Transform.GetModelMatrix();
@@ -59,85 +102,9 @@ void GLInstance::StoreMVP(FTransform Transform, GLuint Program)
 	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, value_ptr(MVP));
 }
 
-void GLInstance::PassAttributeToShader(int32_t ShaderID, float Attribute)
+void GLInstance::ApplyMaterialFlags(TPointer<CMaterial>InMaterial)
 {
-	glUniform1f(ShaderID, Attribute);
-}
-
-void GLInstance::PassAttributeToShader(int32_t ShaderID, int Attribute)
-{
-	glUniform1i(ShaderID, Attribute);
-}
-
-void GLInstance::PassAttributeToShader(int32_t ShaderID, bool Attribute)
-{
-	glUniform1i(ShaderID, Attribute);
-}
-
-void GLInstance::PassAttributeToShader(int32_t ShaderID, Vector3 Attribute)
-{
-	glUniform3fv(ShaderID, 1, Attribute.ToValuePtr());
-}
-
-void GLInstance::PassAttributeToShader(int32_t ShaderID, Vector4 Attribute)
-{
-	glUniform4fv(ShaderID, 1, Attribute.ToValuePtr());
-}
-
-void GLInstance::PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute)
-{
-	glUniformMatrix4fv(ShaderLocation, 1, GL_FALSE, value_ptr(Attribute.ToGLM()));
-}
-
-void GLInstance::RenderMesh(const Pointer<Mesh> Mesh, const FTransform Transform)
-{
-	// TODO: Move material based to material sending attributes
-	Pointer<Material> MeshMaterial = Mesh->MeshMaterial;
-	const TextureData TextureData = MeshMaterial->GetTextureData();
-	const GLuint Program = MeshMaterial->GetShaderProgram();
-	glUseProgram(Program);
-	glFrontFace(GL_CW);	
-	if (TextureData.IsValid())
-	{
-		glEnable(GL_BLEND);
-	}
-	else
-	{
-		glDisable(GL_BLEND);
-	}
-	
-	FTransform ScaledUpTransform = Transform;
-	ScaledUpTransform.Scale *= 1.1f;
-	// ABOVE CALLED FROM DERIVED RENDER
-	glUniform1i(glGetUniformLocation(Program, "bIsTex"), TextureData.IsValid());
-	glUniform1i(glGetUniformLocation(Program, "bFog"), MeshMaterial->bFog);
-	glUniform1i(glGetUniformLocation(Program, "bIsLit"), MeshMaterial->bIsLit);
-	// TODO: Only pass in information if bIsLit? Is info still used elsewhere/otherwise
-	Lighting::PassLightingToShader(Program, MeshMaterial->LightProperties, Transform);
-	if (TextureData.IsValid())
-	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, TextureData.TextureID);
-	}
-	if (MeshMaterial->bReflect)
-	{
-		// TODO: Make cubemap and test
-		// if (Utils::WorldCubeMap)
-		// {
-		// 	glActiveTexture(GL_TEXTURE1);
-		// 	glUniform1i(glGetUniformLocation(Program, "skybox"), 1);
-		// 	glBindTexture(GL_TEXTURE_CUBE_MAP, Utils::WorldCubeMap->EntityMesh->MeshMaterial.Texture.TextureID);
-		// 	glUniform1f(glGetUniformLocation(Program, "ReflectionSize"), 0.1f);
-		// }
-	}
-	if (MeshMaterial->bFog)
-	{
-		glUniform3fv(glGetUniformLocation(Program, "cameraPos"), 1, CameraManager::GetInstance()->GetCameraPosition().ToValuePtr());
-		glUniform4fv(glGetUniformLocation(Program, "vFogColor"), 1, value_ptr(Lighting::GetFogColour()));
-		glUniform1f(glGetUniformLocation(Program, "StartFog"), Lighting::GetStartFogDistance());
-		glUniform1f(glGetUniformLocation(Program, "EndFog"), Lighting::GetEndFogDistance());
-	}
-	if (!MeshMaterial->bTwoSided)
+	if (!InMaterial->bTwoSided)
 	{
 		glEnable(GL_CULL_FACE);
 	}
@@ -145,7 +112,7 @@ void GLInstance::RenderMesh(const Pointer<Mesh> Mesh, const FTransform Transform
 	{
 		glDisable(GL_CULL_FACE);
 	}
-	if (MeshMaterial->bDepthTest)
+	if (InMaterial->bDepthTest)
 	{
 		glEnable(GL_DEPTH_TEST);
 	}
@@ -153,48 +120,130 @@ void GLInstance::RenderMesh(const Pointer<Mesh> Mesh, const FTransform Transform
 	{
 		glDisable(GL_DEPTH_TEST);
 	}
+}
 
-	//enable stencil and set stencil operation
-	if (MeshMaterial->bStencil)
-	{
-		glEnable(GL_STENCIL_TEST);
-		//glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-		//glDepthMask(GL_FALSE);
-		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); //stPass, dpFail, bothPass
-	}
+void GLInstance::BindTexture(TPointer<CTexture> InTexture)
+{
+	glEnable(GL_BLEND);
+	// TODO: Handle multiple
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, InTexture->TextureID);	
+}
 
-	//** 1st pass **
-	//set current stencil value
-	glStencilFunc(GL_ALWAYS, // test function
-	              1, // current value to set
-	              0xFF); //mask value,
-
-	glStencilMask(0xFF); //enable writing to stencil buffer
-	//--> render regular sized cube // fills stencil buffer
-
-	StoreMVP(Transform, Program);
+void GLInstance::RenderMesh(const TPointer<CMeshComponent> Mesh, const STransform Transform)
+{
+	StoreMVP(Transform, ActiveShader->GetShaderProgram());
 	
 	glBindVertexArray(Mesh->vao);
 	glDrawElements(GL_TRIANGLES, Mesh->IndicesCount, GL_UNSIGNED_INT, nullptr);
 
-	if (MeshMaterial->bStencil)
-	{
-		// ** 2nd pass **
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00); //disable writing to stencil buffer
-		//--> render scaled up cube // write to areas where value is not equal to 1
-
-		glUniform1i(glGetUniformLocation(Program, "bIsTex"), false);
-		StoreMVP(ScaledUpTransform, Program);
-		glDrawElements(GL_TRIANGLES, Mesh->IndicesCount, GL_UNSIGNED_INT, nullptr);
-
-		//disable writing to stencil mask
-		glStencilMask(0x00);
-		glDisable(GL_STENCIL_TEST);
-	}
-
 	glBindVertexArray(0);
-	glBindTexture(GL_TEXTURE_2D, 0);
+
+	return;
+	
+	// TPointer<CMaterial> MeshMaterial = Mesh->MeshMaterial;
+	// const CTexture TextureData = MeshMaterial->GetTextureData();
+	// const GLuint Program = MeshMaterial->GetShader()->GetShaderProgram();
+	// glUseProgram(Program);
+	// glFrontFace(GL_CW);
+	// if (TextureData.IsValid())
+	// {
+	// 	glEnable(GL_BLEND);
+	// }
+	// else
+	// {
+	// 	glDisable(GL_BLEND);
+	// }
+	//
+	// // ABOVE CALLED FROM DERIVED RENDER
+	// glUniform1i(glGetUniformLocation(Program, "bIsTex"), TextureData.IsValid());
+	// glUniform1i(glGetUniformLocation(Program, "bFog"), MeshMaterial->bFog);
+	// glUniform1i(glGetUniformLocation(Program, "bIsLit"), MeshMaterial->bIsLit);
+	// // TODO: Only pass in information if bIsLit? Is info still used elsewhere/otherwise
+	// Lighting::PassLightingToShader(shared_from_this());
+	// if (TextureData.IsValid())
+	// {
+	// 	glActiveTexture(GL_TEXTURE0);
+	// 	glBindTexture(GL_TEXTURE_2D, TextureData.TextureID);
+	// }
+	// if (MeshMaterial->bReflect)
+	// {
+	// 	// TODO: Make cubemap and test
+	// 	// if (Utils::WorldCubeMap)
+	// 	// {
+	// 	// 	glActiveTexture(GL_TEXTURE1);
+	// 	// 	glUniform1i(glGetUniformLocation(Program, "skybox"), 1);
+	// 	// 	glBindTexture(GL_TEXTURE_CUBE_MAP, Utils::WorldCubeMap->EntityMesh->MeshMaterial.Texture.TextureID);
+	// 	// 	glUniform1f(glGetUniformLocation(Program, "ReflectionSize"), 0.1f);
+	// 	// }
+	// }
+	// if (MeshMaterial->bFog)
+	// {
+	// 	glUniform3fv(glGetUniformLocation(Program, "cameraPos"), 1, CameraManager::GetInstance()->GetCameraPosition().ToValuePtr());
+	// 	glUniform4fv(glGetUniformLocation(Program, "vFogColor"), 1, value_ptr(Lighting::GetFogColour()));
+	// 	glUniform1f(glGetUniformLocation(Program, "StartFog"), Lighting::GetStartFogDistance());
+	// 	glUniform1f(glGetUniformLocation(Program, "EndFog"), Lighting::GetEndFogDistance());
+	// }
+	// if (!MeshMaterial->bTwoSided)
+	// {
+	// 	glEnable(GL_CULL_FACE);
+	// }
+	// else
+	// {
+	// 	glDisable(GL_CULL_FACE);
+	// }
+	// if (MeshMaterial->bDepthTest)
+	// {
+	// 	glEnable(GL_DEPTH_TEST);
+	// }
+	// else
+	// {
+	// 	glDisable(GL_DEPTH_TEST);
+	// }
+	//
+	// //enable stencil and set stencil operation
+	// if (MeshMaterial->bStencil)
+	// {
+	// 	glEnable(GL_STENCIL_TEST);
+	// 	//glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	// 	//glDepthMask(GL_FALSE);
+	// 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); //stPass, dpFail, bothPass
+	// }
+	//
+	// //** 1st pass **
+	// //set current stencil value
+	// glStencilFunc(GL_ALWAYS, // test function
+	//               1, // current value to set
+	//               0xFF); //mask value,
+	//
+	// glStencilMask(0xFF); //enable writing to stencil buffer
+	// //--> render regular sized cube // fills stencil buffer
+	//
+	// StoreMVP(Transform, Program);
+	//
+	// glBindVertexArray(Mesh->vao);
+	// glDrawElements(GL_TRIANGLES, Mesh->IndicesCount, GL_UNSIGNED_INT, nullptr);
+	//
+	// STransform ScaledUpTransform = Transform;
+	// ScaledUpTransform.Scale *= 1.1f;
+	// if (MeshMaterial->bStencil)
+	// {
+	// 	// ** 2nd pass **
+	// 	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+	// 	glStencilMask(0x00); //disable writing to stencil buffer
+	// 	//--> render scaled up cube // write to areas where value is not equal to 1
+	//
+	// 	glUniform1i(glGetUniformLocation(Program, "bIsTex"), false);
+	// 	StoreMVP(ScaledUpTransform, Program);
+	// 	glDrawElements(GL_TRIANGLES, Mesh->IndicesCount, GL_UNSIGNED_INT, nullptr);
+	//
+	// 	//disable writing to stencil mask
+	// 	glStencilMask(0x00);
+	// 	glDisable(GL_STENCIL_TEST);
+	// }
+	//
+	// glBindVertexArray(0);
+	// glBindTexture(GL_TEXTURE_2D, 0);
 
 	// TODO: Check all errors and log any
 	// LogManager::GetInstance()->DisplayLogMessage("Open GL Error: " + std::to_string(glGetError(0)));
@@ -223,12 +272,12 @@ void GLInstance::RenderMesh(const Pointer<Mesh> Mesh, const FTransform Transform
 // }
 // #define glCheckError() glCheckError_(__FILE__, __LINE__)
 
-void GLInstance::RenderUIElement(Pointer<UIElement> UserInterfaceItem)
+void GLInstance::RenderUIElement(TPointer<UIElement> UserInterfaceItem)
 {
 	UserInterfaceItem->DrawUIElement();
 }
 
-void GLInstance::CleanupMesh(Pointer<Mesh> Mesh)
+void GLInstance::CleanupMesh(TPointer<CMeshComponent> Mesh)
 {
 	if (!Mesh)
 	{
@@ -238,7 +287,7 @@ void GLInstance::CleanupMesh(Pointer<Mesh> Mesh)
 	// TODO: Look into further cleanup
 }
 
-void GLInstance::PostRender(Pointer<IGraphicsWindow> GraphicsWindow)
+void GLInstance::PostRender(TPointer<IGraphicsWindow> GraphicsWindow)
 {	
 }
 

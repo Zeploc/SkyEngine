@@ -29,7 +29,7 @@ public:
 
 private:
 	GLuint VAO;
-	TextureData Texture;
+	CTexture Texture;
 
 	bool bHasTexture = false;
 	EANCHOR ImageAnchor;

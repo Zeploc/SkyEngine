@@ -17,9 +17,7 @@ public:
 
 	void GetFinalData(std::vector<float>& OutVertices, std::vector<uint32_t>& OutIndices) const;
 	int GetIndicesCount() const;
-
-	// TODO: Is this needed here? should be in material
-	Vector4 Colour;
+	bool HasUVData() const { return !UVs.empty(); } 
 	
 #define POSITION_ELEMENTS_COUNT 3
 #define NORMAL_ELEMENTS_COUNT 3
@@ -27,7 +25,6 @@ public:
 	
 protected:
 	void PushPositions(std::vector<float>& OutVertices, int VertexIndex) const;
-	void PushColour(std::vector<float>& OutVertices, int VertexIndex) const;
 	void PushUVs(std::vector<float>& OutVertices, int VertexIndex) const;
 	void PushNormals(std::vector<float>& OutVertices, int VertexIndex) const;
 	

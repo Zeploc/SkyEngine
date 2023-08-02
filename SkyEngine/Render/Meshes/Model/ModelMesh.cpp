@@ -4,7 +4,7 @@
 
 #include <sstream>
 
-#include "Math/FTransform.h"
+#include "Math/Transform.h"
 
 ModelMesh::ModelMesh(vector<Vertex> vertices, vector<GLuint> indices, vector<MeshTexture> textures)
 {
@@ -15,7 +15,7 @@ ModelMesh::ModelMesh(vector<Vertex> vertices, vector<GLuint> indices, vector<Mes
 	this->setupMesh();
 }
 
-void ModelMesh::Render(GLuint program, FTransform ModelTransform)
+void ModelMesh::Render(GLuint program, STransform ModelTransform)
 {
 	glUseProgram(program);
 

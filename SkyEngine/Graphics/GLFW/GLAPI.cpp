@@ -5,7 +5,7 @@
 
 #include "GLInstance.h"
 #include "Platform/Window/GraphicsWindow.h"
-#include "Render/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 #include "System/LogManager.h"
 
 IGLAPI::IGLAPI()
@@ -14,7 +14,6 @@ IGLAPI::IGLAPI()
 
 IGLAPI::~IGLAPI()
 {	
-	glfwTerminate();
 }
 
 std::string IGLAPI::GetGraphicsDisplayName()
@@ -22,8 +21,10 @@ std::string IGLAPI::GetGraphicsDisplayName()
 	return "OpenGL";
 }
 
-unsigned IGLAPI::CreateBuffer(Pointer<Material> Material)
+unsigned IGLAPI::CreateBuffer(const MeshData& MeshData)
 {
+	// TODO: Move buffer/stride determination to shader
+	
 	GLuint vao;
 	GLuint vbo;
 	GLuint ebo;
@@ -35,49 +36,21 @@ unsigned IGLAPI::CreateBuffer(Pointer<Material> Material)
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	const bool bHasTexture = Material->HasTexture();
-
-	if (bHasTexture)
+	if (MeshData.HasUVData())
 	{
-		if (true)
-		{
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat), static_cast<GLvoid*>(0));
-			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat), (GLvoid*)(7 * sizeof(GLfloat)));
-			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat), (GLvoid*)(9 * sizeof(GLfloat)));
-			glEnableVertexAttribArray(0);
-			glEnableVertexAttribArray(1);
-			glEnableVertexAttribArray(2);
-			glEnableVertexAttribArray(3);
-		}
-		else
-		{
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), static_cast<GLvoid*>(0));
-			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(7 * sizeof(GLfloat)));
-			glEnableVertexAttribArray(0);
-			glEnableVertexAttribArray(1);
-			glEnableVertexAttribArray(2);
-		}
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), static_cast<GLvoid*>(0));
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
 	}
 	else
 	{
-		if (true)
-		{
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), static_cast<GLvoid*>(0));
-			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)(7 * sizeof(GLfloat)));
-			glEnableVertexAttribArray(0);
-			glEnableVertexAttribArray(1);
-			glEnableVertexAttribArray(3);
-		}
-		else
-		{
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), static_cast<GLvoid*>(0));
-			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-			glEnableVertexAttribArray(0);
-			glEnableVertexAttribArray(1);
-		}
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), static_cast<GLvoid*>(0));
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
 	}
 	
 	// const GLsizei StrideSize = bHasTexture ? 12 : 10;
@@ -105,12 +78,12 @@ unsigned IGLAPI::CreateBuffer(Pointer<Material> Material)
 	return vao;
 }
 
-TextureData IGLAPI::GetTexture(const char* TextureSource, bool bAA)
+CTexture IGLAPI::GetTexture(const std::string& TextureSource, bool bAA)
 {
-	TextureData Texture;
+	CTexture Texture;
 
 	bool bTextureExists = false;
-	for (auto& it : Shader::Textures)
+	for (auto& it : ShaderManager::Textures)
 	{
 		if (it.first == TextureSource)
 		{
@@ -141,15 +114,15 @@ TextureData IGLAPI::GetTexture(const char* TextureSource, bool bAA)
 			}
 
 			Texture.Path = TextureSource;
-			unsigned char* image = SOIL_load_image(TextureSource, &Texture.Width, &Texture.Height, nullptr, SOIL_LOAD_RGBA);
+			unsigned char* image = SOIL_load_image(TextureSource.c_str(), &Texture.Width, &Texture.Height, nullptr, SOIL_LOAD_RGBA);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Texture.Width, Texture.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
 			glGenerateMipmap(GL_TEXTURE_2D);
 			SOIL_free_image_data(image);
 			glBindTexture(GL_TEXTURE_2D, 0);
 
-			Shader::Textures.insert(std::pair(TextureSource, Texture));
-			LogManager::GetInstance()->DisplayLogMessage("Adding Texture, \"" + std::string(TextureSource) + "\", Total Texture Count : " + std::to_string(Shader::Textures.size()));
+			ShaderManager::Textures.insert(std::pair(TextureSource, Texture));
+			LogManager::GetInstance()->DisplayLogMessage("Adding Texture, \"" + std::string(TextureSource) + "\", Total Texture Count : " + std::to_string(ShaderManager::Textures.size()));
 		}
 		else
 		{
@@ -168,7 +141,7 @@ void IGLAPI::BindArray(const std::vector<float>& Vertices, const std::vector<uin
 	glBindVertexArray(0);
 }
 
-Pointer<IGraphicsInstance> IGLAPI::CreateNewInstance()
+TPointer<IGraphicsInstance> IGLAPI::CreateNewInstance()
 {
 	// Create instance for basic setup before window
 	return std::make_shared<GLInstance>();
@@ -193,73 +166,85 @@ std::string IGLAPI::ReadShader(const char* filename)
 	return shaderCode;
 }
 
-unsigned IGLAPI::CreateShader(GLenum shaderType, std::string source, const char* shaderName)
+bool IGLAPI::CreateShader(uint32_t& ShaderID, GLenum shaderType, std::string source, const char* shaderName)
 {
+	// TODO: Change to bool return
 	int compile_result = 0;
 
-	GLuint shader = glCreateShader(shaderType);
+	ShaderID = glCreateShader(shaderType);
 	const char* shader_code_ptr = source.c_str();
 	const int shader_code_size = source.size();
 
-	glShaderSource(shader, 1, &shader_code_ptr, &shader_code_size);
-	glCompileShader(shader);
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &compile_result);
+	glShaderSource(ShaderID, 1, &shader_code_ptr, &shader_code_size);
+	glCompileShader(ShaderID);
+	glGetShaderiv(ShaderID, GL_COMPILE_STATUS, &compile_result);
 
 	//check for errors
 	if (compile_result == GL_FALSE)
 	{
 		int info_log_length = 0;
-		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &info_log_length);
+		glGetShaderiv(ShaderID, GL_INFO_LOG_LENGTH, &info_log_length);
 		std::vector<char> shader_log(info_log_length);
-		glGetShaderInfoLog(shader, info_log_length, nullptr, &shader_log[0]);
+		glGetShaderInfoLog(ShaderID, info_log_length, nullptr, &shader_log[0]);
 		std::cout << "ERROR compiling shader: " << shaderName << std::endl << &shader_log[0] << std::endl;
-		return 0;
+		return false;
 	}
-	return shader;
+	return true;
 }
 
-unsigned int IGLAPI::CreateProgram(const char* vertexShaderFilename, const char* fragmentShaderFilename, const char* geometryShaderFilename)
+bool IGLAPI::CreateShaderProgram(uint32_t& ProgramID, const char* vertexShaderFilename, const char* fragmentShaderFilename, const char* geometryShaderFilename)
 {
 	//read the shader files and save the code
 	std::string vertex_shader_code = ReadShader(vertexShaderFilename);
 	std::string fragment_shader_code = ReadShader(fragmentShaderFilename);
 
-	GLuint vertex_shader = CreateShader(GL_VERTEX_SHADER, vertex_shader_code, "vertex shader");
-	GLuint fragment_shader = CreateShader(GL_FRAGMENT_SHADER, fragment_shader_code, "fragment shader");
+	GLuint vertex_shader;
+	if (!CreateShader(vertex_shader, GL_VERTEX_SHADER, vertex_shader_code,"vertex shader"))
+	{
+		return false;
+	}
+	GLuint fragment_shader;
+	if (CreateShader(fragment_shader, GL_FRAGMENT_SHADER, fragment_shader_code,"fragment shader"))
+	{
+		return false;
+	}
 	GLuint geometry_shader;
 
 	if (std::string(geometryShaderFilename) != "")
 	{
 		std::string geometry_shader_code = ReadShader(geometryShaderFilename);
-		geometry_shader = CreateShader(GL_GEOMETRY_SHADER, geometry_shader_code, "geometry shader");
+		if (!CreateShader(geometry_shader, GL_GEOMETRY_SHADER, geometry_shader_code,"geometry shader"))
+		{
+			return false;
+		}
 	}
 
 	int link_result = 0;
 	//create the program handle, attatch the shaders and link it
-	GLuint program = glCreateProgram();
-	glAttachShader(program, vertex_shader);
-	glAttachShader(program, fragment_shader);
+	ProgramID = glCreateProgram();
+	glAttachShader(ProgramID, vertex_shader);
+	glAttachShader(ProgramID, fragment_shader);
 	if (std::string(geometryShaderFilename) != "")
 	{
-		glAttachShader(program, geometry_shader);
+		glAttachShader(ProgramID, geometry_shader);
 	}
 
-	glLinkProgram(program);
-	glGetProgramiv(program, GL_LINK_STATUS, &link_result);
+	glLinkProgram(ProgramID);
+	glGetProgramiv(ProgramID, GL_LINK_STATUS, &link_result);
 	//check for link errors
 	if (link_result == GL_FALSE)
 	{
 		int info_log_length = 0;
-		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &info_log_length);
+		glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &info_log_length);
 		std::vector<char> program_log(info_log_length);
-		glGetProgramInfoLog(program, info_log_length, nullptr, &program_log[0]);
+		glGetProgramInfoLog(ProgramID, info_log_length, nullptr, &program_log[0]);
 		std::cout << "Shader Loader : LINK ERROR" << std::endl << &program_log[0] << std::endl;
-		return 0;
+		return false;
 	}
-	return program;
+	return true;
 }
 
-unsigned int IGLAPI::CreateTessProgram(const char* vertexShaderFilename, const char* fragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename)
+bool IGLAPI::CreateTessProgram(uint32_t& ProgramID, const char* vertexShaderFilename, const char* fragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename)
 {
 	//read the shader files and save the code
 	std::string vertex_shader_code = ReadShader(vertexShaderFilename);
@@ -267,57 +252,77 @@ unsigned int IGLAPI::CreateTessProgram(const char* vertexShaderFilename, const c
 	std::string tess_control_shader_code = ReadShader(TessControlShaderFilename);
 	std::string tess_eval_shader_code = ReadShader(TessEvalShaderFilename);
 
-	GLuint vertex_shader = CreateShader(GL_VERTEX_SHADER, vertex_shader_code, "vertex shader");
-	GLuint fragment_shader = CreateShader(GL_FRAGMENT_SHADER, fragment_shader_code, "fragment shader");
-	GLuint tess_control_shader = CreateShader(GL_TESS_CONTROL_SHADER, tess_control_shader_code, "tess control shader");
-	GLuint tess_eval_shader = CreateShader(GL_TESS_EVALUATION_SHADER, tess_eval_shader_code, "tess eval shader");
+	GLuint vertex_shader;
+	if (!CreateShader(vertex_shader, GL_VERTEX_SHADER, vertex_shader_code,"vertex shader"))
+	{
+		return false;
+	}
+	GLuint fragment_shader;
+	if (!CreateShader(fragment_shader, GL_FRAGMENT_SHADER, fragment_shader_code,"fragment shader"))
+	{
+		return false;
+	}
+	GLuint tess_control_shader;
+	if (!CreateShader(tess_control_shader, GL_TESS_CONTROL_SHADER, tess_control_shader_code,"tess control shader"))
+	{
+		return false;
+	}
+	GLuint tess_eval_shader;
+	if (!CreateShader(tess_eval_shader, GL_TESS_EVALUATION_SHADER, tess_eval_shader_code,"tess eval shader"))
+	{
+		return false;
+	}
 
 	int link_result = 0;
 	//create the program handle, attatch the shaders and link it
-	GLuint program = glCreateProgram();
-	glAttachShader(program, vertex_shader);
-	glAttachShader(program, fragment_shader);
-	glAttachShader(program, tess_control_shader);
-	glAttachShader(program, tess_eval_shader);
+	ProgramID = glCreateProgram();
+	glAttachShader(ProgramID, vertex_shader);
+	glAttachShader(ProgramID, fragment_shader);
+	glAttachShader(ProgramID, tess_control_shader);
+	glAttachShader(ProgramID, tess_eval_shader);
 
-	glLinkProgram(program);
-	glGetProgramiv(program, GL_LINK_STATUS, &link_result);
+	glLinkProgram(ProgramID);
+	glGetProgramiv(ProgramID, GL_LINK_STATUS, &link_result);
 	//check for link errors
 	if (link_result == GL_FALSE)
 	{
 		int info_log_length = 0;
-		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &info_log_length);
+		glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &info_log_length);
 		std::vector<char> program_log(info_log_length);
-		glGetProgramInfoLog(program, info_log_length, nullptr, &program_log[0]);
+		glGetProgramInfoLog(ProgramID, info_log_length, nullptr, &program_log[0]);
 		std::cout << "Shader Loader : LINK ERROR" << std::endl << &program_log[0] << std::endl;
-		return 0;
+		return false;
 	}
-	return program;
+	return true;
 }
 
-unsigned int IGLAPI::CreateComputeProgram(const char* ComputeShaderFilename)
+bool IGLAPI::CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename)
 {
 	//read the shader files and save the code
 	std::string compute_shader_code = ReadShader(ComputeShaderFilename);
 
-	GLuint compute_shader = CreateShader(GL_COMPUTE_SHADER, compute_shader_code, "compute shader");
+	GLuint compute_shader;
+	if (!CreateShader(compute_shader, GL_COMPUTE_SHADER, compute_shader_code,"compute shader"))
+	{
+		return false;
+	}
 
 	int link_result = 0;
 	//create the program handle, attatch the shaders and link it
-	GLuint program = glCreateProgram();
-	glAttachShader(program, compute_shader);
+	ProgramID = glCreateProgram();
+	glAttachShader(ProgramID, compute_shader);
 
-	glLinkProgram(program);
-	glGetProgramiv(program, GL_LINK_STATUS, &link_result);
+	glLinkProgram(ProgramID);
+	glGetProgramiv(ProgramID, GL_LINK_STATUS, &link_result);
 	//check for link errors
 	if (link_result == GL_FALSE)
 	{
 		int info_log_length = 0;
-		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &info_log_length);
+		glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &info_log_length);
 		std::vector<char> program_log(info_log_length);
-		glGetProgramInfoLog(program, info_log_length, nullptr, &program_log[0]);
+		glGetProgramInfoLog(ProgramID, info_log_length, nullptr, &program_log[0]);
 		std::cout << "Shader Loader : LINK ERROR" << std::endl << &program_log[0] << std::endl;
-		return 0;
+		return false;
 	}
-	return program;
+	return true;
 }

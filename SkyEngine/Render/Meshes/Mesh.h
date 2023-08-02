@@ -2,35 +2,34 @@
 
 #pragma once
 
+#include "Entity/Component.h"
 #include "Core/Core.h"
 
 // OpenGL Library Includes //
-#include <glew/glew.h>
-#include <glm/glm.hpp>
 
 // Engine Includes //
-#include "Math/FTransform.h"
+#include "Math/Transform.h"
 
 // Library Include //
 #include <memory>
 
 #include "MeshData.h"
-#include "Render/Material.h"
-#include "System/EnumTypes.h"
+#include "Render/Materials/Material.h"
 
 class Entity;
-class CollisionBounds;
+class CCollisionBounds;
 
-class ENGINE_API Mesh
+class ENGINE_API CMeshComponent : public CComponent
 {
 public:
-	Mesh();
-	Mesh(float InWidth, float InHeight, float InDepth, glm::vec4 InColour);
-	Mesh(float InWidth, float InHeight, float InDepth, glm::vec4 InColour, const char* InTextureSource);
+	// TODO: Remove empty constructor once made redundant 
+	CMeshComponent();
+	// TODO: Replace width with mesh data
+	CMeshComponent(const TPointer<Entity>& InOwner, float InWidth, float InHeight, float InDepth, const TPointer<CMaterial>& = nullptr);
 
-	virtual ~Mesh();
+	virtual ~CMeshComponent();
 	
-	virtual bool CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, Pointer<Entity> EntityCheck);
+	virtual bool CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos, TPointer<Entity> EntityCheck);
 
 	virtual void Update() {}
 
@@ -41,21 +40,16 @@ public:
 	void BindMeshData();
 	virtual void Rebind() {}
 
-	// Will replace if texture exists
-	virtual void SetLit(bool _bIsLit);
+	void AddCollisionBounds(float fHeight, float fWidth, float fDepth, TPointer<Entity> _EntityRef);
 
-	void SetReflection(bool _bReflecting);
+	void AddCollisionBounds(TPointer<CCollisionBounds> NewCollision);
 
-	void AddCollisionBounds(float fHeight, float fWidth, float fDepth, Pointer<Entity> _EntityRef);
-
-	void AddCollisionBounds(Pointer<CollisionBounds> NewCollision);
-
-	Pointer<CollisionBounds> GetCollisionBounds()
+	TPointer<CCollisionBounds> GetCollisionBounds()
 	{
 		return MeshCollisionBounds;
 	};
 
-	Pointer<Material> MeshMaterial;
+	TPointer<CMaterial> MeshMaterial;
 	float m_fWidth;
 	float m_fHeight;
 	float m_fDepth = 0;
@@ -65,6 +59,6 @@ public:
 protected:
 	virtual MeshData GetMeshData()= 0;
 	
-	Pointer<CollisionBounds> MeshCollisionBounds;
+	TPointer<CCollisionBounds> MeshCollisionBounds;
 };
 

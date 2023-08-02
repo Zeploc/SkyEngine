@@ -5,7 +5,7 @@
 // Local Includes //
 
 // Engine Includes //
-#include "Render/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 
 // OpenGL Includes //
 #include <soil/SOIL2.h>
@@ -30,7 +30,7 @@ CubeMap::CubeMap(float fWidth, float fHeight, float fDepth, char* _TextureSource
 	m_fHeight = fHeight;
 	m_fDepth = fDepth;
 	
-	MeshMaterial = std::make_shared<Material>("CubeMapProgram");
+	MeshMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader("CubeMapProgram"));
 	BindCubeMap();
 }
 
@@ -172,7 +172,7 @@ void CubeMap::Rebind()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void CubeMap::Render(FTransform Newtransform)
+void CubeMap::Render(STransform Newtransform)
 {
 	// TODO: Cubemap
 	// glUseProgram(MeshMaterial.ShaderProgram);

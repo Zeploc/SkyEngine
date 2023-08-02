@@ -16,7 +16,7 @@
 class ENGINE_API ParticleSystem : public Entity
 {
 public:
-	ParticleSystem(FTransform _Transform);
+	ParticleSystem(STransform _Transform);
 
 	~ParticleSystem();
 
@@ -77,7 +77,7 @@ private:
 	GLuint program;
 	GLuint vao;
 	GLuint vbo;
-	TextureData Texture;
+	CTexture Texture;
 
 	bool bHasTexture = false;
 };

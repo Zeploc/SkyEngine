@@ -6,8 +6,9 @@
 #include <soil/SOIL2.h>
 
 // Engine Includes //
-#include "Render/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 #include "Core/Application.h"
+#include "Render/Shaders/PBRShader.h"
 #include "System/Time.h"
 
 /************************************************************
@@ -16,14 +17,11 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Plane::Plane(float fWidth, float fHeight, glm::vec4 _Colour)
+CPlane::CPlane(const TPointer<Entity>& InOwner, float fWidth, float fHeight, TPointer<CMaterial> InMaterial)
+: CMeshComponent(InOwner, fWidth, fHeight, 0.0f, InMaterial)
 {
-	m_fWidth = fWidth;
-	m_fHeight = fHeight;
 	CollisionBox.fHeight = m_fHeight;
 	CollisionBox.fWidth = m_fWidth;
-	MeshMaterial = std::make_shared<Material>("BaseProgram");
-	MeshMaterial->Colour = _Colour;
 	BindMeshData();	
 }
 
@@ -33,45 +31,23 @@ Plane::Plane(float fWidth, float fHeight, glm::vec4 _Colour)
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Plane::Plane(float fWidth, float fHeight, glm::vec4 _Colour, const char* _TextureSource)
+CPlane::CPlane(const TPointer<Entity>& InOwner, float InWidth, float InHeight, TPointer<CMaterial> InMaterial, glm::vec2 v2FrameCounts, int _iFPS)
+: CMeshComponent(InOwner, InWidth, InHeight, 0.0f, InMaterial)
 {
-	m_fWidth = fWidth;
-	m_fHeight = fHeight;
 	CollisionBox.fHeight = m_fHeight;
 	CollisionBox.fWidth = m_fWidth;
-	MeshMaterial = std::make_shared<Material>("BaseProgram");
-	MeshMaterial->SetTexture(_TextureSource);
-	MeshMaterial->Colour = _Colour;
-	BindMeshData();	
-}
-
-/************************************************************
-#--Description--#:  Constructor function
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	Takes contructor values
-#--Return--#: 		NA
-************************************************************/
-Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char* _TextureSource, glm::vec2 v2FrameCounts, int _iFPS)
-{
-	m_fWidth = _fWidth;
-	m_fHeight = _fHeight;
-	CollisionBox.fHeight = m_fHeight;
-	CollisionBox.fWidth = m_fWidth;
-	MeshMaterial = std::make_shared<Material>("BaseProgram");
-	MeshMaterial->SetTexture(_TextureSource);
-	MeshMaterial->Colour = _Colour;
 	BindMeshData();
 	
 	AnimationInfo.iFPS = _iFPS;
 	m_fFrameCheck = 1.0f / AnimationInfo.iFPS;
 
-	const TextureData TextureData = MeshMaterial->GetTextureData();
+	const TPointer<CTexture> TextureData = MeshMaterial->GetMaterialAttribute<TPointer<CTexture>>(CPBRShader::DiffuseTexture);
 
 	AnimationInfo.v2FrameCount = v2FrameCounts;
 	AnimationInfo.v2EndFrame = v2FrameCounts;
 	AnimationInfo.v2FrameSize = {
-		(TextureData.Width / v2FrameCounts.x) / TextureData.Width,
-		(TextureData.Height / v2FrameCounts.y) / TextureData.Height
+		(TextureData->Width / v2FrameCounts.x) / TextureData->Width,
+		(TextureData->Height / v2FrameCounts.y) / TextureData->Height
 	};
 
 	// TODO: Link coordinates in material for sprite
@@ -84,20 +60,16 @@ Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char* _Text
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char* _TextureSource, int iCount, bool bHorizontal)
+CPlane::CPlane(const TPointer<Entity>& InOwner, float InWidth, float InHeight, TPointer<CMaterial> InMaterial, int iCount, bool bHorizontal)
+: CMeshComponent(InOwner, InWidth, InHeight, 0.0f, InMaterial)
 {	
-	m_fWidth = _fWidth;
-	m_fHeight = _fHeight;
 	CollisionBox.fHeight = m_fHeight;
 	CollisionBox.fWidth = m_fWidth;
-	MeshMaterial = std::make_shared<Material>("BaseProgram");
-	MeshMaterial->SetTexture(_TextureSource);
-	MeshMaterial->Colour = _Colour;
 	BindMeshData();	
 
-	const TextureData TextureData = MeshMaterial->GetTextureData();
-	float fImageRatio = static_cast<float>(TextureData.Width) / static_cast<float>(TextureData.Height);
-	float fObjectRatio = _fHeight / _fWidth;
+	const TPointer<CTexture> TextureData = MeshMaterial->GetMaterialAttribute<TPointer<CTexture>>(CPBRShader::DiffuseTexture);
+	float fImageRatio = static_cast<float>(TextureData->Width) / static_cast<float>(TextureData->Height);
+	float fObjectRatio = InHeight / InWidth;
 	float hSize = static_cast<float>(iCount);
 	float vSize = static_cast<float>(iCount);
 	if (bHorizontal)
@@ -119,13 +91,13 @@ Plane::Plane(float _fWidth, float _fHeight, glm::vec4 _Colour, const char* _Text
 #--Parameters--#:	NA
 #--Return--#: 		NA
 ************************************************************/
-Plane::~Plane()
+CPlane::~CPlane()
 {
 }
 
-void Plane::Reset()
+void CPlane::Reset()
 {
-	Mesh::Reset();
+	CMeshComponent::Reset();
 	// Reset plane specific states
 	AnimationInfo = m_PlaneInitialState.AnimationInfo;
 	m_dFPSCounter = m_PlaneInitialState.m_dFPSCounter;
@@ -139,7 +111,7 @@ void Plane::Reset()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Plane::Render(FTransform Newtransform)
+void CPlane::Render(STransform Newtransform)
 {
 	// TODO: move too renderer linking to plane
 	if (m_fFrameCheck > 0)
@@ -152,10 +124,10 @@ void Plane::Render(FTransform Newtransform)
 		}
 	}
 	// TODO: Properly link sprite sheet
-	if (MeshMaterial && MeshMaterial->HasTexture())
+	if (MeshMaterial && MeshMaterial->HasMaterialAttribute(CPBRShader::DiffuseTexture))
 	{
-		glUseProgram(MeshMaterial->GetShaderProgram());
-		GLint UVCoordsLoc = glGetUniformLocation(MeshMaterial->GetShaderProgram(), "uTexCoordOffset");
+		glUseProgram(MeshMaterial->GetShader()->GetShaderProgram());
+		GLint UVCoordsLoc = glGetUniformLocation(MeshMaterial->GetShader()->GetShaderProgram(), "uTexCoordOffset");
 		glUniform2f(UVCoordsLoc, AnimationInfo.v2CurrentFrame.x * AnimationInfo.v2FrameSize.x, AnimationInfo.v2CurrentFrame.y * AnimationInfo.v2FrameSize.y);
 	}
 	// Mesh::Render(Newtransform);
@@ -167,7 +139,7 @@ void Plane::Render(FTransform Newtransform)
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Plane::Update()
+void CPlane::Update()
 {
 	if (m_fFrameCheck > 0) // Doesn't run, framecheck is 0?
 	{
@@ -180,13 +152,13 @@ void Plane::Update()
 	}
 }
 
-bool Plane::CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, Pointer<Entity> EntityCheck)
+bool CPlane::CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos, TPointer<Entity> EntityCheck)
 {
 	glm::vec3 HalfDimensionvec = glm::vec3(m_fWidth / 2.0f, m_fHeight / 2.0f, m_fDepth / 2.0f);
 	return Utils::CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos);
 }
 
-MeshData Plane::GetMeshData()
+MeshData CPlane::GetMeshData()
 {
 	const float HalfWidth = m_fWidth / 2;
 	const float HalfHeight = m_fHeight / 2;
@@ -218,7 +190,7 @@ MeshData Plane::GetMeshData()
 	};
 
 	MeshData PlaneMeshData(VertexPositions, Indices, Normals);
-	if (MeshMaterial->HasTexture())
+	if (MeshMaterial->HasMaterialAttribute(CPBRShader::DiffuseTexture))
 	{
 		PlaneMeshData.SetUVs(UVCoords);
 	}

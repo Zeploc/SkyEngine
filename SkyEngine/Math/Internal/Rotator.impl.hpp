@@ -8,23 +8,23 @@
 #include <string>
 #include <sstream>
 
-inline Rotator::Rotator(const Vector3x<float>& V)
+inline SRotator::SRotator(const TVector3<float>& V)
 {
 	Pitch = V.X;
 	Yaw = V.Y;
 	Roll = V.Z;
 }
 
-inline Vector3 Rotator::ToVector() const
+inline SVector SRotator::ToVector() const
 {
 	// TODO: Confirm correct
-	const Vector3 ForwardVector(-cos(glm::radians(Pitch)) * sin(glm::radians(Yaw)),
+	const SVector ForwardVector(-cos(glm::radians(Pitch)) * sin(glm::radians(Yaw)),
 	                            sin(glm::radians(Pitch)),
 	                            -cos(glm::radians(Pitch)) * cos(glm::radians(Yaw)));
 	return ForwardVector;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const Rotator& InRotator)
+inline std::ostream& operator<<(std::ostream& os, const SRotator& InRotator)
 {
 	// TODO: Improve to not use to string
 	os << "(";
@@ -35,7 +35,7 @@ inline std::ostream& operator<<(std::ostream& os, const Rotator& InRotator)
 	return os;
 }
 
-inline std::istream& operator>>(std::istream& is, Rotator& OutRotator)
+inline std::istream& operator>>(std::istream& is, SRotator& OutRotator)
 {
 	std::string Empty;
 	// TODO: Improve bracket removal
@@ -50,45 +50,45 @@ inline std::istream& operator>>(std::istream& is, Rotator& OutRotator)
 	return is;
 }
 
-inline Rotator operator+(const Rotator& l, const Rotator& r)
+inline SRotator operator+(const SRotator& l, const SRotator& r)
 {
-	Rotator Ret(l.Pitch + r.Pitch,
+	SRotator Ret(l.Pitch + r.Pitch,
 				 l.Yaw + r.Yaw,
 				 l.Roll + r.Roll);
 
 	return Ret;
 }
 
-inline Rotator operator-(const Rotator& l, const Rotator& r)
+inline SRotator operator-(const SRotator& l, const SRotator& r)
 {
-	Rotator Ret(l.Pitch - r.Pitch,
+	SRotator Ret(l.Pitch - r.Pitch,
 				 l.Yaw - r.Yaw,
 				 l.Roll - r.Roll);
 
 	return Ret;
 }
 
-inline Rotator operator*(const Rotator& l, float f)
+inline SRotator operator*(const SRotator& l, float f)
 {
-	Rotator Ret(l.Pitch * f,
+	SRotator Ret(l.Pitch * f,
 				 l.Yaw * f,
 				 l.Roll * f);
 
 	return Ret;
 }
 
-inline Rotator operator/(const Rotator& l, float f)
+inline SRotator operator/(const SRotator& l, float f)
 {
-	Rotator Ret(l.Pitch / f,
+	SRotator Ret(l.Pitch / f,
 				 l.Yaw / f,
 				 l.Roll / f);
 
 	return Ret;
 }
 
-inline Rotator operator/(float f, const Rotator& l)
+inline SRotator operator/(float f, const SRotator& l)
 {
-	Rotator Ret(f / l.Pitch,
+	SRotator Ret(f / l.Pitch,
 				 f / l.Yaw,
 				 f / l.Roll);
 

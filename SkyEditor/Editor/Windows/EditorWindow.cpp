@@ -10,7 +10,7 @@
 
 #include <Camera/CameraManager.h>
 #include <Input/Input.h>
-#include <Render/Shader.h>
+#include <Render/ShaderManager.h>
 #include <System/Utils.h>
 #include <UI/UIButton.h>
 
@@ -26,7 +26,7 @@ void EditorWindow::CreateExternalWindow()
 	Input::GetInstance()->Init(LinkedWindow);
 }
 
-EditorWindow::EditorWindow(std::string InWindowName, Pointer<EngineWindow> InLinkedWindow, Vector2 InSize, Vector2 InPosition)
+EditorWindow::EditorWindow(std::string InWindowName, TPointer<EngineWindow> InLinkedWindow, SVector2 InSize, SVector2 InPosition)
 : WindowName(InWindowName), LinkedWindow(InLinkedWindow), Size(InSize), Position(InPosition)
 {
 	if (!LinkedWindow)
@@ -53,7 +53,7 @@ void EditorWindow::SetupUI()
 		UIElements.push_back(BackImage);
 
 		//20, Size.y - 20.0f
-		Pointer<UIButton> TestBtn(new UIButton(glm::vec2(0.0f, 0.0f), EANCHOR::TOP_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), Size.X - 35, 30, nullptr));
+		TPointer<UIButton> TestBtn(new UIButton(glm::vec2(0.0f, 0.0f), EANCHOR::TOP_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), Size.X - 35, 30, nullptr));
 
 		TestBtn->BindPress(this, &EditorWindow::StartDrag);
 		TestBtn->BindRelease(this, &EditorWindow::StopDrag);
@@ -61,7 +61,7 @@ void EditorWindow::SetupUI()
 		TestBtn->AddText(WindowName, "Resources/Fonts/Roboto-Thin.ttf", 20, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
 		UIElements.push_back(TestBtn);
 
-		Pointer<UIButton> PopoutButton(new UIButton(glm::vec2(Size.X, 0.0f), EANCHOR::TOP_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 30, 30, nullptr));
+		TPointer<UIButton> PopoutButton(new UIButton(glm::vec2(Size.X, 0.0f), EANCHOR::TOP_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 30, 30, nullptr));
 
 		PopoutButton->BindPress(this, &EditorWindow::PopOut);
 		UIElements.push_back(PopoutButton);
@@ -82,7 +82,7 @@ void EditorWindow::RenderWindow()
 	else
 	{
 		// Position viewport within existing main window
-		const Vector2 MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
+		const SVector2 MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
 		glViewport(Position.X, MainWindowSize.Y - Position.Y - Size.Y, Size.X, Size.Y);
 	}
 
@@ -111,7 +111,7 @@ void EditorWindow::PopOut()
 		return;
 	}
 
-	const Vector2 MainWindowPosition = EditorWindowManager::GetMainWindow()->GetPosition();
+	const SVector2 MainWindowPosition = EditorWindowManager::GetMainWindow()->GetPosition();
 	Position.Y += 30;
 	LinkedWindow->SetWindowPosition(MainWindowPosition + Position);	
 
@@ -156,7 +156,7 @@ void EditorWindow::PopIn()
 	LinkedWindow.reset();
 	LinkedWindow = EditorWindowManager::GetMainWindow();
 
-	const Vector2 MainWindowPosition = LinkedWindow->GetPosition();
+	const SVector2 MainWindowPosition = LinkedWindow->GetPosition();
 	Position -= MainWindowPosition;
 	Position.Y -= 30;
 
@@ -174,21 +174,21 @@ void EditorWindow::StopDrag()
 {
 	if (DraggingWindow)
 	{
-		Vector2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
+		SVector2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
 		SetWindowPosition(NewPosition);
 
 		DraggingWindow = false;
 	}
 }
 
-bool EditorWindow::IsPointInWindow(Vector2 _point)
+bool EditorWindow::IsPointInWindow(SVector2 _point)
 {
 	if (_point.X < Position.X || _point.Y < Position.Y)
 	{
 		return false;
 	}
 
-	Vector2 EndPos = Position + Size;
+	SVector2 EndPos = Position + Size;
 
 	if (_point.X > EndPos.X || _point.Y > EndPos.Y)
 	{
@@ -210,8 +210,8 @@ void EditorWindow::UpdateWindow()
 {
 	if (LinkedWindow != EditorWindowManager::GetMainWindow()) //seperate window
 	{		
-		const Vector2 MainWindowPosition = EditorWindowManager::GetMainWindow()->GetPosition();
-		const Vector2 MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
+		const SVector2 MainWindowPosition = EditorWindowManager::GetMainWindow()->GetPosition();
+		const SVector2 MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
 		
 		// Update position
 		GetPosition();
@@ -237,7 +237,7 @@ void EditorWindow::UpdateWindow()
 
 	if (DraggingWindow)
 	{
-		Vector2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
+		SVector2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
 		SetWindowPosition(NewPosition);
 	}
 
@@ -270,7 +270,7 @@ void EditorWindow::UpdateWindow()
 	//	
 	//}
 
-	for (Pointer<UIElement> UIElement : UIElements)
+	for (TPointer<UIElement> UIElement : UIElements)
 	{
 		UIElement->BaseUpdate();
 	}
@@ -278,7 +278,7 @@ void EditorWindow::UpdateWindow()
 	//Input::GetInstance()->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 }
 
-Vector2 EditorWindow::GetPosition()
+SVector2 EditorWindow::GetPosition()
 {
 	if (LinkedWindow != EditorWindowManager::GetMainWindow())
 	{
@@ -287,7 +287,7 @@ Vector2 EditorWindow::GetPosition()
 	return Position;
 }
 
-void EditorWindow::SetWindowPosition(Vector2 _position)
+void EditorWindow::SetWindowPosition(SVector2 _position)
 {
 	if (LinkedWindow != EditorWindowManager::GetMainWindow())
 	{

@@ -24,6 +24,7 @@
 
 #include "Render/Texture.h"
 #include "Math/Matrix.h"
+#include "Math/Transform.h"
 #include "Render/Lighting.h"
 #include "System/Math_3d.h"
 
@@ -47,7 +48,7 @@ public:
 
 	bool loadMesh(std::string fileName);
 
-	void render(Pointer<Terrain> terrain);
+	void render(TPointer<Terrain> terrain);
 
 	GLuint numBones()
 	{
@@ -58,11 +59,11 @@ public:
 
 	void setCurrentAnimation(int startFrameNum, int endFramNum);
 
-	void SetPosition(Vector3 InPosition);
+	void SetPosition(SVector InPosition);
 
-	void SetRotation(Rotator InRotation);
+	void SetRotation(SRotator InRotation);
 
-	void SetScale(Vector3 InScale);
+	void SetScale(SVector InScale);
 
 	void setSpeed(float _speed);
 
@@ -151,7 +152,7 @@ private:
 
 	void ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const Matrix4& ParentTransform);
 
-	void setShaderEffectVariables(Pointer<Terrain> terrain);
+	void setShaderEffectVariables(TPointer<Terrain> terrain);
 
 	//rendering
 
@@ -187,7 +188,7 @@ private:
 	GLuint m_Buffers[NUM_VBs];
 
 	std::vector<MeshEntry> m_Entries;
-	std::vector<TextureData> m_Textures;
+	std::vector<CTexture> m_Textures;
 
 	std::map<std::string, GLuint> m_BoneMapping;
 	std::map<std::string, aiNodeAnim*> boneHierarchy;
@@ -204,8 +205,6 @@ private:
 
 	float animTick;
 
-	LightInfo ModelLightInfo;
-
 	int startFrame;
 	int endFrame;
 	int currentFrame;
@@ -217,7 +216,7 @@ private:
 
 	float animationTime;
 
-	FTransform Transform;
+	STransform Transform;
 
 	float currentPlayerSpeed;
 	float currentRotationSpeed;

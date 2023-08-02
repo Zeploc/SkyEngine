@@ -16,7 +16,7 @@
 class ParticleSystem2D : public Entity
 {
 public:
-	ParticleSystem2D(FTransform _Transform, const char* _CharName);
+	ParticleSystem2D(STransform _Transform, const char* _CharName);
 
 	~ParticleSystem2D();
 
@@ -42,13 +42,13 @@ public:
 
 	void Update() override;
 
-	std::vector<Pointer<Entity>> GetAdditionalEntitiesToRender() override;
+	std::vector<TPointer<Entity>> GetAdditionalEntitiesToRender() override;
 
 	struct Particle2D
 	{
-		Pointer<Entity> pEntity;
+		TPointer<Entity> pEntity;
 		float fSpeed;
-		Vector2 v2Direction;
+		SVector2 v2Direction;
 		float fFalloffDistance;
 		float fFallOffTime;
 		float fTimeLength;

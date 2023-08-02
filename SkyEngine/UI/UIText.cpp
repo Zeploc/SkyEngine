@@ -10,7 +10,8 @@
 
 // Engine Includes //
 #include "Text.h"
-#include "Render/Shader.h"
+#include "Render/Shaders/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 
 // Local Includes //
 
@@ -24,7 +25,7 @@
 ************************************************************/
 UIText::UIText(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string Font, int _iPSize, EANCHOR _Anchor) : UIElement(_Position, _fRotation, _Colour), sText(_sText), sFont(Font), iPSize(_iPSize), Anchor(_Anchor)
 {
-	Shader::AddFont(Font, iPSize);
+	ShaderManager::AddFont(Font, iPSize);
 }
 
 /************************************************************
@@ -60,6 +61,6 @@ void UIText::DrawUIElement()
 	{
 		return;
 	}
-	glUseProgram(Shader::Programs["TextUIprogram"]);
+	glUseProgram(ShaderManager::GetShader("TextUIprogram")->GetShaderProgram());
 	Text::Render(sText, sFont, iPSize, position, Colour, Anchor);
 }

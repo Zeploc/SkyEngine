@@ -4,7 +4,7 @@
 
 #include <string>
 
-struct TextureData
+struct CTexture
 {
 	std::string Path;
 	int Width = 0;
@@ -12,8 +12,11 @@ struct TextureData
 	uint32_t TextureID = 0;
 	bool bBound = false;
 
-	TextureData() {}
-	TextureData(const std::string InPath)
+	// TODO:
+	bool bAntiAliasing = true;
+
+	CTexture() {}
+	CTexture(const std::string InPath)
 	{
 		Path = InPath;
 	}

@@ -14,7 +14,8 @@
 
 // Engine Includes //
 #include "Camera/CameraManager.h"
-#include "Render/Shader.h"
+#include "Render/Shaders/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 
 // Static Variables //
 std::vector<Text::cFont> Text::Fonts;
@@ -38,7 +39,7 @@ void Text::Render(std::string Text, std::string Font, int iSize, glm::vec2 Posit
 	}
 	if (TextFont.sPathName != Font || TextFont.fPSize != iSize)
 	{
-		TextFont = Shader::AddFont(Font, iSize);
+		TextFont = ShaderManager::AddFont(Font, iSize);
 	}
 	int iTextWidth = 0;
 	for (auto i = Text.begin(); i != Text.end(); ++i)
@@ -60,9 +61,9 @@ void Text::Render(std::string Text, std::string Font, int iSize, glm::vec2 Posit
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	// Activate corresponding render state
 	//glUseProgram(Shader::Textprogram);
-	glUniform3f(glGetUniformLocation(Shader::Programs["TextUIprogram"], "textColor"), colour.x, colour.y, colour.z);
+	glUniform3f(glGetUniformLocation(ShaderManager::GetShader("TextUIprogram")->GetShaderProgram(), "textColor"), colour.x, colour.y, colour.z);
 	glm::mat4 proj = glm::ortho(0.0f, static_cast<GLfloat>(CameraManager::GetInstance()->SCR_WIDTH), 0.0f, static_cast<GLfloat>(CameraManager::GetInstance()->SCR_HEIGHT));
-	glUniformMatrix4fv(glGetUniformLocation(Shader::Programs["TextUIprogram"], "proj"), 1, GL_FALSE, value_ptr(proj));
+	glUniformMatrix4fv(glGetUniformLocation(ShaderManager::GetShader("TextUIprogram")->GetShaderProgram(), "proj"), 1, GL_FALSE, value_ptr(proj));
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(TextFont.VAO);
 

@@ -33,7 +33,7 @@ Entity::Entity(std::string _FromString)
 //#--Parameters--#:		Takes contructor values
 //#--Return--#: 		NA
 //************************************************************/
-Entity::Entity(FTransform _Transform, EANCHOR _Anchor) : Transform(_Transform), EntityAnchor(_Anchor)
+Entity::Entity(STransform _Transform, EANCHOR _Anchor) : Transform(_Transform), EntityAnchor(_Anchor)
 {
 	iEntityID = Utils::AddEntityID();
 	LogManager::GetInstance()->DisplayLogMessage("New Entity created with ID #" + std::to_string(iEntityID));
@@ -51,7 +51,7 @@ Entity::~Entity()
 	LogManager::GetInstance()->DisplayLogMessage("Entity " + std::to_string(iEntityID) + " destroyed!");	
 }
 
-void Entity::AddMesh(Pointer<Mesh> _NewMesh)
+void Entity::AddMesh(TPointer<CMeshComponent> _NewMesh)
 {
 	EntityMesh = _NewMesh;
 	// TODO: Currently binds here when added to entity, should restructure this
@@ -88,9 +88,9 @@ bool Entity::CanRender()
 //	EntityMesh->EntityRef = this->shared_from_this();
 //}
 
-FTransform Entity::GetAnchoredTransform()
+STransform Entity::GetAnchoredTransform()
 {
-	FTransform AnchoredTransform = Transform;
+	STransform AnchoredTransform = Transform;
 	if (EntityMesh->GetCollisionBounds())
 	{
 		AnchoredTransform.Position = Utils::GetAncoredPosition(Transform.Position, EntityMesh->GetCollisionBounds()->GetDimensions(), EntityAnchor);
@@ -137,7 +137,7 @@ void Entity::Update()
 	}
 }
 
-bool Entity::CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos)
+bool Entity::CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos)
 {
 	if (!EntityMesh)
 	{
@@ -199,7 +199,7 @@ std::string Entity::EntityToString()
 	return sEntity.str();
 }
 
-std::ostream& operator<<(std::ostream& os, const Pointer<Entity>& InEntity)
+std::ostream& operator<<(std::ostream& os, const TPointer<Entity>& InEntity)
 {
 	// std::stringstream sEntity("");
 	os << "[Entity] ";
@@ -208,7 +208,7 @@ std::ostream& operator<<(std::ostream& os, const Pointer<Entity>& InEntity)
 	return os;
 }
 
-std::istream& operator>>(std::istream& is, Pointer<Entity>& InEntity)
+std::istream& operator>>(std::istream& is, TPointer<Entity>& InEntity)
 {
 	std::string Empty;
 	// TODO: Remove need for first space removal
@@ -225,7 +225,7 @@ std::istream& operator>>(std::istream& is, Pointer<Entity>& InEntity)
 #--Parameters--#: 	Takes in the movement to move the entity by
 #--Return--#: 		NA
 ************************************************************/
-void Entity::Translate(Vector3 _Movement)
+void Entity::Translate(SVector _Movement)
 {
 	Transform.Position += _Movement;
 }
@@ -236,7 +236,7 @@ void Entity::Translate(Vector3 _Movement)
 #--Parameters--#: 	Takes in the rotation to add
 #--Return--#: 		NA
 ************************************************************/
-void Entity::Rotate(Rotator Rotate)
+void Entity::Rotate(SRotator Rotate)
 {
 	Transform.Rotation += Rotate;
 }
@@ -247,7 +247,7 @@ void Entity::Rotate(Rotator Rotate)
 #--Parameters--#: 	Takes in the new scale
 #--Return--#: 		NA
 ************************************************************/
-void Entity::SetScale(Vector3 _NewScale)
+void Entity::SetScale(SVector _NewScale)
 {
 	Transform.Scale = _NewScale;
 }
@@ -341,7 +341,7 @@ void Entity::SetupB2CircleBody(b2World& Box2DWorld, b2BodyType BodyType, bool bC
 	}
 }
 
-void Entity::SetBox2DTransform(Vector3 _Position, float _Rotation)
+void Entity::SetBox2DTransform(SVector _Position, float _Rotation)
 {
 	if (body)
 	{

@@ -19,7 +19,7 @@ class EditorWindow
 public:
 	void CreateExternalWindow();
 
-	EditorWindow(std::string InWindowName, Pointer<EngineWindow> InLinkedWindow = nullptr, Vector2 InSize = Vector2(100, 100), Vector2 InPosition = Vector2(0, 0));
+	EditorWindow(std::string InWindowName, TPointer<EngineWindow> InLinkedWindow = nullptr, SVector2 InSize = SVector2(100, 100), SVector2 InPosition = SVector2(0, 0));
 
 	void SetupGlutBindings();
 
@@ -29,11 +29,11 @@ public:
 
 	std::string GetWindowName() { return WindowName; };
 
-	Vector2 GetPosition();
+	SVector2 GetPosition();
 
-	void SetWindowPosition(Vector2 _position);
+	void SetWindowPosition(SVector2 _position);
 
-	Pointer<EngineWindow> GetParentWindow() { return LinkedWindow; }
+	TPointer<EngineWindow> GetParentWindow() { return LinkedWindow; }
 
 	void MainWindowSizeChanged(int _w, int _h);
 
@@ -49,7 +49,7 @@ public:
 
 	void StopDrag();
 
-	bool IsPointInWindow(Vector2 _point);
+	bool IsPointInWindow(SVector2 _point);
 
 	void SetBackColour(glm::vec3 _Colour);
 
@@ -59,17 +59,17 @@ protected:
 	glm::vec3 BackColour = glm::vec3(1, 1, 1);
 
 	std::string WindowName;
-	Pointer<EngineWindow> LinkedWindow;
+	TPointer<EngineWindow> LinkedWindow;
 
-	Pointer<UIImage> BackImage;
+	TPointer<UIImage> BackImage;
 
-	Vector2 Size = glm::vec2(100, 100);
-	Vector2 Position = glm::vec2(0, 0);
+	SVector2 Size = glm::vec2(100, 100);
+	SVector2 Position = glm::vec2(0, 0);
 
-	Vector2 DragOffset;
+	SVector2 DragOffset;
 	bool DraggingWindow = false;
 
-	std::vector<Pointer<UIElement>> UIElements;
+	std::vector<TPointer<UIElement>> UIElements;
 
 	bool bCanPopIn = true;
 };

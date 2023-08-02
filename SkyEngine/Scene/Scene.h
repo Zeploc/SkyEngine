@@ -29,17 +29,17 @@ public:
 
 	virtual void RenderScene();
 
-	void AddEntity(Pointer<Entity> _Entity, bool IsInitial = false);
+	void AddEntity(TPointer<Entity> _Entity, bool IsInitial = false);
 
-	void DestroyEntity(Pointer<Entity> _Entity);
+	void DestroyEntity(TPointer<Entity> _Entity);
 
-	void AddUIElement(Pointer<UIElement> Element);
+	void AddUIElement(TPointer<UIElement> Element);
 
-	void AddUITextElement(Pointer<UIText> Element);
+	void AddUITextElement(TPointer<UIText> Element);
 
 	void AddUITextElement(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string font, int iPSize, EANCHOR _Anchor);
 
-	void DestroyUIElement(Pointer<UIElement> _Element);
+	void DestroyUIElement(TPointer<UIElement> _Element);
 
 	virtual void Update();
 
@@ -53,11 +53,11 @@ public:
 	bool operator==(const Scene& rhs) const;
 
 	std::string SceneName;
-	std::vector<Pointer<Entity>> Entities;
-	std::vector<Pointer<UIElement>> UIElements;
+	std::vector<TPointer<Entity>> Entities;
+	std::vector<TPointer<UIElement>> UIElements;
 protected:
-	std::vector<Pointer<Entity>> DestroyedEntities;
-	std::vector<Pointer<UIElement>> UIElementsToBeDestroyed;
+	std::vector<TPointer<Entity>> DestroyedEntities;
+	std::vector<TPointer<UIElement>> UIElementsToBeDestroyed;
 	bool bIsPersistant = false;
 
 private:

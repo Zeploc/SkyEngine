@@ -2,8 +2,7 @@
 
 #pragma once
 
-#include <glew/glew.h>
-#include <GLFW/glfw3.h>
+#include "GLFWIncludes.h"
 
 #include "Platform/Window/GraphicsWindow.h"
 
@@ -11,7 +10,7 @@ class GLFWWindow : public IGraphicsWindow
 {
 public:
 	~GLFWWindow() override;
-	GLFWWindow(std::string InWindowName, Vector2 InWindowSize, bool bFullScreen);
+	GLFWWindow(std::string InWindowName, SVector2 InWindowSize, bool bFullScreen);
 	void CreateGraphicsInstance() override;
 	
 	void SetWindowFullScreen(bool bFullScreen) override;
@@ -25,15 +24,15 @@ public:
 
 	void FocusWindow() const override;
 
-	void SetCursorPosition(Vector2 InCursorPosition) override;
+	void SetCursorPosition(SVector2 InCursorPosition) override;
 
 	bool CloseWindow() override;
 
-	Vector2 GetWindowPosition() override;
+	SVector2 GetWindowPosition() override;
 
-	void SetWindowPosition(Vector2 InWindowPosition) override;
+	void SetWindowPosition(SVector2 InWindowPosition) override;
 
-	Vector2 GetWindowSize() override;
+	SVector2 GetWindowSize() override;
 
 
 protected:

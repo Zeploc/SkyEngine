@@ -3,7 +3,7 @@
 #include "GLFW/GLAPI.h"
 #include "System/LogManager.h"
 
-Pointer<IGraphicsAPI> IGraphicsAPI::CreateGraphicsAPI(EGraphicsAPI APIType)
+TPointer<IGraphicsAPI> IGraphicsAPI::CreateGraphicsAPI(EGraphicsAPI APIType)
 {
 	switch (APIType)
 	{

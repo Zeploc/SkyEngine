@@ -3,14 +3,14 @@
 #include "Pyramid.h"
 
 // Engine Includes //
-#include "Render/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 #include "Core/Application.h"
 
-Pyramid::~Pyramid()
+CPyramid::~CPyramid()
 {
 }
 
-MeshData Pyramid::GetMeshData()
+MeshData CPyramid::GetMeshData()
 {
 	const float HalfWidth = m_fWidth / 2;
 	const float HalfHeight = m_fHeight / 2;

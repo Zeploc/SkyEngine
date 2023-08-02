@@ -27,7 +27,7 @@ public:
 
 		if (bLoading)
 		{
-			Pointer<EditorScene> NewScene = Pointer<EditorScene>(new EditorScene("Editor"));			
+			TPointer<EditorScene> NewScene = TPointer<EditorScene>(new EditorScene("Editor"));			
 			SceneManager::GetInstance()->AddScene(NewScene);
 			
 			// Pointer<Scene> NewScene = Pointer<Scene>(new Scene("Empty"));

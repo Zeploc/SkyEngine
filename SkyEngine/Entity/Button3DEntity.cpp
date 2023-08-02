@@ -10,17 +10,21 @@
 // Static Variables //
 bool Button3DEntity::bButtonPressedThisFrame = false;
 
-Button3DEntity::Button3DEntity(FTransform _Transform, EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, void (*func)()) : Entity(_Transform, _Anchor)
+Button3DEntity::Button3DEntity(STransform _Transform, EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, void (*func)()) : Entity(_Transform, _Anchor)
 {
-	Pointer<Cube> ButtonCubeMesh = std::make_shared<Cube>(Cube(fWidth, fHeight, fDepth, _Colour));
+	// TODO: Link UI pointer and set colour?
+	TPointer<CMaterial> UIMaterial;
+	TPointer<CCube> ButtonCubeMesh = std::make_shared<CCube>(CCube(shared_from_this(), fWidth, fHeight, fDepth, UIMaterial));
 	EntityMesh = ButtonCubeMesh;
 	btnColour = _Colour;
 	btnHighlightColour = _HightlightColour;
 }
 
-Button3DEntity::Button3DEntity(FTransform _Transform, EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, const char* Texturepath, void (*func)()) : Entity(_Transform, _Anchor)
+Button3DEntity::Button3DEntity(STransform _Transform, EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, const char* Texturepath, void (*func)()) : Entity(_Transform, _Anchor)
 {
-	Pointer<Cube> ButtonCubeMesh = std::make_shared<Cube>(Cube(fWidth, fHeight, fDepth, _Colour, Texturepath));
+	// TODO: Link UI pointer and set colour?
+	TPointer<CMaterial> UIMaterial; // _Colour, Texturepath
+	TPointer<CCube> ButtonCubeMesh = std::make_shared<CCube>(CCube(shared_from_this(), fWidth, fHeight, fDepth, UIMaterial));
 	EntityMesh = ButtonCubeMesh;
 	btnColour = _Colour;
 	btnHighlightColour = _HightlightColour;
@@ -48,7 +52,8 @@ void Button3DEntity::Update()
 	{
 		if (EntityMesh->MeshMaterial)
 		{
-			EntityMesh->MeshMaterial->bStencil = true;
+			// TODO: Link stencil
+			// EntityMesh->MeshMaterial->bStencil = true;
 		}
 		if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
 		{
@@ -59,22 +64,24 @@ void Button3DEntity::Update()
 		}
 		if (EntityMesh->MeshMaterial)
 		{
-			EntityMesh->MeshMaterial->Colour = btnHighlightColour;
+			// TODO: Link runtime colour
+			// EntityMesh->MeshMaterial->Colour = btnHighlightColour;
 		}
 	}
 	else
 	{
 		if (EntityMesh->MeshMaterial)
 		{
-			EntityMesh->MeshMaterial->Colour = btnColour;
-			EntityMesh->MeshMaterial->bStencil = false;
+			// TODO: Link stencil and runtime colour
+			// EntityMesh->MeshMaterial->Colour = btnColour;
+			// EntityMesh->MeshMaterial->bStencil = false;
 		}
 	}
 }
 
 bool Button3DEntity::CheckHit(glm::vec3 BottomLeftOffset, glm::vec3 TopRightOffset)
 {
-	Vector3 HitPos;
+	SVector HitPos;
 	return Utils::CheckFaceHit(BottomLeftOffset,
 		TopRightOffset,
 		CameraManager::GetInstance()->GetCameraPosition(),

@@ -4,13 +4,13 @@
 
 // Engine Includes //
 
-#include "Render/Shader.h"
-#include "Render/Lighting.h"
+#include "Render/Shaders/ShaderManager.h"
 #include <soil/SOIL2.h>
 #include <glew/glew.h>
 #include <GLFW/glfw3.h>
 
 #include "Camera/CameraManager.h"
+#include "Render/Shaders/ShaderManager.h"
 
 // Definitions //
 #define POSITION_LOCATION	  0
@@ -36,8 +36,9 @@ void AnimatedModel::VertexBoneData::addBoneData(int BoneID, float Weight)
 
 AnimatedModel::AnimatedModel(std::string modelFilename, std::string texFilename)
 {
-	MeshMaterial = std::make_shared<Material>("AnimatedModel");
-	MeshMaterial->SetTexture(texFilename);
+	MeshMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader("AnimatedModel"));
+	// TODO: Set texture attribute
+	// MeshMaterial->SetTexture(texFilename);
 
 	vao = 0;
 	ZERO_MEM(m_Buffers);
@@ -51,7 +52,7 @@ AnimatedModel::~AnimatedModel()
 {
 }
 
-void AnimatedModel::Render(FTransform Newtransform)
+void AnimatedModel::Render(STransform Newtransform)
 {
 	// TODO:
 	// //return;

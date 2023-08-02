@@ -4,14 +4,20 @@
 #include "Graphics/GraphicsInstance.h"
 #include "Platform/Window/GLFW/GLFWWindow.h"
 
+WindowsPlatform::~WindowsPlatform()
+{
+	// TODO: Not sure if this is the right place? Look into what this does, can't be done per window if its main gl
+	glfwTerminate();
+}
+
 std::string WindowsPlatform::GetPlatformDisplayName()
 {
 	return "Windows";
 }
 
-Pointer<IGraphicsWindow> WindowsPlatform::CreateNewWindow(const std::string& InWindowName, Vector2 InWindowSize, bool bFullScreen)
+TPointer<IGraphicsWindow> WindowsPlatform::CreateNewWindow(const std::string& InWindowName, SVector2 InWindowSize, bool bFullScreen)
 {
-	Pointer<GLFWWindow> NewWindow = std::make_shared<GLFWWindow>(InWindowName, InWindowSize, bFullScreen);
+	TPointer<GLFWWindow> NewWindow = std::make_shared<GLFWWindow>(InWindowName, InWindowSize, bFullScreen);
 	if (!NewWindow->GetGlWindow())
 	{
 		NewWindow.reset();

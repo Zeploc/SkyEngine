@@ -12,7 +12,7 @@
 
 class ModelObject;
 
-class Model : public Mesh
+class Model : public CMeshComponent
 {
 public:
 	Model(glm::vec4 Colour, const char* ModelSource);
@@ -23,14 +23,12 @@ public:
 
 	void Rebind() override;
 
-	void SetLit(bool _bIsLit);
-
 	// TODO: Update to graphics instance
-	void Render(FTransform Newtransform);
+	void Render(STransform Newtransform);
 
 	void Update() override;
 
-	Pointer<ModelObject> pModelObject;
+	TPointer<ModelObject> pModelObject;
 
 	std::string ModelPath;
 };

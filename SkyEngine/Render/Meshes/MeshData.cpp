@@ -40,12 +40,11 @@ void MeshData::GetFinalData(std::vector<float>& OutVertices, std::vector<uint32_
 	for (int i = 0; i < NumberOfElements; ++i)
 	{
 		PushPositions(OutVertices, i);
-		PushColour(OutVertices, i);
+		PushNormals(OutVertices, i);
 		if (bHasUVs)
 		{
 			PushUVs(OutVertices, i);
 		}
-		PushNormals(OutVertices, i);
 	}
 }
 
@@ -62,14 +61,6 @@ void MeshData::PushPositions(std::vector<float>& OutVertices, int VertexIndex) c
 		const int PositionIndex = StartingPosition + i;
 		OutVertices.push_back(Positions[PositionIndex]);
 	}	
-}
-
-void MeshData::PushColour(std::vector<float>& OutVertices, int VertexIndex) const
-{
-	OutVertices.push_back(Colour.R);
-	OutVertices.push_back(Colour.G);
-	OutVertices.push_back(Colour.B);
-	OutVertices.push_back(Colour.A);
 }
 
 void MeshData::PushUVs(std::vector<float>& OutVertices, int VertexIndex) const

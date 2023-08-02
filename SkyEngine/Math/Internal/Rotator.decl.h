@@ -9,52 +9,52 @@
 
 // struct Rotator;
 template <typename T>
-struct Vector3x;
+struct TVector3;
 
-struct ENGINE_API Rotator
+struct ENGINE_API SRotator
 {
 	float Pitch;
 	float Yaw;
 	float Roll;
 
-	Rotator()
+	SRotator()
 	{
 		Pitch = Yaw = Roll = 0;
 	}
 
-	Rotator(float InPitch, float InYaw, float InRoll)
+	SRotator(float InPitch, float InYaw, float InRoll)
 	{
 		Pitch = InPitch;
 		Yaw = InYaw;
 		Roll = InRoll;
 	}
 
-	Rotator(const float* pFloat)
+	SRotator(const float* pFloat)
 	{
 		Pitch = pFloat[0];
 		Yaw = pFloat[0];
 		Roll = pFloat[0];
 	}
 
-	Rotator(float f)
+	SRotator(float f)
 	{
 		Pitch = Yaw = Roll = f;
 	}
 
-	Rotator(glm::vec3 V)
+	SRotator(glm::vec3 V)
 	{
 		Pitch = V.x;
 		Yaw = V.y;
 		Roll = V.z;
 	}
-	Rotator(const Vector3x<float>& V);
+	SRotator(const TVector3<float>& V);
 
 	glm::vec3 ToGLM() const
 	{
 		return glm::vec3(Pitch, Yaw, Roll);
 	}
 
-	Rotator& operator+=(const Rotator& r)
+	SRotator& operator+=(const SRotator& r)
 	{
 		// TODO: Verify
 		Pitch += r.Pitch;
@@ -64,7 +64,7 @@ struct ENGINE_API Rotator
 		return *this;
 	}
 
-	Rotator& operator-()
+	SRotator& operator-()
 	{
 		// TODO: Verify
 		Pitch *= -1;
@@ -74,7 +74,7 @@ struct ENGINE_API Rotator
 		return *this;
 	}
 
-	Rotator& operator-=(const Rotator& r)
+	SRotator& operator-=(const SRotator& r)
 	{
 		// TODO: Verify
 		Pitch -= r.Pitch;
@@ -84,7 +84,7 @@ struct ENGINE_API Rotator
 		return *this;
 	}
 
-	Rotator& operator*=(float f)
+	SRotator& operator*=(float f)
 	{
 		Pitch *= f;
 		Yaw *= f;
@@ -99,7 +99,7 @@ struct ENGINE_API Rotator
 		return &(Pitch);
 	}
 
-	Vector3x<float> ToVector() const;
+	TVector3<float> ToVector() const;
 	
 	std::string ToString() const
 	{
@@ -115,6 +115,6 @@ struct ENGINE_API Rotator
 		printf("(%.02f, %.02f, %.02f)", Pitch, Yaw, Roll);
 	}
 	
-	friend std::ostream& operator<<(std::ostream& os, const Rotator& InRotator);
-	friend std::istream& operator>>(std::istream& is, Rotator& OutRotator);
+	friend std::ostream& operator<<(std::ostream& os, const SRotator& InRotator);
+	friend std::istream& operator>>(std::istream& is, SRotator& OutRotator);
 };

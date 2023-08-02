@@ -8,7 +8,7 @@
 #include <iostream>
 
 // Static Variables //
-Pointer<LogManager> LogManager::m_pLogManager;
+TPointer<LogManager> LogManager::m_pLogManager;
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -57,11 +57,11 @@ void LogManager::DisplayLogMessage(std::string _Message)
 #--Parameters--#:	NA
 #--Return--#: 		Returns static pointer to self
 ************************************************************/
-Pointer<LogManager> LogManager::GetInstance()
+TPointer<LogManager> LogManager::GetInstance()
 {
 	if (!m_pLogManager) // null or doesn't exist
 	{
-		m_pLogManager = Pointer<LogManager>(new LogManager());
+		m_pLogManager = TPointer<LogManager>(new LogManager());
 	}
 	return m_pLogManager;
 }

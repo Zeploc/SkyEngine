@@ -6,7 +6,7 @@
 
 template <typename T>
 template <class U, typename>
-Vector2x<T>& Vector2x<T>::operator+=(U scalar)
+TVector2<T>& TVector2<T>::operator+=(U scalar)
 {
 	AddValues(scalar, scalar);
 	return *this;
@@ -14,7 +14,7 @@ Vector2x<T>& Vector2x<T>::operator+=(U scalar)
 
 template <typename T>
 template <typename U, typename>
-Vector2x<T>& Vector2x<T>::operator+=(Vector2x<U> other)
+TVector2<T>& TVector2<T>::operator+=(TVector2<U> other)
 {
 	AddValues(other.x, other.y);
 	return *this;
@@ -22,7 +22,7 @@ Vector2x<T>& Vector2x<T>::operator+=(Vector2x<U> other)
 
 template <typename T>
 template <typename U, typename>
-Vector2x<T>& Vector2x<T>::operator+=(glm::tvec2<U> other)
+TVector2<T>& TVector2<T>::operator+=(glm::tvec2<U> other)
 {
 	AddValues(other.x, other.y);
 	return *this;
@@ -30,7 +30,7 @@ Vector2x<T>& Vector2x<T>::operator+=(glm::tvec2<U> other)
 
 template <typename T>
 template <class U, typename>
-Vector2x<T>& Vector2x<T>::operator-=(U scalar)
+TVector2<T>& TVector2<T>::operator-=(U scalar)
 {
 	MinusValues(scalar, scalar);
 	return *this;
@@ -38,7 +38,7 @@ Vector2x<T>& Vector2x<T>::operator-=(U scalar)
 
 template <typename T>
 template <typename U, typename>
-Vector2x<T>& Vector2x<T>::operator-=(Vector2x<U> other)
+TVector2<T>& TVector2<T>::operator-=(TVector2<U> other)
 {
 	MinusValues(other.x, other.y);
 	return *this;
@@ -46,22 +46,22 @@ Vector2x<T>& Vector2x<T>::operator-=(Vector2x<U> other)
 
 template <typename T>
 template <typename U, typename>
-Vector2x<T>& Vector2x<T>::operator-=(glm::tvec2<U> other)
+TVector2<T>& TVector2<T>::operator-=(glm::tvec2<U> other)
 {
 	MinusValues(other.x, other.y);
 	return *this;
 }
 
 template <typename T>
-Rotator Vector2x<T>::ToRotator() const
+SRotator TVector2<T>::ToRotator() const
 {
 	// TODO:
-	return Rotator();
+	return SRotator();
 }
 
 template <typename T>
 template <typename U>
-void Vector2x<T>::MinusValues(U InX, U InY)
+void TVector2<T>::MinusValues(U InX, U InY)
 {
 	this->x -= static_cast<T>(InX);
 	this->y -= static_cast<T>(InY);
@@ -69,7 +69,7 @@ void Vector2x<T>::MinusValues(U InX, U InY)
 
 template <typename T>
 template <typename U>
-void Vector2x<T>::AddValues(U InX, U InY)
+void TVector2<T>::AddValues(U InX, U InY)
 {
 	this->x += static_cast<T>(InX);
 	this->y += static_cast<T>(InY);

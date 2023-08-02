@@ -3,7 +3,7 @@
 #include "Mesh.h"
 
 // Engine Includes //
-#include "Render/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"
@@ -11,34 +11,13 @@
 #include "Entity/Entity.h"
 #include "System/LogManager.h"
 
-/************************************************************
-#--Description--#:  Constructor function
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	Takes contructor values
-#--Return--#: 		NA
-************************************************************/
-Mesh::Mesh()
-{
-
-}
-
-Mesh::Mesh(float InWidth, float InHeight, float InDepth, glm::vec4 InColour)
+CMeshComponent::CMeshComponent(const TPointer<Entity>& InOwner, float InWidth, float InHeight, float InDepth, const TPointer<CMaterial>& InMaterial)
+: CComponent(InOwner)
 {
 	m_fWidth = InWidth;
 	m_fHeight = InHeight;
 	m_fDepth = InDepth;
-	MeshMaterial = std::make_shared<Material>("BaseProgram");
-	MeshMaterial->Colour = InColour;
-}
-
-Mesh::Mesh(float InWidth, float InHeight, float InDepth, glm::vec4 InColour, const char* InTextureSource)
-{
-	m_fWidth = InWidth;
-	m_fHeight = InHeight;
-	m_fDepth = InDepth;
-	MeshMaterial = std::make_shared<Material>("BaseProgram");
-	MeshMaterial->SetTexture(InTextureSource);
-	MeshMaterial->Colour = InColour;
+	MeshMaterial = InMaterial;
 }
 
 /************************************************************
@@ -47,7 +26,7 @@ Mesh::Mesh(float InWidth, float InHeight, float InDepth, glm::vec4 InColour, con
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Mesh::~Mesh()
+CMeshComponent::~CMeshComponent()
 {
 	//if (MeshCollisionBounds) delete MeshCollisionBounds;
 	MeshCollisionBounds = nullptr;
@@ -56,7 +35,7 @@ Mesh::~Mesh()
 }
 
 // TODO: Remove the need for entity passed through (use transforms/matrix)
-bool Mesh::CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, Pointer<Entity> EntityCheck)
+bool CMeshComponent::CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos, TPointer<Entity> EntityCheck)
 {
 	// TODO: Check against basic box bounds before considering
 	
@@ -65,7 +44,7 @@ bool Mesh::CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, Poi
 	return false;
 }
 
-void Mesh::Reset()
+void CMeshComponent::Reset()
 {
 	// Reset all mesh variables
 	Rebind();
@@ -76,38 +55,21 @@ void Mesh::Reset()
 	}
 }
 
-void Mesh::BindMeshData()
+void CMeshComponent::BindMeshData()
 {
 	MeshData MeshData = GetMeshData();
-	MeshData.Colour = MeshMaterial->Colour;
 	IndicesCount = MeshData.GetIndicesCount();
-	vao = GetGraphicsAPI()->CreateBuffer(MeshMaterial);
+	vao = GetGraphicsAPI()->CreateBuffer(MeshData);
 	MeshData.BindData(vao);
 	std::cout << "Created mesh with vao: " << vao << std::endl;
 }
 
-void Mesh::SetLit(bool _bIsLit)
+void CMeshComponent::AddCollisionBounds(float fWidth, float fHeight, float fDepth, TPointer<Entity> _EntityRef)
 {
-	if (MeshMaterial)
-	{
-		MeshMaterial->bIsLit = _bIsLit;
-	}
+	MeshCollisionBounds = std::make_shared<CCollisionBounds>(fWidth, fHeight, fDepth, _EntityRef);
 }
 
-void Mesh::SetReflection(bool _bReflecting)
-{
-	if (MeshMaterial)
-	{
-		MeshMaterial->bReflect = _bReflecting;
-	}
-}
-
-void Mesh::AddCollisionBounds(float fWidth, float fHeight, float fDepth, Pointer<Entity> _EntityRef)
-{
-	MeshCollisionBounds = std::make_shared<CollisionBounds>(fWidth, fHeight, fDepth, _EntityRef);
-}
-
-void Mesh::AddCollisionBounds(Pointer<CollisionBounds> NewCollision)
+void CMeshComponent::AddCollisionBounds(TPointer<CCollisionBounds> NewCollision)
 {
 	MeshCollisionBounds = NewCollision;
 }

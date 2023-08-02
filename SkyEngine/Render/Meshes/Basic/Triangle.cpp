@@ -3,10 +3,11 @@
 #include "Triangle.h"
 
 // Engine Includes //
-#include "Render/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 #include "Core/Application.h"
 
-Triangle::Triangle(glm::vec3 _Point1, glm::vec3 _Point2, glm::vec3 _Point3, glm::vec4 _Colour)
+CTriangle::CTriangle(const TPointer<Entity>& InOwner, glm::vec3 _Point1, glm::vec3 _Point2, glm::vec3 _Point3, TPointer<CMaterial> InMaterial)
+: CMeshComponent(InOwner, 0.0f, 0.0f, 0.0f, InMaterial)
 {
 	Point1 = _Point1;
 	Point2 = _Point2;
@@ -17,30 +18,23 @@ Triangle::Triangle(glm::vec3 _Point1, glm::vec3 _Point2, glm::vec3 _Point3, glm:
 	CenterPoint.z = (Point1.z + Point2.z + Point3.z) / 3;
 	m_fWidth = length(CenterPoint - Point1);
 	m_fHeight = m_fWidth;
-	m_fDepth = 0;
-	MeshMaterial = std::make_shared<Material>("BaseProgram");
-	MeshMaterial->Colour = _Colour;
 	BindMeshData();
 }
 
-Triangle::Triangle(glm::vec3 CenterPoint, float Width, glm::vec4 _Colour)
+CTriangle::CTriangle(const TPointer<Entity>& InOwner, glm::vec3 CenterPoint, float Width, TPointer<CMaterial> InMaterial)
+: CMeshComponent(InOwner, Width, Width, 0.0f, InMaterial)
 {
 	Point1 = CenterPoint + glm::vec3(0, Width, 0);
 	Point2 = CenterPoint + glm::vec3(1, -0.5, 0) * Width;
 	Point3 = CenterPoint + glm::vec3(-1, -0.5, 0) * Width;
-	m_fWidth = Width;
-	m_fHeight = Width;
-	m_fDepth = 0;
-	MeshMaterial = std::make_shared<Material>("BaseProgram");
-	MeshMaterial->Colour = _Colour;
 	BindMeshData();
 }
 
-Triangle::~Triangle()
+CTriangle::~CTriangle()
 {
 }
 
-MeshData Triangle::GetMeshData()
+MeshData CTriangle::GetMeshData()
 {
 	const std::vector<float> VertexPositions = {
 		// Front Face

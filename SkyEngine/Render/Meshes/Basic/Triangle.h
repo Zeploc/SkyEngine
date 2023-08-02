@@ -5,13 +5,13 @@
 // This Includes //
 #include "Render/Meshes/Mesh.h"
 
-class Triangle : public Mesh
+class CTriangle : public CMeshComponent
 {
 public:
-	Triangle(glm::vec3 _Point1, glm::vec3 _Point2, glm::vec3 _Point3, glm::vec4 Colour);
-	Triangle(glm::vec3 CenterPoint, float Width, glm::vec4 Colour);
+	CTriangle(const TPointer<Entity>& InOwner, glm::vec3 _Point1, glm::vec3 _Point2, glm::vec3 _Point3, TPointer<CMaterial> InMaterial = nullptr);
+	CTriangle(const TPointer<Entity>& InOwner, glm::vec3 CenterPoint, float Width, TPointer<CMaterial> InMaterial = nullptr);
 
-	~Triangle();
+	~CTriangle();
 	
 protected:
 	MeshData GetMeshData() override;

@@ -13,7 +13,7 @@
 // Engine Includes //
 #include <vector>
 
-#include "Math/FTransform.h"
+#include "Math/Transform.h"
 #include "Math/Matrix.h"
 #include "Math/Rotator.h"
 #include "Render/Meshes/Mesh.h"
@@ -24,7 +24,7 @@ class ENGINE_API Entity : public std::enable_shared_from_this<Entity>
 public:
 	Entity(std::string _FromString);
 
-	Entity(FTransform _Transform, EANCHOR _Anchor);
+	Entity(STransform _Transform, EANCHOR _Anchor);
 
 	//Entity() {};
 	/*Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, Utils::ESHAPE _eShape);
@@ -33,19 +33,19 @@ public:
 	Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, glm::vec2 v2FrameCounts, int _iFPS);*/
 	~Entity();
 
-	void AddMesh(Pointer<Mesh> _NewMesh);
+	void AddMesh(TPointer<CMeshComponent> _NewMesh);
 
 	//void AddMesh(Utils::ESHAPE _NewShape);
 
 	virtual bool CanRender();
-	virtual std::vector<Pointer<Entity>> GetAdditionalEntitiesToRender() { return {}; }
-	virtual FTransform GetAnchoredTransform();
+	virtual std::vector<TPointer<Entity>> GetAdditionalEntitiesToRender() { return {}; }
+	virtual STransform GetAnchoredTransform();
 
 	void BaseUpdate();
 
 	virtual void Update();
 
-	virtual bool CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos);
+	virtual bool CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos);
 
 	virtual void OnDestroy();
 
@@ -61,20 +61,20 @@ public:
 
 	std::string EntityToString();
 
-	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const Pointer<Entity>& InEntity);
-	ENGINE_API friend std::istream& operator>>(std::istream& is, Pointer<Entity>& InEntity);
+	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const TPointer<Entity>& InEntity);
+	ENGINE_API friend std::istream& operator>>(std::istream& is, TPointer<Entity>& InEntity);
 
-	void Translate(Vector3 _Movement);
+	void Translate(SVector _Movement);
 
-	void Rotate(Rotator Rotate);
+	void Rotate(SRotator Rotate);
 
-	void SetScale(Vector3 _NewScale);
+	void SetScale(SVector _NewScale);
 
 	Matrix4 GetModel();
 
-	FTransform Transform;
+	STransform Transform;
 	EANCHOR EntityAnchor;
-	Pointer<Mesh> EntityMesh;
+	TPointer<CMeshComponent> EntityMesh;
 
 	int GetEntityValue() const { return iEntityID; }
 
@@ -89,7 +89,7 @@ public:
 
 	void SetupB2CircleBody(b2World& Box2DWorld, b2BodyType BodyType, bool bCanRotate = true, bool bHasFixture = true, float Density = 1.0f, float Friction = 0.3f);
 
-	void SetBox2DTransform(Vector3 _Position, float _Rotation);
+	void SetBox2DTransform(SVector _Position, float _Rotation);
 
 	bool bRayCast = true;
 

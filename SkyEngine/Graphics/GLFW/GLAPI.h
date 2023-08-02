@@ -12,16 +12,16 @@ public:
 	~IGLAPI() override;
 	std::string GetGraphicsDisplayName() override;
 	
-	unsigned int CreateBuffer(Pointer<Material> Material) override;
-	TextureData GetTexture(const char* TextureSource, bool bAA) override;
+	unsigned int CreateBuffer(const MeshData& MeshData) override;
+	CTexture GetTexture(const std::string& TextureSource, bool bAA) override;
 	void BindArray(const std::vector<float>& Vertices, const std::vector<uint32_t>& Indices, unsigned& Vao) override;
-	Pointer<IGraphicsInstance> CreateNewInstance() override;
-	unsigned CreateProgram(const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* GeometryShaderFilename) override;
-	unsigned CreateTessProgram(const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename) override;
-	unsigned CreateComputeProgram(const char* ComputeShaderFilename) override;
+	TPointer<IGraphicsInstance> CreateNewInstance() override;
+	bool CreateShaderProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* GeometryShaderFilename) override;
+	bool CreateTessProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename) override;
+	bool CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename) override;
 	
 private:
 	std::string ReadShader(const char* filename);
 
-	GLuint CreateShader(GLenum shaderType, std::string source, const char* shaderName);
+	bool CreateShader(uint32_t& ShaderID, GLenum shaderType, std::string source, const char* shaderName);
 };

@@ -17,7 +17,7 @@
 
 // Static Variables //
 int Utils::iEntityNumber = 0;
-Pointer<Entity> Utils::WorldCubeMap;
+TPointer<Entity> Utils::WorldCubeMap;
 
 /************************************************************
 #--Description--#:  Gets position from anchor and current position
@@ -69,7 +69,7 @@ glm::vec3 Utils::GetAncoredPosition2D(glm::vec2 position, glm::vec2 Dimensions, 
 #--Parameters--#:	Element position, dimensions and current anchor
 #--Return--#: 		Returns vector 3 of new position
 ************************************************************/
-glm::vec3 Utils::GetAncoredPosition(Vector3 position, Vector3 Dimensions, EANCHOR _AnchorType)
+glm::vec3 Utils::GetAncoredPosition(SVector position, SVector Dimensions, EANCHOR _AnchorType)
 {
 	glm::vec3 NewPos;
 	switch (_AnchorType)
@@ -157,10 +157,10 @@ glm::vec3 Utils::GetTextAncoredPosition(glm::vec2 position, glm::vec2 Dimensions
 #--Parameters--#:	two pointers to the entities
 #--Return--#: 		Returns boolean whether the entities are colliding
 ************************************************************/
-bool Utils::isColliding2D(Pointer<Entity> Entity1, Pointer<Entity> Entity2)
+bool Utils::isColliding2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2)
 {
-	Pointer<Plane> Entity1Mesh = std::dynamic_pointer_cast<Plane>(Entity1->EntityMesh);
-	Pointer<Plane> Entity2Mesh = std::dynamic_pointer_cast<Plane>(Entity2->EntityMesh);
+	TPointer<CPlane> Entity1Mesh = std::dynamic_pointer_cast<CPlane>(Entity1->EntityMesh);
+	TPointer<CPlane> Entity2Mesh = std::dynamic_pointer_cast<CPlane>(Entity2->EntityMesh);
 	float HalfWidth1 = (Entity1Mesh->CollisionBox.fWidth / 2) * abs(Entity1->Transform.Scale.X);
 	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->Transform.Scale.Y);
 	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->Transform.Scale.X);
@@ -185,10 +185,10 @@ bool Utils::isColliding2D(Pointer<Entity> Entity1, Pointer<Entity> Entity2)
 #--Parameters--#:	two pointers to the entities and the movement to check for first entity
 #--Return--#: 		Returns boolean whether the entities would collide
 ************************************************************/
-bool Utils::CheckCollision2D(Pointer<Entity> Entity1, Pointer<Entity> Entity2, glm::vec2 Movement)
+bool Utils::CheckCollision2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2, glm::vec2 Movement)
 {
-	Pointer<Plane> Entity1Mesh = std::dynamic_pointer_cast<Plane>(Entity1->EntityMesh);
-	Pointer<Plane> Entity2Mesh = std::dynamic_pointer_cast<Plane>(Entity2->EntityMesh);
+	TPointer<CPlane> Entity1Mesh = std::dynamic_pointer_cast<CPlane>(Entity1->EntityMesh);
+	TPointer<CPlane> Entity2Mesh = std::dynamic_pointer_cast<CPlane>(Entity2->EntityMesh);
 	float HalfWidth1 = (Entity1Mesh->CollisionBox.fWidth / 2) * abs(Entity1->Transform.Scale.X);
 	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->Transform.Scale.Y);
 	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->Transform.Scale.X);
@@ -213,10 +213,10 @@ bool Utils::CheckCollision2D(Pointer<Entity> Entity1, Pointer<Entity> Entity2, g
 #--Parameters--#:	two pointers to the entities
 #--Return--#: 		Returns vector 2 of distance
 ************************************************************/
-glm::vec2 Utils::GetDistance2D(Pointer<Entity> Entity1, Pointer<Entity> Entity2)
+glm::vec2 Utils::GetDistance2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2)
 {
-	Pointer<Plane> Entity1Mesh = std::dynamic_pointer_cast<Plane>(Entity1->EntityMesh);
-	Pointer<Plane> Entity2Mesh = std::dynamic_pointer_cast<Plane>(Entity2->EntityMesh);
+	TPointer<CPlane> Entity1Mesh = std::dynamic_pointer_cast<CPlane>(Entity1->EntityMesh);
+	TPointer<CPlane> Entity2Mesh = std::dynamic_pointer_cast<CPlane>(Entity2->EntityMesh);
 	glm::vec2 fDistance = glm::vec2(0, 0);
 	float HalfWidth1 = (Entity1Mesh->CollisionBox.fWidth / 2) * abs(Entity1->Transform.Scale.X);
 	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->Transform.Scale.Y);
@@ -252,10 +252,10 @@ glm::vec2 Utils::GetDistance2D(Pointer<Entity> Entity1, Pointer<Entity> Entity2)
 #--Parameters--#:	two pointers to the entities
 #--Return--#: 		Returns vector 2 of distance with direction
 ************************************************************/
-glm::vec2 Utils::GetDifference2D(Pointer<Entity> Entity1, Pointer<Entity> Entity2)
+glm::vec2 Utils::GetDifference2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2)
 {
-	Pointer<Plane> Entity1Mesh = std::dynamic_pointer_cast<Plane>(Entity1->EntityMesh);
-	Pointer<Plane> Entity2Mesh = std::dynamic_pointer_cast<Plane>(Entity2->EntityMesh);
+	TPointer<CPlane> Entity1Mesh = std::dynamic_pointer_cast<CPlane>(Entity1->EntityMesh);
+	TPointer<CPlane> Entity2Mesh = std::dynamic_pointer_cast<CPlane>(Entity2->EntityMesh);
 	glm::vec2 fDistance = glm::vec2(0, 0);
 	float HalfWidth1 = (Entity1Mesh->CollisionBox.fWidth / 2) * abs(Entity1->Transform.Scale.X);
 	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->Transform.Scale.Y);
@@ -305,24 +305,24 @@ std::vector<std::string> Utils::SeparateString(std::string _string, char _sepera
 	return result;
 }
 
-Vector3 Utils::StringToVec3(std::string _string)
+SVector Utils::StringToVec3(std::string _string)
 {
 	float x = 0.0f, y = 0.0f, z = 0.0f;
 	_string = _string.substr(3, _string.length() - 3);
-	return Vector3(x, y, z);
+	return SVector(x, y, z);
 }
 
-Rotator Utils::StringToRotator(std::string _string)
+SRotator Utils::StringToRotator(std::string _string)
 {
 	float x = 0.0f, y = 0.0f, z = 0.0f;
 	_string = _string.substr(3, _string.length() - 3);
-	return Rotator(x, y, z);
+	return SRotator(x, y, z);
 }
 
 // TODO: Change sphere center to sphere transform (account for rotation and scale)
-bool Utils::CheckSphereHit(Vector3 RayStart, Vector3 RayDirection, Vector3 SphereCenter, float SphereRadius, Vector3& HitPos)
+bool Utils::CheckSphereHit(SVector RayStart, SVector RayDirection, SVector SphereCenter, float SphereRadius, SVector& HitPos)
 {
-	const Vector3 Offset = SphereCenter - RayStart;
+	const SVector Offset = SphereCenter - RayStart;
 	// float a = RayDirection.Dot(RayDirection);
 	// float b = 2.0f * V.Dot(RayDirection);
 	// float c = V.Dot(V) - EntityCheck->EntityMesh->m_fWidth * EntityCheck->EntityMesh->m_fWidth;
@@ -369,31 +369,31 @@ bool Utils::CheckSphereHit(Vector3 RayStart, Vector3 RayDirection, Vector3 Spher
 }
 
 // TODO: Change transform (account for rotation and scale)
-bool Utils::CheckCubeHit(Vector3 RayStart, Vector3 RayDirection, Vector3 CubeDimensions, Pointer<Entity> EntityCheck, Vector3& HitPos)
+bool Utils::CheckCubeHit(SVector RayStart, SVector RayDirection, SVector CubeDimensions, TPointer<Entity> EntityCheck, SVector& HitPos)
 {
-	Vector3 HalfDimensionvec = Vector3(CubeDimensions.X / 2.0f, CubeDimensions.Y / 2.0f, CubeDimensions.Z / 2.0f);
-	std::vector<Vector3> HitPositions;
-	if (CheckFaceHit(Vector3(-HalfDimensionvec.X, -HalfDimensionvec.Y, HalfDimensionvec.Z), Vector3(HalfDimensionvec.X, HalfDimensionvec.Y, HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
+	SVector HalfDimensionvec = SVector(CubeDimensions.X / 2.0f, CubeDimensions.Y / 2.0f, CubeDimensions.Z / 2.0f);
+	std::vector<SVector> HitPositions;
+	if (CheckFaceHit(SVector(-HalfDimensionvec.X, -HalfDimensionvec.Y, HalfDimensionvec.Z), SVector(HalfDimensionvec.X, HalfDimensionvec.Y, HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
 	{
 		HitPositions.push_back(HitPos);
 	}
-	if (CheckFaceHit(Vector3(-HalfDimensionvec.X, -HalfDimensionvec.Y, -HalfDimensionvec.Z), Vector3(HalfDimensionvec.X, HalfDimensionvec.Y, -HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
+	if (CheckFaceHit(SVector(-HalfDimensionvec.X, -HalfDimensionvec.Y, -HalfDimensionvec.Z), SVector(HalfDimensionvec.X, HalfDimensionvec.Y, -HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
 	{
 		HitPositions.push_back(HitPos);
 	}
-	if (CheckFaceHit(Vector3(-HalfDimensionvec.X, -HalfDimensionvec.Y, -HalfDimensionvec.Z), Vector3(HalfDimensionvec.X, -HalfDimensionvec.Y, HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
+	if (CheckFaceHit(SVector(-HalfDimensionvec.X, -HalfDimensionvec.Y, -HalfDimensionvec.Z), SVector(HalfDimensionvec.X, -HalfDimensionvec.Y, HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
 	{
 		HitPositions.push_back(HitPos);
 	}
-	if (CheckFaceHit(Vector3(-HalfDimensionvec.X, HalfDimensionvec.Y, -HalfDimensionvec.Z), Vector3(HalfDimensionvec.X, HalfDimensionvec.Y, HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
+	if (CheckFaceHit(SVector(-HalfDimensionvec.X, HalfDimensionvec.Y, -HalfDimensionvec.Z), SVector(HalfDimensionvec.X, HalfDimensionvec.Y, HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
 	{
 		HitPositions.push_back(HitPos);
 	}
-	if (CheckFaceHit(Vector3(-HalfDimensionvec.X, -HalfDimensionvec.Y, -HalfDimensionvec.Z), Vector3(-HalfDimensionvec.X, HalfDimensionvec.Y, HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
+	if (CheckFaceHit(SVector(-HalfDimensionvec.X, -HalfDimensionvec.Y, -HalfDimensionvec.Z), SVector(-HalfDimensionvec.X, HalfDimensionvec.Y, HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
 	{
 		HitPositions.push_back(HitPos);
 	}
-	if (CheckFaceHit(Vector3(HalfDimensionvec.X, -HalfDimensionvec.Y, -HalfDimensionvec.Z), Vector3(HalfDimensionvec.X, HalfDimensionvec.Y, HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
+	if (CheckFaceHit(SVector(HalfDimensionvec.X, -HalfDimensionvec.Y, -HalfDimensionvec.Z), SVector(HalfDimensionvec.X, HalfDimensionvec.Y, HalfDimensionvec.Z), RayStart, RayDirection, EntityCheck, HitPos))
 	{
 		HitPositions.push_back(HitPos);
 	}
@@ -419,7 +419,7 @@ bool Utils::CheckCubeHit(Vector3 RayStart, Vector3 RayDirection, Vector3 CubeDim
 	return true;
 }
 
-bool Utils::CheckPlaneEntityHit(Vector3 RayStart, Vector3 RayDirection, Pointer<Entity> EntityCheck, Vector3& HitPos)
+bool Utils::CheckPlaneEntityHit(SVector RayStart, SVector RayDirection, TPointer<Entity> EntityCheck, SVector& HitPos)
 {
 	glm::vec3 HalfDimensionvec = glm::vec3(EntityCheck->EntityMesh->m_fWidth / 2.0f, EntityCheck->EntityMesh->m_fHeight / 2.0f, EntityCheck->EntityMesh->m_fDepth / 2.0f);
 	if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
@@ -429,9 +429,9 @@ bool Utils::CheckPlaneEntityHit(Vector3 RayStart, Vector3 RayDirection, Pointer<
 	return false;
 }
 
-Vector3 Utils::LinePlaneIntersect(Vector3 RayStart, Vector3 RayDirection, Vector3 PlanePos, Vector3 PlaneNormal)
+SVector Utils::LinePlaneIntersect(SVector RayStart, SVector RayDirection, SVector PlanePos, SVector PlaneNormal)
 {
-	Vector3 diff = RayStart - PlanePos;
+	SVector diff = RayStart - PlanePos;
 	double prod1 = diff.Dot(PlaneNormal);
 	double prod2 = RayDirection.Dot(PlaneNormal);
 	float prod3 = prod1 / prod2;
@@ -439,16 +439,16 @@ Vector3 Utils::LinePlaneIntersect(Vector3 RayStart, Vector3 RayDirection, Vector
 }
 
 // TODO: Remove need for entity (use transform/matrix)
-bool Utils::CheckFaceHit(Vector3 BottomLeftOffset, Vector3 TopRightOffset, Vector3 RayStart, Vector3 RayDirection, Pointer<Entity> EntityCheck, Vector3& HitPos)
+bool Utils::CheckFaceHit(SVector BottomLeftOffset, SVector TopRightOffset, SVector RayStart, SVector RayDirection, TPointer<Entity> EntityCheck, SVector& HitPos)
 {
-	Vector3 AnchoredPosition = GetAncoredPosition(EntityCheck->Transform.Position, glm::vec3(EntityCheck->EntityMesh->m_fWidth, EntityCheck->EntityMesh->m_fHeight, EntityCheck->EntityMesh->m_fDepth), EntityCheck->EntityAnchor);
-	Vector3 lb = BottomLeftOffset + AnchoredPosition;
-	Vector3 rt = TopRightOffset + AnchoredPosition;
+	SVector AnchoredPosition = GetAncoredPosition(EntityCheck->Transform.Position, glm::vec3(EntityCheck->EntityMesh->m_fWidth, EntityCheck->EntityMesh->m_fHeight, EntityCheck->EntityMesh->m_fDepth), EntityCheck->EntityAnchor);
+	SVector lb = BottomLeftOffset + AnchoredPosition;
+	SVector rt = TopRightOffset + AnchoredPosition;
 	// TODO: Confirm matrix to vector order for new system and create/convert
-	lb = Vector3(Vector4(lb, 1.0f) * EntityCheck->GetModel().ToGLM());
-	rt = Vector3(Vector4(rt, 1.0f) * EntityCheck->GetModel().ToGLM());
+	lb = SVector(SVector4(lb, 1.0f) * EntityCheck->GetModel().ToGLM());
+	rt = SVector(SVector4(rt, 1.0f) * EntityCheck->GetModel().ToGLM());
 
-	Vector3 DirFrac = 1.0f / RayDirection;
+	SVector DirFrac = 1.0f / RayDirection;
 
 	float t1 = (lb.X - RayStart.X) * DirFrac.X;
 	float t2 = (rt.X - RayStart.X) * DirFrac.X;

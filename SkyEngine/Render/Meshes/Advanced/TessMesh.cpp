@@ -4,7 +4,7 @@
 
 // Engine Includes //
 #include "Camera/CameraManager.h"
-#include "Render/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glew/glew.h>
@@ -15,8 +15,8 @@ TessMesh::TessMesh(float fWidth, float fHeight, glm::vec4 _Colour)
 	m_fWidth = fWidth;
 	m_fHeight = fHeight;
 	IndicesCount = 4;
-	MeshMaterial = std::make_shared<Material>("TessProgram");
-	MeshMaterial->Colour = _Colour;
+	MeshMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader("TessProgram"));
+	// MeshMaterial->Colour = _Colour;
 	BindTess();
 }
 
@@ -24,7 +24,7 @@ TessMesh::~TessMesh()
 {
 }
 
-void TessMesh::Render(FTransform Newtransform)
+void TessMesh::Render(STransform Newtransform)
 {
 	// TODO: Tess mesh
 	// if (MeshMaterial.Texture.IsValid())

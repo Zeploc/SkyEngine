@@ -9,77 +9,77 @@
 
 #include "Math/MathDefinitions.h"
 
-struct Rotator;
+struct SRotator;
 
 template <typename T = float>
-struct ENGINE_API Vector2x : glm::tvec2<T, glm::highp>
+struct ENGINE_API TVector2 : glm::tvec2<T, glm::highp>
 {	
 	T& X = glm::tvec2<T>::x;
 	T& Y = glm::tvec2<T>::y;
 
-	Vector2x(T InX, T InY)
+	TVector2(T InX, T InY)
 	{
 		X = InX;
 		Y = InY;
 	}
 	
-	Vector2x()
+	TVector2()
 		: glm::tvec2<T>()
 	{
 		
 	}
 	
-	Vector2x(const Vector2x& Other)
+	TVector2(const TVector2& Other)
 		: glm::tvec2<T>(Other)
 	{
 		
 	}
-	Vector2x(const glm::tvec2<T>& Other)
+	TVector2(const glm::tvec2<T>& Other)
 		: glm::tvec2<T>(Other)
 	{
 		
 	}
-	Vector2x & operator=(Vector2x const & v)
+	TVector2 & operator=(TVector2 const & v)
 	{
 		glm::vec2::operator=(v);
 		return *this;
 	}
 
 	template <class U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
-	Vector2x<T>& operator+=(U scalar);
+	TVector2<T>& operator+=(U scalar);
 	
 	template <typename U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
-	Vector2x<T>& operator+=(Vector2x<U> other);
+	TVector2<T>& operator+=(TVector2<U> other);
 	
 	template <typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
-	Vector2x<T>& operator+=(glm::tvec2<U> other);
+	TVector2<T>& operator+=(glm::tvec2<U> other);
 	
 	template <class U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
-	Vector2x<T>& operator-=(U scalar);
+	TVector2<T>& operator-=(U scalar);
 	
 	template <typename U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
-	Vector2x<T>& operator-=(Vector2x<U> other);
+	TVector2<T>& operator-=(TVector2<U> other);
 	
 	template <typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
-	Vector2x<T>& operator-=(glm::tvec2<U> other);
+	TVector2<T>& operator-=(glm::tvec2<U> other);
 
-	Vector2x Cross(const Vector2x& V) const
+	TVector2 Cross(const TVector2& V) const
 	{
 		return glm::cross<T>(*this, V);
 	}
 
-	float Dot(const Vector2x& V) const
+	float Dot(const TVector2& V) const
 	{
 		return glm::dot<T>(*this, V);
 	}
 
-	Vector2x GetNormalized() const
+	TVector2 GetNormalized() const
 	{
 		GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'normalize' accepts only floating-point inputs");
 		return glm::normalize<T, glm::precision::highp>(*this);
 	}
 
-	Vector2x& Normalize()
+	TVector2& Normalize()
 	{
 		GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'normalize' accepts only floating-point inputs");
 		return *this = glm::normalize<T, glm::precision::highp>(*this);
@@ -91,13 +91,13 @@ struct ENGINE_API Vector2x : glm::tvec2<T, glm::highp>
 	}
 
 	/* Vector rotated by an angle and axis */
-	void Rotate(T Angle, const Vector2x& Axis)
+	void Rotate(T Angle, const TVector2& Axis)
 	{
 		glm::mat4 RotateMatrix = glm::rotate(glm::mat4(1), glm::radians(Angle), Axis);
 		*this = glm::vec4(*this, 1.0f) * RotateMatrix;
 	}
 	/* Direction vector to a rotator */
-	Rotator ToRotator() const;
+	SRotator ToRotator() const;
 	
 	std::string ToString() const
 	{
@@ -125,5 +125,6 @@ protected:
 	void AddValues(U InX, U InY);
 };
 
-using Vector2 = Vector2x<float>;
-using Vector2i = Vector2x<int>;
+using SVector2 = TVector2<float>;
+using SVector2f = TVector2<float>;
+using SVector2i = TVector2<int>;

@@ -5,7 +5,7 @@
 // OpenGL Library //
 
 // Engine Includes //
-#include "Render/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"
 
@@ -21,8 +21,8 @@ GeometryObject::GeometryObject(glm::vec4 _Colour)
 	m_fHeight = 1;
 	IndicesCount = 1;
 	
-	MeshMaterial = std::make_shared<Material>("GeometryShader");
-	MeshMaterial->Colour = _Colour;
+	MeshMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader("GeometryShader"));
+	// MeshMaterial->Colour = _Colour;
 	BindGeometryObject();
 }
 
@@ -72,7 +72,7 @@ void GeometryObject::Rebind()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void GeometryObject::Render(FTransform Newtransform)
+void GeometryObject::Render(STransform Newtransform)
 {
 	// TODO: Geo object
 	// glUseProgram(MeshMaterial.ShaderProgram);

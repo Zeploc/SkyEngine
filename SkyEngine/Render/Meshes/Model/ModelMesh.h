@@ -38,7 +38,7 @@ public:
 	ModelMesh(vector<Vertex> vertices, vector<GLuint> indices, vector<MeshTexture> textures);
 
 	// Render the mesh
-	void Render(GLuint program, FTransform ModelTransform);
+	void Render(GLuint program, STransform ModelTransform);
 
 private:
 	/*  Render data  */

@@ -10,13 +10,13 @@
 
 // #include "Math/MathDefinitions.h"
 
-struct Rotator;
+struct SRotator;
 
 // template <typename T>
 // struct Vector3x;
 
 template <typename T>
-struct ENGINE_API Vector3x : glm::tvec3<T, glm::precision::highp>
+struct ENGINE_API TVector3 : glm::tvec3<T, glm::precision::highp>
 {	
 	T& X = glm::tvec3<T>::x;
 	T& Y = glm::tvec3<T>::y;
@@ -28,62 +28,62 @@ struct ENGINE_API Vector3x : glm::tvec3<T, glm::precision::highp>
 	// TODO: Inherit constructors
 	// using glm::tvec3<T>::glm::tvec3;
 	
-	Vector3x()
+	TVector3()
 		: glm::tvec3<T>()
 	{
 	}
 	
-	Vector3x(const Vector3x& Other)
+	TVector3(const TVector3& Other)
 		: glm::tvec3<T>(Other)
 	{
 	}
-	Vector3x(const glm::tvec3<T>& Other)
+	TVector3(const glm::tvec3<T>& Other)
 		: glm::tvec3<T>(Other)
 	{
 	}
-	Vector3x(const glm::tvec2<T>& V2, T Z)
+	TVector3(const glm::tvec2<T>& V2, T Z)
 		: glm::tvec3<T>(V2, Z)
 	{
 	}
-	Vector3x(const glm::tvec4<T, glm::precision::highp>& Other)
+	TVector3(const glm::tvec4<T, glm::precision::highp>& Other)
 		: glm::tvec3<T>(Other)
 	{
 	}
 	
-	Vector3x(T InX, T InY, T InZ)
+	TVector3(T InX, T InY, T InZ)
 	{
 		X = InX;
 		Y = InY;
 		Z = InZ;
 	}
 	
-	Vector3x& operator=(Vector3x const & v);
+	TVector3& operator=(TVector3 const & v);
 
 	template <class U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
-	Vector3x<T>& operator+=(U scalar);
+	TVector3<T>& operator+=(U scalar);
 	
 	template <typename U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
-	Vector3x<T>& operator+=(Vector3x<U> other);
+	TVector3<T>& operator+=(TVector3<U> other);
 	
 	template <typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
-	Vector3x<T>& operator+=(glm::tvec3<U> other);
+	TVector3<T>& operator+=(glm::tvec3<U> other);
 	
 	template <class U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
-	Vector3x<T>& operator-=(U scalar);
+	TVector3<T>& operator-=(U scalar);
 	
 	template <typename U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
-	Vector3x<T>& operator-=(Vector3x<U> other);
+	TVector3<T>& operator-=(TVector3<U> other);
 	
 	template <typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
-	Vector3x<T>& operator-=(glm::tvec3<U> other);
+	TVector3<T>& operator-=(glm::tvec3<U> other);
 	
-	Vector3x Cross(const Vector3x& V) const;
+	TVector3 Cross(const TVector3& V) const;
 
-	float Dot(const Vector3x& V) const;
+	float Dot(const TVector3& V) const;
 
-	Vector3x GetNormalized() const;
+	TVector3 GetNormalized() const;
 
-	Vector3x& Normalize();
+	TVector3& Normalize();
 
 	T Size() const;
 
@@ -94,16 +94,16 @@ struct ENGINE_API Vector3x : glm::tvec3<T, glm::precision::highp>
 	}
 
 	/* Vector rotated by an angle and axis */
-	void Rotate(T Angle, const Vector3x& Axis);
+	void Rotate(T Angle, const TVector3& Axis);
 
 	/* Direction vector to a rotator */
-	Rotator ToRotator() const;
+	SRotator ToRotator() const;
 	
 	std::string ToString() const;
 
 	void Print() const;
 
-	friend std::ostream& operator<<(std::ostream& os, const Vector3x& InVector)
+	friend std::ostream& operator<<(std::ostream& os, const TVector3& InVector)
 	{
 		// TODO: Improve to not use to string
 		os << "(";
@@ -113,7 +113,7 @@ struct ENGINE_API Vector3x : glm::tvec3<T, glm::precision::highp>
 		os << ")";
 		return os;
 	}
-	friend std::istream& operator>>(std::istream& is, Vector3x& OutVector)
+	friend std::istream& operator>>(std::istream& is, TVector3& OutVector)
 	{
 		std::string Empty;
 		// TODO: Improve bracket removal
@@ -136,6 +136,7 @@ protected:
 	void AddValues(U InX, U InY, U InZ);
 };
 
-using Vector3 = Vector3x<float>;
-// using Vector3i = Vector3x<int>;
+using SVector = TVector3<float>;
+using SVector3 = TVector3<float>;
+using SVector3i = TVector3<int>;
 

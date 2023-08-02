@@ -100,10 +100,10 @@ void Input::DestoryInstance()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Input::Init(Pointer<EngineWindow> Window)
+void Input::Init(TPointer<EngineWindow> Window)
 {
 	// TODO: Temp until input interface is made generic
-	Pointer<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(Window->GetGraphicsWindow());
+	TPointer<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(Window->GetGraphicsWindow());
 	GLFWwindow* glfwWindow = GlfwWindow->GetGlWindow();
 
 	glfwSetKeyCallback(glfwWindow, LprocessKeys);
@@ -356,7 +356,7 @@ std::string Input::InputStateString(unsigned int State)
 void Input::SetCursorVisible(bool _bIsVisible)
 {
 	// TODO: Temp until input interface is made generic	
-	Pointer<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(GetApplication()->GetApplicationWindow()->GetGraphicsWindow());
+	TPointer<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(GetApplication()->GetApplicationWindow()->GetGraphicsWindow());
 	GLFWwindow* glfwWindow = GlfwWindow->GetGlWindow();
 	
 	if (_bIsVisible)

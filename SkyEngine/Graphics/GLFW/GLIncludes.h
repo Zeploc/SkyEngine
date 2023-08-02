@@ -4,4 +4,4 @@
 
 #define GLEW_STATIC // This must be defined when statically linking to GLEW
 #include <glew/glew.h>
-#include <GLFW/glfw3.h>
+#include <gl/GL.h>

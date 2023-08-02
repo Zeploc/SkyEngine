@@ -3,12 +3,13 @@
 #include "ssAnimatedModel.h"
 
 #include "Camera/CameraManager.h"
-#include "Render/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 
 #include <soil/SOIL2.h>
 #include <glm/gtx/transform.hpp>
 
 #include "Core/Application.h"
+#include "Render/Shaders/Shader.h"
 
 #define POSITION_LOCATION	  0
 #define TEX_COORD_LOCATION	  1
@@ -36,12 +37,12 @@ ssAnimatedModel::ssAnimatedModel(std::string modelFilname, std::string texFilena
 	//camera = _camera;
 	//light = _light;
 	//textureID = loadTexture(texFilename);
-	program = Shader::Programs["AnimatedModel"]; // _program;
+	program = ShaderManager::GetShader("AnimatedModel")->GetShaderProgram(); // _program;
 
-	this->Transform.Scale = Vector3(0.1f, 0.1f, 0.1f);
-	this->Transform.Position = Vector3(0.0, 0.0, 0.0);
+	this->Transform.Scale = SVector(0.1f, 0.1f, 0.1f);
+	this->Transform.Position = SVector(0.0, 0.0, 0.0);
 	// TODO: Verify 1 yaw?
-	this->Transform.Rotation = Rotator(1.0f, 0.0f, 0.0f);
+	this->Transform.Rotation = SRotator(1.0f, 0.0f, 0.0f);
 
 	m_VAO = 0;
 	ZERO_MEM(m_Buffers);
@@ -290,7 +291,7 @@ bool ssAnimatedModel::initMaterials(const aiScene* pScene, const std::string fil
 	{
 		const aiMaterial* pMaterial = pScene->mMaterials[i];
 
-		m_Textures[i] = TextureData();
+		m_Textures[i] = CTexture();
 
 		if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0)
 		{
@@ -307,7 +308,7 @@ bool ssAnimatedModel::initMaterials(const aiScene* pScene, const std::string fil
 
 				std::string FullPath = Dir + "/" + p;
 
-				TextureData Texture = GetGraphicsAPI()->GetTexture(FullPath.c_str(), true);
+				CTexture Texture = GetGraphicsAPI()->GetTexture(FullPath.c_str(), true);
 				m_Textures[i] = Texture;
 
 				if (!m_Textures[i].IsValid())
@@ -365,7 +366,7 @@ void ssAnimatedModel::rotate(float rotSpeed)
 	currentRotationSpeed = rotSpeed;
 }
 
-void ssAnimatedModel::setShaderEffectVariables(Pointer<Terrain> terrain)
+void ssAnimatedModel::setShaderEffectVariables(TPointer<Terrain> terrain)
 {
 	glUseProgram(this->program);
 
@@ -408,10 +409,10 @@ void ssAnimatedModel::setShaderEffectVariables(Pointer<Terrain> terrain)
 	}
 
 	glUniform1i(glGetUniformLocation(program, "bIsLit"), true);
-	Lighting::PassLightingToShader(program, ModelLightInfo, Transform);
+	// Lighting::PassLightingToShader(program);
 }
 
-void ssAnimatedModel::render(Pointer<Terrain> terrain)
+void ssAnimatedModel::render(TPointer<Terrain> terrain)
 {
 	setShaderEffectVariables(terrain);
 
@@ -697,17 +698,17 @@ void ssAnimatedModel::Clear()
 
 ///////////////// getter and setters //////////////////////
 
-void ssAnimatedModel::SetPosition(const Vector3 InPosition)
+void ssAnimatedModel::SetPosition(const SVector InPosition)
 {
 	this->Transform.Position = InPosition;
 }
 
-void ssAnimatedModel::SetRotation(const Rotator InRotation)
+void ssAnimatedModel::SetRotation(const SRotator InRotation)
 {
 	this->Transform.Rotation = InRotation;
 }
 
-void ssAnimatedModel::SetScale(const Vector3 InScale)
+void ssAnimatedModel::SetScale(const SVector InScale)
 {
 	this->Transform.Scale = InScale;
 }

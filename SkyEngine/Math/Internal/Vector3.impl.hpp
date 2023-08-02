@@ -8,46 +8,46 @@
 #include "Math/Rotator.h"
 
 template <typename T>
-Vector3x<T> Vector3x<T>::Cross(const Vector3x& V) const
+TVector3<T> TVector3<T>::Cross(const TVector3& V) const
 {
 	return glm::cross<T>(*this, V);
 }
 
 template <typename T>
-float Vector3x<T>::Dot(const Vector3x& V) const
+float TVector3<T>::Dot(const TVector3& V) const
 {
 	return glm::dot<T>(*this, V);
 }
 
 template <typename T>
-Vector3x<T> Vector3x<T>::GetNormalized() const
+TVector3<T> TVector3<T>::GetNormalized() const
 {
 	static_assert(std::numeric_limits<T>::is_iec559, "'normalize' accepts only floating-point inputs");
 	return glm::normalize<T, glm::precision::highp>(*this);
 }
 
 template <typename T>
-Vector3x<T>& Vector3x<T>::Normalize()
+TVector3<T>& TVector3<T>::Normalize()
 {
 	static_assert(std::numeric_limits<T>::is_iec559, "'normalize' accepts only floating-point inputs");
 	return *this = glm::normalize<T, glm::precision::highp>(*this);
 }
 
 template <typename T>
-T Vector3x<T>::Size() const
+T TVector3<T>::Size() const
 {
 	return glm::length(*this);
 }
 
 template <typename T>
-void Vector3x<T>::Rotate(T Angle, const Vector3x& Axis)
+void TVector3<T>::Rotate(T Angle, const TVector3& Axis)
 {
 	glm::mat4 RotateMatrix = glm::rotate(glm::mat4(1), glm::radians(Angle), Axis);
 	*this = glm::vec4(*this, 1.0f) * RotateMatrix;
 }
 
 template <typename T>
-Vector3x<T>& Vector3x<T>::operator=(Vector3x const& v)
+TVector3<T>& TVector3<T>::operator=(TVector3 const& v)
 {
 	glm::vec3::operator=(v);
 	return *this;
@@ -55,7 +55,7 @@ Vector3x<T>& Vector3x<T>::operator=(Vector3x const& v)
 
 template <typename T>
 template <typename U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
-Vector3x<T>& Vector3x<T>::operator+=(U scalar)
+TVector3<T>& TVector3<T>::operator+=(U scalar)
 {
 	AddValues(scalar, scalar, scalar);
 	return *this;
@@ -63,7 +63,7 @@ Vector3x<T>& Vector3x<T>::operator+=(U scalar)
 
 template <typename T>
 template <typename U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
-Vector3x<T>& Vector3x<T>::operator+=(Vector3x<U> other)
+TVector3<T>& TVector3<T>::operator+=(TVector3<U> other)
 {
 	AddValues(other.x, other.y, other.z);
 	return *this;
@@ -71,7 +71,7 @@ Vector3x<T>& Vector3x<T>::operator+=(Vector3x<U> other)
 
 template <typename T>
 template <typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
-Vector3x<T>& Vector3x<T>::operator+=(glm::tvec3<U> other)
+TVector3<T>& TVector3<T>::operator+=(glm::tvec3<U> other)
 {
 	AddValues(other.x, other.y, other.z);
 	return *this;
@@ -79,7 +79,7 @@ Vector3x<T>& Vector3x<T>::operator+=(glm::tvec3<U> other)
 
 template <typename T>
 template <typename U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
-Vector3x<T>& Vector3x<T>::operator-=(U scalar)
+TVector3<T>& TVector3<T>::operator-=(U scalar)
 {
 	MinusValues(scalar, scalar, scalar);
 	return *this;
@@ -87,7 +87,7 @@ Vector3x<T>& Vector3x<T>::operator-=(U scalar)
 
 template <typename T>
 template <typename U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
-Vector3x<T>& Vector3x<T>::operator-=(Vector3x<U> other)
+TVector3<T>& TVector3<T>::operator-=(TVector3<U> other)
 {
 	MinusValues(other.x, other.y, other.z);
 	return *this;
@@ -95,7 +95,7 @@ Vector3x<T>& Vector3x<T>::operator-=(Vector3x<U> other)
 
 template <typename T>
 template <typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
-Vector3x<T>& Vector3x<T>::operator-=(glm::tvec3<U> other)
+TVector3<T>& TVector3<T>::operator-=(glm::tvec3<U> other)
 {
 	MinusValues(other.x, other.y, other.z);
 	return *this;
@@ -103,7 +103,7 @@ Vector3x<T>& Vector3x<T>::operator-=(glm::tvec3<U> other)
 
 template <typename T>
 template <typename U>
-void Vector3x<T>::MinusValues(U InX, U InY, U InZ)
+void TVector3<T>::MinusValues(U InX, U InY, U InZ)
 {
 	this->x -= static_cast<T>(InX);
 	this->y -= static_cast<T>(InY);
@@ -112,7 +112,7 @@ void Vector3x<T>::MinusValues(U InX, U InY, U InZ)
 
 template <typename T>
 template <typename U>
-void Vector3x<T>::AddValues(U InX, U InY, U InZ)
+void TVector3<T>::AddValues(U InX, U InY, U InZ)
 {
 	this->x += static_cast<T>(InX);
 	this->y += static_cast<T>(InY);
@@ -120,7 +120,7 @@ void Vector3x<T>::AddValues(U InX, U InY, U InZ)
 }
 
 template <typename T>
-Rotator Vector3x<T>::ToRotator() const
+SRotator TVector3<T>::ToRotator() const
 {
 	// Get Angle on the lateral plane (will be in radians)
 	const float YawAngle = atan2(X,Z);
@@ -128,7 +128,7 @@ Rotator Vector3x<T>::ToRotator() const
 	// Get pitch based on Y (Up)
 	const float PitchAngle = Size() * sin(Y);
 
-	Rotator NewRotator;
+	SRotator NewRotator;
 	NewRotator.Yaw = ToDegree(YawAngle);//Magnitude * cos(Angle));
 	NewRotator.Pitch = ToDegree(PitchAngle);//ToDegree(Magnitude * sin(Angle));
 
@@ -139,7 +139,7 @@ Rotator Vector3x<T>::ToRotator() const
 }
 
 template <typename T>
-std::string Vector3x<T>::ToString() const
+std::string TVector3<T>::ToString() const
 {
 	// TODO: Update c++
 	// std::format
@@ -149,7 +149,7 @@ std::string Vector3x<T>::ToString() const
 }
 
 template <typename T>
-void Vector3x<T>::Print() const
+void TVector3<T>::Print() const
 {
 	printf("(%.02f, %.02f, %.02f)", X, Y, Z);
 }

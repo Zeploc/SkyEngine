@@ -1,6 +1,6 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
-#include "Shader.h"
+#include "ShaderManager.h"
 
 // Library Includes //
 #include <ft2build.h>
@@ -10,15 +10,18 @@
 #include FT_FREETYPE_H
 
 // Engine Includes //
-#include "Meshes/Model/ModelObject.h"
+#include "PBRShader.h"
+#include "Shader.h"
+#include "UnlitShader.h"
+#include "Render/Meshes/Model/ModelObject.h"
 #include "Core/Application.h"
 #include "System/LogManager.h"
 
 // Local Includes //
 
-std::map<std::string, Pointer<ModelObject>> Shader::Models;
-std::map<const char*, TextureData> Shader::Textures;
-std::map<std::string, GLuint> Shader::Programs;
+std::map<std::string, TPointer<ModelObject>> ShaderManager::Models;
+std::map<std::string, CTexture> ShaderManager::Textures;
+std::map<std::string, TPointer<CShader>> ShaderManager::Shaders;
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -26,7 +29,7 @@ std::map<std::string, GLuint> Shader::Programs;
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Shader::Shader()
+ShaderManager::ShaderManager()
 {
 }
 
@@ -36,12 +39,12 @@ Shader::Shader()
 #--Parameters--#:	NA
 #--Return--#: 		NA
 ************************************************************/
-Shader::~Shader()
+ShaderManager::~ShaderManager()
 {
 	CleanUp();
 }
 
-void Shader::CleanUp()
+void ShaderManager::CleanUp()
 {
 	for (auto& Model : Models)
 	{
@@ -51,43 +54,85 @@ void Shader::CleanUp()
 	Textures.clear();
 }
 
-void Shader::LoadAllDefaultShadersInCurrentContext()
+void ShaderManager::LoadAllDefaultShadersInCurrentContext()
 {
-	AddProgram("Resources/Shaders/TextureVertexShader.vs", "Resources/Shaders/TextureFragmentShader.fs", "BaseProgram");
-	AddComputeProgram("Resources/Shaders/ComputeShader.comps", "ComputeProgram");
-	AddProgram("Resources/Shaders/ParticleShaderCompute.vs", "Resources/Shaders/ParticleShaderCompute.fs", "GPUParticlesProgram");
-	AddProgram("Resources/Shaders/ParticleShader.vs", "Resources/Shaders/ParticleShader.fs", "ParticleShader", "Resources/Shaders/ParticleShader.gs");
-	AddProgram("Resources/Shaders/LitVertexShader.vs", "Resources/Shaders/LitFragmentShader.fs", "LitTextureprogram");
-	AddProgram("Resources/Shaders/AnimatedModel.vs", "Resources/Shaders/AnimatedModel.fs", "AnimatedModel");
-	AddProgram("Resources/Shaders/Text.vs", "Resources/Shaders/Text.fs", "TextUIprogram");
-	AddProgram("Resources/Shaders/UI.vs", "Resources/Shaders/UI.fs", "UIprogram");
-	AddProgram("Resources/Shaders/CubeMapVertexShader.vs", "Resources/Shaders/CubeMapFragmentShader.fs", "CubeMapProgram");
-	AddProgram("Resources/Shaders/ModelVertexShader.vs", "Resources/Shaders/ModelFragmentShader.fs", "ModelProgram");
-	AddProgram("Resources/Shaders/ModelVertexShaderLit.vs", "Resources/Shaders/ModelFragmentShaderLit.fs", "ModelProgramLit");
-	AddProgram("Resources/Shaders/ReflectionShader.vs", "Resources/Shaders/ReflectionShader.fs", "ReflectionProgram");
-	AddProgram("Resources/Shaders/FogShader.vs", "Resources/Shaders/FogShader.fs", "FogProgram");
-	AddProgram("Resources/Shaders/GeometryShader.vs", "Resources/Shaders/GeometryShader.fs", "GeometryShader", "Resources/Shaders/GeometryShader.gs");
-	AddProgram("Resources/Shaders/ParticleShader.vs", "Resources/Shaders/ParticleShader.fs", "ParticleShader", "Resources/Shaders/ParticleShader.gs");
-	AddTessProgram("Resources/Shaders/Tessellation.vs", "Resources/Shaders/Tessellation.fs", "Resources/Shaders/TessControl.tc", "Resources/Shaders/TessEval.te", "TessProgram");
-	AddProgram("Resources/Shaders/FrameBuffer.vs", "Resources/Shaders/FrameBuffer.fs", "FrameBuffer");
+	AddShaderProgram("BaseProgram", "Resources/Shaders/TextureVertexShader.vs", "Resources/Shaders/TextureFragmentShader.fs");
+	AddComputeProgram("ComputeProgram", "Resources/Shaders/ComputeShader.comps");
+	AddShaderProgram("GPUParticlesProgram", "Resources/Shaders/ParticleShaderCompute.vs", "Resources/Shaders/ParticleShaderCompute.fs");
+	AddShaderProgram("ParticleShader", "Resources/Shaders/ParticleShader.vs", "Resources/Shaders/ParticleShader.fs", "Resources/Shaders/ParticleShader.gs");
+	AddShaderProgram("LitTextureprogram", "Resources/Shaders/LitVertexShader.vs", "Resources/Shaders/LitFragmentShader.fs");
+	AddShaderProgram("AnimatedModel", "Resources/Shaders/AnimatedModel.vs", "Resources/Shaders/AnimatedModel.fs");
+	AddShaderProgram("TextUIprogram", "Resources/Shaders/Text.vs", "Resources/Shaders/Text.fs");
+	AddShaderProgram("UIprogram", "Resources/Shaders/UI.vs", "Resources/Shaders/UI.fs");
+	AddShaderProgram("CubeMapProgram", "Resources/Shaders/CubeMapVertexShader.vs", "Resources/Shaders/CubeMapFragmentShader.fs");
+	AddShaderProgram("ModelProgram", "Resources/Shaders/ModelVertexShader.vs", "Resources/Shaders/ModelFragmentShader.fs");
+	AddShaderProgram("ModelProgramLit", "Resources/Shaders/ModelVertexShaderLit.vs", "Resources/Shaders/ModelFragmentShaderLit.fs");
+	AddShaderProgram("ReflectionProgram", "Resources/Shaders/ReflectionShader.vs", "Resources/Shaders/ReflectionShader.fs");
+	AddShaderProgram("FogProgram", "Resources/Shaders/FogShader.vs", "Resources/Shaders/FogShader.fs");
+	AddShaderProgram("GeometryShader", "Resources/Shaders/GeometryShader.vs", "Resources/Shaders/GeometryShader.fs", "Resources/Shaders/GeometryShader.gs");
+	AddShaderProgram("ParticleShader", "Resources/Shaders/ParticleShader.vs", "Resources/Shaders/ParticleShader.fs", "Resources/Shaders/ParticleShader.gs");
+	AddTessProgram("TessProgram", "Resources/Shaders/Tessellation.vs", "Resources/Shaders/Tessellation.fs", "Resources/Shaders/TessControl.tc", "Resources/Shaders/TessEval.te");
+	AddShaderProgram("FrameBuffer", "Resources/Shaders/FrameBuffer.vs", "Resources/Shaders/FrameBuffer.fs");
+
+	AddShader<CPBRShader>();
+	AddShader<CUnlitShader>();
 }
 
-void Shader::AddProgram(std::string VertexShaderPath, std::string FragmentShaderPath, std::string ShaderName, std::string GeometryShaderPath)
+void ShaderManager::AddShaderProgram(std::string ShaderName, std::string VertexShaderPath, std::string FragmentShaderPath, std::string GeometryShaderPath)
 {
-	Programs.insert(std::pair<std::string, GLuint>(ShaderName, GetGraphicsAPI()->CreateProgram(VertexShaderPath.c_str(), FragmentShaderPath.c_str(), GeometryShaderPath.c_str())));
+	const TPointer<CShader> NewShader = std::make_shared<CShader>(ShaderName, VertexShaderPath, FragmentShaderPath);
+	NewShader->SetGeometryShader(GeometryShaderPath);
+	ShaderCreated(NewShader);
+}
+
+void ShaderManager::AddTessProgram(std::string ShaderName, std::string VertexShaderPath, std::string FragmentShaderPath, std::string TessControlShaderPath, std::string TessEvalShaderPath)
+{
+	const TPointer<CShader> NewShader = std::make_shared<CShader>(ShaderName, VertexShaderPath, FragmentShaderPath);
+	NewShader->SetTessShader(TessControlShaderPath, TessEvalShaderPath);
+	ShaderCreated(NewShader);
+}
+
+void ShaderManager::AddComputeProgram(std::string ShaderName, std::string ComputePath)
+{
+	const TPointer<CShader> NewShader = std::make_shared<CShader>(ShaderName, ComputePath);
+	ShaderCreated(NewShader);
+}
+
+void ShaderManager::ShaderCreated(const TPointer<CShader>NewShader)
+{
+	std::string ShaderName = NewShader->GetShaderName();
+	if (!NewShader->CompileShader())
+	{
+		const std::string ErrorMessage = "Failed to create shader" + ShaderName;
+		ensure(false, ErrorMessage.c_str());
+		return;
+	}
+	Shaders.insert(std::pair(ShaderName, NewShader));
 	LogManager::GetInstance()->DisplayLogMessage("Loading Shader \"" + ShaderName + "\"");
 }
 
-void Shader::AddTessProgram(std::string VertexShaderPath, std::string FragmentShaderPath, std::string TessControlShaderPath, std::string TessEvalShaderPath, std::string ShaderName)
+TPointer<CShader> ShaderManager::GetShader(std::string ShaderName)
 {
-	Programs.insert(std::pair<std::string, GLuint>(ShaderName, GetGraphicsAPI()->CreateTessProgram(VertexShaderPath.c_str(), FragmentShaderPath.c_str(), TessControlShaderPath.c_str(), TessEvalShaderPath.c_str())));
-	LogManager::GetInstance()->DisplayLogMessage("Loading Shader \"" + ShaderName + "\"");
+	if (!Shaders.contains(ShaderName))
+	{
+		return nullptr;
+	}
+	return Shaders[ShaderName];
 }
 
-void Shader::AddComputeProgram(std::string ComputePath, std::string ShaderName)
+template <class T>
+TPointer<T> ShaderManager::GetShader()
 {
-	Programs.insert(std::pair<std::string, GLuint>(ShaderName, GetGraphicsAPI()->CreateComputeProgram(ComputePath.c_str())));
-	LogManager::GetInstance()->DisplayLogMessage("Loading Shader \"" + ShaderName + "\"");
+	// TODO: improve retrieval based on stored method
+	for (auto Element : Shaders)
+	{
+		std::shared_ptr<CShader> Shader = Element.second;
+		if (TPointer<CShader> CheckedShader = std::static_pointer_cast<T>(Shader))
+		{
+			return CheckedShader;
+		}
+	}
+	return nullptr;
 }
 
 ///************************************************************
@@ -96,7 +141,7 @@ void Shader::AddComputeProgram(std::string ComputePath, std::string ShaderName)
 //#--Parameters--#: 	Takes in size and colour
 //#--Return--#: 		New vao gluint
 //************************************************************/
-GLuint Shader::BindArray(float fWidth, float fHeight, glm::vec4 Colour)
+GLuint ShaderManager::BindArray(float fWidth, float fHeight, glm::vec4 Colour)
 {
 	// TODO: Remove need (should use material)
 	// float fHalfWidth = fWidth / 2;
@@ -125,7 +170,7 @@ GLuint Shader::BindArray(float fWidth, float fHeight, glm::vec4 Colour)
 #--Parameters--#: 	Takes in size, colour, texture source, ref texture gluint and draw mode
 #--Return--#: 		New vao gluint
 ************************************************************/
-unsigned Shader::BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour, const char* TextureSource, TextureData& Texture, int _DrawMode)
+unsigned ShaderManager::BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour, const char* TextureSource, CTexture& Texture, int _DrawMode)
 {
 	// TODO: Link with material
 	// unsigned int vao = GetGraphicsAPI()->CreateBuffer(Texture, false, false);
@@ -167,7 +212,7 @@ unsigned Shader::BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colou
 #--Parameters--#: 	Takes in font path and font size
 #--Return--#: 		New font struct info
 ************************************************************/
-Text::cFont Shader::AddFont(std::string fontPath, int iPSize)
+Text::cFont ShaderManager::AddFont(std::string fontPath, int iPSize)
 {
 	for (auto it : Text::Fonts)
 	{

@@ -8,7 +8,7 @@
 #include "SoundManager.h"
 
 // Static Variables //
-Pointer<SoundManager> SoundManager::m_pSoundManager;
+TPointer<SoundManager> SoundManager::m_pSoundManager;
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -230,11 +230,11 @@ int SoundManager::GetChannelID(std::string sName)
 #--Parameters--#:	NA
 #--Return--#: 		Returns static pointer to self
 ************************************************************/
-Pointer<SoundManager> SoundManager::GetInstance()
+TPointer<SoundManager> SoundManager::GetInstance()
 {
 	if (!m_pSoundManager) // null or doesn't exist
 	{
-		m_pSoundManager = Pointer<SoundManager>(new SoundManager());
+		m_pSoundManager = TPointer<SoundManager>(new SoundManager());
 	}
 	return m_pSoundManager;
 }

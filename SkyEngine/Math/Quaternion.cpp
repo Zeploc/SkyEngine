@@ -41,7 +41,7 @@ Quaternion operator*(const Quaternion& l, const Quaternion& r)
 	return ret;
 }
 
-Quaternion operator*(const Quaternion& q, const Vector3& v)
+Quaternion operator*(const Quaternion& q, const SVector& v)
 {
 	const float w = - (q.X * v.X) - (q.Y * v.Y) - (q.Z * v.Z);
 	const float x = (q.W * v.X) + (q.Y * v.Z) - (q.Z * v.Y);
@@ -53,7 +53,7 @@ Quaternion operator*(const Quaternion& q, const Vector3& v)
 	return ret;
 }
 
-Vector3 Quaternion::ToDegrees()
+SVector Quaternion::ToDegrees()
 {
 	float f[3];
 
@@ -65,5 +65,5 @@ Vector3 Quaternion::ToDegrees()
 	f[1] = ToDegree(f[1]);
 	f[2] = ToDegree(f[2]);
 
-	return Vector3(f[0], f[1], f[2]);
+	return SVector(f[0], f[1], f[2]);
 }

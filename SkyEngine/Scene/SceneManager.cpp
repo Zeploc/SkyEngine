@@ -14,7 +14,7 @@
 // Local Includes //
 
 // Static Variables //
-Pointer<SceneManager> SceneManager::m_pSceneManager;
+TPointer<SceneManager> SceneManager::m_pSceneManager;
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -47,18 +47,18 @@ SceneManager::~SceneManager()
 #--Parameters--#: 	Scene to add
 #--Return--#: 		NA
 ************************************************************/
-void SceneManager::AddScene(Pointer<Scene> _Scene)
+void SceneManager::AddScene(TPointer<Scene> _Scene)
 {
 	if (Scenes.empty())
 	{
-		Scenes.insert(std::pair<std::string, Pointer<Scene>>(_Scene->SceneName, _Scene));
+		Scenes.insert(std::pair<std::string, TPointer<Scene>>(_Scene->SceneName, _Scene));
 		CurrentScene = _Scene->SceneName;
 		SceneToSwitch = CurrentScene;
 		_Scene->OnLoadScene();
 	}
 	else
 	{
-		Scenes.insert(std::pair<std::string, Pointer<Scene>>(_Scene->SceneName, _Scene));
+		Scenes.insert(std::pair<std::string, TPointer<Scene>>(_Scene->SceneName, _Scene));
 	}
 }
 
@@ -86,7 +86,7 @@ void SceneManager::RemoveScene(std::string SceneName)
 #--Parameters--#: 	Scene to remove
 #--Return--#: 		NA
 ************************************************************/
-void SceneManager::RemoveScene(Pointer<Scene> _Scene)
+void SceneManager::RemoveScene(TPointer<Scene> _Scene)
 {
 	for (auto it = Scenes.begin(); it != Scenes.end(); ++it)
 	{
@@ -155,7 +155,7 @@ void SceneManager::RenderCurrentScene()
 	Scenes[CurrentScene]->RenderScene();
 }
 
-Pointer<Scene> SceneManager::GetCurrentScene()
+TPointer<Scene> SceneManager::GetCurrentScene()
 {
 	if (Scenes.empty())
 	{
@@ -170,11 +170,11 @@ Pointer<Scene> SceneManager::GetCurrentScene()
 #--Parameters--#:	NA
 #--Return--#: 		Returns static pointer to self
 ************************************************************/
-Pointer<SceneManager> SceneManager::GetInstance()
+TPointer<SceneManager> SceneManager::GetInstance()
 {
 	if (!m_pSceneManager) // null or doesn't exist
 	{
-		m_pSceneManager = Pointer<SceneManager>(new SceneManager());
+		m_pSceneManager = TPointer<SceneManager>(new SceneManager());
 	}
 	return m_pSceneManager;
 }

@@ -5,7 +5,7 @@
 #include "Core/Core.h"
 
 template <typename T>
-struct Vector3x;
+struct TVector3;
 
 struct ENGINE_API Quaternion
 {
@@ -17,9 +17,9 @@ struct ENGINE_API Quaternion
 
 	Quaternion Conjugate();
 
-	Vector3x<float> ToDegrees();
+	TVector3<float> ToDegrees();
 };
 
 Quaternion operator*(const Quaternion& l, const Quaternion& r);
 
-Quaternion operator*(const Quaternion& q, const Vector3x<float>& v);
+Quaternion operator*(const Quaternion& q, const TVector3<float>& v);

@@ -30,10 +30,10 @@ public:
 	
 	bool Wireframe = false;
 	
-	Pointer<UIText> LevelNameText;
+	TPointer<UIText> LevelNameText;
 
-	Pointer<TransformationWidget> LocationBox;
+	TPointer<TransformationWidget> LocationBox;
 	
 	float CurrentFocusDistance = 7.0f;
-	Vector2 PreviousMousePosition;
+	SVector2 PreviousMousePosition;
 };

@@ -20,7 +20,7 @@
 #include "Math/Vector4.h"
 #include "Platform/Window/GraphicsWindow.h"
 #include "Platform/Windows/WindowsPlatform.h"
-#include "Render/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 #include "Render/Lighting.h"
 #include "System/TimeManager.h"
 
@@ -34,8 +34,8 @@ namespace SkyEngine
 	Application::Application()
 	{
 		EngineApplication = this;
-		MainWindowSize = Vector2(1920, 1080);
-		SkyColour = Vector3(0.3f, 0.8f, 0.9f);
+		MainWindowSize = SVector2(1920, 1080);
+		SkyColour = SVector(0.3f, 0.8f, 0.9f);
 		GraphicsApiType = EGraphicsAPI::OPENGL;
 	}
 
@@ -56,7 +56,7 @@ namespace SkyEngine
 		LogManager::GetInstance()->Init();
 		GraphicsApi = IGraphicsAPI::CreateGraphicsAPI(GraphicsApiType);
 
-		Lighting::SetFogColour(Vector4(SkyColour, 1.0f));
+		Lighting::SetFogColour(SVector4(SkyColour, 1.0f));
 
 		ApplicationWindow = EngineWindow::CreateEngineWindow("Application Window", MainWindowSize, false);
 		if (!ApplicationWindow)
@@ -164,7 +164,7 @@ namespace SkyEngine
 	{
 		ApplicationWindow.reset();
 		GraphicsApi.reset();
-		Shader::CleanUp();
+		ShaderManager::CleanUp();
 		SceneManager::DestoryInstance();
 		CameraManager::DestoryInstance();
 		//Input::DestoryInstance();
@@ -183,7 +183,7 @@ SkyEngine::Application* GetApplication()
 	return SkyEngine::Application::GetApplication();
 }
 
-Pointer<IGraphicsAPI> GetGraphicsAPI()
+TPointer<IGraphicsAPI> GetGraphicsAPI()
 {
 	return SkyEngine::Application::GetApplication()->GraphicsApi;
 }

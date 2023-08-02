@@ -512,6 +512,7 @@
     <ClInclude Include="Editor\Windows\EditorWindowManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Resources\Shaders\UnlitFragmentShader.fs" />
     <Content Include="..\README.md" />
     <Content Include="Resources\Levels\Demo Scene.slvl" />
     <Content Include="Resources\Levels\Example.slvl" />
@@ -519,6 +520,9 @@
     <Content Include="Resources\Models\theDude.DAE" />
     <Content Include="Resources\Models\theDude.png" />
     <Content Include="Resources\Models\theDude_idle_run.DAE" />
+    <Compile Include="Resources\Shaders\PBRFragmentShader.fs" />
+    <Content Include="Resources\Shaders\PBRVertexShader.vs" />
+    <Content Include="Resources\Shaders\UnlitVertexShader.vs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SkyEngine\SkyEngine.vcxproj">

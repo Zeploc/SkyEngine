@@ -21,7 +21,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-ParticleSystem2D::ParticleSystem2D(FTransform _Transform, const char* _CharName) : Entity(_Transform, EANCHOR::CENTER)
+ParticleSystem2D::ParticleSystem2D(STransform _Transform, const char* _CharName) : Entity(_Transform, EANCHOR::CENTER)
 {
 	m_vParticlePaths.push_back(_CharName);
 }
@@ -181,8 +181,8 @@ void ParticleSystem2D::Update()
 		// Random path from paths
 		int iRandPath = rand() % m_vParticlePaths.size();
 
-		Pointer<Entity> NewParticleEntity = std::make_shared<Entity>(Transform, EANCHOR::CENTER);
-		Pointer<Plane> NewParticlePlaneMesh = std::make_shared<Plane>(fNewSize, fNewSize, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), m_vParticlePaths[iRandPath]);
+		TPointer<Entity> NewParticleEntity = std::make_shared<Entity>(Transform, EANCHOR::CENTER);
+		TPointer<CPlane> NewParticlePlaneMesh = std::make_shared<CPlane>(fNewSize, fNewSize, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), m_vParticlePaths[iRandPath]);
 		NewParticleEntity->AddMesh(NewParticlePlaneMesh);
 
 		Particle2D NewParticle = {NewParticleEntity, fNewSpeed, v2NewDirection, fNewFalloffDistance, fNewFalloffTime, 0.0f};
@@ -195,8 +195,8 @@ void ParticleSystem2D::Update()
 		for (auto iter = m_vParticles.begin(); iter != m_vParticles.end();)
 		{
 			(*iter).fTimeLength += static_cast<float>(Time::dTimeDelta);
-			(*iter).pEntity->Translate(Vector3(0, -m_fGravity * static_cast<float>(Time::dTimeDelta), 0));
-			(*iter).pEntity->Translate(Vector3((*iter).v2Direction * (*iter).fSpeed * static_cast<float>(Time::dTimeDelta), 0));
+			(*iter).pEntity->Translate(SVector(0, -m_fGravity * static_cast<float>(Time::dTimeDelta), 0));
+			(*iter).pEntity->Translate(SVector((*iter).v2Direction * (*iter).fSpeed * static_cast<float>(Time::dTimeDelta), 0));
 
 			glm::vec2 v2Distance = Utils::GetDistance2D((*iter).pEntity, this->shared_from_this());
 			if (sqrt(pow(v2Distance.x, 2) + pow(v2Distance.y, 2)) >= (*iter).fFalloffDistance || (*iter).fTimeLength > (*iter).fFallOffTime)
@@ -213,8 +213,8 @@ void ParticleSystem2D::Update()
 	else if (!m_vParticles.empty())
 	{
 		m_vParticles[0].fTimeLength += static_cast<float>(Time::dTimeDelta);
-		m_vParticles[0].pEntity->Translate(Vector3(m_vParticles[0].v2Direction * m_vParticles[0].fSpeed * static_cast<float>(Time::dTimeDelta), 0));
-		m_vParticles[0].pEntity->Translate(Vector3(0, -m_fGravity * static_cast<float>(Time::dTimeDelta), 0));
+		m_vParticles[0].pEntity->Translate(SVector(m_vParticles[0].v2Direction * m_vParticles[0].fSpeed * static_cast<float>(Time::dTimeDelta), 0));
+		m_vParticles[0].pEntity->Translate(SVector(0, -m_fGravity * static_cast<float>(Time::dTimeDelta), 0));
 		glm::vec2 v2Distance = Utils::GetDistance2D(m_vParticles[0].pEntity, this->shared_from_this());
 
 		if (sqrt(pow(v2Distance.x, 2) + pow(v2Distance.y, 2)) >= m_vParticles[0].fFalloffDistance || m_vParticles[0].fTimeLength > m_vParticles[0].fFallOffTime)
@@ -229,9 +229,9 @@ void ParticleSystem2D::Update()
 	}
 }
 
-std::vector<Pointer<Entity>> ParticleSystem2D::GetAdditionalEntitiesToRender()
+std::vector<TPointer<Entity>> ParticleSystem2D::GetAdditionalEntitiesToRender()
 {
-	std::vector<Pointer<Entity>> ParticleEntities;
+	std::vector<TPointer<Entity>> ParticleEntities;
 	for (auto it : m_vParticles)
 	{
 		ParticleEntities.push_back(it.pEntity);

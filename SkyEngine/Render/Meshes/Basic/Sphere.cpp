@@ -3,20 +3,20 @@
 #include "Sphere.h"
 
 // Engine Includes //
-#include "Render/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 #include "Core/Application.h"
 #include "Entity/Entity.h"
 
-Sphere::~Sphere()
+CSphere::~CSphere()
 {
 }
 
-bool Sphere::CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, Pointer<Entity> EntityCheck)
+bool CSphere::CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos, TPointer<Entity> EntityCheck)
 {
 	return Utils::CheckSphereHit(RayStart, RayDirection, EntityCheck->Transform.Position, m_fWidth, HitPos);
 }
 
-MeshData Sphere::GetMeshData()
+MeshData CSphere::GetMeshData()
 {
 	constexpr uint64_t Sections = 20;
 	constexpr uint64_t VertexAttrib = 12;

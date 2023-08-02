@@ -14,13 +14,13 @@ class Scene;
 class ENGINE_API SceneManager
 {
 public:
-	std::map<std::string, Pointer<Scene>> Scenes;
+	std::map<std::string, TPointer<Scene>> Scenes;
 
-	void AddScene(Pointer<Scene> _Scene);
+	void AddScene(TPointer<Scene> _Scene);
 
 	void RemoveScene(std::string SceneName);
 
-	void RemoveScene(Pointer<Scene> _Scene);
+	void RemoveScene(TPointer<Scene> _Scene);
 
 	void SwitchScene(std::string SceneName, bool _bInstant = false);
 
@@ -28,21 +28,21 @@ public:
 
 	void RenderCurrentScene();
 
-	Pointer<Scene> GetCurrentScene();
+	TPointer<Scene> GetCurrentScene();
 
 	std::string CurrentScene = "";
 	std::string SceneToSwitch = "";
 
 	// Singleton
 public:
-	static Pointer<SceneManager> GetInstance();
+	static TPointer<SceneManager> GetInstance();
 
 	static void DestoryInstance();
 
 	~SceneManager(); // Shared pointer has to be able to call destructor so can't be private
 
 private:
-	static Pointer<SceneManager> m_pSceneManager;
+	static TPointer<SceneManager> m_pSceneManager;
 
 	SceneManager();
 

@@ -8,28 +8,36 @@
 #include <Render/Meshes/Basic/Cube.h>
 #include <Scene/Scene.h>
 
-TransformationWidget::TransformationWidget(FTransform _Transform, Scene* OwningScene) : Entity(_Transform, EANCHOR::CENTER)
+#include "Render/Shaders/ShaderManager.h"
+#include "Render/Shaders/UnlitShader.h"
+
+TransformationWidget::TransformationWidget(STransform _Transform, Scene* OwningScene) : Entity(_Transform, EANCHOR::CENTER)
 {
 	// TODO: Convert to components
 	XMoveTransform = std::make_shared<Entity>(_Transform, EANCHOR::CENTER);
 	YMoveTransform = std::make_shared<Entity>(_Transform, EANCHOR::CENTER);
 	ZMoveTransform = std::make_shared<Entity>(_Transform, EANCHOR::CENTER);
 	XColour = {0.6f, 0.1f, 0.1f, 1.0f};
-	Pointer<Cube> XMoveTransformMesh(new Cube(1.0f, 0.1f, 0.1f, XColour));
-	Pointer<Cube> ZMoveTransformMesh(new Cube(0.1f, 0.1f, 1.0f, ZColour));
-	Pointer<Cube> YMoveTransformMesh(new Cube(0.1f, 1.0f, 0.1f, YColour));
-	XMoveTransformMesh->MeshMaterial->bDepthTest = false;
-	ZMoveTransformMesh->MeshMaterial->bDepthTest = false;
-	YMoveTransformMesh->MeshMaterial->bDepthTest = false;
+	
+	const TPointer<CMaterial> RedUnlitMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CUnlitShader>());
+	RedUnlitMaterial->SetMaterialAttribute(CUnlitShader::DiffuseColour, {.Vector4 = XColour});
+	RedUnlitMaterial->bDepthTest = false;
+	const TPointer<CMaterial> GreenUnlitMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CUnlitShader>());
+	GreenUnlitMaterial->SetMaterialAttribute(CUnlitShader::DiffuseColour, {.Vector4 = YColour});
+	GreenUnlitMaterial->bDepthTest = false;
+	const TPointer<CMaterial> BlueUnlitMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CUnlitShader>());
+	BlueUnlitMaterial->SetMaterialAttribute(CUnlitShader::DiffuseColour, {.Vector4 = ZColour});
+	BlueUnlitMaterial->bDepthTest = false;
+	
+	TPointer<CCube> XMoveTransformMesh = std::make_shared<CCube>(shared_from_this(), 1.0f, 0.1f, 0.1f, RedUnlitMaterial);
+	TPointer<CCube> YMoveTransformMesh = std::make_shared<CCube>(shared_from_this(), 0.1f, 1.0f, 0.1f, GreenUnlitMaterial);
+	TPointer<CCube> ZMoveTransformMesh = std::make_shared<CCube>(shared_from_this(), 0.1f, 0.1f, 1.0f, BlueUnlitMaterial);
 
-	XMoveTransformMesh->MeshMaterial->StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
-	ZMoveTransformMesh->MeshMaterial->StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
-	YMoveTransformMesh->MeshMaterial->StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
+	// XMoveTransformMesh->MeshMaterial->StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
+	// ZMoveTransformMesh->MeshMaterial->StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
+	// YMoveTransformMesh->MeshMaterial->StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
 
-	XMoveTransformMesh->SetLit(false);
-	ZMoveTransformMesh->SetLit(false);
-	YMoveTransformMesh->SetLit(false);
-
+	// TODO: Switch to components in this entity
 	XMoveTransform->AddMesh(XMoveTransformMesh);
 	YMoveTransform->AddMesh(YMoveTransformMesh);
 	ZMoveTransform->AddMesh(ZMoveTransformMesh);
@@ -64,9 +72,9 @@ void TransformationWidget::Update()
 	const bool bMouseBegin = Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_PRESS;
 
 	// Check for hit
-	const Vector3 RayStart = CameraManager::GetInstance()->GetCameraPosition();
-	const Vector3 RayDirection = CameraManager::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos);
-	Vector3 HitPos;
+	const SVector RayStart = CameraManager::GetInstance()->GetCameraPosition();
+	const SVector RayDirection = CameraManager::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos);
+	SVector HitPos;
 	// TODO: Change hover to lighter colour
 	// TODO: Allow for multi axis (use plane/triangle check between axis)
 	if (XMoveTransform->CheckHit(RayStart, RayDirection, HitPos))
@@ -102,17 +110,17 @@ void TransformationWidget::Update()
 		// TODO: Store initial hit offset
 		if (XHeld)
 		{
-			const Vector3 HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
+			const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
 			GrabOffset = Transform.Position.X - HitPoint.X;
 		}
 		else if (YHeld)
 		{
-			const Vector3 HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 0.0f, 1.0f));
+			const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 0.0f, 1.0f));
 			GrabOffset = Transform.Position.Y - HitPoint.Y;
 		}
 		else if (ZHeld)
 		{
-			const Vector3 HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
+			const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
 			GrabOffset = Transform.Position.Z - HitPoint.Z;
 		}
 	}
@@ -127,34 +135,31 @@ void TransformationWidget::Update()
 	{
 		if (XHeld)
 		{
-			const Vector3 HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
+			const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
 			Transform.Position.X = HitPoint.X + GrabOffset;
 		}
 		else if (YHeld)
 		{
-			const Vector3 HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 0.0f, 1.0f));
+			const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 0.0f, 1.0f));
 			Transform.Position.Y = HitPoint.Y + GrabOffset;
 		}
 		else if (ZHeld)
 		{
-			const Vector3 HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
+			const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
 			Transform.Position.Z = HitPoint.Z + GrabOffset;
 		}
 		SelectedEntity->Transform.Position = Transform.Position;
 	}
 
 	// TODO: Update so colour gets updated (only happens on bind
-	XMoveTransform->EntityMesh->MeshMaterial->bStencil = XHovered;
-	XMoveTransform->EntityMesh->MeshMaterial->Colour = XColour * (XHovered ? 2.0f : 1.0f);
-	//XMoveTransform->EntityMesh->Rebind();
-
-	YMoveTransform->EntityMesh->MeshMaterial->bStencil = YHovered;
-	YMoveTransform->EntityMesh->MeshMaterial->Colour = YColour * (YHovered ? 2.0f : 1.0f);
-	//YMoveTransform->EntityMesh->Rebind();
-
-	ZMoveTransform->EntityMesh->MeshMaterial->bStencil = ZHovered;
-	ZMoveTransform->EntityMesh->MeshMaterial->Colour = ZColour * (ZHovered ? 2.0f : 1.0f);
-	//ZMoveTransform->EntityMesh->Rebind();
+	// XMoveTransform->EntityMesh->MeshMaterial->bStencil = XHovered;
+	// XMoveTransform->EntityMesh->MeshMaterial->Colour = XColour * (XHovered ? 2.0f : 1.0f);
+	//
+	// YMoveTransform->EntityMesh->MeshMaterial->bStencil = YHovered;
+	// YMoveTransform->EntityMesh->MeshMaterial->Colour = YColour * (YHovered ? 2.0f : 1.0f);
+	//
+	// ZMoveTransform->EntityMesh->MeshMaterial->bStencil = ZHovered;
+	// ZMoveTransform->EntityMesh->MeshMaterial->Colour = ZColour * (ZHovered ? 2.0f : 1.0f);
 
 	// Update child transforms
 	// TODO: Remove need for component transform system
@@ -163,7 +168,7 @@ void TransformationWidget::Update()
 	ZMoveTransform->Transform.Position = Transform.Position + glm::vec3(0, 0, ZMoveTransform->EntityMesh->m_fDepth / 2.0f);
 }
 
-std::vector<Pointer<Entity>> TransformationWidget::GetAdditionalEntitiesToRender()
+std::vector<TPointer<Entity>> TransformationWidget::GetAdditionalEntitiesToRender()
 {
 	return {};//{XMoveTransform, YMoveTransform, ZMoveTransform};
 }

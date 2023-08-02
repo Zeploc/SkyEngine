@@ -26,7 +26,7 @@
 #define ASSIMP_LOAD_FLAGS (aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices)
 #define GLCheckError() (glGetError() == GL_NO_ERROR)
 
-class AnimatedModel : public Mesh
+class AnimatedModel : public CMeshComponent
 {
 public:
 	AnimatedModel(std::string modelFilename, std::string texFilename);
@@ -34,7 +34,7 @@ public:
 	~AnimatedModel();
 
 	// TODO: Update to graphics instance
-	void Render(FTransform Newtransform);
+	void Render(STransform Newtransform);
 
 	void Update() override;
 
@@ -141,9 +141,6 @@ private:
 
 	Matrix4 m_GlobalInverseTransform;
 	GLuint m_boneLocation[100];
-
-	// Model
-	LightInfo ModelLightInfo;
 
 	// Animation
 	float animTick;

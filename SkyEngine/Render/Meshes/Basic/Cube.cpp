@@ -3,14 +3,15 @@
 #include "Cube.h"
 
 // Engine Includes //
-#include "Render/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 #include "Core/Application.h"
+#include "Render/Shaders/PBRShader.h"
 
-Cube::~Cube()
+CCube::~CCube()
 {
 }
 
-MeshData Cube::GetMeshData()
+MeshData CCube::GetMeshData()
 {
 	const float HalfWidth = m_fWidth / 2;
 	const float HalfHeight = m_fHeight / 2;
@@ -133,14 +134,14 @@ MeshData Cube::GetMeshData()
 	};
 
 	MeshData CubeMeshData(VertexPositions, Indices, Normals);
-	if (MeshMaterial->HasTexture())
+	if (MeshMaterial->HasMaterialAttribute(CPBRShader::DiffuseTexture))
 	{
 		CubeMeshData.SetUVs(UVCoords);
 	}
 	return CubeMeshData;
 }
 
-bool Cube::CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, Pointer<Entity> EntityCheck)
+bool CCube::CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos, TPointer<Entity> EntityCheck)
 {
 	return Utils::CheckCubeHit(RayStart, RayDirection, {m_fWidth, m_fHeight, m_fDepth}, EntityCheck, HitPos);
 }

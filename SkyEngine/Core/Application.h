@@ -30,20 +30,20 @@ namespace SkyEngine
 		
 		bool bLoading = true;
 
-		Vector2 MainWindowSize;
-		Vector3 SkyColour;
+		SVector2 MainWindowSize;
+		SVector SkyColour;
 
-		Pointer<IGraphicsAPI> GraphicsApi;
-		Pointer<IPlatformInterface> PlatformInterface;
+		TPointer<IGraphicsAPI> GraphicsApi;
+		TPointer<IPlatformInterface> PlatformInterface;
 		EGraphicsAPI GraphicsApiType;
 
-		Pointer<EngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
+		TPointer<EngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
 		
 		static Application* GetApplication();
 	protected:
 		static Application* EngineApplication;
 
-		Pointer<EngineWindow> ApplicationWindow;
+		TPointer<EngineWindow> ApplicationWindow;
 	};
 
 	// To be defined in client
@@ -51,5 +51,5 @@ namespace SkyEngine
 }
 
 ENGINE_API SkyEngine::Application* GetApplication();
-ENGINE_API Pointer<IGraphicsAPI> GetGraphicsAPI();
+ENGINE_API TPointer<IGraphicsAPI> GetGraphicsAPI();
 

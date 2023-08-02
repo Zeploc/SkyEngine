@@ -29,26 +29,28 @@
 
 #include "Core/Application.h"
 #include "Platform/Window/GraphicsWindow.h"
+#include "Render/Shaders/PBRShader.h"
+#include "Render/Shaders/ShaderManager.h"
 
 EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 {
-	Pointer<UIButton> QuitBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 20, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
+	TPointer<UIButton> QuitBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 20, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
 	QuitBtn->AddText("Quit", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
 	// TODO: Let delegate allow derived class type when passing in "this"? - Auto cast check inside? Template type for derived types allowed?
 	QuitBtn->BindPress(GetApplication(), &SkyEngine::Application::Quit);
 	AddUIElement(QuitBtn);
 	
-	Pointer<UIButton> SaveBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 150, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
+	TPointer<UIButton> SaveBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 150, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
 	SaveBtn->AddText("Save", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
 	SaveBtn->BindPress(this, &EditorScene::SaveCurrentLevel);
 	AddUIElement(SaveBtn);
 	
-	Pointer<UIButton> SaveAsNewBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 280, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
+	TPointer<UIButton> SaveAsNewBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 280, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
 	SaveAsNewBtn->AddText("Save As", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
 	SaveAsNewBtn->BindPress(this, &EditorScene::SaveAsNew);
 	AddUIElement(SaveAsNewBtn);
 
-	Pointer<UIButton> OpenBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 410, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
+	TPointer<UIButton> OpenBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 410, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
 	OpenBtn->AddText("Open", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
 	OpenBtn->BindPress(this, &EditorScene::OpenFile);
 	AddUIElement(OpenBtn);
@@ -56,7 +58,7 @@ EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 	LevelNameText = std::make_shared<UIText>(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 540, CameraManager::GetInstance()->SCR_HEIGHT - 15.0f), 0.0f, glm::vec4(0.3, 0.3, 0.3, 1.0f), "Level Name", "Resources/Fonts/Roboto-Regular.ttf", 20, EANCHOR::BOTTOM_RIGHT);
 	AddUIElement(LevelNameText);
 
-	Pointer<UIText> TipText(new UIText({CameraManager::GetInstance()->SCR_WIDTH - 20, 15.0f}, 0, {0.3, 0.3, 0.3, 1.0f}, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 22, EANCHOR::TOP_RIGHT));
+	TPointer<UIText> TipText(new UIText({CameraManager::GetInstance()->SCR_WIDTH - 20, 15.0f}, 0, {0.3, 0.3, 0.3, 1.0f}, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 22, EANCHOR::TOP_RIGHT));
 	AddUIElement(TipText);
 
 	Lighting::SetLightPosition({5, 5, 5});
@@ -65,7 +67,7 @@ EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 	CameraManager::GetInstance()->SetCameraPos({-10, 10, 0});
 	CameraManager::GetInstance()->SetCameraForwardVector({0, -0.5, 1.0f});
 
-	const Pointer<EngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
+	const TPointer<EngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 
 	EditorWindow* NewWindow = new EditorWindow("Outliner", ApplicationWindow, glm::vec2(300, 400), glm::vec2(0, 0));
 	NewWindow->SetBackColour(glm::vec3(0.2, 0.6, 0.8));
@@ -77,17 +79,11 @@ EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 	//ExternalWindow->SetBackColour(glm::vec3(0.6, 0.3, 0.4));
 
 	AddSampleEntities();
-	
-	Pointer<Entity> CubeEnty(new Entity(FTransform{{10.0f, 4.0f, 4.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	Pointer<Cube> CubyMesh(new Cube(3.0f, 3.0f, 3.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
-	CubeEnty->AddMesh(CubyMesh);
-	CubyMesh->SetLit(true);
-	// CubyMesh->SetReflection(true);
-	AddEntity(CubeEnty, true);
+
 
 	// Last added to appear on top
 	// TODO: Depth test order to always be infront of loaded level objects
-	LocationBox = std::make_shared<TransformationWidget>(FTransform{{0.0f, 0.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, this);
+	LocationBox = std::make_shared<TransformationWidget>(STransform{{0.0f, 0.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, this);
 	AddEntity(LocationBox, true);
 	LocationBox->SetVisible(false);
 	LocationBox->bRayCast = false;
@@ -95,21 +91,37 @@ EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 
 void EditorScene::AddSampleEntities()
 {
-	Pointer<Entity> SphereRaycastTest(new Entity(FTransform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	Pointer<Sphere> SphereRaycastMesh(new Sphere(2.0f, 2.0f, 2.0f, {0.1f, 0.8f, 0.3f, 1.0f}, "Resources/Images/SmoothCliff_1024.jpg"));
+	TPointer<CTexture> BrickTexture = std::make_shared<CTexture>("Resources/Images/StoneWall_2x2.jpg");	
+	TPointer<CMaterial> BrickMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CPBRShader>());
+	BrickMaterial->SetMaterialAttribute(CPBRShader::DiffuseTexture, {.Texture = BrickTexture});
+
+	// Would be nice to be able to copy an existing material as a template
+	TPointer<CMaterial> ColouredBrickMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CPBRShader>());
+	ColouredBrickMaterial->SetMaterialAttribute(CPBRShader::DiffuseTexture, {.Texture = BrickTexture});
+	ColouredBrickMaterial->SetMaterialAttribute(CPBRShader::DiffuseColour, {.Vector4 = {0.5f, 0.3f, 0.3f, 1.0f}});
+	
+	TPointer<CTexture> CliffTexture = std::make_shared<CTexture>("Resources/Images/SmoothCliff_1024.jpg");	
+	TPointer<CMaterial> CliffMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CPBRShader>());
+	CliffMaterial->SetMaterialAttribute(CPBRShader::DiffuseTexture, {.Texture = BrickTexture});
+	CliffMaterial->SetMaterialAttribute(CPBRShader::DiffuseColour, {.Vector4 = {0.1f, 0.8f, 0.3f, 1.0f}});
+	
+	TPointer<CMaterial> PlaneMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CPBRShader>());
+	PlaneMaterial->SetMaterialAttribute(CPBRShader::DiffuseColour, {.Vector4 = {0.5f, 0.5f, 0.5f, 1.0f}});
+
+	// TODO: Switch all below to make shared
+	TPointer<Entity> SphereRaycastTest(new Entity(STransform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	TPointer<CSphere> SphereRaycastMesh = std::make_shared<CSphere>(SphereRaycastTest, 2.0f, 2.0f, 2.0f, CliffMaterial);
 	SphereRaycastTest->AddMesh(SphereRaycastMesh);
-	SphereRaycastMesh->SetLit(true);
-	SphereRaycastMesh->SetReflection(true);
 	AddEntity(SphereRaycastTest, true);
 			
-	Pointer<Entity> FloorEntity(new Entity({{0, 0, 0}, {-90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	TPointer<Entity> FloorEntity(new Entity({{0, 0, 0}, {-90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
 	//glm::vec3 Points[4] = { {-10, 10, 1}, {10, 10, -1 }, { 10, -10, 0 }, { -10, -10, -3 } };
-	Pointer<Plane> FloorPlanMesh(new Plane(50, 50, {0.5f, 0.5f, 0.5f, 1.0f}));
+	TPointer<CPlane> FloorPlanMesh = std::make_shared<CPlane>(FloorEntity, 50, 50, PlaneMaterial);
 	FloorEntity->AddMesh(FloorPlanMesh);
 	FloorPlanMesh->MeshMaterial->bTwoSided = true;
 	AddEntity(FloorEntity, true);
 	
-	Pointer<ParticleSystem> ParticleBoy(new ParticleSystem({{20, 8, 10}, {0, 0, 0}, {1, 1, 1}}));
+	TPointer<ParticleSystem> ParticleBoy(new ParticleSystem({{20, 8, 10}, {0, 0, 0}, {1, 1, 1}}));
 	ParticleBoy->SetPositionRange({-5, 5}, {0, 0}, {-5, 5});
 	ParticleBoy->SetDirectionRange({0, 0}, {-1, -1}, {0, 0});
 	ParticleBoy->SetFalloffTime({100.0f, 100.0f});
@@ -119,12 +131,12 @@ void EditorScene::AddSampleEntities()
 	ParticleBoy->Init(1000, "Resources/Images/raindrop.png");
 	AddEntity(ParticleBoy, true);
 	
-	Pointer<ParticleSystem> ParticleBoy2(new ParticleSystem({{20, 1, 20}, {0, 0, 0}, {1, 1, 1}}));
+	TPointer<ParticleSystem> ParticleBoy2(new ParticleSystem({{20, 1, 20}, {0, 0, 0}, {1, 1, 1}}));
 	ParticleBoy2->Init(1000, "Resources/Images/Box.png");
 	AddEntity(ParticleBoy2, true);
 	
-	Pointer<Entity> GeomEnt(new Entity({{10, 6, 10}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	Pointer<GeometryObject> GeomShape(new GeometryObject({0.0, 0.9f, 0.3f, 1.0f}));
+	TPointer<Entity> GeomEnt(new Entity({{10, 6, 10}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	TPointer<GeometryObject> GeomShape(new GeometryObject({0.0, 0.9f, 0.3f, 1.0f}));
 	GeomEnt->AddMesh(GeomShape);
 	AddEntity(GeomEnt, true);
 	
@@ -136,34 +148,26 @@ void EditorScene::AddSampleEntities()
 	// ModelEntityMesh->SetReflection(true);
 	// AddEntity(ModelEntity, true);
 	
-	Pointer<Entity> CubeEnty(new Entity(FTransform{{10.0f, 4.0f, 4.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	Pointer<Cube> CubyMesh(new Cube(3.0f, 3.0f, 3.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
+	TPointer<Entity> CubeEnty(new Entity(STransform{{10.0f, 4.0f, 4.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	TPointer<CCube> CubyMesh(new CCube(CubeEnty, 3.0f, 3.0f, 3.0f, ColouredBrickMaterial));
 	CubeEnty->AddMesh(CubyMesh);
-	CubyMesh->SetLit(true);
-	CubyMesh->SetReflection(true);
 	AddEntity(CubeEnty, true);
 	
-	Pointer<Entity> PyramidEntity(new Entity(FTransform{{10.0f, 4.0f, 8.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	Pointer<Pyramid> PyramidMesh(new Pyramid(3.0f, 3.0f, 3.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
+	TPointer<Entity> PyramidEntity(new Entity(STransform{{10.0f, 4.0f, 8.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	TPointer<CPyramid> PyramidMesh(new CPyramid(PyramidEntity, 3.0f, 3.0f, 3.0f, ColouredBrickMaterial));
 	PyramidEntity->AddMesh(PyramidMesh);
 	// PyramidMesh->SetLit(false, true);
 	// TODO: Identify and fix pyramid lighting
-	PyramidMesh->SetLit(true);
-	PyramidMesh->SetReflection(true);
 	AddEntity(PyramidEntity, true);
 	
-	Pointer<Entity> SphereEntity(new Entity(FTransform{{10.0f, 4.0f, 12.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	Pointer<Sphere> SphereMesh(new Sphere(2.0f, 2.0f, 2.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
+	TPointer<Entity> SphereEntity(new Entity(STransform{{10.0f, 4.0f, 12.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	TPointer<CSphere> SphereMesh(new CSphere(SphereEntity, 2.0f, 2.0f, 2.0f, ColouredBrickMaterial));
 	SphereEntity->AddMesh(SphereMesh);
-	SphereMesh->SetLit(true);
-	SphereMesh->SetReflection(true);
 	AddEntity(SphereEntity, true);
 	
-	Pointer<Entity> PlaneEntity(new Entity(FTransform{{10.0f, 4.0f, 16.0f}, {-90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	Pointer<Plane> PlaneMesh(new Plane(2.0f, 2.0f, {0.5f, 0.3f, 0.3f, 1.0f}, "Resources/Images/StoneWall_2x2.jpg"));
+	TPointer<Entity> PlaneEntity(new Entity(STransform{{10.0f, 4.0f, 16.0f}, {-90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	TPointer<CPlane> PlaneMesh(new CPlane(PlaneEntity, 2.0f, 2.0f, ColouredBrickMaterial));
 	PlaneEntity->AddMesh(PlaneMesh);
-	PlaneMesh->SetLit(true);
-	PlaneMesh->SetReflection(true);
 	PlaneMesh->MeshMaterial->bTwoSided = true;
 	AddEntity(PlaneEntity, true);
 }
@@ -172,11 +176,11 @@ void EditorScene::UpdateSelectedEntity()
 {
 	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_HOLD)
 	{
-		Vector3 rayStart = CameraManager::GetInstance()->GetCameraPosition();
-		Vector3 RayDirection = CameraManager::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos);
-		Vector3 HitPos;
-		std::vector<Pointer<Entity>> HitEntities;
-		std::vector<Vector3> HitPosition;
+		SVector rayStart = CameraManager::GetInstance()->GetCameraPosition();
+		SVector RayDirection = CameraManager::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos);
+		SVector HitPos;
+		std::vector<TPointer<Entity>> HitEntities;
+		std::vector<SVector> HitPosition;
 		for (auto& Ent : Entities)
 		{
 			if (!Ent->bRayCast || !Ent->EntityMesh || !Ent->IsVisible())
@@ -201,7 +205,7 @@ void EditorScene::UpdateSelectedEntity()
 					ClosestHitID = i;
 				}
 			}
-			Pointer<Entity> HitEntity = HitEntities[ClosestHitID]; // Hit ent
+			TPointer<Entity> HitEntity = HitEntities[ClosestHitID]; // Hit ent
 			HitPos = HitPosition[ClosestHitID];
 
 			if (LocationBox && Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::INPUT_FIRST_PRESS)
@@ -225,9 +229,9 @@ void EditorScene::Update()
 	CameraManager* CameraInstance = CameraManager::GetInstance();
 
 	// TODO: Change from moving back to center to instead get offset (loop mouse when edge of screen?
-	Vector2 CenterScreen(static_cast<double>(CameraInstance->SCR_WIDTH) * 0.5, static_cast<double>(CameraInstance->SCR_HEIGHT) * 0.5);	
+	SVector2 CenterScreen(static_cast<double>(CameraInstance->SCR_WIDTH) * 0.5, static_cast<double>(CameraInstance->SCR_HEIGHT) * 0.5);	
 	
-	Vector2 Offset = Input::GetInstance()->MousePos - CenterScreen;
+	SVector2 Offset = Input::GetInstance()->MousePos - CenterScreen;
 	Offset *= CameraInstance->MouseSensitivity;
 	
 	const bool bAltDown = Input::GetInstance()->MouseALT == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseALT == Input::INPUT_HOLD;
@@ -279,7 +283,7 @@ void EditorScene::Update()
 	// TODO: Change spectator to use left click while alt down
 	if (bAltDown)
 	{
-		const Vector3 CameraPivotPoint = CameraInstance->GetCameraPosition() + CameraInstance->GetCameraForwardVector() * CurrentFocusDistance;
+		const SVector CameraPivotPoint = CameraInstance->GetCameraPosition() + CameraInstance->GetCameraForwardVector() * CurrentFocusDistance;
 		if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_HOLD)
 		{
 			if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_PRESS)
@@ -289,8 +293,8 @@ void EditorScene::Update()
 			}
 			else
 			{
-				Vector3 NewCameraForwardVector = CameraInstance->GetCameraForwardVector();
-				NewCameraForwardVector.Rotate(Offset.X, Vector3(0,1,0));
+				SVector NewCameraForwardVector = CameraInstance->GetCameraForwardVector();
+				NewCameraForwardVector.Rotate(Offset.X, SVector(0,1,0));
 				NewCameraForwardVector.Rotate(Offset.Y, CameraInstance->GetCameraRightVector());
 				CameraInstance->SetCameraForwardVector(NewCameraForwardVector);
 			}
@@ -334,7 +338,7 @@ void EditorScene::Update()
 			}
 			else
 			{
-				Vector3 NewCameraPosition = CameraInstance->GetCameraPosition();
+				SVector NewCameraPosition = CameraInstance->GetCameraPosition();
 				NewCameraPosition += CameraInstance->GetCameraRightVector() * Offset.X * CameraInstance->MouseSensitivity;
 				NewCameraPosition += -CameraInstance->GetCameraUpVector() * Offset.Y * CameraInstance->MouseSensitivity;
 				CameraInstance->SetCameraPos(NewCameraPosition);
@@ -428,8 +432,8 @@ void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
 	// std::string LevelName = OpenedLevelFile[0].substr(1, OpenedLevelFile[0].length() - 2);
 	// SceneName = LevelName;
 
-	std::vector< Pointer<Entity>> EntitiesCopy = Entities;
-	for (Pointer<Entity> CurrentEnt : EntitiesCopy)
+	std::vector< TPointer<Entity>> EntitiesCopy = Entities;
+	for (TPointer<Entity> CurrentEnt : EntitiesCopy)
 	{
 		if (CurrentEnt == LocationBox
 			|| CurrentEnt == LocationBox->XMoveTransform
@@ -449,11 +453,14 @@ void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
 	
 	while(OpenedLevelFile.peek() != EOF )
 	{
-		Pointer<Entity> NewEntity(new Entity(FTransform(), EANCHOR::CENTER));
+		TPointer<Entity> NewEntity(new Entity(STransform(), EANCHOR::CENTER));
 		OpenedLevelFile >> NewEntity;
 		std::getline(OpenedLevelFile, Empty, '\n');
 		
-		Pointer<Cube> CubeMesh(new Cube(3.0f, 3.0f, 3.0f, {0.7f, 0.4f, 0.3f, 1.0f}));
+		TPointer<CMaterial> TestMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CPBRShader>());
+		TestMaterial->SetMaterialAttribute(CPBRShader::DiffuseColour, {.Vector4 = {0.7f, 0.4f, 0.3f, 1.0f}});
+		
+		TPointer<CCube> CubeMesh = std::make_shared<CCube>(NewEntity, 3.0f, 3.0f, 3.0f, TestMaterial);
 		NewEntity->AddMesh(CubeMesh);
 		NewEntity->SetInitialEntity(true);
 		AddEntity(NewEntity, true);
@@ -533,7 +540,7 @@ void EditorScene::SaveCurrentLevel()
      	return;
      }
 	 LevelFile << "[" + SceneName + "]\n";
-	 for (Pointer<Entity> Entity : Entities)
+	 for (TPointer<Entity> Entity : Entities)
 	 {
 	 	if (Entity == LocationBox
 	 		|| Entity == LocationBox->XMoveTransform

@@ -5,11 +5,11 @@
 // This Includes //
 #include "Render/Meshes/Mesh.h"
 
-class ENGINE_API Pyramid : public Mesh
+class ENGINE_API CPyramid : public CMeshComponent
 {
 public:
-	using Mesh::Mesh;
-	~Pyramid();
+	using CMeshComponent::CMeshComponent;
+	~CPyramid();
 	
 protected:
 	MeshData GetMeshData() override;

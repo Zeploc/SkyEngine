@@ -13,7 +13,7 @@
 // Engine Includes //
 #include "Core/EngineWindow.h"
 #include "Input/Input.h"
-#include "Math/FTransform.h"
+#include "Math/Transform.h"
 #include "Math/Matrix.h"
 #include "Math/Vector.h"
 #include "Math/Vector4.h"
@@ -30,7 +30,7 @@ CameraManager* CameraManager::m_pCamera;
 #--Parameters--#: 	Takes in screen size and camera vectors
 #--Return--#: 		NA
 ************************************************************/
-void CameraManager::Init(int ScreenWidth, int ScreenHeight, Vector3 CamPos, Vector3 ForwardVec, Vector3 UpVec)
+void CameraManager::Init(int ScreenWidth, int ScreenHeight, SVector CamPos, SVector ForwardVec, SVector UpVec)
 {
 	SCR_WIDTH = ScreenWidth;
 	SCR_HEIGHT = ScreenHeight;
@@ -58,18 +58,18 @@ void CameraManager::UpdateViewMatrix()
 	               CameraUp);
 }
 
-Vector3 CameraManager::GetCameraRightVector() const
+SVector CameraManager::GetCameraRightVector() const
 {
 	return CameraForward.Cross(CameraUp).GetNormalized();
 }
 
-void CameraManager::SetCameraForwardVector(Vector3 _Forward)
+void CameraManager::SetCameraForwardVector(SVector _Forward)
 {
 	CameraForward = _Forward;
 	UpdateViewMatrix();
 }
 
-void CameraManager::SetCameraPos(Vector3 NewPos)
+void CameraManager::SetCameraPos(SVector NewPos)
 {
 	CameraPosition = NewPos;
 	UpdateViewMatrix();
@@ -81,14 +81,14 @@ void CameraManager::SetCameraPos(Vector3 NewPos)
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void CameraManager::MoveCamera(Vector3 _Movement)
+void CameraManager::MoveCamera(SVector _Movement)
 {
 	CameraPosition += _Movement;
 	UpdateViewMatrix();
 	//SetMVP(FTransform());
 }
 
-Vector2 CameraManager::GetScreenCenter() const
+SVector2 CameraManager::GetScreenCenter() const
 {
 	return {static_cast<float>(SCR_WIDTH) * 0.5f, static_cast<float>(SCR_HEIGHT) * 0.5f};
 }
@@ -114,9 +114,9 @@ void CameraManager::SpectatorUpdate()
 		return;
 	}
 
-	Vector2 Offset = Input::GetInstance()->MousePos - GetScreenCenter();
+	SVector2 Offset = Input::GetInstance()->MousePos - GetScreenCenter();
 	Offset *= MouseSensitivity;
-	CameraForward.Rotate(Offset.X, Vector3(0,1,0));
+	CameraForward.Rotate(Offset.X, SVector(0,1,0));
 	CameraForward.Rotate(Offset.Y, GetCameraRightVector());
 	// Needs Clamp
 	// GetCameraForwardVector().Rotate(Offset.Y, Vector3(1,0,0));
@@ -130,7 +130,7 @@ void CameraManager::SpectatorUpdate()
 
 	if (bSpectatorMovement)
 	{
-		const Vector3 ForwardMovement = CameraForward * CameraSpeed * TimeManager::GetDeltaTime();
+		const SVector ForwardMovement = CameraForward * CameraSpeed * TimeManager::GetDeltaTime();
 		if (Input::GetInstance()->KeyState[GLFW_KEY_W] == Input::INPUT_HOLD)
 		{
 			CameraPosition += ForwardMovement;
@@ -140,7 +140,7 @@ void CameraManager::SpectatorUpdate()
 			CameraPosition -= ForwardMovement;
 		}
 
-		const Vector3 RightMovement = GetCameraRightVector() * CameraSpeed * TimeManager::GetDeltaTime();
+		const SVector RightMovement = GetCameraRightVector() * CameraSpeed * TimeManager::GetDeltaTime();
 		if (Input::GetInstance()->KeyState[GLFW_KEY_A] == Input::INPUT_HOLD)
 		{
 			CameraPosition -= RightMovement;
@@ -150,7 +150,7 @@ void CameraManager::SpectatorUpdate()
 			CameraPosition += RightMovement;
 		}
 
-		const Vector3 UpMovement = CameraUp * CameraSpeed * TimeManager::GetDeltaTime();
+		const SVector UpMovement = CameraUp * CameraSpeed * TimeManager::GetDeltaTime();
 		if (Input::GetInstance()->KeyState[GLFW_KEY_E] == Input::INPUT_HOLD)
 		{
 			CameraPosition += UpMovement;
@@ -180,27 +180,27 @@ void CameraManager::SetWindowScale(float _fNewScale)
 	// projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, fMaxViewClipping);
 }
 
-Vector3 CameraManager::ScreenToWorldDirection(Vector2 InScreenPosition)
+SVector CameraManager::ScreenToWorldDirection(SVector2 InScreenPosition)
 {
 	float x = (2.0f * InScreenPosition.X) / SCR_WIDTH - 1.0f;
 	float y = 1.0f - (2.0f * InScreenPosition.Y) / SCR_HEIGHT;
-	const Vector2 RayNds = {x, y};
+	const SVector2 RayNds = {x, y};
 
-	const Vector4 RayClip = Vector4(RayNds.X, RayNds.Y, -1.0f, 1.0f);
+	const SVector4 RayClip = SVector4(RayNds.X, RayNds.Y, -1.0f, 1.0f);
 	
-	Vector4 RayEye = Projection.GetInverse() * RayClip;
-	RayEye = Vector4(RayEye.X, RayEye.Y, -1.0f, 0.0f);
+	SVector4 RayEye = Projection.GetInverse() * RayClip;
+	RayEye = SVector4(RayEye.X, RayEye.Y, -1.0f, 0.0f);
 
-	Vector3 RayWorld = Vector3(View.GetInverse().ToGLM() * RayEye);
+	SVector RayWorld = SVector(View.GetInverse().ToGLM() * RayEye);
 
 	RayWorld = RayWorld.Normalize();
 	return RayWorld;
 }
 
-Vector3 CameraManager::ScreenToWorldPosition2D(Vector2 InScreenPosition)
+SVector CameraManager::ScreenToWorldPosition2D(SVector2 InScreenPosition)
 {
-	Vector3 PlaneNormal = -CameraForward;
-	Vector3 MouseDirection = ScreenToWorldDirection(InScreenPosition);
+	SVector PlaneNormal = -CameraForward;
+	SVector MouseDirection = ScreenToWorldDirection(InScreenPosition);
 	float t = -(CameraPosition.Dot(PlaneNormal) / MouseDirection.Dot(PlaneNormal));
 	t /= abs(CameraPosition.Z);
 	return (MouseDirection * t) + CameraPosition;
@@ -217,7 +217,7 @@ glm::mat4 CameraManager::GetMVP(glm::mat4 model) const
 #--Parameters--#: 	Takes in the transforms vectors
 #--Return--#: 		NA
 ************************************************************/
-void CameraManager::SetMVP(FTransform InTransform, GLuint program)
+void CameraManager::SetMVP(STransform InTransform, GLuint program)
 {
 	glm::mat4 model = InTransform.GetModelMatrix();
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, value_ptr(model));

@@ -17,7 +17,7 @@
 class ParticleSystemGPU : public Entity
 {
 public:
-	ParticleSystemGPU(FTransform _Transform);
+	ParticleSystemGPU(STransform _Transform);
 	
 	~ParticleSystemGPU();
 
@@ -78,7 +78,7 @@ private:
 	GLuint program;
 	GLuint vao;
 	GLuint vbo;
-	TextureData Texture;
+	CTexture Texture;
 
 	GLuint posVbo;
 	GLuint velVbo;

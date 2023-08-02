@@ -5,7 +5,8 @@
 // Engine Includes //
 #include "Camera/CameraManager.h"
 #include "Input/Input.h"
-#include "Render/Shader.h"
+#include "Render/Shaders/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 #include "Sound/SoundManager.h"
 
 // Library Includes //
@@ -118,7 +119,7 @@ void UIButton::DrawUIElement()
 	{
 		return;
 	}
-	glUseProgram(Shader::Programs["TextUIprogram"]);
+	glUseProgram(ShaderManager::GetShader("TextUIprogram")->GetShaderProgram());
 	ImageComponent.DrawUIElement();
 	if (bHasText)
 	{

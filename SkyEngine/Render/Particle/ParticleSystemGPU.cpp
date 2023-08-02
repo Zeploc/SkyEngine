@@ -4,7 +4,7 @@
 
 // Engine Includes //
 #include "Particle.h"
-#include "Render/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 #include "Camera/CameraManager.h"
 
 // Library Includes //
@@ -13,6 +13,7 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include "Core/Application.h"
+#include "Render/Shaders/Shader.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -20,7 +21,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-ParticleSystemGPU::ParticleSystemGPU(FTransform _Transform) : Entity(_Transform, EANCHOR::CENTER)
+ParticleSystemGPU::ParticleSystemGPU(STransform _Transform) : Entity(_Transform, EANCHOR::CENTER)
 {
 	Colour = glm::vec4(123.0f / 255.0f, 173.0f / 255.0f, 203.0f / 255.0f, 2.0f);
 }
@@ -67,7 +68,7 @@ void ParticleSystemGPU::BindParticleSystemGPU(const char* TexturePath)
 		m_vPosition.push_back(part.position);
 	}*/
 
-	program = Shader::Programs["GPUParticlesProgram"];
+	program = ShaderManager::GetShader("GPUParticlesProgram")->GetShaderProgram();
 
 	Texture = GetGraphicsAPI()->GetTexture(TexturePath, true);
 
@@ -238,7 +239,7 @@ void ParticleSystemGPU::Update()
 ************************************************************/
 void ParticleSystemGPU::DrawEntity()
 {
-	glUseProgram(Shader::Programs["ComputeProgram"]);
+	glUseProgram(ShaderManager::GetShader("ComputeProgram")->GetShaderProgram());
 
 	glDispatchCompute(NUM_PARTICLES / 128, 1, 1);
 	// Sync, wait for completion

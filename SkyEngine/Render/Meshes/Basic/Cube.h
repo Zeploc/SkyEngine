@@ -5,13 +5,13 @@
 // This Includes //
 #include "Render/Meshes/Mesh.h"
 
-class ENGINE_API Cube : public Mesh
+class ENGINE_API CCube : public CMeshComponent
 {
 public:
-	using Mesh::Mesh;
-	~Cube();
+	using CMeshComponent::CMeshComponent;
+	~CCube();
 	
-	bool CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos, Pointer<Entity> EntityCheck) override;
+	bool CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos, TPointer<Entity> EntityCheck) override;
 protected:
 	MeshData GetMeshData() override;
 };

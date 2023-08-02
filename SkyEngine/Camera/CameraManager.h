@@ -31,7 +31,7 @@ enum class EProjectionMode
 };
 
 class EngineWindow;
-struct FTransform;
+struct STransform;
 
 class ENGINE_API CameraManager
 {
@@ -45,14 +45,14 @@ public:
 	Matrix4 View;
 	Matrix4 Projection;
 
-	void Init(int ScreenWidth, int ScreenHeight, Vector3 CamPos, Vector3 ForwardVec, Vector3 UpVec);
+	void Init(int ScreenWidth, int ScreenHeight, SVector CamPos, SVector ForwardVec, SVector UpVec);
 
 	void UpdateViewMatrix();
 
 	virtual void SpectatorUpdate();
 
 	glm::mat4 GetMVP(glm::mat4 model) const;
-	void SetMVP(FTransform InTransform, GLuint program);
+	void SetMVP(STransform InTransform, GLuint program);
 
 	void SwitchProjection(EProjectionMode InMode);
 
@@ -62,23 +62,23 @@ public:
 
 	float GetWindowScale() { return fWindowScale; }
 
-	Vector3 ScreenToWorldDirection(Vector2 InScreenPosition);
+	SVector ScreenToWorldDirection(SVector2 InScreenPosition);
 
-	Vector3 ScreenToWorldPosition2D(Vector2 InScreenPosition);
+	SVector ScreenToWorldPosition2D(SVector2 InScreenPosition);
 		
 	// Getters
-	Vector3 GetCameraPosition() const { return CameraPosition; }
-	Vector3 GetCameraForwardVector() const { return CameraForward; }
-	Vector3 GetCameraUpVector() const { return CameraUp; }
+	SVector GetCameraPosition() const { return CameraPosition; }
+	SVector GetCameraForwardVector() const { return CameraForward; }
+	SVector GetCameraUpVector() const { return CameraUp; }
 
-	Vector3 GetCameraRightVector() const;
+	SVector GetCameraRightVector() const;
 
-	void SetCameraForwardVector(Vector3 _Forward);
+	void SetCameraForwardVector(SVector _Forward);
 	
-	void SetCameraPos(Vector3 NewPos);
+	void SetCameraPos(SVector NewPos);
 
-	void MoveCamera(Vector3 _Movement);
-	Vector2 GetScreenCenter() const;
+	void MoveCamera(SVector _Movement);
+	SVector2 GetScreenCenter() const;
 
 	void EnableSpectatorControls(bool _bSpectatorControls);
 
@@ -90,7 +90,7 @@ public:
 	bool bSpectatorMovement = true;
 	float MouseSensitivity = 0.15f;
 
-	Pointer<EngineWindow> MainWindow;
+	TPointer<EngineWindow> MainWindow;
 
 protected:
 	
@@ -98,15 +98,15 @@ private:
 	// FPS CONTROLS
 	bool bUseSpectatorControls = false;
 
-	Vector2 PreviousMousePosition;
+	SVector2 PreviousMousePosition;
 
 	float CameraSpeed = 12.0f;
 	GLfloat Yaw = 0.0f;
 	GLfloat Pitch = 0.0f;
 
-	Vector3 CameraPosition;
-	Vector3 CameraForward;
-	Vector3 CameraUp;
+	SVector CameraPosition;
+	SVector CameraForward;
+	SVector CameraUp;
 
 	EProjectionMode ProjectionMode = EProjectionMode::Perspective;
 

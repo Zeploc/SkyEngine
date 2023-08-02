@@ -10,7 +10,7 @@
 #include "Math/MathDefinitions.h"
 
 template <typename T = float>
-struct ENGINE_API Vector4x : glm::tvec4<T, glm::highp>
+struct ENGINE_API TVector4 : glm::tvec4<T, glm::highp>
 {	
 	T& X = glm::tvec4<T, glm::highp>::x;
 	T& Y = glm::tvec4<T, glm::highp>::y;
@@ -21,57 +21,61 @@ struct ENGINE_API Vector4x : glm::tvec4<T, glm::highp>
 	T& B = glm::tvec4<T, glm::highp>::z;
 	T& A = glm::tvec4<T, glm::highp>::w;
 
-	Vector4x()
+	TVector4()
 		: glm::tvec4<T>()
 	{
 		
 	}
 	
-	Vector4x(const Vector4x<T>& Other)
+	TVector4(const TVector4<T>& Other)
 		: glm::tvec4<T>(Other)
 	{
 		
 	}
-	Vector4x(const glm::tvec4<T>& Other)
+	TVector4(const glm::tvec4<T>& Other)
 		: glm::tvec4<T>(Other)
 	{
 		
 	}
-	Vector4x(T InX, T InY, T InZ, T InW)
+	TVector4(T InX, T InY, T InZ, T InW)
 	{
 		X = InX;
 		Y = InY;
 		Z = InZ;
 		W = InW;
 	}
-	Vector4x(glm::tvec3<T> Vec3, T InW)
+	TVector4(T InX)
+	{
+		X = Y = Z = W = InX;
+	}
+	TVector4(glm::tvec3<T> Vec3, T InW)
 		: glm::tvec4<T>(Vec3, InW)
 	{
 	}
 	
-	Vector4x& operator=(Vector4x const & v)
+	TVector4& operator=(TVector4 const & v)
 	{
 		glm::vec4::operator=(v);
 		return *this;
 	}
 
-	Vector4x Cross(const Vector4x& V) const
+	TVector4 Cross(const TVector4& V) const
 	{
 		return glm::cross<T>(*this, V);
 	}
 
-	float Dot(const Vector4x& V) const
+	float Dot(const TVector4& V) const
 	{
 		return glm::dot<T>(*this, V);
 	}
 
-	Vector4x GetNormalized() const
+	TVector4 GetNormalized() const
 	{
 		GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'normalize' accepts only floating-point inputs");
 		return glm::normalize<T, glm::precision::highp>(*this);
 	}
 
-	Vector4x& Normalize()
+	TVector4& Normalize()
 	{
 		GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'normalize' accepts only floating-point inputs");
 		return *this = glm::normalize<T, glm::precision::highp>(*this);
@@ -107,5 +111,6 @@ struct ENGINE_API Vector4x : glm::tvec4<T, glm::highp>
 	// friend std::istream& operator>>(std::istream& is, Vector4x& OutVector);
 };
 
-using Vector4 = Vector4x<float>;
-using Vector4i = Vector4x<int>;
+using SVector4 = TVector4<float>;
+using SVector4f = TVector4<float>;
+using SVector4i = TVector4<int>;

@@ -3,14 +3,14 @@
 #include "Model.h"
 
 // Engine Includes //
-#include "Render/Lighting.h"
-#include "Render/Shader.h"
+#include "Render/Shaders/ShaderManager.h"
 
 // Library Includes //
 #include <map>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "ModelObject.h"
+#include "Render/Shaders/PBRShader.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -25,8 +25,8 @@ Model::Model(glm::vec4 _Colour, const char* ModelSource)
 	m_fDepth = 0; // fDepth;
 	ModelPath = ModelSource;
 	
-	MeshMaterial = std::make_shared<Material>("BaseProgram");
-	MeshMaterial->Colour = _Colour;
+	MeshMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CPBRShader>());
+	// MeshMaterial->Colour = _Colour;
 	BindModel();
 }
 
@@ -49,16 +49,17 @@ Model::~Model()
 ************************************************************/
 void Model::BindModel()
 {
-	for (auto& it : Shader::Models)
-	{
-		if (it.first == MeshMaterial->GetTextureData().Path)
-		{
-			pModelObject = it.second;
-			return;
-		}
-	}
-	pModelObject = std::make_shared<ModelObject>(MeshMaterial->GetTextureData().Path);
-	Shader::Models.insert(std::pair<std::string, Pointer<ModelObject>>(ModelPath, pModelObject));
+	// TODO: bind model
+	// for (auto& it : ShaderManager::Models)
+	// {
+	// 	if (it.first == MeshMaterial->GetTextureData().Path)
+	// 	{
+	// 		pModelObject = it.second;
+	// 		return;
+	// 	}
+	// }
+	// pModelObject = std::make_shared<ModelObject>(MeshMaterial->GetTextureData().Path);
+	// ShaderManager::Models.insert(std::pair<std::string, TPointer<ModelObject>>(ModelPath, pModelObject));
 }
 
 /************************************************************
@@ -72,18 +73,13 @@ void Model::Rebind()
 	BindModel();
 }
 
-void Model::SetLit(bool _bIsLit)
-{
-	Mesh::SetLit(_bIsLit);
-}
-
 /************************************************************
 #--Description--#:	Render Current Mesh to the screen
 #--Author--#: 		Alex Coultas
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Model::Render(FTransform Newtransform)
+void Model::Render(STransform Newtransform)
 {
 	// TODO: Review/improve
 	// glFrontFace(GL_CCW);

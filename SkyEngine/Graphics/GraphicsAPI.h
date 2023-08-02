@@ -14,7 +14,7 @@ class IGraphicsInstance;
 class UIElement;
 class Entity;
 class IGraphicsWindow;
-class Material;
+class CMaterial;
 
 enum class EGraphicsAPI
 {
@@ -29,19 +29,19 @@ public:
 	
 	virtual std::string GetGraphicsDisplayName() = 0;
 
-	static Pointer<IGraphicsAPI> CreateGraphicsAPI(EGraphicsAPI APIType);
+	static TPointer<IGraphicsAPI> CreateGraphicsAPI(EGraphicsAPI APIType);
 
-	virtual Pointer<IGraphicsInstance> CreateNewInstance() = 0;
+	virtual TPointer<IGraphicsInstance> CreateNewInstance() = 0;
 	
-	virtual unsigned int CreateBuffer(Pointer<Material> Material) = 0;
-	virtual TextureData GetTexture(const char* TextureSource, bool bAA) = 0;
+	virtual unsigned int CreateBuffer(const MeshData& MeshData) = 0;
+	virtual CTexture GetTexture(const std::string& TextureSource, bool bAA) = 0;
 	/* Create a new VAO if -1, otherwise will use it  */
 	virtual void BindArray(const std::vector<float>& vertices, const std::vector<uint32_t>& indices, unsigned& vao) = 0;
 	
-	virtual unsigned int CreateProgram(const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* GeometryShaderFilename) = 0;
+	virtual bool CreateShaderProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* GeometryShaderFilename) = 0;
 
-	virtual unsigned int CreateTessProgram(const char* VertexShaderFilename, const char* FragmentShaderFilename,
-								const char* TessControlShaderFilename, const char* TessEvalShaderFilename) = 0;
+	virtual bool CreateTessProgram(uint32_t& ProgramID, const char* VertexShaderFilename,
+	                               const char* FragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename) = 0;
 
-	virtual unsigned int CreateComputeProgram(const char* ComputeShaderFilename) = 0;
+	virtual bool CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename) = 0;
 };

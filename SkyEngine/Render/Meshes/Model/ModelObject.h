@@ -28,7 +28,7 @@ public:
 	~ModelObject();
 
 	// Draws the model, and thus all its meshes
-	void Render(FTransform MeshTransform);
+	void Render(STransform MeshTransform);
 
 private:
 	/*  Model Data  */

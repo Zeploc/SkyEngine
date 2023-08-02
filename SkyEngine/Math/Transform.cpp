@@ -1,13 +1,13 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
-#include "FTransform.h"
+#include "Transform.h"
 
 #include <string>
 #include <sstream>
 
 #include "System/Utils.h"
 
-std::string FTransform::ToString() const
+std::string STransform::ToString() const
 {
 	std::string sTransform;
 	sTransform += Position.ToString() + " ";
@@ -16,7 +16,7 @@ std::string FTransform::ToString() const
 	return sTransform;
 }
 
-void FTransform::FromString(std::string sTransform)
+void STransform::FromString(std::string sTransform)
 {
 	std::vector<std::string> Seperated = Utils::SeparateString(sTransform, ' ');
 	if (Seperated.size() >= 3)
@@ -27,7 +27,7 @@ void FTransform::FromString(std::string sTransform)
 	}
 }
 
-glm::mat4 FTransform::GetModelMatrix() const
+glm::mat4 STransform::GetModelMatrix() const
 {
 	glm::mat4 translate = glm::translate(glm::mat4(), Position);
 	glm::mat4 scale = glm::scale(glm::mat4(), Scale);
@@ -39,13 +39,13 @@ glm::mat4 FTransform::GetModelMatrix() const
 	return translate * rotation * scale;
 }
 
-std::ostream& operator<<(std::ostream& os, const FTransform& InTransform)
+std::ostream& operator<<(std::ostream& os, const STransform& InTransform)
 {
 	os << "(" << InTransform.Position << " " << InTransform.Rotation << " " << InTransform.Scale << ")";
 	return os;
 }
 
-std::istream& operator>>(std::istream& is, FTransform& OutTransform)
+std::istream& operator>>(std::istream& is, STransform& OutTransform)
 {
 	std::string Empty;
 	// TODO: Improve bracket removal

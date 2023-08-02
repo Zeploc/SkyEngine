@@ -7,7 +7,8 @@
 class WindowsPlatform : public IPlatformInterface
 {
 public:
+	~WindowsPlatform() override;
 	std::string GetPlatformDisplayName() override;
 	
-	Pointer<IGraphicsWindow> CreateNewWindow(const std::string& InWindowName, Vector2 InWindowSize, bool bFullScreen) override;
+	TPointer<IGraphicsWindow> CreateNewWindow(const std::string& InWindowName, SVector2 InWindowSize, bool bFullScreen) override;
 };
