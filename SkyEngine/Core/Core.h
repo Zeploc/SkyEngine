@@ -4,6 +4,7 @@
 
 #define SE_PLATFORM_WINDOWS
 #define SE_BUILD_DLL
+// #define NDEBUG
 
 // If define fails on compile?
 #ifdef SE_PLATFORM_WINDOWS
@@ -21,6 +22,7 @@ using TPointer = std::shared_ptr<T>;
 
 template<typename T>
 using Scope = std::unique_ptr<T>;
+
 
 #ifndef NDEBUG
 #   define ensure(Expr, Msg) \

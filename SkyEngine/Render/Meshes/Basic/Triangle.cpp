@@ -5,8 +5,9 @@
 // Engine Includes //
 #include "Render/Shaders/ShaderManager.h"
 #include "Core/Application.h"
+#include "Render/Materials/InternalMaterial.h"
 
-CTriangle::CTriangle(const TPointer<Entity>& InOwner, glm::vec3 _Point1, glm::vec3 _Point2, glm::vec3 _Point3, TPointer<CMaterial> InMaterial)
+CTriangle::CTriangle(const TPointer<Entity>& InOwner, glm::vec3 _Point1, glm::vec3 _Point2, glm::vec3 _Point3, TPointer<CMaterialInterface> InMaterial)
 : CMeshComponent(InOwner, 0.0f, 0.0f, 0.0f, InMaterial)
 {
 	Point1 = _Point1;
@@ -21,7 +22,7 @@ CTriangle::CTriangle(const TPointer<Entity>& InOwner, glm::vec3 _Point1, glm::ve
 	BindMeshData();
 }
 
-CTriangle::CTriangle(const TPointer<Entity>& InOwner, glm::vec3 CenterPoint, float Width, TPointer<CMaterial> InMaterial)
+CTriangle::CTriangle(const TPointer<Entity>& InOwner, glm::vec3 CenterPoint, float Width, TPointer<CMaterialInterface> InMaterial)
 : CMeshComponent(InOwner, Width, Width, 0.0f, InMaterial)
 {
 	Point1 = CenterPoint + glm::vec3(0, Width, 0);
@@ -54,7 +55,7 @@ MeshData CTriangle::GetMeshData()
 	MeshData TriangleMeshData(VertexPositions, Indices, Normals);
 
 	// TODO: Triangle doesn't support texture/UVs
-	assert(!MeshMaterial->HasTexture());
+	ensure(!MeshMaterial->HasTexture(), "Texture for triangle which isn't supported at the moment");
 	if (MeshMaterial->HasTexture())
 	{
 		// PlaneMeshData.SetUVs(UVCoords);

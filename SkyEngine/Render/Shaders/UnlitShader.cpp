@@ -1,12 +1,40 @@
 ﻿#include "UnlitShader.h"
 
-std::string CUnlitShader::DiffuseColour = "DiffuseColour";
-std::string CUnlitShader::DiffuseTexture = "DiffuseTexture";
+#include <glew/glew.h>
+
+#include "Graphics/GraphicsInstance.h"
 
 CUnlitShader::CUnlitShader()
-: CShader("Unlit","Resources/Shaders/UnlitVertexShader.vs", "Resources/Shaders/UnlitFragmentShader.vs")
+: CShader("Unlit","Resources/Shaders/UnlitVertexShader.vs", "Resources/Shaders/UnlitFragmentShader.fs")
 {
 	// TODO: Setup shader uniforms
-	DefineAttribute(DiffuseColour, SVector4(1.0f));
-	DefineAttribute(DiffuseTexture, TPointer<CTexture>());
+}
+
+bool CUnlitShader::CompileShader()
+{
+	if (!CShader::CompileShader())
+	{
+		return false;
+	}
+	// TODO: Replace with graphics api
+	Params.DiffuseTextureLocation = glGetUniformLocation(ShaderProgram, Params.DiffuseTextureName.c_str());
+	Params.DiffuseColourLocation = glGetUniformLocation(ShaderProgram, Params.DiffuseColourName.c_str());
+
+	return true;
+}
+
+void CUnlitShader::BindShader(const TPointer<IGraphicsInstance>& InGraphicsInterface)
+{
+	CShader::BindShader(InGraphicsInterface);
+}
+
+void CUnlitShader::UploadMaterialParameters(const TPointer<IGraphicsInstance>& InGraphicsInstance, const ShaderParameters& InParams)
+{
+	InGraphicsInstance->PassAttributeToShader(Params.DiffuseTextureLocation, InParams.DiffuseTexture);
+	InGraphicsInstance->PassAttributeToShader(Params.DiffuseColourLocation, InParams.DiffuseColour);
+}
+
+bool CUnlitShader::HasTexture(const ShaderParameters& InParams)
+{
+	return InParams.DiffuseTexture != nullptr;
 }

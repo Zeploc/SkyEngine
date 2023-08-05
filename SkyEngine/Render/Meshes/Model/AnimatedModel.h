@@ -29,7 +29,7 @@
 class AnimatedModel : public CMeshComponent
 {
 public:
-	AnimatedModel(std::string modelFilename, std::string texFilename);
+	AnimatedModel(const TPointer<Entity>& InOwner, std::string modelFilename, std::string texFilename);
 
 	~AnimatedModel();
 
@@ -64,10 +64,10 @@ private:
 			MaterialIndex = INVALID_MATERIAL;
 		}
 
-		GLuint NumIndices;
-		GLuint BaseVertex;
-		GLuint BaseIndex;
-		GLuint MaterialIndex;
+		uint32_t NumIndices;
+		uint32_t BaseVertex;
+		uint32_t BaseIndex;
+		uint32_t MaterialIndex;
 	};
 
 	struct BoneInfo
@@ -114,8 +114,8 @@ private:
 
 	bool InitFromScene(const aiScene* pScene, std::string Filename);
 
-	void initMesh(GLuint meshIndex, const aiMesh* paiMesh, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals,
-	              std::vector<glm::vec2>& texcoords, std::vector<VertexBoneData>& bones, std::vector<GLuint>& indices);
+	void initMesh(uint32_t meshIndex, const aiMesh* paiMesh, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals,
+	              std::vector<glm::vec2>& texcoords, std::vector<VertexBoneData>& bones, std::vector<uint32_t>& indices);
 
 	void loadBones(int meshIndex, const aiMesh* pMesh, std::vector<VertexBoneData>& bones);
 
@@ -127,20 +127,20 @@ private:
 
 	bool initMaterials(const aiScene* pScene, std::string filename);
 
-	GLuint loadTexture(std::string texFileName);
+	uint32_t loadTexture(std::string texFileName);
 
 	// Bone
-	GLuint m_Buffers[NUM_VBs];
-	std::map<std::string, GLuint> m_BoneMapping;
+	uint32_t m_Buffers[NUM_VBs];
+	std::map<std::string, uint32_t> m_BoneMapping;
 	std::map<std::string, aiNodeAnim*> boneHierarchy;
 	std::vector<BoneInfo> m_BoneInfo;
-	GLuint m_NumBones;
+	uint32_t m_NumBones;
 
 	std::vector<MeshEntry> m_Entries;
-	std::vector<GLuint> m_Textures;
+	std::vector<uint32_t> m_Textures;
 
 	Matrix4 m_GlobalInverseTransform;
-	GLuint m_boneLocation[100];
+	uint32_t m_boneLocation[100];
 
 	// Animation
 	float animTick;
@@ -162,13 +162,13 @@ private:
 
 	void CalcInterpolatedPosition(aiVector3D& out, float AnimationTime, const aiNodeAnim* pNodeAnim);
 
-	GLuint FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);
+	uint32_t FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);
 
 	void CalcInterpolatedRotation(aiQuaternion& out, float AnimationTime, const aiNodeAnim* pNodeAnim);
 
-	GLuint FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim);
+	uint32_t FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim);
 
 	void CalcInterpolatedScaling(aiVector3D& out, float AnimationTime, const aiNodeAnim* pNodeAnim);
 
-	GLuint FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim);
+	uint32_t FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim);
 };

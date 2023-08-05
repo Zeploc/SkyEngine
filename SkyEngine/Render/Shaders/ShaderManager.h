@@ -9,14 +9,16 @@
 #include <string>
 
 // Engine Includes //
+#include "Shader.h"
 #include "Render/Texture.h"
-#include "Entity/2DParticleSystem.h"
+// #include "Entity/2DParticleSystem.h"
 #include "UI/Text.h"
 
-class CShader;
+// class CShader;
 class ModelObject;
+class CUndefinedShader;
 
-class ShaderManager
+class ENGINE_API ShaderManager
 {
 public:
 	ShaderManager();
@@ -35,19 +37,22 @@ public:
 
 	static void ShaderCreated(const TPointer<CShader>NewShader);
 	static TPointer<CShader> GetShader(std::string ShaderName);
+	static TPointer<CUndefinedShader> GetUndefinedShader(std::string ShaderName);
 	template<class T>
-	static TPointer<T> GetShader();
-	
+	static TPointer<T> GetShader();	
 
 	static std::map<std::string, TPointer<ModelObject>> Models;
-	static std::map<std::string, CTexture> Textures;
+	static std::map<std::string, TPointer<CTexture>> Textures;
 
 	static unsigned int BindArray(float fWidth, float fHeight, glm::vec4 Colour);
 
 	static unsigned int BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour, const char* TextureSource, CTexture& Texture, int _DrawMode);
 
 	static Text::cFont AddFont(std::string fontPath, int iPSize);
-
+	
+	// TODO: Needed for template as static shaders can't be exported :( 
+	static std::map<std::string, TPointer<CShader>> GetShaders();
+	
 protected:
 	template<class T>
 	static void AddShader();
@@ -60,4 +65,19 @@ void ShaderManager::AddShader()
 {
 	const TPointer<CShader> NewShader = std::make_shared<T>();
 	ShaderCreated(NewShader);
+}
+
+template <class T>
+TPointer<T> ShaderManager::GetShader()
+{
+	// TODO: improve retrieval based on stored method
+	for (auto Element : GetShaders())
+	{
+		std::shared_ptr<CShader> Shader = Element.second;
+		if (TPointer<T> CheckedShader = std::static_pointer_cast<T>(Shader))
+		{
+			return CheckedShader;
+		}
+	}
+	return nullptr;
 }

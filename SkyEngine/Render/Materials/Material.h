@@ -1,108 +1,49 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
-#include <map>
 
+#include "InternalMaterial.h"
+#include "Graphics/GraphicsInstance.h"
 #include "Render/Lighting.h"
-#include "Math/Vector4.h"
+#include "Render/Shaders/ShaderManager.h"
 
 class CTexture;
 class CShader;
 class IGraphicsInstance;
 
-struct ENGINE_API MaterialAttribute
+enum class EAttributeType
 {
-	MaterialAttribute(bool InBoolean)
-	{
-		Boolean = InBoolean;
-	}
-	MaterialAttribute(int InInteger)
-	{
-		Integer = InInteger;
-	}
-	MaterialAttribute(float InNumber)
-	{
-		Number = InNumber;
-	}
-	MaterialAttribute(SVector InVector3)
-	{
-		Vector3 = InVector3;
-	}
-	MaterialAttribute(SVector4 InVector4)
-	{
-		Vector4 = InVector4;
-	}
-	MaterialAttribute(TPointer<CTexture> InTexture)
-	{
-		Texture = InTexture;
-	}
-	~MaterialAttribute()
-	{
-		Texture.reset();
-	}
-	MaterialAttribute(const MaterialAttribute& Other)
-	{
-		*this = Other;
-	}
-	MaterialAttribute(MaterialAttribute& Other)
-	{
-		*this = Other;
-	}
-	MaterialAttribute& operator=(const MaterialAttribute& Other)
-	{
-		Boolean = Other.Boolean;
-		Integer = Other.Integer;
-		Number = Other.Number;
-		Vector3 = Other.Vector3;
-		Vector4 = Other.Vector4;
-		Texture = Other.Texture;
-		return *this;
-	}
-	union
-	{
-		// Would read in as boolean if starts with lower case b
-		bool Boolean;
-		int Integer;
-		float Number;
-		SVector Vector3;
-		SVector4 Vector4;
-		TPointer<CTexture> Texture;
-	};
+	None,
+	Boolean,
+	Integer,
+	Number,
+	Vector3,
+	Vector4,
+	Texture
 };
 
-
-class ENGINE_API CMaterial : public std::enable_shared_from_this<CMaterial>
+template <class S = CShader>
+class TMaterial : public CMaterialInterface
 {
-public:
-	// TODO: Load asset from path
-	CMaterial(const std::string& InMaterialPath);
+	// TODO: Once all shaders switched over, also make base CShader not allowed
+	static_assert(std::is_base_of<CShader, S>::value, "Template S must inherit from Shader");
 	
-	void BindMaterial(const TPointer<IGraphicsInstance> InGraphicsInterface);
-
+public:
+	TMaterial();
+	
 	// TODO: Remove once from file system setup
-	CMaterial(const TPointer<CShader> InShader);
-
-	// const std::map<std::string, MaterialAttribute>& GetMaterialAttributes() { return MaterialAttributes; }
-	bool SetMaterialAttribute(const std::string& AttributeName, MaterialAttribute Attribute);
-	template<typename T>
-	T GetMaterialAttribute(const std::string& AttributeName);
-	bool HasMaterialAttribute(const std::string& AttributeName);
-	bool HasTexture() const;
+	TMaterial(const TPointer<S> InShader);
 
 	// TODO: Make redundant
-	TPointer<CShader> GetShader() const { return Shader; }
+	TPointer<S> GetShader() const;
 	
-	// Flags
-	bool bTwoSided = false;
-	bool bDepthTest = true;
-	// TODO: Blend mode (translucent)	
+	typename S::ShaderParameters Params;
 	
+	TPointer<CShader> GetBaseShader() override;
+	void BindMaterial(TPointer<IGraphicsInstance> InGraphicsInterface) override;
+	bool HasTexture() override;
 protected:
-	// TODO: Stores map of keys to values including textures
-	// std::map<std::string, MaterialAttribute> MaterialAttributes;
-	
-	CMaterial(std::string ShaderName);
-	// const CTexture& GetTextureData() const { return Texture; }
+	// CMaterial(std::string ShaderName);
 
 	// Stencil
 	bool bStencil = false;
@@ -112,15 +53,154 @@ protected:
 	bool bAntiAliasing = true;
 
 protected:
-	TPointer<CShader> Shader;
-	// CTexture Texture;
+	TPointer<S> Shader;
 
-	std::string MaterialAssetPath; 
 };
 
-template <typename T>
-T CMaterial::GetMaterialAttribute(const std::string& AttributeName)
+template <class S>
+TPointer<CShader> TMaterial<S>::GetBaseShader()
 {
-	return T();
-	// return MaterialAttributes[AttributeName];
+	return Shader;
 }
+
+template <class S>
+void TMaterial<S>::BindMaterial(TPointer<IGraphicsInstance> InGraphicsInterface)
+{
+	CMaterialInterface::BindMaterial(InGraphicsInterface);
+	TPointer<S> TypedShader = std::static_pointer_cast<S>(InGraphicsInterface->ActiveShader);
+	TypedShader->UploadMaterialParameters(InGraphicsInterface, Params);
+}
+
+template <class S>
+bool TMaterial<S>::HasTexture()
+{
+	return Shader->HasTexture(Params);
+}
+
+template <class S>
+TMaterial<S>::TMaterial()
+{
+	Shader = ShaderManager::GetShader<S>();
+}
+
+// template <class S>
+// CMaterial::CMaterial(std::string ShaderName)
+// {
+// 	// TODO: Check loaded? Ideally all materials would be determined and appropriate shaders loaded? Or all loaded at startup
+// 	Shader = ShaderManager::GetShader(ShaderName);
+// 	// Set material defaults to shader defaults
+// 	// MaterialAttributes = Shader->GetShaderAttributes();
+// }
+
+template <class S>
+TMaterial<S>::TMaterial(const TPointer<S> InShader)
+{
+	Shader = InShader;
+	// MaterialAttributes = Shader->GetShaderAttributes();
+}
+
+template <class S>
+TPointer<S> TMaterial<S>::GetShader() const
+{ return Shader; }
+
+// template <typename T>
+// T CMaterial<S>::GetMaterialAttribute(const std::string& AttributeName)
+// {
+// 	return MaterialAttributes[AttributeName].GetActiveMember<T>();
+// 	return T();
+// }
+
+
+// struct ENGINE_API MaterialAttribute
+// {
+// 	EAttributeType Type = EAttributeType::None;
+// 	MaterialAttribute(bool InBoolean)
+// 	{
+// 		Boolean = InBoolean;
+// 		Type = EAttributeType::Boolean;
+// 	}
+// 	MaterialAttribute(int InInteger)
+// 	{
+// 		Integer = InInteger;
+// 		Type = EAttributeType::Integer;
+// 	}
+// 	MaterialAttribute(float InNumber)
+// 	{
+// 		Number = InNumber;
+// 		Type = EAttributeType::Number;
+// 	}
+// 	MaterialAttribute(SVector InVector3)
+// 	{
+// 		Vector3 = InVector3;
+// 		Type = EAttributeType::Vector3;
+// 	}
+// 	MaterialAttribute(SVector4 InVector4)
+// 	{
+// 		Vector4 = InVector4;
+// 		Type = EAttributeType::Vector4;
+// 	}
+// 	MaterialAttribute(TPointer<CTexture> InTexture)
+// 	{
+// 		Texture = InTexture;
+// 		Type = EAttributeType::Texture;
+// 	}
+// 	// TODO: Want something like this
+// 	// template<typename T>
+// 	// T GetActiveMember()
+// 	// {
+// 	// 	switch (Type)
+// 	// 	{
+// 	// 	case EAttributeType::Boolean:
+// 	// 		return Boolean;
+// 	// 	case EAttributeType::Integer:
+// 	// 		return Integer;
+// 	// 	case EAttributeType::Number:
+// 	// 		return Number;
+// 	// 	case EAttributeType::Vector3:
+// 	// 		return Vector3;
+// 	// 	case EAttributeType::Vector4:
+// 	// 		return Vector4;
+// 	// 	case EAttributeType::Texture:
+// 	// 		return Texture;
+// 	// 	}
+// 	// 	return nullptr;
+// 	// }
+// 	bool GetBoolean() const { return Boolean; }
+// 	int GetInteger() const { return Integer; }
+// 	float GetNumber() const { return Number; }
+// 	SVector3 GetVector3() const { return Vector3; }
+// 	SVector4 GetVector4() const { return Vector4; }
+// 	TPointer<CTexture> GetTexture() const { return Texture; }
+// 	~MaterialAttribute()
+// 	{
+// 		Texture.reset();
+// 	}
+// 	MaterialAttribute(const MaterialAttribute& Other)
+// 	{
+// 		*this = Other;
+// 	}
+// 	MaterialAttribute(MaterialAttribute& Other)
+// 	{
+// 		*this = Other;
+// 	}
+// 	MaterialAttribute& operator=(const MaterialAttribute& Other)
+// 	{
+// 		Boolean = Other.Boolean;
+// 		Integer = Other.Integer;
+// 		Number = Other.Number;
+// 		Vector3 = Other.Vector3;
+// 		Vector4 = Other.Vector4;
+// 		Texture = Other.Texture;
+// 		return *this;
+// 	}
+// 	union
+// 	{
+// 		// Would read in as boolean if starts with lower case b
+// 		bool Boolean;
+// 		int Integer;
+// 		float Number;
+// 		SVector Vector3;
+// 		SVector4 Vector4;
+// 		TPointer<CTexture> Texture;
+// 	};
+// };

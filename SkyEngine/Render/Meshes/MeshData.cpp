@@ -14,7 +14,7 @@ void MeshData::SetUVs(const std::vector<float>& UVData)
 	UVs = UVData;
 }
 
-void MeshData::BindData(unsigned vao)
+void MeshData::BindData(unsigned vao) const
 {
 	std::vector<float> OutVertices;
 	std::vector<uint32_t> OutIndices;

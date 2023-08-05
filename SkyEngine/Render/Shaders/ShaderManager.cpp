@@ -12,15 +12,17 @@
 // Engine Includes //
 #include "PBRShader.h"
 #include "Shader.h"
+#include "UndefinedShader.h"
 #include "UnlitShader.h"
 #include "Render/Meshes/Model/ModelObject.h"
 #include "Core/Application.h"
 #include "System/LogManager.h"
+#include "UndefinedShader.h"
 
 // Local Includes //
 
 std::map<std::string, TPointer<ModelObject>> ShaderManager::Models;
-std::map<std::string, CTexture> ShaderManager::Textures;
+std::map<std::string, TPointer<CTexture>> ShaderManager::Textures;
 std::map<std::string, TPointer<CShader>> ShaderManager::Shaders;
 
 /************************************************************
@@ -80,21 +82,21 @@ void ShaderManager::LoadAllDefaultShadersInCurrentContext()
 
 void ShaderManager::AddShaderProgram(std::string ShaderName, std::string VertexShaderPath, std::string FragmentShaderPath, std::string GeometryShaderPath)
 {
-	const TPointer<CShader> NewShader = std::make_shared<CShader>(ShaderName, VertexShaderPath, FragmentShaderPath);
+	const TPointer<CUndefinedShader> NewShader = std::make_shared<CUndefinedShader>(ShaderName, VertexShaderPath, FragmentShaderPath);
 	NewShader->SetGeometryShader(GeometryShaderPath);
 	ShaderCreated(NewShader);
 }
 
 void ShaderManager::AddTessProgram(std::string ShaderName, std::string VertexShaderPath, std::string FragmentShaderPath, std::string TessControlShaderPath, std::string TessEvalShaderPath)
 {
-	const TPointer<CShader> NewShader = std::make_shared<CShader>(ShaderName, VertexShaderPath, FragmentShaderPath);
+	const TPointer<CUndefinedShader> NewShader = std::make_shared<CUndefinedShader>(ShaderName, VertexShaderPath, FragmentShaderPath);
 	NewShader->SetTessShader(TessControlShaderPath, TessEvalShaderPath);
 	ShaderCreated(NewShader);
 }
 
 void ShaderManager::AddComputeProgram(std::string ShaderName, std::string ComputePath)
 {
-	const TPointer<CShader> NewShader = std::make_shared<CShader>(ShaderName, ComputePath);
+	const TPointer<CUndefinedShader> NewShader = std::make_shared<CUndefinedShader>(ShaderName, ComputePath);
 	ShaderCreated(NewShader);
 }
 
@@ -120,19 +122,13 @@ TPointer<CShader> ShaderManager::GetShader(std::string ShaderName)
 	return Shaders[ShaderName];
 }
 
-template <class T>
-TPointer<T> ShaderManager::GetShader()
+TPointer<CUndefinedShader> ShaderManager::GetUndefinedShader(std::string ShaderName)
 {
-	// TODO: improve retrieval based on stored method
-	for (auto Element : Shaders)
+	if (!Shaders.contains(ShaderName))
 	{
-		std::shared_ptr<CShader> Shader = Element.second;
-		if (TPointer<CShader> CheckedShader = std::static_pointer_cast<T>(Shader))
-		{
-			return CheckedShader;
-		}
+		return nullptr;
 	}
-	return nullptr;
+	return std::static_pointer_cast<CUndefinedShader>(Shaders[ShaderName]);
 }
 
 ///************************************************************
@@ -294,5 +290,10 @@ Text::cFont ShaderManager::AddFont(std::string fontPath, int iPSize)
 
 	Text::Fonts.push_back(newFont);
 	return newFont;
+}
+
+std::map<std::string, TPointer<CShader>> ShaderManager::GetShaders()
+{
+	return Shaders;
 }
 

@@ -8,6 +8,7 @@
 #include "Entity/Entity.h"
 #include "Input/CXBOXController.h"
 #include "Platform/Window/GraphicsWindow.h"
+#include "Render/Materials/InternalMaterial.h"
 #include "Render/Shaders/Shader.h"
 #include "Render/Shaders/ShaderManager.h"
 #include "System/LogManager.h"
@@ -47,34 +48,49 @@ void GLInstance::PreRender(TPointer<IGraphicsWindow> GraphicsWindow)
 	glViewport(0, 0, WindowSize.X, WindowSize.Y);
 }
 
-void GLInstance::InternalPassAttributeToShader(int32_t ShaderID, float Attribute)
+void GLInstance::PassAttributeToShader(int32_t ShaderID, float Attribute)
 {
 	glUniform1f(ShaderID, Attribute);
 }
 
-void GLInstance::InternalPassAttributeToShader(int32_t ShaderID, int Attribute)
+void GLInstance::PassAttributeToShader(int32_t ShaderID, int Attribute)
 {
 	glUniform1i(ShaderID, Attribute);
 }
 
-void GLInstance::InternalPassAttributeToShader(int32_t ShaderID, bool Attribute)
+void GLInstance::PassAttributeToShader(int32_t ShaderID, bool Attribute)
 {
 	glUniform1i(ShaderID, Attribute);
 }
 
-void GLInstance::InternalPassAttributeToShader(int32_t ShaderID, SVector Attribute)
+void GLInstance::PassAttributeToShader(int32_t ShaderID, SVector Attribute)
 {
 	glUniform3fv(ShaderID, 1, Attribute.ToValuePtr());
 }
 
-void GLInstance::InternalPassAttributeToShader(int32_t ShaderID, SVector4 Attribute)
+void GLInstance::PassAttributeToShader(int32_t ShaderID, SVector4 Attribute)
 {
 	glUniform4fv(ShaderID, 1, Attribute.ToValuePtr());
 }
 
-void GLInstance::InternalPassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute)
+void GLInstance::PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute)
 {
 	glUniformMatrix4fv(ShaderLocation, 1, GL_FALSE, value_ptr(Attribute.ToGLM()));
+}
+
+void GLInstance::PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture> Attribute)
+{
+	if (!Attribute || !Attribute->IsValid())
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		return;
+	}
+	// Use shader location for index?
+	glEnable(GL_BLEND);
+	// TODO: Handle multiple
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, Attribute->TextureID);	
 }
 
 void GLInstance::BindShader(uint32_t ShaderProgramID)
@@ -102,7 +118,7 @@ void GLInstance::StoreMVP(STransform Transform, GLuint Program)
 	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, value_ptr(MVP));
 }
 
-void GLInstance::ApplyMaterialFlags(TPointer<CMaterial>InMaterial)
+void GLInstance::ApplyMaterialFlags(TPointer<CMaterialInterface>InMaterial)
 {
 	if (!InMaterial->bTwoSided)
 	{
@@ -120,14 +136,6 @@ void GLInstance::ApplyMaterialFlags(TPointer<CMaterial>InMaterial)
 	{
 		glDisable(GL_DEPTH_TEST);
 	}
-}
-
-void GLInstance::BindTexture(TPointer<CTexture> InTexture)
-{
-	glEnable(GL_BLEND);
-	// TODO: Handle multiple
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, InTexture->TextureID);	
 }
 
 void GLInstance::RenderMesh(const TPointer<CMeshComponent> Mesh, const STransform Transform)

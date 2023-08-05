@@ -8,25 +8,38 @@
 #include <Render/Meshes/Basic/Cube.h>
 #include <Scene/Scene.h>
 
+#include "Render/Materials/Material.h"
 #include "Render/Shaders/ShaderManager.h"
 #include "Render/Shaders/UnlitShader.h"
 
-TransformationWidget::TransformationWidget(STransform _Transform, Scene* OwningScene) : Entity(_Transform, EANCHOR::CENTER)
+TransformationWidget::TransformationWidget(STransform _Transform, Scene* OwningScene)
+: Entity(_Transform, EANCHOR::CENTER)
+{	
+	XMoveTransform = std::make_shared<Entity>(Transform, EANCHOR::CENTER);
+	YMoveTransform = std::make_shared<Entity>(Transform, EANCHOR::CENTER);
+	ZMoveTransform = std::make_shared<Entity>(Transform, EANCHOR::CENTER);
+	OwningScene->AddEntity(XMoveTransform, true);
+	OwningScene->AddEntity(YMoveTransform, true);
+	OwningScene->AddEntity(ZMoveTransform, true);
+}
+
+TransformationWidget::~TransformationWidget()
+{
+}
+
+void TransformationWidget::CreateWidgets()
 {
 	// TODO: Convert to components
-	XMoveTransform = std::make_shared<Entity>(_Transform, EANCHOR::CENTER);
-	YMoveTransform = std::make_shared<Entity>(_Transform, EANCHOR::CENTER);
-	ZMoveTransform = std::make_shared<Entity>(_Transform, EANCHOR::CENTER);
 	XColour = {0.6f, 0.1f, 0.1f, 1.0f};
 	
-	const TPointer<CMaterial> RedUnlitMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CUnlitShader>());
-	RedUnlitMaterial->SetMaterialAttribute(CUnlitShader::DiffuseColour, {.Vector4 = XColour});
+	const TPointer<CMaterial_Unlit> RedUnlitMaterial = std::make_shared<CMaterial_Unlit>();
+	RedUnlitMaterial->Params.DiffuseColour = XColour;
 	RedUnlitMaterial->bDepthTest = false;
-	const TPointer<CMaterial> GreenUnlitMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CUnlitShader>());
-	GreenUnlitMaterial->SetMaterialAttribute(CUnlitShader::DiffuseColour, {.Vector4 = YColour});
+	const TPointer<CMaterial_Unlit> GreenUnlitMaterial = std::make_shared<CMaterial_Unlit>();
+	GreenUnlitMaterial->Params.DiffuseColour = YColour;
 	GreenUnlitMaterial->bDepthTest = false;
-	const TPointer<CMaterial> BlueUnlitMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CUnlitShader>());
-	BlueUnlitMaterial->SetMaterialAttribute(CUnlitShader::DiffuseColour, {.Vector4 = ZColour});
+	const TPointer<CMaterial_Unlit> BlueUnlitMaterial = std::make_shared<CMaterial_Unlit>();
+	BlueUnlitMaterial->Params.DiffuseColour = ZColour;
 	BlueUnlitMaterial->bDepthTest = false;
 	
 	TPointer<CCube> XMoveTransformMesh = std::make_shared<CCube>(shared_from_this(), 1.0f, 0.1f, 0.1f, RedUnlitMaterial);
@@ -42,9 +55,6 @@ TransformationWidget::TransformationWidget(STransform _Transform, Scene* OwningS
 	YMoveTransform->AddMesh(YMoveTransformMesh);
 	ZMoveTransform->AddMesh(ZMoveTransformMesh);
 
-	OwningScene->AddEntity(XMoveTransform, true);
-	OwningScene->AddEntity(YMoveTransform, true);
-	OwningScene->AddEntity(ZMoveTransform, true);
 	XMoveTransform->bRayCast = false;
 	YMoveTransform->bRayCast = false;
 	ZMoveTransform->bRayCast = false;
@@ -52,10 +62,6 @@ TransformationWidget::TransformationWidget(STransform _Transform, Scene* OwningS
 	//XMoveTransform->bStencil = true;
 	//EntityMesh = XMoveTransform;
 	//AddMesh(XMoveTransform);
-}
-
-TransformationWidget::~TransformationWidget()
-{
 }
 
 void TransformationWidget::Update()

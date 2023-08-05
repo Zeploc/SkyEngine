@@ -5,7 +5,7 @@
 
 class Entity;
 
-class CComponent
+class ENGINE_API CComponent
 {
 public:
 	CComponent(const TPointer<Entity>& InOwner);

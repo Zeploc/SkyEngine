@@ -130,6 +130,7 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;assimp-vc142-mtd.lib;zlibstaticd.lib;Box2D.lib;fmod64_vc.lib;freetype.lib;glew64s.lib;glfw3.lib;glfw3dll.lib;soil2.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -437,6 +438,7 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
       <EnableFuzzer>false</EnableFuzzer>
     </ClCompile>
     <ClCompile Include="Render/Lighting.cpp" />
+    <ClCompile Include="Render\Materials\InternalMaterial.cpp" />
     <ClCompile Include="Render\Materials\Material.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -1879,6 +1881,7 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Render\Shaders\UndefinedShader.cpp" />
     <ClCompile Include="Render\Shaders\UnlitShader.cpp" />
     <ClCompile Include="Scene/Scene.cpp" />
     <ClCompile Include="Scene/SceneManager.cpp" />
@@ -1935,7 +1938,9 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
     <ClInclude Include="Platform\Window\GLFW\GLFWIncludes.h" />
     <ClInclude Include="Platform\Window\GraphicsWindow.h" />
     <ClInclude Include="Render/Lighting.h" />
+    <ClInclude Include="Render\Materials\InternalMaterial.h" />
     <ClInclude Include="Render\Materials\Material.h" />
+    <ClInclude Include="Render\Materials\MaterialType.h" />
     <ClInclude Include="Render\Meshes\Advanced\CubeMap.h" />
     <ClInclude Include="Render\Meshes\Advanced\GeometryObject.h" />
     <ClInclude Include="Render\Meshes\Advanced\TessMesh.h" />
@@ -1957,6 +1962,7 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
     <ClInclude Include="Render\Shaders\PBRShader.h" />
     <ClInclude Include="Render\Shaders\Shader.h" />
     <ClInclude Include="Render\Shaders\ShaderManager.h" />
+    <ClInclude Include="Render\Shaders\UndefinedShader.h" />
     <ClInclude Include="Render\Shaders\UnlitShader.h" />
     <ClInclude Include="Render\Texture.h" />
     <ClInclude Include="Scene/Scene.h" />

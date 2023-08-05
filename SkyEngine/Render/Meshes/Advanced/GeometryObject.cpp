@@ -8,6 +8,9 @@
 #include "Render/Shaders/ShaderManager.h"
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"
+#include "Render/Materials/Material.h"
+#include "Render/Materials/MaterialType.h"
+#include "Render/Shaders/UndefinedShader.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -15,13 +18,14 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-GeometryObject::GeometryObject(glm::vec4 _Colour)
+GeometryObject::GeometryObject(const TPointer<Entity>& InOwner, glm::vec4 _Colour)
+	: CMeshComponent(InOwner)
 {
 	m_fWidth = 1;
 	m_fHeight = 1;
 	IndicesCount = 1;
 	
-	MeshMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader("GeometryShader"));
+	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>(ShaderManager::GetUndefinedShader("GeometryShader"));
 	// MeshMaterial->Colour = _Colour;
 	BindGeometryObject();
 }

@@ -1,15 +1,17 @@
 ﻿#include "GraphicsInstance.h"
 
 #include "Entity/Entity.h"
+#include "Render/Materials/InternalMaterial.h"
 #include "Render/Shaders/Shader.h"
 #include "UI/UIElement.h"
 
-void IGraphicsInstance::InsertEntityMeshToRenderList(std::map<TPointer<CMaterial>, std::vector<TPointer<CMeshComponent>>> MeshesByMaterial, const TPointer<Entity>& EntityToRender)
+void IGraphicsInstance::InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender)
 {
-	TPointer<CMaterial> Material = EntityToRender->EntityMesh->MeshMaterial;
+	TPointer<CMaterialInterface> Material = EntityToRender->EntityMesh->MeshMaterial;
 	if (!MeshesByMaterial.contains(Material))
 	{
-		MeshesByMaterial.insert(MeshesByMaterial, {});
+		std::vector<TPointer<CMeshComponent>> NewVector = {};
+		MeshesByMaterial.insert(std::pair(Material, NewVector));
 	}
 	MeshesByMaterial[Material].push_back(EntityToRender->EntityMesh);
 }
@@ -17,7 +19,7 @@ void IGraphicsInstance::InsertEntityMeshToRenderList(std::map<TPointer<CMaterial
 void IGraphicsInstance::Render(TPointer<IGraphicsWindow> GraphicsWindow, std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements)
 {
 	// TODO: Later store in/update list as new meshes added
-	std::map<TPointer<CMaterial>, std::vector<TPointer<CMeshComponent>>> MeshesByMaterial;
+	std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>> MeshesByMaterial;
 	
 	for (const TPointer<Entity>& EntityToRender : Entities)
 	{
@@ -38,10 +40,10 @@ void IGraphicsInstance::Render(TPointer<IGraphicsWindow> GraphicsWindow, std::ve
 	// TODO: Later sort by shader program
 	for (const auto& MaterialMeshSet : MeshesByMaterial)
 	{
-		const std::shared_ptr<CMaterial> Material = MaterialMeshSet.first;
+		const std::shared_ptr<CMaterialInterface> Material = MaterialMeshSet.first;
 
 		// Confirm/bind shader
-		TPointer<CShader> Shader = Material->GetShader();
+		TPointer<CShader> Shader = Material->GetBaseShader();
 		if (ActiveShader != Shader)
 		{
 			Shader->BindShader(shared_from_this());
@@ -73,6 +75,6 @@ void IGraphicsInstance::RenderEntity(TPointer<Entity> Entity)
 		return;
 	}
 	const STransform AnchoredTransform = Entity->GetAnchoredTransform();
-	assert(Entity->EntityMesh);
+	ensure(Entity->EntityMesh != nullptr, "No entity mesh found!");
 	RenderMesh(Entity->EntityMesh, AnchoredTransform);	
 }

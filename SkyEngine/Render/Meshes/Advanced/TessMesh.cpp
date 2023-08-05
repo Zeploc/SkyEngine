@@ -5,17 +5,22 @@
 // Engine Includes //
 #include "Camera/CameraManager.h"
 #include "Render/Shaders/ShaderManager.h"
+#include "Render/Shaders/UndefinedShader.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glew/glew.h>
 #include <GLFW/glfw3.h>
 
-TessMesh::TessMesh(float fWidth, float fHeight, glm::vec4 _Colour)
+#include "Render/Materials/Material.h"
+#include "Render/Materials/MaterialType.h"
+
+TessMesh::TessMesh(const TPointer<Entity>& InOwner,float fWidth, float fHeight, glm::vec4 _Colour)
+	: CMeshComponent(InOwner)
 {
 	m_fWidth = fWidth;
 	m_fHeight = fHeight;
 	IndicesCount = 4;
-	MeshMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader("TessProgram"));
+	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>(ShaderManager::GetUndefinedShader("TessProgram"));
 	// MeshMaterial->Colour = _Colour;
 	BindTess();
 }

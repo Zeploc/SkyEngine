@@ -3,15 +3,18 @@
 #include "Mesh.h"
 
 // Engine Includes //
-#include "Render/Shaders/ShaderManager.h"
-
-#include "Camera/CameraManager.h"
 #include "Core/Application.h"
 #include "Entity/CollisionBounds.h"
 #include "Entity/Entity.h"
+#include "Render/Shaders/Shader.h"
 #include "System/LogManager.h"
 
-CMeshComponent::CMeshComponent(const TPointer<Entity>& InOwner, float InWidth, float InHeight, float InDepth, const TPointer<CMaterial>& InMaterial)
+CMeshComponent::CMeshComponent(const TPointer<Entity>& InOwner)
+	: CComponent(InOwner)
+{
+}
+
+CMeshComponent::CMeshComponent(const TPointer<Entity>& InOwner, float InWidth, float InHeight, float InDepth, const TPointer<CMaterialInterface>& InMaterial)
 : CComponent(InOwner)
 {
 	m_fWidth = InWidth;

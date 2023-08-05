@@ -13,7 +13,7 @@ public:
 	
 	void SetUVs(const std::vector<float>& UVData);
 
-	void BindData(unsigned int vao);
+	void BindData(unsigned int vao) const;
 
 	void GetFinalData(std::vector<float>& OutVertices, std::vector<uint32_t>& OutIndices) const;
 	int GetIndicesCount() const;

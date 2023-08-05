@@ -8,6 +8,7 @@
 // Engine Includes //
 #include "Render/Shaders/ShaderManager.h"
 #include "Core/Application.h"
+#include "Render/Materials/Material.h"
 #include "Render/Shaders/PBRShader.h"
 #include "System/Time.h"
 
@@ -17,7 +18,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CPlane::CPlane(const TPointer<Entity>& InOwner, float fWidth, float fHeight, TPointer<CMaterial> InMaterial)
+CPlane::CPlane(const TPointer<Entity>& InOwner, float fWidth, float fHeight, TPointer<CMaterialInterface> InMaterial)
 : CMeshComponent(InOwner, fWidth, fHeight, 0.0f, InMaterial)
 {
 	CollisionBox.fHeight = m_fHeight;
@@ -31,7 +32,7 @@ CPlane::CPlane(const TPointer<Entity>& InOwner, float fWidth, float fHeight, TPo
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CPlane::CPlane(const TPointer<Entity>& InOwner, float InWidth, float InHeight, TPointer<CMaterial> InMaterial, glm::vec2 v2FrameCounts, int _iFPS)
+CPlane::CPlane(const TPointer<Entity>& InOwner, float InWidth, float InHeight, TPointer<CMaterialInterface> InMaterial, glm::vec2 v2FrameCounts, int _iFPS)
 : CMeshComponent(InOwner, InWidth, InHeight, 0.0f, InMaterial)
 {
 	CollisionBox.fHeight = m_fHeight;
@@ -41,7 +42,8 @@ CPlane::CPlane(const TPointer<Entity>& InOwner, float InWidth, float InHeight, T
 	AnimationInfo.iFPS = _iFPS;
 	m_fFrameCheck = 1.0f / AnimationInfo.iFPS;
 
-	const TPointer<CTexture> TextureData = MeshMaterial->GetMaterialAttribute<TPointer<CTexture>>(CPBRShader::DiffuseTexture);
+	const std::shared_ptr<TMaterial<CPBRShader>> Material = std::static_pointer_cast<CMaterial_PBR>(MeshMaterial);
+	const TPointer<CTexture> TextureData = Material->Params.DiffuseTexture;
 
 	AnimationInfo.v2FrameCount = v2FrameCounts;
 	AnimationInfo.v2EndFrame = v2FrameCounts;
@@ -60,14 +62,15 @@ CPlane::CPlane(const TPointer<Entity>& InOwner, float InWidth, float InHeight, T
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CPlane::CPlane(const TPointer<Entity>& InOwner, float InWidth, float InHeight, TPointer<CMaterial> InMaterial, int iCount, bool bHorizontal)
+CPlane::CPlane(const TPointer<Entity>& InOwner, float InWidth, float InHeight, TPointer<CMaterialInterface> InMaterial, int iCount, bool bHorizontal)
 : CMeshComponent(InOwner, InWidth, InHeight, 0.0f, InMaterial)
 {	
 	CollisionBox.fHeight = m_fHeight;
 	CollisionBox.fWidth = m_fWidth;
 	BindMeshData();	
 
-	const TPointer<CTexture> TextureData = MeshMaterial->GetMaterialAttribute<TPointer<CTexture>>(CPBRShader::DiffuseTexture);
+	const std::shared_ptr<TMaterial<CPBRShader>> Material = std::static_pointer_cast<CMaterial_PBR>(MeshMaterial);
+	const TPointer<CTexture> TextureData = Material->Params.DiffuseTexture;
 	float fImageRatio = static_cast<float>(TextureData->Width) / static_cast<float>(TextureData->Height);
 	float fObjectRatio = InHeight / InWidth;
 	float hSize = static_cast<float>(iCount);
@@ -124,10 +127,10 @@ void CPlane::Render(STransform Newtransform)
 		}
 	}
 	// TODO: Properly link sprite sheet
-	if (MeshMaterial && MeshMaterial->HasMaterialAttribute(CPBRShader::DiffuseTexture))
+	if (MeshMaterial && MeshMaterial->HasTexture())
 	{
-		glUseProgram(MeshMaterial->GetShader()->GetShaderProgram());
-		GLint UVCoordsLoc = glGetUniformLocation(MeshMaterial->GetShader()->GetShaderProgram(), "uTexCoordOffset");
+		glUseProgram(MeshMaterial->GetBaseShader()->GetShaderProgram());
+		GLint UVCoordsLoc = glGetUniformLocation(MeshMaterial->GetBaseShader()->GetShaderProgram(), "uTexCoordOffset");
 		glUniform2f(UVCoordsLoc, AnimationInfo.v2CurrentFrame.x * AnimationInfo.v2FrameSize.x, AnimationInfo.v2CurrentFrame.y * AnimationInfo.v2FrameSize.y);
 	}
 	// Mesh::Render(Newtransform);
@@ -190,7 +193,7 @@ MeshData CPlane::GetMeshData()
 	};
 
 	MeshData PlaneMeshData(VertexPositions, Indices, Normals);
-	if (MeshMaterial->HasMaterialAttribute(CPBRShader::DiffuseTexture))
+	if (MeshMaterial->HasTexture())
 	{
 		PlaneMeshData.SetUVs(UVCoords);
 	}

@@ -10,7 +10,7 @@
 
 #include <Camera/CameraManager.h>
 #include <Input/Input.h>
-#include <Render/ShaderManager.h>
+#include <Render/Shaders/ShaderManager.h>
 #include <System/Utils.h>
 #include <UI/UIButton.h>
 

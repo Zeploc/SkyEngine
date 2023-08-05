@@ -10,7 +10,11 @@
 // This Includes //
 #include "2DParticleSystem.h"
 
+#include "Render/Materials/Material.h"
 #include "Render/Meshes/Basic/Plane.h"
+#include "Render/Shaders/PBRShader.h"
+#include "Render/Shaders/ShaderManager.h"
+#include "Render/Shaders/UnlitShader.h"
 #include "Scene/Scene.h"
 #include "Scene/SceneManager.h"
 #include "System/Time.h"
@@ -181,8 +185,13 @@ void ParticleSystem2D::Update()
 		// Random path from paths
 		int iRandPath = rand() % m_vParticlePaths.size();
 
+		TPointer<CTexture> ParticleTexture = std::make_shared<CTexture>(m_vParticlePaths[iRandPath]);	
+		TPointer<CMaterial_Unlit> ParticleMaterial = std::make_shared<CMaterial_Unlit>();
+		ParticleMaterial->Params.DiffuseColour = SVector4(1.0f, 1.0f, 1.0f, 1.0f);
+		ParticleMaterial->Params.DiffuseTexture = ParticleTexture;
+		
 		TPointer<Entity> NewParticleEntity = std::make_shared<Entity>(Transform, EANCHOR::CENTER);
-		TPointer<CPlane> NewParticlePlaneMesh = std::make_shared<CPlane>(fNewSize, fNewSize, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), m_vParticlePaths[iRandPath]);
+		TPointer<CPlane> NewParticlePlaneMesh = std::make_shared<CPlane>(NewParticleEntity, fNewSize, fNewSize, ParticleMaterial);
 		NewParticleEntity->AddMesh(NewParticlePlaneMesh);
 
 		Particle2D NewParticle = {NewParticleEntity, fNewSpeed, v2NewDirection, fNewFalloffDistance, fNewFalloffTime, 0.0f};

@@ -5,6 +5,7 @@
 // Engine Includes //
 #include "Render/Shaders/ShaderManager.h"
 #include "Core/Application.h"
+#include "Render/Materials/InternalMaterial.h"
 
 CPyramid::~CPyramid()
 {

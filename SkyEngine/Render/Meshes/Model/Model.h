@@ -15,7 +15,7 @@ class ModelObject;
 class Model : public CMeshComponent
 {
 public:
-	Model(glm::vec4 Colour, const char* ModelSource);
+	Model(const TPointer<Entity>& InOwner, glm::vec4 Colour, const char* ModelSource);
 
 	~Model();
 

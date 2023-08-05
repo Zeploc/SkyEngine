@@ -13,7 +13,7 @@ public:
 	std::string GetGraphicsDisplayName() override;
 	
 	unsigned int CreateBuffer(const MeshData& MeshData) override;
-	CTexture GetTexture(const std::string& TextureSource, bool bAA) override;
+	TPointer<CTexture> GetTexture(const std::string& TextureSource, bool bAA) override;
 	void BindArray(const std::vector<float>& Vertices, const std::vector<uint32_t>& Indices, unsigned& Vao) override;
 	TPointer<IGraphicsInstance> CreateNewInstance() override;
 	bool CreateShaderProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* GeometryShaderFilename) override;

@@ -28,8 +28,11 @@
 #include <Windows.h>
 
 #include "Core/Application.h"
+#include "Core/Application.h"
 #include "Platform/Window/GraphicsWindow.h"
+#include "Render/Materials/Material.h"
 #include "Render/Shaders/PBRShader.h"
+#include "Render/Shaders/UndefinedShader.h"
 #include "Render/Shaders/ShaderManager.h"
 
 EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
@@ -84,6 +87,7 @@ EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 	// Last added to appear on top
 	// TODO: Depth test order to always be infront of loaded level objects
 	LocationBox = std::make_shared<TransformationWidget>(STransform{{0.0f, 0.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, this);
+	LocationBox->CreateWidgets();	
 	AddEntity(LocationBox, true);
 	LocationBox->SetVisible(false);
 	LocationBox->bRayCast = false;
@@ -92,21 +96,22 @@ EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 void EditorScene::AddSampleEntities()
 {
 	TPointer<CTexture> BrickTexture = std::make_shared<CTexture>("Resources/Images/StoneWall_2x2.jpg");	
-	TPointer<CMaterial> BrickMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CPBRShader>());
-	BrickMaterial->SetMaterialAttribute(CPBRShader::DiffuseTexture, {.Texture = BrickTexture});
-
+	// TPointer<CMaterial_PBR> BrickMaterial = std::make_shared<CMaterial_PBR>();
+	TPointer<TMaterial<CUndefinedShader>> BrickMaterial = std::make_shared<TMaterial<CUndefinedShader>>(ShaderManager::GetUndefinedShader("BaseProgram"));
+	BrickMaterial->Params.DiffuseTexture = BrickTexture;
+	
 	// Would be nice to be able to copy an existing material as a template
-	TPointer<CMaterial> ColouredBrickMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CPBRShader>());
-	ColouredBrickMaterial->SetMaterialAttribute(CPBRShader::DiffuseTexture, {.Texture = BrickTexture});
-	ColouredBrickMaterial->SetMaterialAttribute(CPBRShader::DiffuseColour, {.Vector4 = {0.5f, 0.3f, 0.3f, 1.0f}});
+	TPointer<CMaterial_PBR> ColouredBrickMaterial = std::make_shared<CMaterial_PBR>();
+	ColouredBrickMaterial->Params.DiffuseTexture = BrickTexture;
+	ColouredBrickMaterial->Params.DiffuseColour = {0.5f, 0.3f, 0.3f, 1.0f};
 	
-	TPointer<CTexture> CliffTexture = std::make_shared<CTexture>("Resources/Images/SmoothCliff_1024.jpg");	
-	TPointer<CMaterial> CliffMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CPBRShader>());
-	CliffMaterial->SetMaterialAttribute(CPBRShader::DiffuseTexture, {.Texture = BrickTexture});
-	CliffMaterial->SetMaterialAttribute(CPBRShader::DiffuseColour, {.Vector4 = {0.1f, 0.8f, 0.3f, 1.0f}});
+	TPointer<CTexture> CliffTexture = std::make_shared<CTexture>("Resources/Images/SmoothCliff_1024.jpg");
+	TPointer<CMaterial_PBR> CliffMaterial = std::make_shared<CMaterial_PBR>();
+	ColouredBrickMaterial->Params.DiffuseTexture = BrickTexture;
+	ColouredBrickMaterial->Params.DiffuseColour = {0.1f, 0.8f, 0.3f, 1.0f};
 	
-	TPointer<CMaterial> PlaneMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CPBRShader>());
-	PlaneMaterial->SetMaterialAttribute(CPBRShader::DiffuseColour, {.Vector4 = {0.5f, 0.5f, 0.5f, 1.0f}});
+	TPointer<CMaterial_PBR> PlaneMaterial = std::make_shared<CMaterial_PBR>();
+	PlaneMaterial->Params.DiffuseColour = {0.5f, 0.5f, 0.5f, 1.0f};
 
 	// TODO: Switch all below to make shared
 	TPointer<Entity> SphereRaycastTest(new Entity(STransform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
@@ -136,7 +141,7 @@ void EditorScene::AddSampleEntities()
 	AddEntity(ParticleBoy2, true);
 	
 	TPointer<Entity> GeomEnt(new Entity({{10, 6, 10}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	TPointer<GeometryObject> GeomShape(new GeometryObject({0.0, 0.9f, 0.3f, 1.0f}));
+	TPointer<GeometryObject> GeomShape = std::make_shared<GeometryObject>(GeomEnt, SVector4(0.0, 0.9f, 0.3f, 1.0f));
 	GeomEnt->AddMesh(GeomShape);
 	AddEntity(GeomEnt, true);
 	
@@ -457,8 +462,8 @@ void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
 		OpenedLevelFile >> NewEntity;
 		std::getline(OpenedLevelFile, Empty, '\n');
 		
-		TPointer<CMaterial> TestMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CPBRShader>());
-		TestMaterial->SetMaterialAttribute(CPBRShader::DiffuseColour, {.Vector4 = {0.7f, 0.4f, 0.3f, 1.0f}});
+		TPointer<CMaterial_PBR> TestMaterial = std::make_shared<CMaterial_PBR>();
+		TestMaterial->Params.DiffuseColour = {0.7f, 0.4f, 0.3f, 1.0f};
 		
 		TPointer<CCube> CubeMesh = std::make_shared<CCube>(NewEntity, 3.0f, 3.0f, 3.0f, TestMaterial);
 		NewEntity->AddMesh(CubeMesh);

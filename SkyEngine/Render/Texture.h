@@ -4,8 +4,9 @@
 
 #include <string>
 
-struct CTexture
+class CTexture
 {
+public:
 	std::string Path;
 	int Width = 0;
 	int Height = 0;

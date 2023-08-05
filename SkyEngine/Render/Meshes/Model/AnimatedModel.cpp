@@ -10,7 +10,8 @@
 #include <GLFW/glfw3.h>
 
 #include "Camera/CameraManager.h"
-#include "Render/Shaders/ShaderManager.h"
+#include "Render/Materials/Material.h"
+#include "Render/Shaders/UndefinedShader.h"
 
 // Definitions //
 #define POSITION_LOCATION	  0
@@ -34,9 +35,10 @@ void AnimatedModel::VertexBoneData::addBoneData(int BoneID, float Weight)
 	//assert(0); //more bones than we have space for
 }
 
-AnimatedModel::AnimatedModel(std::string modelFilename, std::string texFilename)
+AnimatedModel::AnimatedModel(const TPointer<Entity>& InOwner, std::string modelFilename, std::string texFilename)
+	: CMeshComponent(InOwner)
 {
-	MeshMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader("AnimatedModel"));
+	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>(ShaderManager::GetUndefinedShader("AnimatedModel"));
 	// TODO: Set texture attribute
 	// MeshMaterial->SetTexture(texFilename);
 

@@ -30,10 +30,10 @@ unsigned IGLAPI::CreateBuffer(const MeshData& MeshData)
 	GLuint ebo;
 
 	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ebo);
 
-	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 	if (MeshData.HasUVData())
@@ -78,9 +78,9 @@ unsigned IGLAPI::CreateBuffer(const MeshData& MeshData)
 	return vao;
 }
 
-CTexture IGLAPI::GetTexture(const std::string& TextureSource, bool bAA)
+TPointer<CTexture> IGLAPI::GetTexture(const std::string& TextureSource, bool bAA)
 {
-	CTexture Texture;
+	TPointer<CTexture> Texture;
 
 	bool bTextureExists = false;
 	for (auto& it : ShaderManager::Textures)
@@ -96,9 +96,10 @@ CTexture IGLAPI::GetTexture(const std::string& TextureSource, bool bAA)
 	{
 		if (bTextureExists == false)
 		{
-			glGenTextures(1, &Texture.TextureID);
-			glBindTexture(GL_TEXTURE_2D, Texture.TextureID);
-			Texture.bBound = true;
+			Texture = std::make_shared<CTexture>();
+			glGenTextures(1, &Texture->TextureID);
+			glBindTexture(GL_TEXTURE_2D, Texture->TextureID);
+			Texture->bBound = true;
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -113,9 +114,9 @@ CTexture IGLAPI::GetTexture(const std::string& TextureSource, bool bAA)
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			}
 
-			Texture.Path = TextureSource;
-			unsigned char* image = SOIL_load_image(TextureSource.c_str(), &Texture.Width, &Texture.Height, nullptr, SOIL_LOAD_RGBA);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Texture.Width, Texture.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+			Texture->Path = TextureSource;
+			unsigned char* image = SOIL_load_image(TextureSource.c_str(), &Texture->Width, &Texture->Height, nullptr, SOIL_LOAD_RGBA);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Texture->Width, Texture->Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
 			glGenerateMipmap(GL_TEXTURE_2D);
 			SOIL_free_image_data(image);
@@ -126,7 +127,7 @@ CTexture IGLAPI::GetTexture(const std::string& TextureSource, bool bAA)
 		}
 		else
 		{
-			glBindTexture(GL_TEXTURE_2D, Texture.TextureID);
+			glBindTexture(GL_TEXTURE_2D, Texture->TextureID);
 		}
 	}
 
@@ -152,11 +153,7 @@ std::string IGLAPI::ReadShader(const char* filename)
 	std::string shaderCode;
 	std::ifstream file(filename, std::ios::in);
 
-	if (!file.good())
-	{
-		std::cout << "Can't read file " << filename << std::endl;
-		std::terminate();
-	}
+	ensure (file.good(), (std::string("Can't read file ") + filename).c_str());
 
 	file.seekg(0, std::ios::end);
 	shaderCode.resize(file.tellg());
@@ -186,7 +183,7 @@ bool IGLAPI::CreateShader(uint32_t& ShaderID, GLenum shaderType, std::string sou
 		glGetShaderiv(ShaderID, GL_INFO_LOG_LENGTH, &info_log_length);
 		std::vector<char> shader_log(info_log_length);
 		glGetShaderInfoLog(ShaderID, info_log_length, nullptr, &shader_log[0]);
-		std::cout << "ERROR compiling shader: " << shaderName << std::endl << &shader_log[0] << std::endl;
+		std::cerr << "ERROR compiling shader: " << shaderName << std::endl << &shader_log[0] << std::endl;
 		return false;
 	}
 	return true;
@@ -199,12 +196,12 @@ bool IGLAPI::CreateShaderProgram(uint32_t& ProgramID, const char* vertexShaderFi
 	std::string fragment_shader_code = ReadShader(fragmentShaderFilename);
 
 	GLuint vertex_shader;
-	if (!CreateShader(vertex_shader, GL_VERTEX_SHADER, vertex_shader_code,"vertex shader"))
+	if (!CreateShader(vertex_shader, GL_VERTEX_SHADER, vertex_shader_code,vertexShaderFilename))
 	{
 		return false;
 	}
 	GLuint fragment_shader;
-	if (CreateShader(fragment_shader, GL_FRAGMENT_SHADER, fragment_shader_code,"fragment shader"))
+	if (!CreateShader(fragment_shader, GL_FRAGMENT_SHADER, fragment_shader_code,fragmentShaderFilename))
 	{
 		return false;
 	}
@@ -213,7 +210,7 @@ bool IGLAPI::CreateShaderProgram(uint32_t& ProgramID, const char* vertexShaderFi
 	if (std::string(geometryShaderFilename) != "")
 	{
 		std::string geometry_shader_code = ReadShader(geometryShaderFilename);
-		if (!CreateShader(geometry_shader, GL_GEOMETRY_SHADER, geometry_shader_code,"geometry shader"))
+		if (!CreateShader(geometry_shader, GL_GEOMETRY_SHADER, geometry_shader_code,geometryShaderFilename))
 		{
 			return false;
 		}

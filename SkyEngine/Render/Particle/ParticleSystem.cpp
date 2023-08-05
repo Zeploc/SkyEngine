@@ -246,7 +246,7 @@ void ParticleSystem::DrawEntity()
 	glUniform1f(glGetUniformLocation(program, "Size"), ParticleSize);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, Texture.TextureID);
+	glBindTexture(GL_TEXTURE_2D, Texture->TextureID);
 	glUniform1i(glGetUniformLocation(program, "Texture"), 0);
 
 	glDisable(GL_CULL_FACE);

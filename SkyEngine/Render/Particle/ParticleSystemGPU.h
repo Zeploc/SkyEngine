@@ -75,14 +75,14 @@ private:
 	float m_fCurrentLifeTime = 0;
 	float m_fCurrentDelay = 0;
 
-	GLuint program;
-	GLuint vao;
-	GLuint vbo;
-	CTexture Texture;
+	uint32_t program;
+	uint32_t vao;
+	uint32_t vbo;
+	TPointer<CTexture> Texture;
 
-	GLuint posVbo;
-	GLuint velVbo;
-	GLuint initVelVbo;
+	uint32_t posVbo;
+	uint32_t velVbo;
+	uint32_t initVelVbo;
 
 	bool bHasTexture = false;
 };

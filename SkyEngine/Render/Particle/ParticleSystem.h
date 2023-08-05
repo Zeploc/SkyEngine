@@ -77,7 +77,7 @@ private:
 	GLuint program;
 	GLuint vao;
 	GLuint vbo;
-	CTexture Texture;
+	TPointer<CTexture> Texture;
 
 	bool bHasTexture = false;
 };

@@ -188,7 +188,7 @@ private:
 	GLuint m_Buffers[NUM_VBs];
 
 	std::vector<MeshEntry> m_Entries;
-	std::vector<CTexture> m_Textures;
+	std::vector<TPointer<CTexture>> m_Textures;
 
 	std::map<std::string, GLuint> m_BoneMapping;
 	std::map<std::string, aiNodeAnim*> boneHierarchy;

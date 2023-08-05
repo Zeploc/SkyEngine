@@ -5,6 +5,7 @@
 // Engine Includes //
 #include "Render/Shaders/ShaderManager.h"
 #include "Core/Application.h"
+#include "Render/Materials/InternalMaterial.h"
 #include "Render/Shaders/PBRShader.h"
 
 CCube::~CCube()
@@ -134,7 +135,7 @@ MeshData CCube::GetMeshData()
 	};
 
 	MeshData CubeMeshData(VertexPositions, Indices, Normals);
-	if (MeshMaterial->HasMaterialAttribute(CPBRShader::DiffuseTexture))
+	if (MeshMaterial->HasTexture())
 	{
 		CubeMeshData.SetUVs(UVCoords);
 	}

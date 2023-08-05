@@ -10,7 +10,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "ModelObject.h"
+#include "Render/Materials/Material.h"
 #include "Render/Shaders/PBRShader.h"
+#include "Render/Shaders/UndefinedShader.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -18,14 +20,15 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Model::Model(glm::vec4 _Colour, const char* ModelSource)
+Model::Model(const TPointer<Entity>& InOwner, glm::vec4 _Colour, const char* ModelSource)
+	: CMeshComponent(InOwner)
 {
 	m_fWidth = 0; // fWidth;
 	m_fHeight = 0; // fHeight;
 	m_fDepth = 0; // fDepth;
 	ModelPath = ModelSource;
-	
-	MeshMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader<CPBRShader>());
+
+	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>();
 	// MeshMaterial->Colour = _Colour;
 	BindModel();
 }

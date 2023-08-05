@@ -13,6 +13,7 @@ public:
 	TransformationWidget(STransform _Transform, class Scene* OwningScene);
 
 	~TransformationWidget();
+	void CreateWidgets();
 
 	void Update() override;
 

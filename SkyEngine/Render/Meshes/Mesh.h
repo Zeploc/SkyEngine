@@ -14,18 +14,19 @@
 #include <memory>
 
 #include "MeshData.h"
-#include "Render/Materials/Material.h"
 
 class Entity;
+class CShader;
 class CCollisionBounds;
+class CMaterialInterface;
 
 class ENGINE_API CMeshComponent : public CComponent
 {
 public:
 	// TODO: Remove empty constructor once made redundant 
-	CMeshComponent();
+	CMeshComponent(const TPointer<Entity>& InOwner);
 	// TODO: Replace width with mesh data
-	CMeshComponent(const TPointer<Entity>& InOwner, float InWidth, float InHeight, float InDepth, const TPointer<CMaterial>& = nullptr);
+	CMeshComponent(const TPointer<Entity>& InOwner, float InWidth, float InHeight, float InDepth, const TPointer<CMaterialInterface>& = nullptr);
 
 	virtual ~CMeshComponent();
 	
@@ -49,11 +50,11 @@ public:
 		return MeshCollisionBounds;
 	};
 
-	TPointer<CMaterial> MeshMaterial;
+	TPointer<CMaterialInterface> MeshMaterial;
 	float m_fWidth;
 	float m_fHeight;
 	float m_fDepth = 0;
-	GLuint vao;
+	uint32_t vao;
 	int IndicesCount;
 	
 protected:

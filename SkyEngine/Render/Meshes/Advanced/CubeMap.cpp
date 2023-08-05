@@ -11,6 +11,9 @@
 #include <soil/SOIL2.h>
 
 #include "Camera/CameraManager.h"
+#include "Render/Materials/Material.h"
+#include "Render/Materials/MaterialType.h"
+#include "Render/Shaders/UndefinedShader.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -18,7 +21,8 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CubeMap::CubeMap(float fWidth, float fHeight, float fDepth, char* _TextureSources[6])
+CubeMap::CubeMap(const TPointer<Entity>& InOwner, float fWidth, float fHeight, float fDepth, char* _TextureSources[6])
+	: CMeshComponent(InOwner)
 {
 	TextureSources[0] = _TextureSources[0];
 	TextureSources[1] = _TextureSources[1];
@@ -29,8 +33,7 @@ CubeMap::CubeMap(float fWidth, float fHeight, float fDepth, char* _TextureSource
 	m_fWidth = fWidth;
 	m_fHeight = fHeight;
 	m_fDepth = fDepth;
-	
-	MeshMaterial = std::make_shared<CMaterial>(ShaderManager::GetShader("CubeMapProgram"));
+	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>(ShaderManager::GetUndefinedShader("CubeMapProgram"));
 	BindCubeMap();
 }
 

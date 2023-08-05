@@ -90,6 +90,10 @@ bool Entity::CanRender()
 
 STransform Entity::GetAnchoredTransform()
 {
+	if (!EntityMesh)
+	{
+		return Transform;
+	}
 	STransform AnchoredTransform = Transform;
 	if (EntityMesh->GetCollisionBounds())
 	{

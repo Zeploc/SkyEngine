@@ -9,11 +9,11 @@
 class ENGINE_API CPlane : public CMeshComponent
 {
 public:
-	CPlane(const TPointer<Entity>& InOwner, float fWidth, float fHeight, TPointer<CMaterial> InMaterial = nullptr);
+	CPlane(const TPointer<Entity>& InOwner, float fWidth, float fHeight, TPointer<CMaterialInterface> InMaterial = nullptr);
 
-	CPlane(const TPointer<Entity>& InOwner, float InWidth, float InHeight, TPointer<CMaterial> InMaterial, glm::vec2 v2FrameCounts, int _iFPS);
+	CPlane(const TPointer<Entity>& InOwner, float InWidth, float InHeight, TPointer<CMaterialInterface> InMaterial, glm::vec2 v2FrameCounts, int _iFPS);
 
-	CPlane(const TPointer<Entity>& InOwner, float _fWidth, float _fHeight, TPointer<CMaterial> InMaterial, int iCount, bool bHorizontal);
+	CPlane(const TPointer<Entity>& InOwner, float _fWidth, float _fHeight, TPointer<CMaterialInterface> InMaterial, int iCount, bool bHorizontal);
 
 	~CPlane();
 

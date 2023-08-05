@@ -6,6 +6,7 @@
 #include "Render/Shaders/ShaderManager.h"
 #include "Core/Application.h"
 #include "Entity/Entity.h"
+#include "Render/Materials/InternalMaterial.h"
 
 CSphere::~CSphere()
 {

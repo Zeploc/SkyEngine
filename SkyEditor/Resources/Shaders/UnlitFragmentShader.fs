@@ -11,6 +11,7 @@ in vec3 PixelNormal;
 
 uniform int bIsTex = 1;
 uniform sampler2D tex;
+uniform vec3 CameraPosition = vec3(1.0f, 1.0f, 3.0f);
 
 // Fog
 uniform vec4 LightColour;
