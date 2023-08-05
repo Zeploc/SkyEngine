@@ -2,9 +2,7 @@
 
 #pragma once
 
-#include <string>
 #include <assimp/types.h>
-#include <vector>
 
 #include "Camera/CameraManager.h"
 

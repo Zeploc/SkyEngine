@@ -2,9 +2,6 @@
 
 #pragma once
 
-#include <memory>
-#include <string>
-
 #include "Core/Core.h"
 
 class CShader;

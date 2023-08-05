@@ -1,4 +1,7 @@
-﻿#include "InternalMaterial.h"
+﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
+
+#include "SEPCH.h"
+#include "InternalMaterial.h"
 
 #include "Graphics/GraphicsInstance.h"
 #include "Render/Shaders/Shader.h"

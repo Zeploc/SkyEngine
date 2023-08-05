@@ -1,4 +1,7 @@
-﻿#include "GraphicsWindow.h"
+﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
+
+#include "SEPCH.h"
+#include "GraphicsWindow.h"
 
 #include "Core/Application.h"
 #include "Graphics/GraphicsInstance.h"

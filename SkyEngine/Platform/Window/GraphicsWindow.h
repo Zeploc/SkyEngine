@@ -1,8 +1,6 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
-#include <memory>
-#include <vector>
 
 #include "Core/Delegates.h"
 #include "Math/Vector2.h"

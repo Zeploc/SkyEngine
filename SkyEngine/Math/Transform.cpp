@@ -1,9 +1,7 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
 #include "Transform.h"
-
-#include <string>
-#include <sstream>
 
 #include "System/Utils.h"
 

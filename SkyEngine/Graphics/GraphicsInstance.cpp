@@ -1,4 +1,7 @@
-﻿#include "GraphicsInstance.h"
+﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
+
+#include "SEPCH.h"
+#include "GraphicsInstance.h"
 
 #include "Entity/Entity.h"
 #include "Render/Materials/InternalMaterial.h"

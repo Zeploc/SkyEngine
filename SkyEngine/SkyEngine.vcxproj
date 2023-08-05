@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{5CB67A3D-72AB-4B56-B866-FA21096624A0}</ProjectGuid>
+    <ProjectGuid>{52A23481-BE0C-E9F7-074B-9A9D73F4C64C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SkyEngine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
@@ -122,13 +122,13 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SE_PLATFORM_WINDOWS;SE_BUILD_DLL;_DEBUG;CPPDYNAMICLIBRARYTEMPLATE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>SEPCH.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -208,6 +208,9 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Core\EngineWindow.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="SEPCH.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Entity/2DParticleSystem.cpp" />
     <ClCompile Include="Entity/Button3DEntity.cpp" />
     <ClCompile Include="Entity/CollisionBounds.cpp" />
@@ -268,6 +271,7 @@ copy /Y $(SolutionDir)Binaries\$(Configuration)-$(Platform)\$(ProjectName)\$(Pro
     <ClCompile Include="Math/Matrix.cpp" />
     <ClCompile Include="Math/Quaternion.cpp" />
     <ClCompile Include="Math\Transform.cpp" />
+    <ClInclude Include="SEPCH.h" />
     <ClInclude Include="Entity\Component.h" />
     <ClInclude Include="Graphics\GLFW\GLIncludes.h" />
     <ClInclude Include="Math\Internal\Rotator.decl.h" />

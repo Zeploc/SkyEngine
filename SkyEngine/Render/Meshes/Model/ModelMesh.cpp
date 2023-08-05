@@ -1,8 +1,7 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
 #include "ModelMesh.h"
-
-#include <sstream>
 
 #include "Math/Transform.h"
 

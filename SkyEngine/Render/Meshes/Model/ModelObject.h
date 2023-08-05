@@ -2,10 +2,6 @@
 
 #pragma once
 
-// Std. Includes
-#include <string>
-#include <vector>
-
 using namespace std;
 // GL Includes
 

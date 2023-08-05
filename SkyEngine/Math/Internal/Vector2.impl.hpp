@@ -1,6 +1,8 @@
-﻿#pragma once
+﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#pragma once
 
+#include "SEPCH.h"
 #include "Vector2.decl.h"
 #include "Math/Rotator.h"
 

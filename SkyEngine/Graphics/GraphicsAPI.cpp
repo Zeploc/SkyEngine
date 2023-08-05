@@ -1,4 +1,7 @@
-﻿#include "GraphicsAPI.h"
+﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
+
+#include "SEPCH.h"
+#include "GraphicsAPI.h"
 
 #include "GLFW/GLAPI.h"
 #include "System/LogManager.h"

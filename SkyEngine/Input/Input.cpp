@@ -1,13 +1,13 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
-#include <iostream>
+#include "SEPCH.h"
+#include "Input.h"
 
 // OpenGL Library Includes //
 #include <glew/glew.h>
 #include <GLFW/glfw3.h>
 
 // Engine Includes //
-#include "Input.h"
 #include "CXBOXController.h"
 #include "UI/UIButton.h"
 

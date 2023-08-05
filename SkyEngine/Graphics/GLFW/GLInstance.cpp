@@ -1,4 +1,7 @@
-﻿#include "GLInstance.h"
+﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
+
+#include "SEPCH.h"
+#include "GLInstance.h"
 
 #include <format>
 #include "GLIncludes.h"

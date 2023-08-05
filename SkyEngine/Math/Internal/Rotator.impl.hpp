@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "SEPCH.h"
 #include "Rotator.decl.h"
 #include "../Vector.h"
 

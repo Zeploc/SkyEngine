@@ -1,5 +1,6 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
 #include "Text.h"
 
 // Library Includes //

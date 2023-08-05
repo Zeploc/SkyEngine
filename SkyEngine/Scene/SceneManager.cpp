@@ -1,11 +1,10 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
 #include "SceneManager.h"
 
 // Library Includes //
-#include <iostream>
 
-// OpenGL Library Includes //
 
 // Engine Includes //
 #include "Scene.h"

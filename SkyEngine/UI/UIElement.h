@@ -5,7 +5,6 @@
 #include "Core/Core.h"
 
 // Library Includes //
-#include <memory>
 
 // OpenGL Library Includes //
 #include <glm/common.hpp>

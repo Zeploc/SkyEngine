@@ -3,8 +3,6 @@
 #pragma once
 
 // Library Includes //
-#include <memory>
-#include <vector>
 
 // OpenGL Library Includes //
 

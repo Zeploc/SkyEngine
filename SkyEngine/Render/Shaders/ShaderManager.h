@@ -5,8 +5,6 @@
 #include "Core/Core.h"
 
 // Library Includes //
-#include <map>
-#include <string>
 
 // Engine Includes //
 #include "Shader.h"

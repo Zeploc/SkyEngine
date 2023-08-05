@@ -1,4 +1,7 @@
-﻿#include "GLAPI.h"
+﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
+
+#include "SEPCH.h"
+#include "GLAPI.h"
 
 #include <fstream>
 #include <soil/SOIL2.h>

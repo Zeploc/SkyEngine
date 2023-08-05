@@ -1,11 +1,11 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
 #include "LogManager.h"
 
 #include "UI/UIText.h"
 
 // Library Includes //
-#include <iostream>
 
 // Static Variables //
 TPointer<LogManager> LogManager::m_pLogManager;

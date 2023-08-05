@@ -1,5 +1,9 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
+#include "Scene.h"
+
+// Only used for key inputs, swap out later
 #include <glew/glew.h>
 
 // Engine Includes //
@@ -10,7 +14,6 @@
 // Local Includes //
 
 // This Includes //
-#include "Scene.h"
 
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"

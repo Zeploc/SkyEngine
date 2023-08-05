@@ -6,8 +6,6 @@
 #include "UIElement.h"
 
 // Library Includes //
-#include <string>
-#include <vector>
 
 class Widget : public UIElement
 {

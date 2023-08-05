@@ -4,8 +4,6 @@
 
 #include "Core/Core.h"
 
-#include <string>
-
 #include "Math/Internal/Vector2.decl.h"
 
 class IGraphicsWindow;

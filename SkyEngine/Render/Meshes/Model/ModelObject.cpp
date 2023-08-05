@@ -1,8 +1,8 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
 #include "ModelObject.h"
 
-#include <iostream>
 #include <assimp/postprocess.h>
 #include <soil/SOIL2.h>
 

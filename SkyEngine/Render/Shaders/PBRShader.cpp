@@ -1,4 +1,7 @@
-﻿#include "PBRShader.h"
+﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
+
+#include "SEPCH.h"
+#include "PBRShader.h"
 
 #include "Graphics/GraphicsInstance.h"
 #include "Render/Lighting.h"

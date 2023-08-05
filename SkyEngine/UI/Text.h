@@ -3,9 +3,6 @@
 #pragma once
 
 // Library Includes //
-#include <map>
-#include <string>
-#include <vector>
 
 // OpenGL Library Includes //
 #include <glew/glew.h>

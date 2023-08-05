@@ -3,7 +3,6 @@
 #pragma once
 
 // Library Includes //
-#include <string>
 
 // OpenGL Library Includes //
 

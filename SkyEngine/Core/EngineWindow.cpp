@@ -1,4 +1,7 @@
-﻿#include "EngineWindow.h"
+﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
+
+#include "SEPCH.h"
+#include "EngineWindow.h"
 
 #include "Application.h"
 #include "Graphics/GraphicsAPI.h"

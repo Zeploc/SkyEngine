@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "SEPCH.h"
 #include <SkyEngine.h>
 #include <Scene/SceneManager.h>
 #include <Dependencies/include/glew/glew.h>

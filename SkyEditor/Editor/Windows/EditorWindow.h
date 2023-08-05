@@ -2,9 +2,6 @@
 
 #pragma once
 
-#include <memory>
-#include <string>
-#include <vector>
 #include <glm/glm.hpp>
 
 #include <Math/Vector.h>

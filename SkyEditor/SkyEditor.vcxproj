@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{5932B542-1ABF-4CFF-8FBE-5BE609C7667C}</ProjectGuid>
+    <ProjectGuid>{03F58080-6F5F-35F7-B89D-E69C2447134C}</ProjectGuid>
     <RootNamespace>My2DLocalMultiplayerGame</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>SkyEditor</ProjectName>

@@ -5,8 +5,6 @@
 #include "Core/Core.h"
 
 // Library Includes //
-#include <string>
-#include <vector>
 
 // OpenGL Library Includes //
 #include <fmod/fmod.hpp>

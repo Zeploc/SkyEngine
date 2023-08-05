@@ -5,7 +5,6 @@
 #include "UIElement.h"
 
 // Library Includes //
-#include <string>
 
 // OpenGL Library Includes //
 

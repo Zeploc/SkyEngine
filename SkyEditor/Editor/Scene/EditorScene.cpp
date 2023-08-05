@@ -1,6 +1,7 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 // Library Includes //
+#include "SEPCH.h"
 #include "EditorScene.h"
 
 #include "Render/Lighting.h"

@@ -1,12 +1,12 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
 #include "Model.h"
 
 // Engine Includes //
 #include "Render/Shaders/ShaderManager.h"
 
 // Library Includes //
-#include <map>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "ModelObject.h"

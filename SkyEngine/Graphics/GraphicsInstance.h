@@ -1,9 +1,6 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
-#include <map>
-#include <memory>
-#include <vector>
 
 #include "Math/Transform.h"
 #include "Math/Matrix.h"

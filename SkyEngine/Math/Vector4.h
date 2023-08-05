@@ -3,8 +3,6 @@
 #pragma once
 
 #include "Core/Core.h"
-#include <string>
-#include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Math/MathDefinitions.h"

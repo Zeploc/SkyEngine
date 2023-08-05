@@ -1,4 +1,7 @@
-﻿#include "GLFWWindow.h"
+﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
+
+#include "SEPCH.h"
+#include "GLFWWindow.h"
 
 #include <iostream>
 #include <glew/glew.h>

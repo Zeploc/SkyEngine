@@ -1,4 +1,7 @@
-﻿#include "MeshData.h"
+﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
+
+#include "SEPCH.h"
+#include "MeshData.h"
 
 #include "Core/Application.h"
 

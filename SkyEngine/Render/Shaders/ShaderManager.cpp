@@ -1,11 +1,10 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
 #include "ShaderManager.h"
 
 // Library Includes //
 #include <ft2build.h>
-#include <iostream>
-#include <map>
 #include <soil/SOIL2.h>
 #include FT_FREETYPE_H
 

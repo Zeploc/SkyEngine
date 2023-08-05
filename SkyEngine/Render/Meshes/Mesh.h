@@ -11,7 +11,6 @@
 #include "Math/Transform.h"
 
 // Library Include //
-#include <memory>
 
 #include "MeshData.h"
 

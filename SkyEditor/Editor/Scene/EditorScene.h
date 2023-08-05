@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include <string>
 #include <Scene/Scene.h>
 
 #include "Math/Vector2.h"
