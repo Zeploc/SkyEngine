@@ -67,14 +67,3 @@ void IGraphicsInstance::Render(TPointer<IGraphicsWindow> GraphicsWindow, std::ve
 	}
 	ActiveShader = nullptr;
 }
-
-void IGraphicsInstance::RenderEntity(TPointer<Entity> Entity)
-{	
-	if (!Entity)
-	{
-		return;
-	}
-	const STransform AnchoredTransform = Entity->GetAnchoredTransform();
-	ensure(Entity->EntityMesh != nullptr, "No entity mesh found!");
-	RenderMesh(Entity->EntityMesh, AnchoredTransform);	
-}

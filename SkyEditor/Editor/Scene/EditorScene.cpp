@@ -415,7 +415,7 @@ void EditorScene::OpenFile()
 	std::ifstream OpenedFile(FileName);//szFile); //
 	if (!OpenedFile.is_open())
 	{
-		MessageBox(NULL, FileName.c_str(), "Failed to open", MB_OK);
+		MessageBoxA(NULL, FileName.c_str(), "Failed to open", MB_OK);
 		return;
 	}
 
@@ -536,7 +536,7 @@ void EditorScene::SaveAsNew()
 		// MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);
 		return;
 	}
-	MessageBox(NULL, ofn.lpstrFile, "File Name (WIP)", MB_OK);
+	MessageBoxA(NULL, ofn.lpstrFile, "File Name (WIP)", MB_OK);
 }
 
 void EditorScene::SaveCurrentLevel()
@@ -546,7 +546,7 @@ void EditorScene::SaveCurrentLevel()
 	 LevelFile.open(LevelPath);
 	 if (!LevelFile.is_open())
      {
-     	MessageBox(NULL, LevelPath.c_str(), "Failed to edit", MB_OK);
+     	MessageBoxA(NULL, LevelPath.c_str(), "Failed to edit", MB_OK);
      	return;
      }
 	 LevelFile << "[" + SceneName + "]\n";

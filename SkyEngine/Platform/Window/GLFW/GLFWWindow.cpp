@@ -6,6 +6,7 @@
 
 #include "Input/CXBOXController.h"
 #include "Input/Input.h"
+#include "System/LogManager.h"
 
 void glfw_onError(int error, const char * description);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -134,7 +135,8 @@ SVector2 GLFWWindow::GetWindowSize()
 void glfw_onError(int error, const char* description)
 {
 	// print message in Windows popup dialog box
-	MessageBox(NULL, LPCWSTR(description), LPCWSTR("GLFW error"), MB_OK);
+	LogManager::GetInstance()->DisplayLogError(description);
+	MessageBoxA(NULL, description, "GLFW error", MB_OK);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)

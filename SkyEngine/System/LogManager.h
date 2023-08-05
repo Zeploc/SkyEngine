@@ -18,7 +18,9 @@ public:
 
 	void Render();
 
-	void DisplayLogMessage(std::string _Message);
+	void DisplayLogMessage(const std::string& InMessage);
+	void DisplayLogWarning(const std::string& InMessage);
+	void DisplayLogError(const std::string& InMessage);
 
 	TPointer<UIText> LoadingMessage;
 

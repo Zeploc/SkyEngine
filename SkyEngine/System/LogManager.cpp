@@ -41,14 +41,23 @@ void LogManager::Render()
 	LoadingMessage->DrawUIElement();
 }
 
-void LogManager::DisplayLogMessage(std::string _Message)
+void LogManager::DisplayLogMessage(const std::string& InMessage)
 {
-	std::cout << _Message << std::endl;
+	std::cout << InMessage << std::endl;
 	if (LoadingMessage)
 	{
-		LoadingMessage->sText = _Message;
+		LoadingMessage->sText = InMessage;
 	}
-	//glutPostRedisplay();
+}
+
+void LogManager::DisplayLogWarning(const std::string& InMessage)
+{
+	std::cerr << InMessage << std::endl;
+}
+
+void LogManager::DisplayLogError(const std::string& InMessage)
+{
+	std::cerr << InMessage << std::endl;
 }
 
 /************************************************************
