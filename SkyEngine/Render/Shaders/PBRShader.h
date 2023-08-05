@@ -19,7 +19,7 @@ public:
 	struct ShaderParameters
 	{
 		DefineShaderVector4Param(DiffuseColour, SVector4(1.0f))
-		DefineShaderTextureParam(DiffuseTexture, TPointer<CTexture>())
+		DefineShaderTextureParam(DiffuseTexture, nullptr)
 		DefineShaderFloatParam(SpecularStrength, 1.0f)
 		DefineShaderFloatParam(Shininess, 32.0f)	
 		// TODO: Setup shader uniforms

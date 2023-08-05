@@ -33,7 +33,7 @@ CubeMap::CubeMap(const TPointer<Entity>& InOwner, float fWidth, float fHeight, f
 	m_fWidth = fWidth;
 	m_fHeight = fHeight;
 	m_fDepth = fDepth;
-	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>(ShaderManager::GetUndefinedShader("CubeMapProgram"));
+	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>("CubeMapMaterial", ShaderManager::GetUndefinedShader("CubeMapProgram"));
 	BindCubeMap();
 }
 

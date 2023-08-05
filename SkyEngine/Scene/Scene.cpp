@@ -14,6 +14,7 @@
 
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"
+#include "Core/EngineWindow.h"
 #include "Entity/Button3DEntity.h"
 #include "Input/Input.h"
 #include "Platform/Window/GraphicsWindow.h"

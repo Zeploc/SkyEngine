@@ -3,13 +3,11 @@
 #include "Graphics/GraphicsInstance.h"
 #include "Render/Shaders/Shader.h"
 
-CMaterialInterface::CMaterialInterface()
+CMaterialInterface::CMaterialInterface(const std::string& InMaterialName, const std::string& InMaterialPath)
 {
-}
-
-CMaterialInterface::CMaterialInterface(const std::string& InMaterialPath)
-{
+	MaterialName = InMaterialName;
 	MaterialAssetPath = InMaterialPath;
+	
 	// TODO: Read from material path
 	// Convert to values and store
 	// Get shader from material file and store pointer

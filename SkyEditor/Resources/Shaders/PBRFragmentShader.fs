@@ -9,9 +9,9 @@ in vec3 PixelNormal;
 
 // TODO: Textures
 
-uniform int bIsTex = 1;
-uniform sampler2D tex;
-uniform float AmbientStrength = 0.1f;
+uniform int bHasDiffuseTexture = 1;
+uniform sampler2D DiffuseTexture;
+uniform float AmbientStrength = 10.1f;
 uniform vec3 LightColour = vec3(1.0f, 1.0f, 1.0f);
 uniform vec3 LightPosition;// = vec3(-5.0f, 5.0f, 0.5f);
 uniform vec3 LightDirection;// = vec3(-5.0f, 5.0f, 0.5f);
@@ -26,10 +26,7 @@ uniform float StartFog = 20.0f;
 uniform float EndFog = 40.0f;
 
 void main(void)
-{
-	 color = vec4(1,1,1,1);// PixelColor;
-	 return;
- 
+{ 
 	// Light Direction
 	vec3 Normal = normalize(PixelNormal);
 	vec3 LightDirection = normalize(PixelPosition - LightPosition);
@@ -46,9 +43,9 @@ void main(void)
 	float diffuseStr = max(dot(Normal, -LightDirection), 0.0f);
 	vec3 diffuse = diffuseStr * LightColour;
 	
-	if (bIsTex == 1) 
+	if (bHasDiffuseTexture == 1) 
 	{
-	    color = vec4(ambient + diffuse + specular, 1.0f) * texture(tex, PixelTextureCoord) * PixelColor;
+	    color = vec4(ambient + diffuse + specular, 1.0f) * texture(DiffuseTexture, PixelTextureCoord) * PixelColor;
 	}
 	else
 	{

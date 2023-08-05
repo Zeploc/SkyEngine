@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Graphics/GraphicsAPI.h"
 #include "Input/Input.h"
+#include "Platform/PlatformInterface.h"
 #include "Platform/Window/GraphicsWindow.h"
 
 EngineWindow::~EngineWindow()

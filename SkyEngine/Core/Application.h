@@ -2,12 +2,14 @@
 
 #pragma once
 
-#include "EngineWindow.h"
+// #include "EngineWindow.h"
 #include "Core/Core.h"
 #include "Graphics/GraphicsAPI.h"
 #include "Math/Vector.h"
 #include "Math/Vector2.h"
-#include "Platform/PlatformInterface.h"
+
+class IPlatformInterface;
+class EngineWindow;
 
 namespace SkyEngine
 {	

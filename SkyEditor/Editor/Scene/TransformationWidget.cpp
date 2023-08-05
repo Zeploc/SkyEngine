@@ -32,19 +32,19 @@ void TransformationWidget::CreateWidgets()
 	// TODO: Convert to components
 	XColour = {0.6f, 0.1f, 0.1f, 1.0f};
 	
-	const TPointer<CMaterial_Unlit> RedUnlitMaterial = std::make_shared<CMaterial_Unlit>();
+	const TPointer<CMaterial_Unlit> RedUnlitMaterial = std::make_shared<CMaterial_Unlit>("RedUnlitMaterial");
 	RedUnlitMaterial->Params.DiffuseColour = XColour;
 	RedUnlitMaterial->bDepthTest = false;
-	const TPointer<CMaterial_Unlit> GreenUnlitMaterial = std::make_shared<CMaterial_Unlit>();
+	const TPointer<CMaterial_Unlit> GreenUnlitMaterial = std::make_shared<CMaterial_Unlit>("GreenUnlitMaterial");
 	GreenUnlitMaterial->Params.DiffuseColour = YColour;
 	GreenUnlitMaterial->bDepthTest = false;
-	const TPointer<CMaterial_Unlit> BlueUnlitMaterial = std::make_shared<CMaterial_Unlit>();
+	const TPointer<CMaterial_Unlit> BlueUnlitMaterial = std::make_shared<CMaterial_Unlit>("BlueUnlitMaterial");
 	BlueUnlitMaterial->Params.DiffuseColour = ZColour;
 	BlueUnlitMaterial->bDepthTest = false;
 	
-	TPointer<CCube> XMoveTransformMesh = std::make_shared<CCube>(shared_from_this(), 1.0f, 0.1f, 0.1f, RedUnlitMaterial);
-	TPointer<CCube> YMoveTransformMesh = std::make_shared<CCube>(shared_from_this(), 0.1f, 1.0f, 0.1f, GreenUnlitMaterial);
-	TPointer<CCube> ZMoveTransformMesh = std::make_shared<CCube>(shared_from_this(), 0.1f, 0.1f, 1.0f, BlueUnlitMaterial);
+	TPointer<CCube> XMoveTransformMesh = std::make_shared<CCube>(XMoveTransform, 1.0f, 0.1f, 0.1f, RedUnlitMaterial);
+	TPointer<CCube> YMoveTransformMesh = std::make_shared<CCube>(YMoveTransform, 0.1f, 1.0f, 0.1f, GreenUnlitMaterial);
+	TPointer<CCube> ZMoveTransformMesh = std::make_shared<CCube>(ZMoveTransform, 0.1f, 0.1f, 1.0f, BlueUnlitMaterial);
 
 	// XMoveTransformMesh->MeshMaterial->StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};
 	// ZMoveTransformMesh->MeshMaterial->StencilColour = {1.0f, 1.0f, 1.0f, 0.7f};

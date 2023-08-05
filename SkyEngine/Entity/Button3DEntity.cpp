@@ -4,6 +4,7 @@
 
 // Engine Includes //
 #include "Camera/CameraManager.h"
+#include "Core/Application.h"
 #include "Input/Input.h"
 #include "Render/Materials/Material.h"
 #include "Render/Meshes/Basic/Cube.h"
@@ -15,7 +16,7 @@ bool Button3DEntity::bButtonPressedThisFrame = false;
 Button3DEntity::Button3DEntity(STransform _Transform, EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, void (*func)()) : Entity(_Transform, _Anchor)
 {
 	// TODO: Link UI pointer and set colour?
-	TPointer<CMaterial_Unlit> UIMaterial = std::make_shared<CMaterial_Unlit>();
+	TPointer<CMaterial_Unlit> UIMaterial = std::make_shared<CMaterial_Unlit>("UIMaterial");
 	UIMaterial->Params.DiffuseColour = _Colour;
 	TPointer<CCube> ButtonCubeMesh = std::make_shared<CCube>(CCube(shared_from_this(), fWidth, fHeight, fDepth, UIMaterial));
 	EntityMesh = ButtonCubeMesh;
@@ -26,8 +27,8 @@ Button3DEntity::Button3DEntity(STransform _Transform, EANCHOR _Anchor, float fWi
 Button3DEntity::Button3DEntity(STransform _Transform, EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, const char* Texturepath, void (*func)()) : Entity(_Transform, _Anchor)
 {
 	// TODO: Link UI pointer and set colour?
-	TPointer<CTexture> ButtonTexture = std::make_shared<CTexture>(Texturepath);
-	TPointer<CMaterial_Unlit> UIMaterial = std::make_shared<CMaterial_Unlit>();
+	TPointer<CTexture> ButtonTexture = GetGraphicsAPI()->GetTexture(Texturepath);
+	TPointer<CMaterial_Unlit> UIMaterial = std::make_shared<CMaterial_Unlit>("UIMaterial");
 	UIMaterial->Params.DiffuseColour = _Colour;
 	UIMaterial->Params.DiffuseTexture = ButtonTexture;
 	TPointer<CCube> ButtonCubeMesh = std::make_shared<CCube>(CCube(shared_from_this(), fWidth, fHeight, fDepth, UIMaterial));

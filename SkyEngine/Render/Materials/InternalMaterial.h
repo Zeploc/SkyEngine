@@ -14,9 +14,8 @@ class ENGINE_API CMaterialInterface : public std::enable_shared_from_this<CMater
 {
 public:
 	virtual ~CMaterialInterface() = default;
-	CMaterialInterface();
 	// TODO: Load asset from path
-	CMaterialInterface(const std::string& InMaterialPath);
+	CMaterialInterface(const std::string& InMaterialName, const std::string& InMaterialPath = std::string());
 	virtual void BindMaterial(TPointer<IGraphicsInstance> InGraphicsInterface);
 
 	// TODO: place holder, replace
@@ -31,4 +30,5 @@ public:
 protected:
 
 	std::string MaterialAssetPath; 
+	std::string MaterialName; 
 };

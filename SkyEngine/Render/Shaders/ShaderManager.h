@@ -70,14 +70,15 @@ void ShaderManager::AddShader()
 template <class T>
 TPointer<T> ShaderManager::GetShader()
 {
+	const std::map<std::string, TPointer<CShader>> CurrentShaders = GetShaders();
 	// TODO: improve retrieval based on stored method
-	for (auto Element : GetShaders())
+	for (auto Element : CurrentShaders)
 	{
 		std::shared_ptr<CShader> Shader = Element.second;
-		if (TPointer<T> CheckedShader = std::static_pointer_cast<T>(Shader))
+		if (TPointer<T> CheckedShader = std::dynamic_pointer_cast<T>(Shader))
 		{
 			return CheckedShader;
-		}
+		}				
 	}
 	return nullptr;
 }

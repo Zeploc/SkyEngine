@@ -9,8 +9,8 @@ in vec3 PixelNormal;
 
 // TODO: Textures
 
-uniform int bIsTex = 1;
-uniform sampler2D tex;
+uniform int bHasDiffuseTexture = 0;
+uniform sampler2D DiffuseTexture;
 uniform vec3 CameraPosition = vec3(1.0f, 1.0f, 3.0f);
 
 // Fog
@@ -26,9 +26,9 @@ void main(void)
 	// Specular Highlight
 	vec3 negViewDir = normalize(CameraPosition - PixelPosition);	
 	
-	if (bIsTex == 1) 
+	if (bHasDiffuseTexture == 1) 
 	{
-	    color = texture(tex, PixelTextureCoord) * PixelColor;
+	    color = texture(DiffuseTexture, PixelTextureCoord) * PixelColor;
 	}
 	else
 	{

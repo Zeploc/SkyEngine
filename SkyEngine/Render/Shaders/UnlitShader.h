@@ -17,7 +17,7 @@ public:
 	struct ShaderParameters
 	{
 		DefineShaderVector4Param(DiffuseColour, SVector4(1.0f))
-		DefineShaderTextureParam(DiffuseTexture, TPointer<CTexture>())
+		DefineShaderTextureParam(DiffuseTexture, nullptr)
 	};
 	
 	ShaderParameters Params;

@@ -95,23 +95,30 @@ EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
 
 void EditorScene::AddSampleEntities()
 {
-	TPointer<CTexture> BrickTexture = std::make_shared<CTexture>("Resources/Images/StoneWall_2x2.jpg");	
+	TPointer<CTexture> BrickTexture = GetGraphicsAPI()->GetTexture("Resources/Images/StoneWall_2x2.jpg");
 	// TPointer<CMaterial_PBR> BrickMaterial = std::make_shared<CMaterial_PBR>();
-	TPointer<TMaterial<CUndefinedShader>> BrickMaterial = std::make_shared<TMaterial<CUndefinedShader>>(ShaderManager::GetUndefinedShader("BaseProgram"));
+	TPointer<TMaterial<CUndefinedShader>> BrickMaterial = std::make_shared<TMaterial<CUndefinedShader>>("BrickMaterial", ShaderManager::GetUndefinedShader("BaseProgram"));
 	BrickMaterial->Params.DiffuseTexture = BrickTexture;
 	
 	// Would be nice to be able to copy an existing material as a template
-	TPointer<CMaterial_PBR> ColouredBrickMaterial = std::make_shared<CMaterial_PBR>();
+	TPointer<CMaterial_PBR> ColouredBrickMaterial = std::make_shared<CMaterial_PBR>("ColouredBrickMaterial");
 	ColouredBrickMaterial->Params.DiffuseTexture = BrickTexture;
 	ColouredBrickMaterial->Params.DiffuseColour = {0.5f, 0.3f, 0.3f, 1.0f};
 	
-	TPointer<CTexture> CliffTexture = std::make_shared<CTexture>("Resources/Images/SmoothCliff_1024.jpg");
-	TPointer<CMaterial_PBR> CliffMaterial = std::make_shared<CMaterial_PBR>();
-	ColouredBrickMaterial->Params.DiffuseTexture = BrickTexture;
-	ColouredBrickMaterial->Params.DiffuseColour = {0.1f, 0.8f, 0.3f, 1.0f};
+	TPointer<CMaterial_PBR> ColouredBrickPlaneMaterial = std::make_shared<CMaterial_PBR>("ColouredBrickPlaneMaterial");
+	ColouredBrickPlaneMaterial->Params.DiffuseTexture = BrickTexture;
+	ColouredBrickPlaneMaterial->Params.DiffuseColour = {0.5f, 0.3f, 0.3f, 1.0f};
+	ColouredBrickPlaneMaterial->bTwoSided = true;
 	
-	TPointer<CMaterial_PBR> PlaneMaterial = std::make_shared<CMaterial_PBR>();
+	TPointer<CTexture> CliffTexture = GetGraphicsAPI()->GetTexture("Resources/Images/SmoothCliff_1024.jpg");
+	TPointer<CMaterial_PBR> CliffMaterial = std::make_shared<CMaterial_PBR>("CliffMaterial");
+	CliffMaterial->Params.DiffuseTexture = BrickTexture;
+	CliffMaterial->Params.DiffuseColour = {0.1f, 0.8f, 0.3f, 1.0f};
+	
+
+	TPointer<CMaterial_PBR> PlaneMaterial = std::make_shared<CMaterial_PBR>("PlaneMaterial");
 	PlaneMaterial->Params.DiffuseColour = {0.5f, 0.5f, 0.5f, 1.0f};
+	PlaneMaterial->bTwoSided = true;
 
 	// TODO: Switch all below to make shared
 	TPointer<Entity> SphereRaycastTest(new Entity(STransform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
@@ -123,27 +130,26 @@ void EditorScene::AddSampleEntities()
 	//glm::vec3 Points[4] = { {-10, 10, 1}, {10, 10, -1 }, { 10, -10, 0 }, { -10, -10, -3 } };
 	TPointer<CPlane> FloorPlanMesh = std::make_shared<CPlane>(FloorEntity, 50, 50, PlaneMaterial);
 	FloorEntity->AddMesh(FloorPlanMesh);
-	FloorPlanMesh->MeshMaterial->bTwoSided = true;
 	AddEntity(FloorEntity, true);
 	
-	TPointer<ParticleSystem> ParticleBoy(new ParticleSystem({{20, 8, 10}, {0, 0, 0}, {1, 1, 1}}));
-	ParticleBoy->SetPositionRange({-5, 5}, {0, 0}, {-5, 5});
-	ParticleBoy->SetDirectionRange({0, 0}, {-1, -1}, {0, 0});
-	ParticleBoy->SetFalloffTime({100.0f, 100.0f});
-	ParticleBoy->SetFalloffRange({30, 40});
-	ParticleBoy->SetSpeedRange({1, 10});
-	ParticleBoy->ParticleSize = 0.8f;
-	ParticleBoy->Init(1000, "Resources/Images/raindrop.png");
-	AddEntity(ParticleBoy, true);
-	
-	TPointer<ParticleSystem> ParticleBoy2(new ParticleSystem({{20, 1, 20}, {0, 0, 0}, {1, 1, 1}}));
-	ParticleBoy2->Init(1000, "Resources/Images/Box.png");
-	AddEntity(ParticleBoy2, true);
-	
-	TPointer<Entity> GeomEnt(new Entity({{10, 6, 10}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	TPointer<GeometryObject> GeomShape = std::make_shared<GeometryObject>(GeomEnt, SVector4(0.0, 0.9f, 0.3f, 1.0f));
-	GeomEnt->AddMesh(GeomShape);
-	AddEntity(GeomEnt, true);
+	// TPointer<ParticleSystem> ParticleBoy(new ParticleSystem({{20, 8, 10}, {0, 0, 0}, {1, 1, 1}}));
+	// ParticleBoy->SetPositionRange({-5, 5}, {0, 0}, {-5, 5});
+	// ParticleBoy->SetDirectionRange({0, 0}, {-1, -1}, {0, 0});
+	// ParticleBoy->SetFalloffTime({100.0f, 100.0f});
+	// ParticleBoy->SetFalloffRange({30, 40});
+	// ParticleBoy->SetSpeedRange({1, 10});
+	// ParticleBoy->ParticleSize = 0.8f;
+	// ParticleBoy->Init(1000, "Resources/Images/raindrop.png");
+	// AddEntity(ParticleBoy, true);
+	//
+	// TPointer<ParticleSystem> ParticleBoy2(new ParticleSystem({{20, 1, 20}, {0, 0, 0}, {1, 1, 1}}));
+	// ParticleBoy2->Init(1000, "Resources/Images/Box.png");
+	// AddEntity(ParticleBoy2, true);
+	//
+	// TPointer<Entity> GeomEnt(new Entity({{10, 6, 10}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	// TPointer<GeometryObject> GeomShape = std::make_shared<GeometryObject>(GeomEnt, SVector4(0.0, 0.9f, 0.3f, 1.0f));
+	// GeomEnt->AddMesh(GeomShape);
+	// AddEntity(GeomEnt, true);
 	
 	// TODO: Fix as broken with updated assimp
 	// Pointer<Entity> ModelEntity(new Entity(FTransform{{10.0f, 2.0f, 0.0f}, {-90, -90, 0}, {0.2f, 0.2f, 0.2f}}, EANCHOR::CENTER));
@@ -171,9 +177,8 @@ void EditorScene::AddSampleEntities()
 	AddEntity(SphereEntity, true);
 	
 	TPointer<Entity> PlaneEntity(new Entity(STransform{{10.0f, 4.0f, 16.0f}, {-90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	TPointer<CPlane> PlaneMesh(new CPlane(PlaneEntity, 2.0f, 2.0f, ColouredBrickMaterial));
+	TPointer<CPlane> PlaneMesh(new CPlane(PlaneEntity, 2.0f, 2.0f, ColouredBrickPlaneMaterial));
 	PlaneEntity->AddMesh(PlaneMesh);
-	PlaneMesh->MeshMaterial->bTwoSided = true;
 	AddEntity(PlaneEntity, true);
 }
 
@@ -462,7 +467,7 @@ void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
 		OpenedLevelFile >> NewEntity;
 		std::getline(OpenedLevelFile, Empty, '\n');
 		
-		TPointer<CMaterial_PBR> TestMaterial = std::make_shared<CMaterial_PBR>();
+		TPointer<CMaterial_PBR> TestMaterial = std::make_shared<CMaterial_PBR>("TestMaterial");
 		TestMaterial->Params.DiffuseColour = {0.7f, 0.4f, 0.3f, 1.0f};
 		
 		TPointer<CCube> CubeMesh = std::make_shared<CCube>(NewEntity, 3.0f, 3.0f, 3.0f, TestMaterial);

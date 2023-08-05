@@ -25,7 +25,7 @@ GeometryObject::GeometryObject(const TPointer<Entity>& InOwner, glm::vec4 _Colou
 	m_fHeight = 1;
 	IndicesCount = 1;
 	
-	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>(ShaderManager::GetUndefinedShader("GeometryShader"));
+	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>("GeometryObjectMaterial", ShaderManager::GetUndefinedShader("GeometryShader"));
 	// MeshMaterial->Colour = _Colour;
 	BindGeometryObject();
 }

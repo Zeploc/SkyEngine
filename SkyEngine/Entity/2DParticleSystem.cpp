@@ -10,6 +10,7 @@
 // This Includes //
 #include "2DParticleSystem.h"
 
+#include "Core/Application.h"
 #include "Render/Materials/Material.h"
 #include "Render/Meshes/Basic/Plane.h"
 #include "Render/Shaders/PBRShader.h"
@@ -185,8 +186,8 @@ void ParticleSystem2D::Update()
 		// Random path from paths
 		int iRandPath = rand() % m_vParticlePaths.size();
 
-		TPointer<CTexture> ParticleTexture = std::make_shared<CTexture>(m_vParticlePaths[iRandPath]);	
-		TPointer<CMaterial_Unlit> ParticleMaterial = std::make_shared<CMaterial_Unlit>();
+		TPointer<CTexture> ParticleTexture = GetGraphicsAPI()->GetTexture(m_vParticlePaths[iRandPath]);	
+		TPointer<CMaterial_Unlit> ParticleMaterial = std::make_shared<CMaterial_Unlit>("ParticleMaterial");
 		ParticleMaterial->Params.DiffuseColour = SVector4(1.0f, 1.0f, 1.0f, 1.0f);
 		ParticleMaterial->Params.DiffuseTexture = ParticleTexture;
 		

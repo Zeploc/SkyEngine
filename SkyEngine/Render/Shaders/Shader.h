@@ -74,6 +74,7 @@ protected:
 #define DefineShaderTextureParam(ParamName, DefaultValue)\
 	TPointer<CTexture> ParamName = DefaultValue;\
 	int32_t ParamName##Location = -1;\
+	int32_t Has##ParamName##Location = -1;\
 	std::string ParamName##Name = #ParamName;
 
 

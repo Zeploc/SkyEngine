@@ -46,8 +46,8 @@ void IGraphicsInstance::Render(TPointer<IGraphicsWindow> GraphicsWindow, std::ve
 		TPointer<CShader> Shader = Material->GetBaseShader();
 		if (ActiveShader != Shader)
 		{
-			Shader->BindShader(shared_from_this());
 			ActiveShader = Shader;
+			Shader->BindShader(shared_from_this());
 		}
 		
 		// Bind material

@@ -20,6 +20,7 @@ bool CPBRShader::CompileShader()
 	}
 	// TODO: Replace with graphics api 
 	Params.DiffuseTextureLocation = glGetUniformLocation(ShaderProgram, Params.DiffuseTextureName.c_str());
+	Params.HasDiffuseTextureLocation = glGetUniformLocation(ShaderProgram, (std::string("bHas") + Params.DiffuseTextureName).c_str());
 	Params.DiffuseColourLocation = glGetUniformLocation(ShaderProgram, Params.DiffuseColourName.c_str());
 	Params.SpecularStrengthLocation = glGetUniformLocation(ShaderProgram, Params.SpecularStrengthName.c_str());
 	Params.ShininessLocation = glGetUniformLocation(ShaderProgram, Params.ShininessName.c_str());
@@ -38,6 +39,8 @@ void CPBRShader::BindShader(const TPointer<IGraphicsInstance>& InGraphicsInterfa
 void CPBRShader::UploadMaterialParameters(const TPointer<IGraphicsInstance>& InGraphicsInstance, const ShaderParameters& InParams)
 {
 	InGraphicsInstance->PassAttributeToShader(Params.DiffuseTextureLocation, InParams.DiffuseTexture);
+	const bool bHasTexture = InParams.DiffuseTexture != nullptr;
+	InGraphicsInstance->PassAttributeToShader(Params.HasDiffuseTextureLocation, bHasTexture);
 	InGraphicsInstance->PassAttributeToShader(Params.DiffuseColourLocation, InParams.DiffuseColour);
 	InGraphicsInstance->PassAttributeToShader(Params.SpecularStrengthLocation, InParams.SpecularStrength);
 	InGraphicsInstance->PassAttributeToShader(Params.ShininessLocation, InParams.Shininess);

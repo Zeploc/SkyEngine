@@ -38,7 +38,7 @@ void AnimatedModel::VertexBoneData::addBoneData(int BoneID, float Weight)
 AnimatedModel::AnimatedModel(const TPointer<Entity>& InOwner, std::string modelFilename, std::string texFilename)
 	: CMeshComponent(InOwner)
 {
-	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>(ShaderManager::GetUndefinedShader("AnimatedModel"));
+	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>("AnimatedModelMaterial", ShaderManager::GetUndefinedShader("AnimatedModel"));
 	// TODO: Set texture attribute
 	// MeshMaterial->SetTexture(texFilename);
 

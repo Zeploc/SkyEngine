@@ -29,10 +29,10 @@ class TMaterial : public CMaterialInterface
 	static_assert(std::is_base_of<CShader, S>::value, "Template S must inherit from Shader");
 	
 public:
-	TMaterial();
+	TMaterial(std::string MaterialName);
 	
 	// TODO: Remove once from file system setup
-	TMaterial(const TPointer<S> InShader);
+	TMaterial(std::string MaterialName, const TPointer<S> InShader);
 
 	// TODO: Make redundant
 	TPointer<S> GetShader() const;
@@ -42,6 +42,8 @@ public:
 	TPointer<CShader> GetBaseShader() override;
 	void BindMaterial(TPointer<IGraphicsInstance> InGraphicsInterface) override;
 	bool HasTexture() override;
+
+	TPointer<S> Shader;
 protected:
 	// CMaterial(std::string ShaderName);
 
@@ -53,7 +55,6 @@ protected:
 	bool bAntiAliasing = true;
 
 protected:
-	TPointer<S> Shader;
 
 };
 
@@ -78,7 +79,8 @@ bool TMaterial<S>::HasTexture()
 }
 
 template <class S>
-TMaterial<S>::TMaterial()
+TMaterial<S>::TMaterial(std::string MaterialName)
+	: CMaterialInterface(MaterialName)
 {
 	Shader = ShaderManager::GetShader<S>();
 }
@@ -93,7 +95,8 @@ TMaterial<S>::TMaterial()
 // }
 
 template <class S>
-TMaterial<S>::TMaterial(const TPointer<S> InShader)
+TMaterial<S>::TMaterial(std::string MaterialName, const TPointer<S> InShader)
+	: CMaterialInterface(MaterialName)
 {
 	Shader = InShader;
 	// MaterialAttributes = Shader->GetShaderAttributes();

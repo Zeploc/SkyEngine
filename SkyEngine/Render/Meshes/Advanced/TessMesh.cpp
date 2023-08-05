@@ -20,7 +20,7 @@ TessMesh::TessMesh(const TPointer<Entity>& InOwner,float fWidth, float fHeight, 
 	m_fWidth = fWidth;
 	m_fHeight = fHeight;
 	IndicesCount = 4;
-	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>(ShaderManager::GetUndefinedShader("TessProgram"));
+	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>("TessMesh", ShaderManager::GetUndefinedShader("TessProgram"));
 	// MeshMaterial->Colour = _Colour;
 	BindTess();
 }

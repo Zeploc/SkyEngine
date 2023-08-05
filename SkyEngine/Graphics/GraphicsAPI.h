@@ -7,7 +7,6 @@
 #include "Core/Core.h"
 
 #include "Math/Vector2.h"
-#include "Render/Texture.h"
 #include "Render/Meshes/MeshData.h"
 
 class IGraphicsInstance;
@@ -15,6 +14,7 @@ class UIElement;
 class Entity;
 class IGraphicsWindow;
 class CShader;
+class CTexture;
 
 enum class EGraphicsAPI
 {
@@ -34,7 +34,7 @@ public:
 	virtual TPointer<IGraphicsInstance> CreateNewInstance() = 0;
 	
 	virtual unsigned int CreateBuffer(const MeshData& MeshData) = 0;
-	virtual TPointer<CTexture> GetTexture(const std::string& TextureSource, bool bAA) = 0;
+	virtual TPointer<CTexture> GetTexture(const std::string& TextureSource, bool bAA = true) = 0;
 	/* Create a new VAO if -1, otherwise will use it  */
 	virtual void BindArray(const std::vector<float>& vertices, const std::vector<uint32_t>& indices, unsigned& vao) = 0;
 	

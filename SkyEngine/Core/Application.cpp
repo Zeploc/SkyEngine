@@ -10,6 +10,7 @@
 //#include <vld.h>
 
 // Engine Includes //
+#include "EngineWindow.h"
 #include "Input/Input.h"
 #include "Scene/SceneManager.h"
 #include "Sound/SoundManager.h"

@@ -28,7 +28,7 @@ Model::Model(const TPointer<Entity>& InOwner, glm::vec4 _Colour, const char* Mod
 	m_fDepth = 0; // fDepth;
 	ModelPath = ModelSource;
 
-	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>();
+	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>("ModelMaterial");
 	// MeshMaterial->Colour = _Colour;
 	BindModel();
 }
