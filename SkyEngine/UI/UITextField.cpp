@@ -6,7 +6,7 @@
 #include "Input/Input.h"
 #include "Render/Shaders/Shader.h"
 #include "Render/Shaders/ShaderManager.h"
-#include "System/Time.h"
+#include "System/TimeManager.h"
 
 // Library Includes //
 
@@ -130,7 +130,7 @@ void UITextField::Update()
 
 	BackImage.Update();
 	FieldText.Update();
-	dSpamDelay += Time::dTimeDelta;
+	dSpamDelay += TimeManager::GetDeltaTime();
 	//if (fSpamDelay > fSpamTime)
 	//	fSpamDelay = 0;
 }

@@ -16,9 +16,8 @@
 #include "Render/Shaders/PBRShader.h"
 #include "Render/Shaders/ShaderManager.h"
 #include "Render/Shaders/UnlitShader.h"
-#include "Scene/Scene.h"
 #include "Scene/SceneManager.h"
-#include "System/Time.h"
+#include "System/TimeManager.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -166,8 +165,8 @@ float ParticleSystem2D::RandomBetweenRange(float _fMin, float _fMax)
 void ParticleSystem2D::Update()
 {
 	// Decrease timer
-	m_fCurrentDelay -= static_cast<float>(Time::dTimeDelta);
-	m_fCurrentLifeTime += static_cast<float>(Time::dTimeDelta);
+	m_fCurrentDelay -= TimeManager::GetDeltaTime();
+	m_fCurrentLifeTime += TimeManager::GetDeltaTime();
 	if (m_fCurrentDelay <= 0 && (m_fLifeTime == 0 || m_fCurrentLifeTime <= m_fLifeTime))
 	{
 		// Generate New Random Time
@@ -204,9 +203,9 @@ void ParticleSystem2D::Update()
 	{
 		for (auto iter = m_vParticles.begin(); iter != m_vParticles.end();)
 		{
-			(*iter).fTimeLength += static_cast<float>(Time::dTimeDelta);
-			(*iter).pEntity->Translate(SVector(0, -m_fGravity * static_cast<float>(Time::dTimeDelta), 0));
-			(*iter).pEntity->Translate(SVector((*iter).v2Direction * (*iter).fSpeed * static_cast<float>(Time::dTimeDelta), 0));
+			(*iter).fTimeLength += TimeManager::GetDeltaTime();
+			(*iter).pEntity->Translate(SVector(0, -m_fGravity * TimeManager::GetDeltaTime(), 0));
+			(*iter).pEntity->Translate(SVector((*iter).v2Direction * (*iter).fSpeed * TimeManager::GetDeltaTime(), 0));
 
 			glm::vec2 v2Distance = Utils::GetDistance2D((*iter).pEntity, this->shared_from_this());
 			if (sqrt(pow(v2Distance.x, 2) + pow(v2Distance.y, 2)) >= (*iter).fFalloffDistance || (*iter).fTimeLength > (*iter).fFallOffTime)
@@ -222,9 +221,9 @@ void ParticleSystem2D::Update()
 	}
 	else if (!m_vParticles.empty())
 	{
-		m_vParticles[0].fTimeLength += static_cast<float>(Time::dTimeDelta);
-		m_vParticles[0].pEntity->Translate(SVector(m_vParticles[0].v2Direction * m_vParticles[0].fSpeed * static_cast<float>(Time::dTimeDelta), 0));
-		m_vParticles[0].pEntity->Translate(SVector(0, -m_fGravity * static_cast<float>(Time::dTimeDelta), 0));
+		m_vParticles[0].fTimeLength += TimeManager::GetDeltaTime();
+		m_vParticles[0].pEntity->Translate(SVector(m_vParticles[0].v2Direction * m_vParticles[0].fSpeed * TimeManager::GetDeltaTime(), 0));
+		m_vParticles[0].pEntity->Translate(SVector(0, -m_fGravity * TimeManager::GetDeltaTime(), 0));
 		glm::vec2 v2Distance = Utils::GetDistance2D(m_vParticles[0].pEntity, this->shared_from_this());
 
 		if (sqrt(pow(v2Distance.x, 2) + pow(v2Distance.y, 2)) >= m_vParticles[0].fFalloffDistance || m_vParticles[0].fTimeLength > m_vParticles[0].fFallOffTime)

@@ -17,7 +17,9 @@ float TimeManager::DeltaTime = 0.0;
 double TimeManager::TickRate = 60.0;
 
 bool TimeManager::bCanTickThisFrame = true;
+
 bool TimeManager::bTickRateEnabled = false;
+double TimeManager::FPS = 0.0f;
 
 void TimeManager::Start()
 {		
@@ -47,6 +49,7 @@ void TimeManager::Update()
 	SystemTime = InternalGetSystemTime();
 	LastSystemTime = SystemTime;
 	DeltaTime = static_cast<float>(DoubleDeltaTime);
+	FPS = 1.0 / DeltaTime;
 	
 	// LogManager::GetInstance()->DisplayLogMessage("delta time " + std::to_string(DeltaTime));
 }

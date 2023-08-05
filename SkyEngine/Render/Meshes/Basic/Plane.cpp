@@ -10,7 +10,7 @@
 #include "Core/Application.h"
 #include "Render/Materials/Material.h"
 #include "Render/Shaders/PBRShader.h"
-#include "System/Time.h"
+#include "System/TimeManager.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -119,7 +119,7 @@ void CPlane::Render(STransform Newtransform)
 	// TODO: move too renderer linking to plane
 	if (m_fFrameCheck > 0)
 	{
-		m_dFPSCounter += Time::dTimeDelta;
+		m_dFPSCounter += TimeManager::GetDeltaTime();
 		if (m_dFPSCounter > m_fFrameCheck)
 		{
 			m_dFPSCounter = 0; // m_dFPSCounter - m_fFrameCheck;
@@ -146,7 +146,7 @@ void CPlane::Update()
 {
 	if (m_fFrameCheck > 0) // Doesn't run, framecheck is 0?
 	{
-		m_dFPSCounter += Time::dTimeDelta;
+		m_dFPSCounter += TimeManager::GetDeltaTime();
 		if (m_dFPSCounter > m_fFrameCheck)
 		{
 			m_dFPSCounter = 0; // m_dFPSCounter - m_fFrameCheck;

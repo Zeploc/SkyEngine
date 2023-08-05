@@ -10,6 +10,7 @@ public:
 	static float GetDeltaTime() { return DeltaTime; }
 	static bool CanTickThisFrame() { return bCanTickThisFrame; }
 	static double GetTickRate() { return TickRate; }
+	static double GetFPS() { return FPS; }
 	static double GetSystemTime() { return SystemTime; }
 	static double GetElapsedEngineTime();
 	
@@ -27,4 +28,6 @@ protected:
 
 	static bool bCanTickThisFrame;
 	static bool bTickRateEnabled;
+	
+	static double FPS;
 };

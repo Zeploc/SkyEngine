@@ -3,10 +3,6 @@
 #include "Application.h"
 
 // Library Includes //
-#include <iostream>
-#include <time.h>
-#include <windows.h>
-#include <Box2D/Box2D.h>
 //#include <vld.h>
 
 // Engine Includes //
@@ -14,7 +10,6 @@
 #include "Input/Input.h"
 #include "Scene/SceneManager.h"
 #include "Sound/SoundManager.h"
-#include "System/Time.h"
 #include "System/LogManager.h"
 #include "Camera/CameraManager.h"
 #include "Graphics/GraphicsInstance.h"
@@ -130,7 +125,6 @@ namespace SkyEngine
 			{
 				SceneManager::GetInstance()->UpdateCurrentScene();
 				CameraManager::GetInstance()->UpdateViewMatrix();
-				Time::Update();
 				SI->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 			}
 		}

@@ -3,7 +3,7 @@
 #include "Particle.h"
 
 // Engine Includes //
-#include "System/Time.h"
+#include "System/TimeManager.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -36,12 +36,12 @@ Particle::~Particle()
 
 void Particle::Update()
 {
-	fElapsedTime += Time::dTimeDelta;
+	fElapsedTime += TimeManager::GetDeltaTime();
 	float Distance = length(position - InitialPosition);
 	if (fElapsedTime > fFallOffTime || Distance > fFalloffDistance)
 	{
 		position = InitialPosition;
 		fElapsedTime = 0.0f;
 	}
-	position += v3Direction * fSpeed * static_cast<float>(Time::dTimeDelta);
+	position += v3Direction * fSpeed * TimeManager::GetDeltaTime();
 }
