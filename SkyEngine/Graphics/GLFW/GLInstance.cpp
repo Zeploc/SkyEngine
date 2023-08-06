@@ -96,6 +96,17 @@ void GLInstance::PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture
 	glBindTexture(GL_TEXTURE_2D, Attribute->TextureID);	
 }
 
+void GLInstance::SetWireframeMode(bool bInWireframeEnabled)
+{
+	glPolygonMode(GL_FRONT_AND_BACK, bInWireframeEnabled ? GL_LINE : GL_FILL);
+}
+
+void GLInstance::SetRenderViewport(const SVector2 InViewportPosition, const SVector2 InViewportSize)
+{
+	// TODO: Safety checks
+	glViewport(InViewportPosition.X, InViewportPosition.Y, InViewportSize.X, InViewportSize.Y);
+}
+
 void GLInstance::BindShader(uint32_t ShaderProgramID)
 {
 	// TODO: Check if overhead and not change if current shader program is active

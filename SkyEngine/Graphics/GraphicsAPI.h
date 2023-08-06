@@ -17,7 +17,8 @@ class CTexture;
 enum class EGraphicsAPI
 {
 	OPENGL,
-	VULKAN
+	VULKAN,
+	DIRECTX
 };
 
 class ENGINE_API IGraphicsAPI

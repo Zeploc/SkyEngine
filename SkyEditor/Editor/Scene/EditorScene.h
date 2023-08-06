@@ -12,7 +12,7 @@ class TransformationWidget;
 class EditorScene : public Scene
 {
 public:
-	EditorScene(std::string sSceneName);
+	EditorScene(const std::string& InSceneName);
 	void AddSampleEntities();
 
 	void UpdateSelectedEntity();

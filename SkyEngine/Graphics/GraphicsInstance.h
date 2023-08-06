@@ -6,6 +6,7 @@
 #include "Math/Matrix.h"
 #include "Math/Vector.h"
 #include "Math/Vector4.h"
+#include "Math/Vector2.h"
 
 class UIElement;
 class Entity;
@@ -30,6 +31,9 @@ public:
 	
 	virtual void PreRender(TPointer<IGraphicsWindow> GraphicsWindow) {}
 	virtual void PostRender(TPointer<IGraphicsWindow> GraphicsWindow) {}
+	
+	virtual void SetWireframeMode(bool bInWireframeEnabled) = 0;
+	virtual void SetRenderViewport(const SVector2 InViewportPosition, const SVector2 InViewportSize) = 0;
 	
 	// template <typename T>
 	// void PassAttributeToShader(int32_t ShaderLocation, T Attribute);

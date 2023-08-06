@@ -18,7 +18,7 @@ class Entity;
 class ENGINE_API Scene : public std::enable_shared_from_this<Scene>
 {
 public:
-	Scene(std::string sSceneName);
+	Scene(const std::string& InSceneName);
 
 	virtual ~Scene();
 

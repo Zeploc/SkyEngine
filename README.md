@@ -60,20 +60,25 @@ A custom project for developing an engine and editor for experience purposes.
 - Collision Bounds
 
 # Next Steps
+- Full pass on input system (allow per window)
+- Component structure
+- Log manager/system pass
+- Play editor level
+- Dynamic link engine (and game for editor) when working on project, static link when building the game as an exe
+- Change light from static to light objects
+- Further Refine Material/shader pipeline
 - Complete Saving/Loading entities from save
 - Move Hit check to mesh instead of entity and account for rotation
 - Fix/Complete translating entities in editor
 - Rotate + Scale entities in editor
 - Change editor movement/look to state based input + Improve "Spectator" controls structure
-- Complete basic Vector/ Rotator and Quat math functions
+- Link up model/fbx
 - Add Transform math functions
 - Link up cubemap
 - Multi Param Delegates
 - Switch input to delegates
-- Pyramid Lighting fix
-- Play editor level
-- Dynamic link engine (and game for editor) when working on project, static link when building the game as an exe
-- Link dependencies PDBs
+- Link dependencies git modules to solution as projects
+- Link remaining dependencies PDBs
 - Update dependencies to recent versions
 - Update VS project to latest
 - Add release binaries (Fix 32?)
@@ -115,6 +120,7 @@ A custom project for developing an engine and editor for experience purposes.
 - Log system
 - Delegates create multiple parameters with templates
 - Create macro to define custom multi param delegates
+- Add timers to timer manager
 ## UI
 - UI Editor - creator for ImGui
 - Widget system -ImGui

@@ -8,7 +8,6 @@
 
 // Engine Includes //
 #include <fstream>
-#include <iostream>
 
 #include <Camera/CameraManager.h>
 #include <Input/Input.h>
@@ -36,7 +35,7 @@
 #include "Render/Shaders/UndefinedShader.h"
 #include "Render/Shaders/ShaderManager.h"
 
-EditorScene::EditorScene(std::string sSceneName) : Scene(sSceneName)
+EditorScene::EditorScene(const std::string& InSceneName) : Scene(InSceneName)
 {
 	TPointer<UIButton> QuitBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 20, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
 	QuitBtn->AddText("Quit", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
@@ -274,14 +273,7 @@ void EditorScene::Update()
 	if (Input::GetInstance()->KeyState[GLFW_KEY_G] == Input::INPUT_FIRST_PRESS)
 	{
 		Wireframe = !Wireframe;
-		if (Wireframe)
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		}
-		else
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		}
+		GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->GetGraphicsInstance()->SetWireframeMode(Wireframe);
 	}
 	if (Input::GetInstance()->KeyState[GLFW_KEY_F] == Input::INPUT_FIRST_PRESS)
 	{
@@ -523,21 +515,21 @@ void EditorScene::SaveAsNew()
 	char szFile[100];
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = NULL;
-	ofn.lpstrFile = szFile;
+	ofn.lpstrFile = LPWSTR(szFile);
 	ofn.lpstrFile[0] = '\0';
 	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter = "Level (*.slvl)\0*.slvl\0Text\0*.TXT\0";
+	ofn.lpstrFilter = LPCWSTR("Level (*.slvl)\0*.slvl\0Text\0*.TXT\0");
 	ofn.nFilterIndex = 1;
-	ofn.lpstrFileTitle = const_cast<LPSTR>("Untitled.slvl");
+	ofn.lpstrFileTitle = LPWSTR("Untitled.slvl");
 	ofn.nMaxFileTitle = 0;
-	ofn.lpstrInitialDir = "Resources/Levels/";
+	ofn.lpstrInitialDir = LPCWSTR("Resources/Levels/");
 	ofn.Flags = OFN_PATHMUSTEXIST;// | OFN_FILEMUSTEXIST;
-	if (!GetSaveFileNameA(&ofn))
+	if (!GetSaveFileNameA(LPOPENFILENAMEA(&ofn)))
 	{
 		// MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);
 		return;
 	}
-	MessageBoxA(NULL, ofn.lpstrFile, "File Name (WIP)", MB_OK);
+	MessageBoxA(NULL, LPCSTR(ofn.lpstrFile), "File Name (WIP)", MB_OK);
 }
 
 void EditorScene::SaveCurrentLevel()

@@ -4,14 +4,10 @@
 #include "EditorWindow.h"
 
 #include "EditorWindowManager.h"
-
-#include <glew/glew.h>
-#include <GLFW/glfw3.h>
 #include <iostream>
 
 #include <Camera/CameraManager.h>
 #include <Input/Input.h>
-#include <Render/Shaders/ShaderManager.h>
 #include <System/Utils.h>
 #include <UI/UIButton.h>
 
@@ -84,7 +80,7 @@ void EditorWindow::RenderWindow()
 	{
 		// Position viewport within existing main window
 		const SVector2 MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
-		glViewport(Position.X, MainWindowSize.Y - Position.Y - Size.Y, Size.X, Size.Y);
+		LinkedWindow->GetGraphicsWindow()->GetGraphicsInstance()->SetRenderViewport({Position.X, MainWindowSize.Y - Position.Y - Size.Y}, {Size.X, Size.Y});
 	}
 
 	CameraManager::GetInstance()->SCR_WIDTH = Size.X;

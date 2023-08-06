@@ -28,7 +28,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Scene::Scene(std::string sSceneName) : SceneName(sSceneName)
+Scene::Scene(const std::string& InSceneName) : SceneName(InSceneName)
 {
 }
 
