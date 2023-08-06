@@ -131,7 +131,7 @@ void CameraManager::SpectatorUpdate()
 
 	if (bSpectatorMovement)
 	{
-		const SVector ForwardMovement = CameraForward * CameraSpeed * TimeManager::GetDeltaTime();
+		const SVector ForwardMovement = CameraForward * CameraSpeed * CTimeManager::GetDeltaTime();
 		if (Input::GetInstance()->KeyState[GLFW_KEY_W] == Input::INPUT_HOLD)
 		{
 			CameraPosition += ForwardMovement;
@@ -141,7 +141,7 @@ void CameraManager::SpectatorUpdate()
 			CameraPosition -= ForwardMovement;
 		}
 
-		const SVector RightMovement = GetCameraRightVector() * CameraSpeed * TimeManager::GetDeltaTime();
+		const SVector RightMovement = GetCameraRightVector() * CameraSpeed * CTimeManager::GetDeltaTime();
 		if (Input::GetInstance()->KeyState[GLFW_KEY_A] == Input::INPUT_HOLD)
 		{
 			CameraPosition -= RightMovement;
@@ -151,7 +151,7 @@ void CameraManager::SpectatorUpdate()
 			CameraPosition += RightMovement;
 		}
 
-		const SVector UpMovement = CameraUp * CameraSpeed * TimeManager::GetDeltaTime();
+		const SVector UpMovement = CameraUp * CameraSpeed * CTimeManager::GetDeltaTime();
 		if (Input::GetInstance()->KeyState[GLFW_KEY_E] == Input::INPUT_HOLD)
 		{
 			CameraPosition += UpMovement;

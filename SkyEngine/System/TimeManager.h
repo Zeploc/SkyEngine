@@ -2,7 +2,7 @@
 
 #pragma once
 
-class TimeManager
+class CTimeManager
 {
 public:
 	static void Start();

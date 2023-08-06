@@ -10,27 +10,27 @@
 using std::chrono::milliseconds;
 using std::chrono::system_clock;
 
-double TimeManager::CurrentFrameTime = 0.0;
+double CTimeManager::CurrentFrameTime = 0.0;
 
-double TimeManager::StartSystemTime = 0.0;
-double TimeManager::LastSystemTime = 0.0;
-double TimeManager::SystemTime = 0.0;
-float TimeManager::DeltaTime = 0.0;
+double CTimeManager::StartSystemTime = 0.0;
+double CTimeManager::LastSystemTime = 0.0;
+double CTimeManager::SystemTime = 0.0;
+float CTimeManager::DeltaTime = 1.0f / 60.0f;
 
-double TimeManager::TickRate = 60.0;
+double CTimeManager::TickRate = 60.0;
 
-bool TimeManager::bCanTickThisFrame = true;
+bool CTimeManager::bCanTickThisFrame = true;
 
-bool TimeManager::bTickRateEnabled = false;
-double TimeManager::FPS = 0.0f;
+bool CTimeManager::bTickRateEnabled = false;
+double CTimeManager::FPS = 0.0f;
 
-void TimeManager::Start()
+void CTimeManager::Start()
 {		
 	srand(unsigned int(time(NULL)));
 	StartSystemTime = InternalGetSystemTime();
 }
 
-void TimeManager::Update()
+void CTimeManager::Update()
 {
 	const double DoubleDeltaTime = InternalGetSystemTime() - LastSystemTime;
 	CurrentFrameTime += DoubleDeltaTime;
@@ -57,12 +57,12 @@ void TimeManager::Update()
 	// LogManager::GetInstance()->DisplayLogMessage("delta time " + std::to_string(DeltaTime));
 }
 
-double TimeManager::GetElapsedEngineTime()
+double CTimeManager::GetElapsedEngineTime()
 {
 	return SystemTime - StartSystemTime;
 }
 
-double TimeManager::InternalGetSystemTime()
+double CTimeManager::InternalGetSystemTime()
 {
 	const auto MillisecondsSinceEpocLong = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 	const double MillisecondsSinceEpoc = static_cast<double>(MillisecondsSinceEpocLong);

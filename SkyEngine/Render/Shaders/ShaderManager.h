@@ -10,7 +10,7 @@
 #include "Shader.h"
 #include "Render/Texture.h"
 // #include "Entity/2DParticleSystem.h"
-#include "UI/Text.h"
+#include "UI/Legacy/Text.h"
 
 // class CShader;
 class ModelObject;

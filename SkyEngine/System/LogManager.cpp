@@ -3,7 +3,7 @@
 #include "SEPCH.h"
 #include "LogManager.h"
 
-#include "UI/UIText.h"
+#include "UI/Legacy/UIText.h"
 
 // Library Includes //
 

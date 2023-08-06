@@ -34,6 +34,7 @@ public:
 	
 	virtual void SetWireframeMode(bool bInWireframeEnabled) = 0;
 	virtual void SetRenderViewport(const SVector2i InViewportPosition, const SVector2i InViewportSize) = 0;
+	virtual void RenderImGui() = 0;
 	
 	// template <typename T>
 	// void PassAttributeToShader(int32_t ShaderLocation, T Attribute);

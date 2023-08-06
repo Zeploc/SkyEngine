@@ -131,7 +131,7 @@ void UITextField::Update()
 
 	BackImage.Update();
 	FieldText.Update();
-	dSpamDelay += TimeManager::GetDeltaTime();
+	dSpamDelay += CTimeManager::GetDeltaTime();
 	//if (fSpamDelay > fSpamTime)
 	//	fSpamDelay = 0;
 }

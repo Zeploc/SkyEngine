@@ -37,12 +37,12 @@ Particle::~Particle()
 
 void Particle::Update()
 {
-	fElapsedTime += TimeManager::GetDeltaTime();
+	fElapsedTime += CTimeManager::GetDeltaTime();
 	float Distance = length(position - InitialPosition);
 	if (fElapsedTime > fFallOffTime || Distance > fFalloffDistance)
 	{
 		position = InitialPosition;
 		fElapsedTime = 0.0f;
 	}
-	position += v3Direction * fSpeed * TimeManager::GetDeltaTime();
+	position += v3Direction * fSpeed * CTimeManager::GetDeltaTime();
 }

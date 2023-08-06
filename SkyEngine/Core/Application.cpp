@@ -14,6 +14,9 @@
 #include "System/LogManager.h"
 #include "Camera/CameraManager.h"
 #include "Graphics/GraphicsInstance.h"
+#include "Layers/Layer.h"
+#include "Layers/LayerStack.h"
+#include "Layers/UILayer.h"
 #include "Math/Vector4.h"
 #include "Platform/Window/GraphicsWindow.h"
 #include "Platform/Windows/WindowsPlatform.h"
@@ -30,6 +33,7 @@ namespace SkyEngine
 	
 	Application::Application()
 	{
+		ensure(!EngineApplication, "Application already exist!");
 		EngineApplication = this;
 		MainWindowSize = SVector2i(1920, 1080);
 		SkyColour = SVector(0.3f, 0.8f, 0.9f);
@@ -65,11 +69,13 @@ namespace SkyEngine
 		// TODO: Move sky colour to scene
 		ApplicationWindow->GetGraphicsWindow()->GetGraphicsInstance()->ClearColour = SkyColour;
 
-		TimeManager::Start();
+		CTimeManager::Start();
 
 		// TODO: Change from singleton to graphics instance
 		CAM->Init(MainWindowSize.X, MainWindowSize.Y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
 		CAM->MainWindow = ApplicationWindow;
+		
+		PushOverlay(new CUILayer());
 		
 		return true;
 	}
@@ -85,7 +91,7 @@ namespace SkyEngine
 				CAM->SCR_HEIGHT = MainWindowSize.Y;
 				CAM->VIEWPORT_X = 0;
 				CAM->VIEWPORT_Y = 0;
-
+				
 				Update();
 				CAM->SCR_WIDTH = MainWindowSize.X;
 				CAM->SCR_HEIGHT = MainWindowSize.Y;
@@ -114,20 +120,26 @@ namespace SkyEngine
 		if (bLoading)
 		{
 			SoundManager::GetInstance()->InitFMod();
-
-			// TODO: Default scene defined elsewhere and loaded
-			
-			// Pointer<Level> LevelScene = Pointer<Level>(new Level("Demo Environment"));			
-			// SceneManager::GetInstance()->AddScene(LevelScene);
+			for (CLayer* Layer : LayerStack)
+			{
+				Layer->OnUpdate();
+			}
 		}
 		else
 		{
-			TimeManager::Update();
-			if (TimeManager::CanTickThisFrame())
+			CTimeManager::Update();
+			if (CTimeManager::CanTickThisFrame())
 			{
 				SceneManager::GetInstance()->UpdateCurrentScene();
-				CameraManager::GetInstance()->UpdateViewMatrix();
-				SI->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
+				CameraManager::GetInstance()->UpdateViewMatrix();				
+
+				// TODO: Once linking events system, would work backwards in layer based on highest first
+				for (CLayer* Layer : LayerStack)
+				{
+					Layer->OnUpdate();
+				}
+				
+				// SI->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 			}
 		}
 	}
@@ -146,6 +158,11 @@ namespace SkyEngine
 		// else
 		{
 			SM->RenderCurrentScene();
+		}
+		
+		for (CLayer* Layer : LayerStack)
+		{
+			Layer->OnRender();
 		}
 		ApplicationWindow->GetGraphicsWindow()->PostRender();		
 	}
@@ -168,19 +185,31 @@ namespace SkyEngine
 		SoundManager::DestoryInstance();
 		Text::Fonts.~vector();
 	}
+
+	void Application::PushLayer(CLayer* InLayer)
+	{
+		LayerStack.PushLayer(InLayer);
+		InLayer->OnAttach();
+	}
+
+	void Application::PushOverlay(CLayer* InLayer)
+	{
+		LayerStack.PushOverlay(InLayer);
+		InLayer->OnAttach();
+	}
 }
 
-SkyEngine::Application* SkyEngine::Application::GetApplication()
+SkyEngine::Application* SkyEngine::Application::Get()
 {
 	return EngineApplication;
 }
 
 SkyEngine::Application* GetApplication()
 {
-	return SkyEngine::Application::GetApplication();
+	return SkyEngine::Application::Get();
 }
 
 TPointer<IGraphicsAPI> GetGraphicsAPI()
 {
-	return SkyEngine::Application::GetApplication()->GraphicsApi;
+	return SkyEngine::Application::Get()->GraphicsApi;
 }

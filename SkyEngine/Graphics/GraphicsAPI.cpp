@@ -3,7 +3,7 @@
 #include "SEPCH.h"
 #include "GraphicsAPI.h"
 
-#include "GLFW/GLAPI.h"
+#include "GL/GLAPI.h"
 #include "System/LogManager.h"
 
 TPointer<IGraphicsAPI> IGraphicsAPI::CreateGraphicsAPI(EGraphicsAPI APIType)

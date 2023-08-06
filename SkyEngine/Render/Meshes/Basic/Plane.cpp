@@ -120,7 +120,7 @@ void CPlane::Render(STransform Newtransform)
 	// TODO: move too renderer linking to plane
 	if (m_fFrameCheck > 0)
 	{
-		m_dFPSCounter += TimeManager::GetDeltaTime();
+		m_dFPSCounter += CTimeManager::GetDeltaTime();
 		if (m_dFPSCounter > m_fFrameCheck)
 		{
 			m_dFPSCounter = 0; // m_dFPSCounter - m_fFrameCheck;
@@ -147,7 +147,7 @@ void CPlane::Update()
 {
 	if (m_fFrameCheck > 0) // Doesn't run, framecheck is 0?
 	{
-		m_dFPSCounter += TimeManager::GetDeltaTime();
+		m_dFPSCounter += CTimeManager::GetDeltaTime();
 		if (m_dFPSCounter > m_fFrameCheck)
 		{
 			m_dFPSCounter = 0; // m_dFPSCounter - m_fFrameCheck;

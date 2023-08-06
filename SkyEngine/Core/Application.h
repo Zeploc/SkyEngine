@@ -5,9 +5,11 @@
 // #include "EngineWindow.h"
 #include "Core/Core.h"
 #include "Graphics/GraphicsAPI.h"
+#include "Layers/LayerStack.h"
 #include "Math/Vector.h"
 #include "Math/Vector2.h"
 
+class CLayer;
 class IPlatformInterface;
 class EngineWindow;
 
@@ -33,6 +35,9 @@ namespace SkyEngine
 		virtual void RenderScene();
 		virtual void ChangeSize(int w, int h);
 		virtual void OnExit();
+
+		void PushLayer(CLayer* InLayer);
+		void PushOverlay(CLayer* InLayer);
 		
 		bool bLoading = true;
 
@@ -45,11 +50,12 @@ namespace SkyEngine
 
 		TPointer<EngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
 		
-		static Application* GetApplication();
-	protected:
+		inline static Application* Get();
+	private:
 		static Application* EngineApplication;
 
 		TPointer<EngineWindow> ApplicationWindow;
+		CLayerStack LayerStack;
 	};
 
 	// To be defined in client

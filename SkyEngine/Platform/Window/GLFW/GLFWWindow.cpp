@@ -22,7 +22,8 @@ GLFWWindow::~GLFWWindow()
 }
 
 GLFWWindow::GLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool bFullScreen) : IGraphicsWindow(InWindowName, InWindowSize, bFullScreen)
-{	
+{
+	// TODO: Only call below once for whole program
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -49,12 +50,12 @@ GLFWWindow::GLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool bF
 		WindowPosition.X = width / 2 - InWindowSize.X / 2;
 		WindowPosition.Y = height / 2 - InWindowSize.Y / 2;
 	}
-	GlWindow = glfwCreateWindow(InWindowSize.X, InWindowSize.Y, InWindowName.c_str(), FullscreenMonitor, nullptr);
-	if (GlWindow == NULL)
+	GlWindow = glfwCreateWindow(InWindowSize.X, InWindowSize.Y, InWindowName.c_str(), FullscreenMonitor, nullptr);			
+	if (!ENSURE_CORE(GlWindow != NULL, "Failed to create GLFW window"))
 	{
-		std::cout << "Failed to create GLFW window" << std::endl;
 		return;// -1;
 	}
+	glfwMakeContextCurrent(GlWindow);
 
 	if (!bFullScreen)
 	{
@@ -91,9 +92,11 @@ void GLFWWindow::PreRender()
 void GLFWWindow::PostRender()
 {
 	IGraphicsWindow::PostRender();
-	glfwSwapBuffers(GlWindow);
 	glfwPollEvents();
+	glfwSwapBuffers(GlWindow);
 }
+
+// TODO: VSync with glfwSwapInterval(1);
 
 void GLFWWindow::FocusWindow() const
 {

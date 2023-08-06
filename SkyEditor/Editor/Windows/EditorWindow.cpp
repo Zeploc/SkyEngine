@@ -9,7 +9,7 @@
 #include <Camera/CameraManager.h>
 #include <Input/Input.h>
 #include <System/Utils.h>
-#include <UI/UIButton.h>
+#include <UI/Legacy/UIButton.h>
 
 #include "Graphics/GraphicsInstance.h"
 #include "Platform/Window/GraphicsWindow.h"

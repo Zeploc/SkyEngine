@@ -1,0 +1,3 @@
+[submodule "SkyEngine/Dependencies/ImGui"]
+	path = SkyEngine/Dependencies/ImGui
+	url = https://github.com/TheCherno/imgui

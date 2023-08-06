@@ -22,7 +22,7 @@ TPointer<EngineWindow> EngineWindow::CreateEngineWindow(const std::string& InWin
 		NewWindow.reset();
 	}
 	// The input function registration
-	Input::GetInstance()->Init(NewWindow);
+	// Input::GetInstance()->Init(NewWindow);
 	return NewWindow;
 }
 

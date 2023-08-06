@@ -8,8 +8,8 @@
 
 // Engine Includes //
 #include "Entity/Entity.h"
-#include "UI/UIElement.h"
-#include "UI/UIText.h"
+#include "UI/Legacy/UIElement.h"
+#include "UI/Legacy/UIText.h"
 
 // Local Includes //
 

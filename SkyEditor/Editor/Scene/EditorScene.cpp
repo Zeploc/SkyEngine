@@ -11,8 +11,8 @@
 
 #include <Camera/CameraManager.h>
 #include <Input/Input.h>
-#include <UI/UIText.h>
-#include <UI/UIButton.h>
+#include <UI/Legacy/UIText.h>
+#include <UI/Legacy/UIButton.h>
 
 #include "TransformationWidget.h"
 #include "Editor/Windows/EditorWindow.h"

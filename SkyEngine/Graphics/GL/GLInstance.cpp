@@ -7,6 +7,8 @@
 #include "GLIncludes.h"
 #include <glm/gtc/type_ptr.inl>
 
+#include "imgui.h"
+#include "imgui_impl_opengl3.h"
 #include "Camera/CameraManager.h"
 #include "Entity/Entity.h"
 #include "Input/CXBOXController.h"
@@ -15,7 +17,7 @@
 #include "Render/Shaders/Shader.h"
 #include "Render/Shaders/ShaderManager.h"
 #include "System/LogManager.h"
-#include "UI/UIElement.h"
+#include "UI/Legacy/UIElement.h"
 
 void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
@@ -105,6 +107,11 @@ void GLInstance::SetRenderViewport(const SVector2i InViewportPosition, const SVe
 {
 	// TODO: Safety checks
 	glViewport(InViewportPosition.X, InViewportPosition.Y, InViewportSize.X, InViewportSize.Y);
+}
+
+void GLInstance::RenderImGui()
+{
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());	
 }
 
 void GLInstance::BindShader(uint32_t ShaderProgramID)

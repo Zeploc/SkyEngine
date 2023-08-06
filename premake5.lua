@@ -12,6 +12,9 @@ outputdir = "%{cfg.buildcfg}-%{cfg.architecture}"
 
 -- Include directors relative to root folder (solution directory)
 IncludeDir = {}
+IncludeDir["ImGui"] = "SkyEngine/Dependencies/ImGui"
+
+include "SkyEngine/Dependencies/ImGui"
 
 project "SkyEngine"
    location "SkyEngine"
@@ -42,6 +45,7 @@ project "SkyEngine"
       "%{prj.name}",
       "%{prj.name}/Dependencies/include",
       "%{prj.name}/Dependencies/include/freetype",
+      "%{IncludeDir.ImGui}"
    }
 
    libdirs
@@ -69,7 +73,8 @@ project "SkyEngine"
       "glew64s.lib",
       "glfw3.lib",
       "glfw3dll.lib",
-      "soil2.lib"
+      "soil2.lib",
+      "ImGui"
    }
 
    filter "system:windows"
