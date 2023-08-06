@@ -2,11 +2,9 @@
 
 #pragma once
 
-#include <vector>
-
 #include "Math/Vector4.h"
 
-class ENGINE_API MeshData
+class MeshData
 {
 public:
 	MeshData(const std::vector<float> &PositionData, const std::vector<uint32_t> &IndexData, const std::vector<float>& NormalData);

@@ -435,7 +435,7 @@ SVector Utils::LinePlaneIntersect(SVector RayStart, SVector RayDirection, SVecto
 	SVector diff = RayStart - PlanePos;
 	double prod1 = diff.Dot(PlaneNormal);
 	double prod2 = RayDirection.Dot(PlaneNormal);
-	float prod3 = prod1 / prod2;
+	float prod3 = float(prod1 / prod2);
 	return RayStart - RayDirection * prod3;
 }
 

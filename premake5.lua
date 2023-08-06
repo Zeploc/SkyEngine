@@ -28,6 +28,7 @@ project "SkyEngine"
    { 
       "%{prj.name}/**.h", 
       "%{prj.name}/**.cpp",
+      "%{prj.name}/**.hpp",
       "README.md" 
    }
    
@@ -78,6 +79,7 @@ project "SkyEngine"
 
       defines
       {
+         "GLEW_STATIC",
          "SE_PLATFORM_WINDOWS",
          "SE_BUILD_DLL"
          -- _DEBUG;

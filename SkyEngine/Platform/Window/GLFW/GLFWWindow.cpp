@@ -21,7 +21,7 @@ GLFWWindow::~GLFWWindow()
 	GlWindow = nullptr;
 }
 
-GLFWWindow::GLFWWindow(std::string InWindowName, SVector2 InWindowSize, bool bFullScreen) : IGraphicsWindow(InWindowName, InWindowSize, bFullScreen)
+GLFWWindow::GLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool bFullScreen) : IGraphicsWindow(InWindowName, InWindowSize, bFullScreen)
 {	
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -33,7 +33,7 @@ GLFWWindow::GLFWWindow(std::string InWindowName, SVector2 InWindowSize, bool bFu
 	glfwSetErrorCallback(glfw_onError);
 	
 	GLFWmonitor* FullscreenMonitor = nullptr;
-	SVector2 WindowPosition;
+	SVector2i WindowPosition;
 	if (bFullScreen)
 	{
 		int* MonitorCount = new int;
@@ -46,8 +46,8 @@ GLFWWindow::GLFWWindow(std::string InWindowName, SVector2 InWindowSize, bool bFu
 		GLFWmonitor** GlfwGetMonitors = glfwGetMonitors(&MonitorCount);
 		int x, y, width, height;
 		glfwGetMonitorWorkarea(GlfwGetMonitors[0], &x, &y, &width, &height);
-		WindowPosition.X = width / 2.0f - InWindowSize.X / 2.0f;
-		WindowPosition.Y = height / 2.0f - InWindowSize.Y / 2.0f;
+		WindowPosition.X = width / 2 - InWindowSize.X / 2;
+		WindowPosition.Y = height / 2 - InWindowSize.Y / 2;
 	}
 	GlWindow = glfwCreateWindow(InWindowSize.X, InWindowSize.Y, InWindowName.c_str(), FullscreenMonitor, nullptr);
 	if (GlWindow == NULL)
@@ -101,7 +101,7 @@ void GLFWWindow::FocusWindow() const
 	
 }
 
-void GLFWWindow::SetCursorPosition(SVector2 InCursorPosition)
+void GLFWWindow::SetCursorPosition(SVector2i InCursorPosition)
 {
 	IGraphicsWindow::SetCursorPosition(InCursorPosition);
 	
@@ -114,25 +114,25 @@ bool GLFWWindow::CloseWindow()
 	return true;
 }
 
-SVector2 GLFWWindow::GetWindowPosition()
+SVector2i GLFWWindow::GetWindowPosition()
 {
 	// TODO: Swap to Vector2i
 	int x, y;
 	glfwGetWindowPos(GlWindow, &x, &y);
-	return {static_cast<float>(x), static_cast<float>(y)};
+	return {x, y};
 }
 
-void GLFWWindow::SetWindowPosition(SVector2 InWindowPosition)
+void GLFWWindow::SetWindowPosition(SVector2i InWindowPosition)
 {
 	glfwSetWindowPos(GlWindow, InWindowPosition.X, InWindowPosition.Y);
 }
 
-SVector2 GLFWWindow::GetWindowSize()
+SVector2i GLFWWindow::GetWindowSize()
 {
 	// TODO: Swap to Vector2i
 	int WindowWidth, WindowHeight;
 	glfwGetWindowSize(GlWindow, &WindowWidth, &WindowHeight);
-	return {static_cast<float>(WindowWidth), static_cast<float>(WindowHeight)};
+	return {WindowWidth, WindowHeight};
 }
 
 void glfw_onError(int error, const char* description)

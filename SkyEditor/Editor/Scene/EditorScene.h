@@ -34,5 +34,5 @@ public:
 	TPointer<TransformationWidget> LocationBox;
 	
 	float CurrentFocusDistance = 7.0f;
-	SVector2 PreviousMousePosition;
+	SVector2i PreviousMousePosition;
 };

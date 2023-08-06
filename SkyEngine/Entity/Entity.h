@@ -18,6 +18,9 @@
 #include "Render/Meshes/Mesh.h"
 #include "System/EnumTypes.h"
 
+// TODO: Warnings with exporting class containing STDL
+#pragma warning (disable : 4251)
+
 class ENGINE_API Entity : public std::enable_shared_from_this<Entity>
 {
 public:
@@ -30,7 +33,7 @@ public:
 	Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, Utils::ESHAPE _eShape, glm::vec4 UVCoords = glm::vec4(0, 1, 0, 1));
 	Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, int iCount, bool bHorizontal);
 	Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, glm::vec2 v2FrameCounts, int _iFPS);*/
-	~Entity();
+	virtual ~Entity();
 
 	void AddMesh(TPointer<CMeshComponent> _NewMesh);
 

@@ -13,7 +13,7 @@ class ENGINE_API IPlatformInterface
 public:
 	virtual ~IPlatformInterface() = default;
 	
-	virtual TPointer<IGraphicsWindow> CreateNewWindow(const std::string& InWindowName, SVector2 InWindowSize, bool bFullScreen) = 0;
+	virtual TPointer<IGraphicsWindow> CreateNewWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bFullScreen) = 0;
 
 	virtual std::string GetPlatformDisplayName() = 0;
 };

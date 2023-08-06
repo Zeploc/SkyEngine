@@ -14,7 +14,7 @@ EngineWindow::~EngineWindow()
 	GraphicsWindow.reset();
 }
 
-TPointer<EngineWindow> EngineWindow::CreateEngineWindow(const std::string& InWindowName, SVector2 InWindowSize, bool bInFullScreen)
+TPointer<EngineWindow> EngineWindow::CreateEngineWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bInFullScreen)
 {
 	TPointer<EngineWindow> NewWindow = std::make_shared<EngineWindow>(InWindowName, InWindowSize, bInFullScreen);
 	if (!NewWindow->GetGraphicsWindow())
@@ -31,19 +31,19 @@ bool EngineWindow::ShouldWindowClose() const
 	return GraphicsWindow->ShouldWindowClose();
 }
 
-SVector2 EngineWindow::GetSize()
+SVector2i EngineWindow::GetSize()
 {
 	WindowSize = GraphicsWindow->GetWindowSize();
 	return WindowSize;
 }
 
-SVector2 EngineWindow::GetPosition()
+SVector2i EngineWindow::GetPosition()
 {
 	WindowPosition = GraphicsWindow->GetWindowPosition();
 	return WindowPosition;
 }
 
-void EngineWindow::SetWindowPosition(SVector2 InPosition)
+void EngineWindow::SetWindowPosition(SVector2i InPosition)
 {
 	WindowPosition = InPosition;
 	GraphicsWindow->SetWindowPosition(WindowPosition);
@@ -54,7 +54,7 @@ void EngineWindow::OnFocusedChanged()
 	OnFocusChanged.Broadcast();
 }
 
-EngineWindow::EngineWindow(const std::string& InWindowName, SVector2 InWindowSize, bool bInFullScreen)
+EngineWindow::EngineWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bInFullScreen)
 {
 	WindowName = InWindowName;
 	WindowSize = InWindowSize;

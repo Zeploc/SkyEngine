@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <format>
+
 #include "Core/Core.h"
 #include <string>
 #include <iostream>
@@ -12,7 +14,7 @@
 struct SRotator;
 
 template <typename T = float>
-struct ENGINE_API TVector2 : glm::tvec2<T, glm::highp>
+struct TVector2 : glm::tvec2<T, glm::highp>
 {	
 	T& X = glm::tvec2<T>::x;
 	T& Y = glm::tvec2<T>::y;
@@ -41,7 +43,7 @@ struct ENGINE_API TVector2 : glm::tvec2<T, glm::highp>
 	}
 	TVector2 & operator=(TVector2 const & v)
 	{
-		glm::vec2::operator=(v);
+		glm::tvec2<T>::operator=(v);
 		return *this;
 	}
 
@@ -101,11 +103,7 @@ struct ENGINE_API TVector2 : glm::tvec2<T, glm::highp>
 	
 	std::string ToString() const
 	{
-		// TODO: Update c++
-		// std::format
-		char Str[1024];
-		sprintf_s(Str,"(%.02f, %.02f)", X, Y);
-		return Str;
+		return std::format("({}, {})", X, Y);
 	}
 
 	void Print() const
@@ -125,6 +123,6 @@ protected:
 	void AddValues(U InX, U InY);
 };
 
-using SVector2 = TVector2<float>;
-using SVector2f = TVector2<float>;
-using SVector2i = TVector2<int>;
+typedef TVector2<float> SVector2;
+typedef TVector2<float> SVector2f;
+typedef TVector2<int> SVector2i;

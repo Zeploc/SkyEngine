@@ -6,6 +6,9 @@
 #include "Rotator.h"
 #include "Vector.h"
 
+// TODO: STDL warnings with exporting class with vector
+#pragma warning (disable : 4251)
+
 struct ENGINE_API STransform
 {
 	SVector Position;

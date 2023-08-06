@@ -89,9 +89,9 @@ void CameraManager::MoveCamera(SVector _Movement)
 	//SetMVP(FTransform());
 }
 
-SVector2 CameraManager::GetScreenCenter() const
+SVector2i CameraManager::GetScreenCenter() const
 {
-	return {static_cast<float>(SCR_WIDTH) * 0.5f, static_cast<float>(SCR_HEIGHT) * 0.5f};
+	return SVector2i(SCR_WIDTH / 2, SCR_HEIGHT / 2);
 }
 
 void CameraManager::EnableSpectatorControls(bool _bSpectatorControls)
@@ -115,8 +115,8 @@ void CameraManager::SpectatorUpdate()
 		return;
 	}
 
-	SVector2 Offset = Input::GetInstance()->MousePos - GetScreenCenter();
-	Offset *= MouseSensitivity;
+	const SVector2i ScreenOffset = Input::GetInstance()->MousePos - GetScreenCenter();
+	const SVector2 Offset = SVector2(ScreenOffset) * MouseSensitivity;
 	CameraForward.Rotate(Offset.X, SVector(0,1,0));
 	CameraForward.Rotate(Offset.Y, GetCameraRightVector());
 	// Needs Clamp
@@ -181,7 +181,7 @@ void CameraManager::SetWindowScale(float _fNewScale)
 	// projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, fMaxViewClipping);
 }
 
-SVector CameraManager::ScreenToWorldDirection(SVector2 InScreenPosition)
+SVector CameraManager::ScreenToWorldDirection(SVector2i InScreenPosition)
 {
 	float x = (2.0f * InScreenPosition.X) / SCR_WIDTH - 1.0f;
 	float y = 1.0f - (2.0f * InScreenPosition.Y) / SCR_HEIGHT;
@@ -198,10 +198,10 @@ SVector CameraManager::ScreenToWorldDirection(SVector2 InScreenPosition)
 	return RayWorld;
 }
 
-SVector CameraManager::ScreenToWorldPosition2D(SVector2 InScreenPosition)
+SVector CameraManager::ScreenToWorldPosition2D(SVector2i InScreenPosition)
 {
-	SVector PlaneNormal = -CameraForward;
-	SVector MouseDirection = ScreenToWorldDirection(InScreenPosition);
+	const SVector PlaneNormal = -CameraForward;
+	const SVector MouseDirection = ScreenToWorldDirection(InScreenPosition);
 	float t = -(CameraPosition.Dot(PlaneNormal) / MouseDirection.Dot(PlaneNormal));
 	t /= abs(CameraPosition.Z);
 	return (MouseDirection * t) + CameraPosition;

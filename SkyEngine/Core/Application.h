@@ -11,6 +11,9 @@
 class IPlatformInterface;
 class EngineWindow;
 
+// TODO: Warnings with exporting class containing STDL
+#pragma warning (disable : 4251)
+
 namespace SkyEngine
 {	
 	// TODO: Namespace? More defined name?
@@ -22,7 +25,8 @@ namespace SkyEngine
 
 		virtual bool ApplicationSetup();
 
-		void Run();
+		// TODO: Add return type for error handling
+		int Run();
 		void Quit();
 
 		virtual void Update();
@@ -32,7 +36,7 @@ namespace SkyEngine
 		
 		bool bLoading = true;
 
-		SVector2 MainWindowSize;
+		SVector2i MainWindowSize;
 		SVector SkyColour;
 
 		TPointer<IGraphicsAPI> GraphicsApi;

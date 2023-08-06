@@ -12,8 +12,6 @@
 #include <map>
 #include <functional>
 
-#define SE_PLATFORM_WINDOWS
-
 #ifdef SE_PLATFORM_WINDOWS
 	#include <Windows.h>
 #else

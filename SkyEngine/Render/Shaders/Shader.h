@@ -9,6 +9,9 @@
 class CMaterialInterface;
 class IGraphicsInstance;
 
+// TODO: STDL warnings with exporting class with vector
+#pragma warning (disable : 4251)
+
 class ENGINE_API CShader 
 {
 	// TODO: static assert for shader params

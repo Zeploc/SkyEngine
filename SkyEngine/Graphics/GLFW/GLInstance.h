@@ -29,5 +29,5 @@ public:
 	void PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute) override;
 	void PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture> Attribute) override;
 	void SetWireframeMode(bool bInWireframeEnabled) override;
-	void SetRenderViewport(const SVector2 InViewportPosition, const SVector2 InViewportSize) override;
+	void SetRenderViewport(const SVector2i InViewportPosition, const SVector2i InViewportSize) override;
 };

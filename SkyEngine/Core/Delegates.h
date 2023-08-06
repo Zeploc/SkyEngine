@@ -6,6 +6,9 @@
 
 #include "Core.h"
 
+// TODO: STDL warnings with exporting class with vector
+#pragma warning (disable : 4251)
+
 class DelegateBase
 {
 public:
@@ -120,7 +123,7 @@ private:
 };
 
 
-ENGINE_API class FMulticastDelegate
+class ENGINE_API FMulticastDelegate
 {
 public:	
 	FMulticastDelegate()
@@ -193,7 +196,6 @@ public:
 
 private:
 	std::list<DelegateBase*> Delegates;
-
 };
 
 

@@ -72,7 +72,7 @@ TPointer<T> ShaderManager::GetShader()
 	// TODO: improve retrieval based on stored method
 	for (auto Element : CurrentShaders)
 	{
-		std::shared_ptr<CShader> Shader = Element.second;
+		TPointer<CShader> Shader = Element.second;
 		if (TPointer<T> CheckedShader = std::dynamic_pointer_cast<T>(Shader))
 		{
 			return CheckedShader;

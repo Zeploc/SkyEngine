@@ -43,7 +43,7 @@ void IGraphicsInstance::Render(TPointer<IGraphicsWindow> GraphicsWindow, std::ve
 	// TODO: Later sort by shader program
 	for (const auto& MaterialMeshSet : MeshesByMaterial)
 	{
-		const std::shared_ptr<CMaterialInterface> Material = MaterialMeshSet.first;
+		const TPointer<CMaterialInterface> Material = MaterialMeshSet.first;
 
 		// Confirm/bind shader
 		TPointer<CShader> Shader = Material->GetBaseShader();

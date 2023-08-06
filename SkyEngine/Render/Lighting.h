@@ -15,6 +15,9 @@
 
 class IGraphicsInstance;
 
+// TODO: STDL warnings with exporting class with vector
+#pragma warning (disable : 4251)
+
 class ENGINE_API Lighting
 {
 public:
@@ -24,14 +27,14 @@ public:
 	static void PassLightingToShader(const TPointer<IGraphicsInstance>& GraphicsInstance);
 
 	// Can't export static member variables directly if class is exported
-	static inline SVector GetLightPosition();
-	static inline SVector GetSunDirection();
-	static inline glm::vec4 GetFogColour();
-	static inline float GetStartFogDistance();
-	static inline float GetEndFogDistance();
-	static inline void SetLightPosition(SVector InLightPosition);
-	static inline void SetSunDirection(SVector InSunDirection);
-	static inline void SetFogColour(glm::vec4 InFogColour);
+	static SVector GetLightPosition();
+	static SVector GetSunDirection();
+	static glm::vec4 GetFogColour();
+	static float GetStartFogDistance();
+	static float GetEndFogDistance();
+	static void SetLightPosition(SVector InLightPosition);
+	static void SetSunDirection(SVector InSunDirection);
+	static void SetFogColour(glm::vec4 InFogColour);
 
 private:
 	static SVector LightPosition;

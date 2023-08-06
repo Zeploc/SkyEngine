@@ -4,11 +4,12 @@
 
 extern SkyEngine::Application* SkyEngine::CreateApplication();
 
-void main(int argc, char** argv)
+int main(int argc, char** argv)
 {
-	auto App = SkyEngine::CreateApplication();
-	App->Run();
+	const auto App = SkyEngine::CreateApplication();
+	int AppExitState = App->Run();
 	delete App;
+	return AppExitState;
 }
 #else
 	#error SkyEngine only supports Windows!

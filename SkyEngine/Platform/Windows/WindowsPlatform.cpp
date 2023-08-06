@@ -18,7 +18,7 @@ std::string WindowsPlatform::GetPlatformDisplayName()
 	return "Windows";
 }
 
-TPointer<IGraphicsWindow> WindowsPlatform::CreateNewWindow(const std::string& InWindowName, SVector2 InWindowSize, bool bFullScreen)
+TPointer<IGraphicsWindow> WindowsPlatform::CreateNewWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bFullScreen)
 {
 	TPointer<GLFWWindow> NewWindow = std::make_shared<GLFWWindow>(InWindowName, InWindowSize, bFullScreen);
 	if (!NewWindow->GetGlWindow())

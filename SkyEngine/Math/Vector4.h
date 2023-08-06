@@ -8,7 +8,7 @@
 #include "Math/MathDefinitions.h"
 
 template <typename T = float>
-struct ENGINE_API TVector4 : glm::tvec4<T, glm::highp>
+struct TVector4 : glm::tvec4<T, glm::highp>
 {	
 	T& X = glm::tvec4<T, glm::highp>::x;
 	T& Y = glm::tvec4<T, glm::highp>::y;
@@ -109,6 +109,6 @@ struct ENGINE_API TVector4 : glm::tvec4<T, glm::highp>
 	// friend std::istream& operator>>(std::istream& is, Vector4x& OutVector);
 };
 
-using SVector4 = TVector4<float>;
-using SVector4f = TVector4<float>;
-using SVector4i = TVector4<int>;
+typedef ENGINE_API TVector4<float> SVector4;
+typedef ENGINE_API TVector4<float> SVector4f;
+typedef ENGINE_API TVector4<int> SVector4i;

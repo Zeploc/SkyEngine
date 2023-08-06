@@ -26,9 +26,9 @@ public:
 
 	std::string GetWindowName() { return WindowName; };
 
-	SVector2 GetPosition();
+	SVector2i GetPosition();
 
-	void SetWindowPosition(SVector2 _position);
+	void SetWindowPosition(SVector2i _position);
 
 	TPointer<EngineWindow> GetParentWindow() { return LinkedWindow; }
 
@@ -46,7 +46,7 @@ public:
 
 	void StopDrag();
 
-	bool IsPointInWindow(SVector2 _point);
+	bool IsPointInWindow(SVector2i _point);
 
 	void SetBackColour(glm::vec3 _Colour);
 
@@ -60,10 +60,10 @@ protected:
 
 	TPointer<UIImage> BackImage;
 
-	SVector2 Size = glm::vec2(100, 100);
-	SVector2 Position = glm::vec2(0, 0);
+	SVector2i Size = glm::vec2(100, 100);
+	SVector2i Position = glm::vec2(0, 0);
 
-	SVector2 DragOffset;
+	SVector2i DragOffset;
 	bool DraggingWindow = false;
 
 	std::vector<TPointer<UIElement>> UIElements;

@@ -123,10 +123,10 @@ void AnimatedModel::BindMesh(std::string fileName)
 
 	startFrame = 31;
 	endFrame = 50;
-	animFps = m_pScene->mAnimations[0]->mChannels[0]->mNumPositionKeys / m_pScene->mAnimations[0]->mDuration;
+	animFps = static_cast<int>(m_pScene->mAnimations[0]->mChannels[0]->mNumPositionKeys) / static_cast<int>(m_pScene->mAnimations[0]->mDuration);
 
-	animStartTime = startFrame / static_cast<float>(animFps);
-	animEndtime = endFrame / static_cast<float>(animFps);
+	animStartTime = (float)startFrame / (float)animFps;
+	animEndtime = (float)endFrame / (float)animFps;
 	animationTime = animStartTime;
 	animSpeed = 0.500f;
 
@@ -175,7 +175,7 @@ bool AnimatedModel::InitFromScene(const aiScene* pScene, const std::string Filen
 	std::vector<glm::vec3> normals;
 	std::vector<glm::vec2> texcoords;
 	std::vector<VertexBoneData> bones;
-	std::vector<GLuint> indices;
+	std::vector<uint32_t> indices;
 
 	GLuint numVertices = 0;
 	GLuint numIndices = 0;
@@ -201,7 +201,7 @@ bool AnimatedModel::InitFromScene(const aiScene* pScene, const std::string Filen
 	indices.reserve(numIndices);
 
 	// initialize the meshes in the scene one by one
-	for (size_t i = 0; i < m_Entries.size(); i++)
+	for (uint32_t i = 0; i < (uint32_t)m_Entries.size(); i++)
 	{
 		const aiMesh* paiMesh = pScene->mMeshes[i];
 		initMesh(i, paiMesh, positions, normals, texcoords, bones, indices);
@@ -364,7 +364,7 @@ void AnimatedModel::initMesh(GLuint meshIndex, const aiMesh* paiMesh, std::vecto
 
 void AnimatedModel::loadBones(int meshIndex, const aiMesh* pMesh, std::vector<VertexBoneData>& bones)
 {
-	for (int i = 0; i < pMesh->mNumBones; i++)
+	for (uint32_t i = 0; i < (uint32_t)pMesh->mNumBones; i++)
 	{
 		int BoneIndex = 0;
 		std::string BoneName(pMesh->mBones[i]->mName.data);
@@ -388,10 +388,10 @@ void AnimatedModel::loadBones(int meshIndex, const aiMesh* pMesh, std::vector<Ve
 
 		//gets the bone index and bone weight of each bone
 		// stored in bones vector
-		for (int j = 0; j < pMesh->mBones[i]->mNumWeights; j++)
+		for (uint32_t j = 0; j < pMesh->mBones[i]->mNumWeights; j++)
 		{
-			int VertexID = m_Entries[meshIndex].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
-			float Weight = pMesh->mBones[i]->mWeights[j].mWeight;
+			const int VertexID = m_Entries[meshIndex].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
+			const float Weight = pMesh->mBones[i]->mWeights[j].mWeight;
 			bones[VertexID].addBoneData(BoneIndex, Weight);
 		}
 	}
@@ -614,9 +614,9 @@ void AnimatedModel::CalcInterpolatedPosition(aiVector3D& out, float AnimationTim
 	out = start + factor * delta;
 }
 
-GLuint AnimatedModel::FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim)
+uint32_t AnimatedModel::FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim)
 {
-	for (size_t i = 0; i < pNodeAnim->mNumPositionKeys - 1; i++)
+	for (uint32_t i = 0; i < (uint32_t)pNodeAnim->mNumPositionKeys - 1; i++)
 	{
 		if (AnimationTime < static_cast<float>(pNodeAnim->mPositionKeys[i + 1].mTime))
 		{
@@ -654,7 +654,7 @@ GLuint AnimatedModel::FindRotation(float AnimationTime, const aiNodeAnim* pNodeA
 	// TODO: Confirm mTime > 0 is correct (Previously checked if keys was more than 0, indicating length more than zero for below)
 	assert(pNodeAnim->mRotationKeys->mTime > 0.0);
 
-	for (size_t i = 0; pNodeAnim->mNumRotationKeys - 1; i++)
+	for (uint32_t i = 0; (uint32_t)pNodeAnim->mNumRotationKeys - 1; i++)
 	{
 		if (AnimationTime < static_cast<float>(pNodeAnim->mRotationKeys[i + 1].mTime))
 		{
@@ -692,7 +692,7 @@ GLuint AnimatedModel::FindScaling(float AnimationTime, const aiNodeAnim* pNodeAn
 {
 	assert(pNodeAnim->mNumScalingKeys > 0);
 
-	for (size_t i = 0; i < pNodeAnim->mNumScalingKeys - 1; i++)
+	for (uint32_t i = 0; i < (uint32_t)pNodeAnim->mNumScalingKeys - 1; i++)
 	{
 		if (AnimationTime < static_cast<float>(pNodeAnim->mScalingKeys[i + 1].mTime))
 		{

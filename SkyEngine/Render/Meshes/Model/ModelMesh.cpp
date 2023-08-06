@@ -51,7 +51,7 @@ void ModelMesh::Render(GLuint program, STransform ModelTransform)
 
 	// Draw mesh
 	glBindVertexArray(this->VAO);
-	glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, (int32_t)this->indices.size(), GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 
 	// Always good practice to set everything back to defaults once configured.

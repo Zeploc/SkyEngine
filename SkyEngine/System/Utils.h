@@ -15,6 +15,9 @@
 // Forward Declarations //
 class Entity;
 
+// TODO: Warnings with exporting class containing STDL
+#pragma warning (disable : 4251)
+
 class ENGINE_API Utils
 {
 public:

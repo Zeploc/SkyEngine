@@ -9,6 +9,9 @@
 #include "Camera/CameraManager.h"
 #include "Math/Vector.h"
 
+// TODO: Warnings with exporting class containing STDL
+#pragma warning (disable : 4251)
+
 class ENGINE_API Input
 {
 public:
@@ -31,7 +34,7 @@ public:
 		MOUSE_RIGHT,
 	};
 
-	SVector2 MousePos;
+	SVector2i MousePos;
 	unsigned int KeyState[350]; //255
 	unsigned int MouseState[3];
 
@@ -39,7 +42,7 @@ public:
 	unsigned int MouseCTRL = INPUT_RELEASED;
 	unsigned int MouseALT = INPUT_RELEASED;
 
-	SVector Axis = {0, 0, 0};
+	TVector3<float> Axis = {0, 0, 0};
 
 	std::vector<class XBOXController*> Players;
 

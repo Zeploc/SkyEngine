@@ -33,7 +33,7 @@ public:
 	virtual void PostRender(TPointer<IGraphicsWindow> GraphicsWindow) {}
 	
 	virtual void SetWireframeMode(bool bInWireframeEnabled) = 0;
-	virtual void SetRenderViewport(const SVector2 InViewportPosition, const SVector2 InViewportSize) = 0;
+	virtual void SetRenderViewport(const SVector2i InViewportPosition, const SVector2i InViewportSize) = 0;
 	
 	// template <typename T>
 	// void PassAttributeToShader(int32_t ShaderLocation, T Attribute);

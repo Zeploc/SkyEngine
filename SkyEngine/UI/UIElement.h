@@ -4,12 +4,11 @@
 
 #include "Core/Core.h"
 
-// Library Includes //
-
 // OpenGL Library Includes //
 #include <glm/common.hpp>
 
-// Engine Includes //
+// TODO: STDL warnings with exporting class with vector
+#pragma warning (disable : 4251)
 
 class ENGINE_API UIElement : public std::enable_shared_from_this<UIElement>
 {

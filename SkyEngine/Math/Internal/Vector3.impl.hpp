@@ -54,7 +54,7 @@ TVector3<T>& TVector3<T>::operator=(TVector3 const& v)
 }
 
 template <typename T>
-template <typename U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
+template <typename U, typename>
 TVector3<T>& TVector3<T>::operator+=(U scalar)
 {
 	AddValues(scalar, scalar, scalar);
@@ -62,7 +62,7 @@ TVector3<T>& TVector3<T>::operator+=(U scalar)
 }
 
 template <typename T>
-template <typename U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
+template <typename U, typename>
 TVector3<T>& TVector3<T>::operator+=(TVector3<U> other)
 {
 	AddValues(other.x, other.y, other.z);
@@ -70,7 +70,7 @@ TVector3<T>& TVector3<T>::operator+=(TVector3<U> other)
 }
 
 template <typename T>
-template <typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+template <typename U, typename>
 TVector3<T>& TVector3<T>::operator+=(glm::tvec3<U> other)
 {
 	AddValues(other.x, other.y, other.z);
@@ -78,7 +78,7 @@ TVector3<T>& TVector3<T>::operator+=(glm::tvec3<U> other)
 }
 
 template <typename T>
-template <typename U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
+template <typename U, typename>
 TVector3<T>& TVector3<T>::operator-=(U scalar)
 {
 	MinusValues(scalar, scalar, scalar);
@@ -86,7 +86,7 @@ TVector3<T>& TVector3<T>::operator-=(U scalar)
 }
 
 template <typename T>
-template <typename U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
+template <typename U, typename>
 TVector3<T>& TVector3<T>::operator-=(TVector3<U> other)
 {
 	MinusValues(other.x, other.y, other.z);
@@ -94,7 +94,7 @@ TVector3<T>& TVector3<T>::operator-=(TVector3<U> other)
 }
 
 template <typename T>
-template <typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+template <typename U, typename>
 TVector3<T>& TVector3<T>::operator-=(glm::tvec3<U> other)
 {
 	MinusValues(other.x, other.y, other.z);

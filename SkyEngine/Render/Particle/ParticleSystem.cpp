@@ -261,7 +261,7 @@ void ParticleSystem::DrawEntity()
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * m_vPosition.size(), &m_vPosition[0], GL_STATIC_DRAW);
 
-	glDrawArrays(GL_POINTS, 0, m_vPosition.size());
+	glDrawArrays(GL_POINTS, 0, (int32_t)m_vPosition.size());
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 

@@ -190,18 +190,18 @@ private:
 	std::vector<MeshEntry> m_Entries;
 	std::vector<TPointer<CTexture>> m_Textures;
 
-	std::map<std::string, GLuint> m_BoneMapping;
+	std::map<std::string, uint32_t> m_BoneMapping;
 	std::map<std::string, aiNodeAnim*> boneHierarchy;
 	std::vector<BoneInfo> m_BoneInfo;
-	GLuint m_NumBones;
+	uint32_t m_NumBones;
 
 	Matrix4 m_GlobalInverseTransform;
-	GLuint m_boneLocation[100];
+	uint32_t m_boneLocation[100];
 
 	const aiScene* m_pScene;
 	Assimp::Importer m_Importer;
 
-	GLuint numMaterialsCounter;
+	uint32_t numMaterialsCounter;
 
 	float animTick;
 

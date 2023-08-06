@@ -8,12 +8,15 @@
 
 class IGraphicsWindow;
 
+// TODO: Warnings with exporting class containing STDL
+#pragma warning (disable : 4251)
+
 class ENGINE_API EngineWindow : public std::enable_shared_from_this<EngineWindow>
 {
 public:
-	EngineWindow(const std::string& InWindowName, SVector2 InWindowSize, bool bInFullScreen);
+	EngineWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bInFullScreen);
 	~EngineWindow();
-	static TPointer<EngineWindow> CreateEngineWindow(const std::string& InWindowName, SVector2 InWindowSize, bool bInFullScreen = false);
+	static TPointer<EngineWindow> CreateEngineWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bInFullScreen = false);
 
 	TPointer<IGraphicsWindow> GetGraphicsWindow() const { return GraphicsWindow; }
 
@@ -21,10 +24,10 @@ public:
 	
 	std::string GetWindowName() { return WindowName; }
 
-	SVector2 GetSize();
+	SVector2i GetSize();
 	
-	SVector2 GetPosition();
-	void SetWindowPosition(SVector2 InPosition);
+	SVector2i GetPosition();
+	void SetWindowPosition(SVector2i InPosition);
 
 	// TODO: Pass in window in delegate
 	FMulticastDelegate OnFocusChanged;
@@ -33,8 +36,8 @@ protected:
 	void OnFocusedChanged();
 	
 	std::string WindowName;
-	SVector2 WindowSize;
-	SVector2 WindowPosition;
+	SVector2i WindowSize;
+	SVector2i WindowPosition;
 	bool bFullscreen = false;
 
 	TPointer<IGraphicsWindow> GraphicsWindow;

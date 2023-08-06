@@ -33,14 +33,17 @@ enum class EProjectionMode
 class EngineWindow;
 struct STransform;
 
+// TODO: Warnings with exporting class containing STDL
+#pragma warning (disable : 4251)
+
 class ENGINE_API CameraManager
 {
 public:
 
-	unsigned int SCR_WIDTH = 800;
-	unsigned int SCR_HEIGHT = 800;
-	unsigned int VIEWPORT_X = 0;
-	unsigned int VIEWPORT_Y = 0;
+	uint32_t SCR_WIDTH = 800;
+	uint32_t SCR_HEIGHT = 800;
+	uint32_t VIEWPORT_X = 0;
+	uint32_t VIEWPORT_Y = 0;
 		
 	Matrix4 View;
 	Matrix4 Projection;
@@ -62,9 +65,9 @@ public:
 
 	float GetWindowScale() { return fWindowScale; }
 
-	SVector ScreenToWorldDirection(SVector2 InScreenPosition);
+	SVector ScreenToWorldDirection(SVector2i InScreenPosition);
 
-	SVector ScreenToWorldPosition2D(SVector2 InScreenPosition);
+	SVector ScreenToWorldPosition2D(SVector2i InScreenPosition);
 		
 	// Getters
 	SVector GetCameraPosition() const { return CameraPosition; }
@@ -78,7 +81,7 @@ public:
 	void SetCameraPos(SVector NewPos);
 
 	void MoveCamera(SVector _Movement);
-	SVector2 GetScreenCenter() const;
+	SVector2i GetScreenCenter() const;
 
 	void EnableSpectatorControls(bool _bSpectatorControls);
 
@@ -98,15 +101,15 @@ private:
 	// FPS CONTROLS
 	bool bUseSpectatorControls = false;
 
-	SVector2 PreviousMousePosition;
+	SVector2i PreviousMousePosition;
 
 	float CameraSpeed = 12.0f;
-	GLfloat Yaw = 0.0f;
-	GLfloat Pitch = 0.0f;
+	float Yaw = 0.0f;
+	float Pitch = 0.0f;
 
-	SVector CameraPosition;
-	SVector CameraForward;
-	SVector CameraUp;
+	TVector3<float> CameraPosition;
+	TVector3<float> CameraForward;
+	TVector3<float> CameraUp;
 
 	EProjectionMode ProjectionMode = EProjectionMode::Perspective;
 

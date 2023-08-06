@@ -74,7 +74,7 @@ bool ssAnimatedModel::loadMesh(std::string fileName)
 
 	startFrame = 31;
 	endFrame = 50;
-	animFps = m_pScene->mAnimations[0]->mChannels[0]->mNumPositionKeys / m_pScene->mAnimations[0]->mDuration;
+	animFps = static_cast<int>(m_pScene->mAnimations[0]->mChannels[0]->mNumPositionKeys) / static_cast<int>(m_pScene->mAnimations[0]->mDuration);
 
 	animStartTime = startFrame / static_cast<float>(animFps);
 	animEndtime = endFrame / static_cast<float>(animFps);
@@ -152,7 +152,7 @@ bool ssAnimatedModel::InitFromScene(const aiScene* pScene, std::string Filename)
 	indices.reserve(numIndices);
 
 	// initialize the meshes in the scene one by one
-	for (size_t i = 0; i < m_Entries.size(); i++)
+	for (uint32_t i = 0; i < (uint32_t)m_Entries.size(); i++)
 	{
 		const aiMesh* paiMesh = pScene->mMeshes[i];
 		initMesh(i, paiMesh, positions, normals, texcoords, bones, indices);
@@ -233,7 +233,7 @@ void ssAnimatedModel::loadBones(int meshIndex,
                                 const aiMesh* pMesh,
                                 std::vector<VertexBoneData>& bones)
 {
-	for (int i = 0; i < pMesh->mNumBones; i++)
+	for (uint32_t i = 0; i < (uint32_t)pMesh->mNumBones; i++)
 	{
 		int BoneIndex = 0;
 		std::string BoneName(pMesh->mBones[i]->mName.data);
@@ -257,10 +257,10 @@ void ssAnimatedModel::loadBones(int meshIndex,
 
 		//gets the bone index and bone weight of each bone
 		// stored in bones vector
-		for (int j = 0; j < pMesh->mBones[i]->mNumWeights; j++)
+		for (uint32_t j = 0; j < (uint32_t)pMesh->mBones[i]->mNumWeights; j++)
 		{
-			int VertexID = m_Entries[meshIndex].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
-			float Weight = pMesh->mBones[i]->mWeights[j].mWeight;
+			const int VertexID = m_Entries[meshIndex].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
+			const float Weight = pMesh->mBones[i]->mWeights[j].mWeight;
 			bones[VertexID].addBoneData(BoneIndex, Weight);
 		}
 	}
@@ -590,7 +590,7 @@ void ssAnimatedModel::CalcInterpolatedPosition(aiVector3D& out, float AnimationT
 
 GLuint ssAnimatedModel::FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim)
 {
-	for (size_t i = 0; i < pNodeAnim->mNumPositionKeys - 1; i++)
+	for (uint32_t i = 0; i < (uint32_t)pNodeAnim->mNumPositionKeys - 1; i++)
 	{
 		if (AnimationTime < static_cast<float>(pNodeAnim->mPositionKeys[i + 1].mTime))
 		{
@@ -628,7 +628,7 @@ GLuint ssAnimatedModel::FindRotation(float AnimationTime, const aiNodeAnim* pNod
 	// TODO: Confirm mTime > 0 is correct (Previously checked if keys was more than 0, indicating length more than zero for below)
 	// assert(pNodeAnim->mRotationKeys->mTime > 0.0);
 
-	for (size_t i = 0; pNodeAnim->mNumRotationKeys - 1; i++)
+	for (uint32_t i = 0; (uint32_t)pNodeAnim->mNumRotationKeys - 1; i++)
 	{
 		if (AnimationTime < static_cast<float>(pNodeAnim->mRotationKeys[i + 1].mTime))
 		{
@@ -666,7 +666,7 @@ GLuint ssAnimatedModel::FindScaling(float AnimationTime, const aiNodeAnim* pNode
 {
 	assert(pNodeAnim->mNumScalingKeys > 0);
 
-	for (size_t i = 0; i < pNodeAnim->mNumScalingKeys - 1; i++)
+	for (uint32_t i = 0; i < (uint32_t)pNodeAnim->mNumScalingKeys - 1; i++)
 	{
 		if (AnimationTime < static_cast<float>(pNodeAnim->mScalingKeys[i + 1].mTime))
 		{

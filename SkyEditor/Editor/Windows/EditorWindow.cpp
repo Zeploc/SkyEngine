@@ -79,7 +79,7 @@ void EditorWindow::RenderWindow()
 	else
 	{
 		// Position viewport within existing main window
-		const SVector2 MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
+		const SVector2i MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
 		LinkedWindow->GetGraphicsWindow()->GetGraphicsInstance()->SetRenderViewport({Position.X, MainWindowSize.Y - Position.Y - Size.Y}, {Size.X, Size.Y});
 	}
 
@@ -108,7 +108,7 @@ void EditorWindow::PopOut()
 		return;
 	}
 
-	const SVector2 MainWindowPosition = EditorWindowManager::GetMainWindow()->GetPosition();
+	const SVector2i MainWindowPosition = EditorWindowManager::GetMainWindow()->GetPosition();
 	Position.Y += 30;
 	LinkedWindow->SetWindowPosition(MainWindowPosition + Position);	
 
@@ -153,7 +153,7 @@ void EditorWindow::PopIn()
 	LinkedWindow.reset();
 	LinkedWindow = EditorWindowManager::GetMainWindow();
 
-	const SVector2 MainWindowPosition = LinkedWindow->GetPosition();
+	const SVector2i MainWindowPosition = LinkedWindow->GetPosition();
 	Position -= MainWindowPosition;
 	Position.Y -= 30;
 
@@ -171,21 +171,21 @@ void EditorWindow::StopDrag()
 {
 	if (DraggingWindow)
 	{
-		SVector2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
+		SVector2i NewPosition = Input::GetInstance()->MousePos - DragOffset;
 		SetWindowPosition(NewPosition);
 
 		DraggingWindow = false;
 	}
 }
 
-bool EditorWindow::IsPointInWindow(SVector2 _point)
+bool EditorWindow::IsPointInWindow(SVector2i _point)
 {
 	if (_point.X < Position.X || _point.Y < Position.Y)
 	{
 		return false;
 	}
 
-	SVector2 EndPos = Position + Size;
+	const SVector2i EndPos = Position + Size;
 
 	if (_point.X > EndPos.X || _point.Y > EndPos.Y)
 	{
@@ -207,8 +207,8 @@ void EditorWindow::UpdateWindow()
 {
 	if (LinkedWindow != EditorWindowManager::GetMainWindow()) //seperate window
 	{		
-		const SVector2 MainWindowPosition = EditorWindowManager::GetMainWindow()->GetPosition();
-		const SVector2 MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
+		const SVector2i MainWindowPosition = EditorWindowManager::GetMainWindow()->GetPosition();
+		const SVector2i MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
 		
 		// Update position
 		GetPosition();
@@ -234,7 +234,7 @@ void EditorWindow::UpdateWindow()
 
 	if (DraggingWindow)
 	{
-		SVector2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
+		SVector2i NewPosition = Input::GetInstance()->MousePos - DragOffset;
 		SetWindowPosition(NewPosition);
 	}
 
@@ -275,7 +275,7 @@ void EditorWindow::UpdateWindow()
 	//Input::GetInstance()->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 }
 
-SVector2 EditorWindow::GetPosition()
+SVector2i EditorWindow::GetPosition()
 {
 	if (LinkedWindow != EditorWindowManager::GetMainWindow())
 	{
@@ -284,7 +284,7 @@ SVector2 EditorWindow::GetPosition()
 	return Position;
 }
 
-void EditorWindow::SetWindowPosition(SVector2 _position)
+void EditorWindow::SetWindowPosition(SVector2i _position)
 {
 	if (LinkedWindow != EditorWindowManager::GetMainWindow())
 	{
@@ -297,7 +297,7 @@ void EditorWindow::MainWindowSizeChanged(int _w, int _h)
 {
 	if (LinkedWindow != EditorWindowManager::GetMainWindow()) //seperate window
 	{
-		Size = glm::vec2(_w, _h);
+		Size = glm::tvec2<int>(_w, _h);
 	}
 	//glutSetWindow(WindowID);
 

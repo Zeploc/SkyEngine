@@ -117,8 +117,8 @@ void CubeMap::BindCubeMap()
 	
 	IndicesCount = 36;
 	
-	GLuint vbo;
-	GLuint ebo;
+	GLuint vbo = 0;
+	GLuint ebo = 0;
 
 	// TODO: Link textures properly
 	// glGenTextures(1, &MeshMaterial->GetTextureData().TextureID);

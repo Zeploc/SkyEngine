@@ -4,8 +4,6 @@
 
 #include <memory>
 
-#define SE_PLATFORM_WINDOWS
-#define SE_BUILD_DLL
 // #define NDEBUG
 
 // If define fails on compile?

@@ -10,7 +10,7 @@ class GLFWWindow : public IGraphicsWindow
 {
 public:
 	~GLFWWindow() override;
-	GLFWWindow(std::string InWindowName, SVector2 InWindowSize, bool bFullScreen);
+	GLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool bFullScreen);
 	void CreateGraphicsInstance() override;
 	
 	void SetWindowFullScreen(bool bFullScreen) override;
@@ -24,15 +24,15 @@ public:
 
 	void FocusWindow() const override;
 
-	void SetCursorPosition(SVector2 InCursorPosition) override;
+	void SetCursorPosition(SVector2i InCursorPosition) override;
 
 	bool CloseWindow() override;
 
-	SVector2 GetWindowPosition() override;
+	SVector2i GetWindowPosition() override;
 
-	void SetWindowPosition(SVector2 InWindowPosition) override;
+	void SetWindowPosition(SVector2i InWindowPosition) override;
 
-	SVector2 GetWindowSize() override;
+	SVector2i GetWindowSize() override;
 
 
 protected:

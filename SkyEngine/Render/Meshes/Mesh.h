@@ -14,6 +14,9 @@
 
 #include "MeshData.h"
 
+// TODO: Warnings with exporting class containing STDL
+#pragma warning (disable : 4251)
+
 class Entity;
 class CShader;
 class CCollisionBounds;
@@ -47,7 +50,7 @@ public:
 	TPointer<CCollisionBounds> GetCollisionBounds()
 	{
 		return MeshCollisionBounds;
-	};
+	}
 
 	TPointer<CMaterialInterface> MeshMaterial;
 	float m_fWidth;

@@ -3,20 +3,17 @@
 #pragma once
 
 #include "Core/Core.h"
-#include <string>
-#include <iostream>
 #include <glm/detail/type_vec3.hpp>
 #include <glm/detail/type_vec2.hpp>
 
-// #include "Math/MathDefinitions.h"
+// TODO: Can the precompiled header be used here? Will that get included in every header that includes vector?
+#include <string>
+#include <iostream>
 
 struct SRotator;
 
-// template <typename T>
-// struct Vector3x;
-
 template <typename T>
-struct ENGINE_API TVector3 : glm::tvec3<T, glm::precision::highp>
+struct TVector3 : glm::tvec3<T, glm::precision::highp>
 {	
 	T& X = glm::tvec3<T>::x;
 	T& Y = glm::tvec3<T>::y;
@@ -136,7 +133,7 @@ protected:
 	void AddValues(U InX, U InY, U InZ);
 };
 
-using SVector = TVector3<float>;
-using SVector3 = TVector3<float>;
-using SVector3i = TVector3<int>;
+typedef ENGINE_API TVector3<float> SVector;
+typedef ENGINE_API TVector3<float> SVector3;
+typedef ENGINE_API TVector3<int> SVector3i;
 

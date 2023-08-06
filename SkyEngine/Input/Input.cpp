@@ -170,7 +170,7 @@ void Input::processSpecialKeys(int key, int x, int y)
 ************************************************************/
 void Input::MouseInput(int x, int y)
 {
-	MousePos = glm::vec2(x, y);
+	MousePos = glm::tvec2(x, y);
 }
 
 /************************************************************
@@ -417,7 +417,7 @@ void Input::LprocessSpecialKeys(int key, int x, int y)
 ************************************************************/
 void Input::LMouseInput(GLFWwindow* window, double x, double y)
 {
-	GetInstance()->MouseInput(x, y);
+	GetInstance()->MouseInput((int)x, (int)y);
 }
 
 /************************************************************

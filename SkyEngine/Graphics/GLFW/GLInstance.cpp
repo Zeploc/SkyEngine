@@ -45,7 +45,7 @@ void GLInstance::PreRender(TPointer<IGraphicsWindow> GraphicsWindow)
 {
 	glClearColor(ClearColour.R, ClearColour.G, ClearColour.B, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	const SVector2 WindowSize = GraphicsWindow->GetWindowSize();
+	const SVector2i WindowSize = GraphicsWindow->GetWindowSize();
 	// TODO: Option to expoose/override viewport position
 	// Fill whole window with viewport by default
 	glViewport(0, 0, WindowSize.X, WindowSize.Y);
@@ -101,7 +101,7 @@ void GLInstance::SetWireframeMode(bool bInWireframeEnabled)
 	glPolygonMode(GL_FRONT_AND_BACK, bInWireframeEnabled ? GL_LINE : GL_FILL);
 }
 
-void GLInstance::SetRenderViewport(const SVector2 InViewportPosition, const SVector2 InViewportSize)
+void GLInstance::SetRenderViewport(const SVector2i InViewportPosition, const SVector2i InViewportSize)
 {
 	// TODO: Safety checks
 	glViewport(InViewportPosition.X, InViewportPosition.Y, InViewportSize.X, InViewportSize.Y);

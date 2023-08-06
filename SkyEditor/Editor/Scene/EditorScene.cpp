@@ -128,7 +128,7 @@ void EditorScene::AddSampleEntities()
 			
 	TPointer<Entity> FloorEntity(new Entity({{0, 0, 0}, {-90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
 	//glm::vec3 Points[4] = { {-10, 10, 1}, {10, 10, -1 }, { 10, -10, 0 }, { -10, -10, -3 } };
-	TPointer<CPlane> FloorPlanMesh = std::make_shared<CPlane>(FloorEntity, 50, 50, PlaneMaterial);
+	const TPointer<CPlane> FloorPlanMesh = std::make_shared<CPlane>(FloorEntity, 50.0f, 50.0f, PlaneMaterial);
 	FloorEntity->AddMesh(FloorPlanMesh);
 	AddEntity(FloorEntity, true);
 	
@@ -176,8 +176,8 @@ void EditorScene::AddSampleEntities()
 	SphereEntity->AddMesh(SphereMesh);
 	AddEntity(SphereEntity, true);
 	
-	TPointer<Entity> PlaneEntity(new Entity(STransform{{10.0f, 4.0f, 16.0f}, {-90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
-	TPointer<CPlane> PlaneMesh(new CPlane(PlaneEntity, 2.0f, 2.0f, ColouredBrickPlaneMaterial));
+	TPointer<Entity> PlaneEntity = std::make_shared<Entity>(STransform{{10.0f, 4.0f, 16.0f}, {-90, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER);
+	TPointer<CPlane> PlaneMesh = std::make_shared<CPlane>(PlaneEntity, 2.0f, 2.0f, ColouredBrickPlaneMaterial);
 	PlaneEntity->AddMesh(PlaneMesh);
 	AddEntity(PlaneEntity, true);
 }
@@ -239,10 +239,10 @@ void EditorScene::Update()
 	CameraManager* CameraInstance = CameraManager::GetInstance();
 
 	// TODO: Change from moving back to center to instead get offset (loop mouse when edge of screen?
-	SVector2 CenterScreen(static_cast<double>(CameraInstance->SCR_WIDTH) * 0.5, static_cast<double>(CameraInstance->SCR_HEIGHT) * 0.5);	
+	SVector2i CenterScreen(CameraInstance->SCR_WIDTH / 2, CameraInstance->SCR_HEIGHT / 2);
 	
-	SVector2 Offset = Input::GetInstance()->MousePos - CenterScreen;
-	Offset *= CameraInstance->MouseSensitivity;
+	SVector2i ScreenOffset = Input::GetInstance()->MousePos - CenterScreen;
+	SVector2 Offset = SVector2(ScreenOffset) * CameraInstance->MouseSensitivity;
 	
 	const bool bAltDown = Input::GetInstance()->MouseALT == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseALT == Input::INPUT_HOLD;
 	const bool bShiftDown = Input::GetInstance()->MouseSHIFT == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseSHIFT == Input::INPUT_HOLD;
@@ -268,7 +268,6 @@ void EditorScene::Update()
 		Input::GetInstance()->SetCursorVisible(true);
 		CameraInstance->EnableSpectatorControls(false);
 		GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->SetCursorPosition(PreviousMousePosition);
-		// glfwSetCursorPos(CameraInstance->MainWindow, PreviousMousePosition.X, PreviousMousePosition.Y);
 	}
 	if (Input::GetInstance()->KeyState[GLFW_KEY_G] == Input::INPUT_FIRST_PRESS)
 	{

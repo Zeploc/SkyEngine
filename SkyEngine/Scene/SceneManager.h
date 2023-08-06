@@ -4,9 +4,10 @@
 
 #include "Core/Core.h"
 
-// Library Includes //
-
 class Scene;
+
+// TODO: STDL warnings with exporting class with vector
+#pragma warning (disable : 4251)
 
 class ENGINE_API SceneManager
 {

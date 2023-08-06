@@ -5,6 +5,9 @@
 
 class Entity;
 
+// TODO: STDL warnings with exporting class with vector
+#pragma warning (disable : 4251)
+
 class ENGINE_API CComponent
 {
 public:

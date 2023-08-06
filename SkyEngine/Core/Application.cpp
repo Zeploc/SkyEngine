@@ -31,7 +31,7 @@ namespace SkyEngine
 	Application::Application()
 	{
 		EngineApplication = this;
-		MainWindowSize = SVector2(1920, 1080);
+		MainWindowSize = SVector2i(1920, 1080);
 		SkyColour = SVector(0.3f, 0.8f, 0.9f);
 		GraphicsApiType = EGraphicsAPI::OPENGL;
 	}
@@ -74,7 +74,7 @@ namespace SkyEngine
 		return true;
 	}
 
-	void Application::Run()
+	int Application::Run()
 	{
 		if (ApplicationSetup())
 		{
@@ -101,6 +101,7 @@ namespace SkyEngine
 		}
 		
 		OnExit();
+		return 0;
 	}
 
 	void Application::Quit()
