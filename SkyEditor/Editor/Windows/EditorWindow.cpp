@@ -83,11 +83,6 @@ void EditorWindow::RenderWindow()
 		LinkedWindow->GetGraphicsWindow()->GetGraphicsInstance()->SetRenderViewport({Position.X, MainWindowSize.Y - Position.Y - Size.Y}, {Size.X, Size.Y});
 	}
 
-	CameraManager::GetInstance()->SCR_WIDTH = Size.X;
-	CameraManager::GetInstance()->SCR_HEIGHT = Size.Y;
-	CameraManager::GetInstance()->VIEWPORT_X = Position.X;
-	CameraManager::GetInstance()->VIEWPORT_Y = Position.Y;
-
 	LinkedWindow->GetGraphicsWindow()->Render({}, UIElements);
 	
 	if (LinkedWindow != EditorWindowManager::GetMainWindow()) // Separate window
@@ -226,11 +221,6 @@ void EditorWindow::UpdateWindow()
 	}
 
 	LinkedWindow->GetGraphicsWindow()->FocusWindow();
-
-	CameraManager::GetInstance()->SCR_WIDTH = Size.X;
-	CameraManager::GetInstance()->SCR_HEIGHT = Size.Y;
-	CameraManager::GetInstance()->VIEWPORT_X = Position.X;
-	CameraManager::GetInstance()->VIEWPORT_Y = Position.Y;
 
 	if (DraggingWindow)
 	{

@@ -37,31 +37,34 @@
 
 EditorScene::EditorScene(const std::string& InSceneName) : Scene(InSceneName)
 {
-	TPointer<UIButton> QuitBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 20, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
+	const TPointer<EngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
+	const SVector2i WindowSize = ApplicationWindow->GetSize();
+
+	TPointer<UIButton> QuitBtn(new UIButton(glm::vec2(WindowSize.X - 20, WindowSize.Y - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
 	QuitBtn->AddText("Quit", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
 	// TODO: Let delegate allow derived class type when passing in "this"? - Auto cast check inside? Template type for derived types allowed?
 	QuitBtn->BindPress(GetApplication(), &SkyEngine::Application::Quit);
 	AddUIElement(QuitBtn);
 	
-	TPointer<UIButton> SaveBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 150, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
+	TPointer<UIButton> SaveBtn(new UIButton(glm::vec2(WindowSize.X - 150, WindowSize.Y - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
 	SaveBtn->AddText("Save", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
 	SaveBtn->BindPress(this, &EditorScene::SaveCurrentLevel);
 	AddUIElement(SaveBtn);
 	
-	TPointer<UIButton> SaveAsNewBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 280, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
+	TPointer<UIButton> SaveAsNewBtn(new UIButton(glm::vec2(WindowSize.X - 280, WindowSize.Y - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
 	SaveAsNewBtn->AddText("Save As", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
 	SaveAsNewBtn->BindPress(this, &EditorScene::SaveAsNew);
 	AddUIElement(SaveAsNewBtn);
 
-	TPointer<UIButton> OpenBtn(new UIButton(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 410, CameraManager::GetInstance()->SCR_HEIGHT - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
+	TPointer<UIButton> OpenBtn(new UIButton(glm::vec2(WindowSize.X - 410, WindowSize.Y - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
 	OpenBtn->AddText("Open", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
 	OpenBtn->BindPress(this, &EditorScene::OpenFile);
 	AddUIElement(OpenBtn);
 
-	LevelNameText = std::make_shared<UIText>(glm::vec2(CameraManager::GetInstance()->SCR_WIDTH - 540, CameraManager::GetInstance()->SCR_HEIGHT - 15.0f), 0.0f, glm::vec4(0.3, 0.3, 0.3, 1.0f), "Level Name", "Resources/Fonts/Roboto-Regular.ttf", 20, EANCHOR::BOTTOM_RIGHT);
+	LevelNameText = std::make_shared<UIText>(glm::vec2(WindowSize.X - 540, WindowSize.Y - 15.0f), 0.0f, glm::vec4(0.3, 0.3, 0.3, 1.0f), "Level Name", "Resources/Fonts/Roboto-Regular.ttf", 20, EANCHOR::BOTTOM_RIGHT);
 	AddUIElement(LevelNameText);
 
-	TPointer<UIText> TipText(new UIText({CameraManager::GetInstance()->SCR_WIDTH - 20, 15.0f}, 0, {0.3, 0.3, 0.3, 1.0f}, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 22, EANCHOR::TOP_RIGHT));
+	TPointer<UIText> TipText(new UIText({WindowSize.X - 20, 15.0f}, 0, {0.3, 0.3, 0.3, 1.0f}, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 22, EANCHOR::TOP_RIGHT));
 	AddUIElement(TipText);
 
 	Lighting::SetLightPosition({5, 5, 5});
@@ -70,12 +73,10 @@ EditorScene::EditorScene(const std::string& InSceneName) : Scene(InSceneName)
 	CameraManager::GetInstance()->SetCameraPos({-10, 10, 0});
 	CameraManager::GetInstance()->SetCameraForwardVector({0, -0.5, 1.0f});
 
-	const TPointer<EngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
-
 	EditorWindow* NewWindow = new EditorWindow("Outliner", ApplicationWindow, glm::vec2(300, 400), glm::vec2(0, 0));
 	NewWindow->SetBackColour(glm::vec3(0.2, 0.6, 0.8));
 		
-	EditorWindow* ContentWindow = new EditorWindow("Content", ApplicationWindow, glm::vec2(600, 150), glm::vec2(0, CameraManager::GetInstance()->SCR_HEIGHT - 150));
+	EditorWindow* ContentWindow = new EditorWindow("Content", ApplicationWindow, glm::vec2(600, 150), glm::vec2(0, WindowSize.Y - 150));
 	ContentWindow->SetBackColour(glm::vec3(0.4, 0.4, 0.4));
 
 	//EditorWindow* ExternalWindow = new EditorWindow("External Test", nullptr, glm::vec2(500, 300), glm::vec2(100, 100));
@@ -238,11 +239,9 @@ void EditorScene::Update()
 	LevelNameText->sText = SceneName;
 	CameraManager* CameraInstance = CameraManager::GetInstance();
 
-	// TODO: Change from moving back to center to instead get offset (loop mouse when edge of screen?
-	SVector2i CenterScreen(CameraInstance->SCR_WIDTH / 2, CameraInstance->SCR_HEIGHT / 2);
-	
-	SVector2i ScreenOffset = Input::GetInstance()->MousePos - CenterScreen;
-	SVector2 Offset = SVector2(ScreenOffset) * CameraInstance->MouseSensitivity;
+	SVector2i ScreenCenter = CameraInstance->GetScreenCenter();
+	const SVector2i ScreenOffset = Input::GetInstance()->MousePos - ScreenCenter;
+	const SVector2 Offset = SVector2(ScreenOffset) * CameraInstance->MouseSensitivity;
 	
 	const bool bAltDown = Input::GetInstance()->MouseALT == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseALT == Input::INPUT_HOLD;
 	const bool bShiftDown = Input::GetInstance()->MouseSHIFT == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseSHIFT == Input::INPUT_HOLD;
@@ -300,7 +299,7 @@ void EditorScene::Update()
 				NewCameraForwardVector.Rotate(Offset.Y, CameraInstance->GetCameraRightVector());
 				CameraInstance->SetCameraForwardVector(NewCameraForwardVector);
 			}
-			CameraInstance->MainWindow->GetGraphicsWindow()->SetCursorPosition(CenterScreen);
+			GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->SetCursorPosition(ScreenCenter);
 		}
 		else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_HOLD)
 		{
@@ -313,7 +312,7 @@ void EditorScene::Update()
 			{
 				CurrentFocusDistance += Offset.Y * .3f;
 			}
-			CameraInstance->MainWindow->GetGraphicsWindow()->SetCursorPosition(CenterScreen);
+			GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->SetCursorPosition(ScreenCenter);
 		}
 		else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_RELEASE)
 		{
@@ -345,7 +344,7 @@ void EditorScene::Update()
 				NewCameraPosition += -CameraInstance->GetCameraUpVector() * Offset.Y * CameraInstance->MouseSensitivity;
 				CameraInstance->SetCameraPos(NewCameraPosition);
 			}
-			CameraInstance->MainWindow->GetGraphicsWindow()->SetCursorPosition(CenterScreen);
+			GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->SetCursorPosition(ScreenCenter);
 		}
 		else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_RELEASE)
 		{

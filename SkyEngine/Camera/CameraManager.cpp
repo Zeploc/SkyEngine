@@ -185,7 +185,6 @@ SVector CameraManager::ScreenToWorldDirection(SVector2i InScreenPosition)
 {
 	float x = (2.0f * (float)InScreenPosition.X) / (float)ViewportWindow->GetSize().X - 1.0f;
 	float y = 1.0f - (2.0f * (float)InScreenPosition.Y) / (float)ViewportWindow->GetSize().Y;
-	LogManager::GetInstance()->DisplayLogMessage(std::format("x: {}, y: {}", x, y));
 	const SVector2 RayNds = {x, y};
 
 	const SVector4 RayClip = SVector4(RayNds.X, RayNds.Y, -1.0f, 1.0f);
