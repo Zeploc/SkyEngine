@@ -141,7 +141,7 @@ void UIButton::Update()
 		return;
 	}
 	glm::vec2 MousePosViewport = Input::GetInstance()->MousePos;
-	glm::vec2 ViewportOffset = glm::vec2(CameraManager::GetInstance()->VIEWPORT_X, CameraManager::GetInstance()->VIEWPORT_Y);
+	glm::vec2 ViewportOffset;// = glm::vec2(CameraManager::GetInstance()->VIEWPORT_X, CameraManager::GetInstance()->VIEWPORT_Y);
 	//MousePosViewport += ViewportOffset;
 	glm::vec2 TopLeft = glm::vec2(position.x - ImageComponent.GetWidth() / 2, position.y - ImageComponent.GetHeight() / 2) + ViewportOffset;
 	glm::vec2 BottomRight = glm::vec2(position.x + ImageComponent.GetWidth() / 2, position.y + ImageComponent.GetHeight() / 2) + ViewportOffset;

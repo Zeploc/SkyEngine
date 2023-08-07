@@ -72,9 +72,9 @@ void UIImage::DrawUIElement()
 	}
 	glEnable(GL_BLEND);
 	glUseProgram(ShaderManager::GetShader("UIprogram")->GetShaderProgram());
-	glm::mat4 proj = glm::ortho(0.0f, static_cast<GLfloat>(CameraManager::GetInstance()->SCR_WIDTH), 0.0f, static_cast<GLfloat>(CameraManager::GetInstance()->SCR_HEIGHT));
+	glm::mat4 proj;// = glm::ortho(0.0f, static_cast<GLfloat>(CameraManager::GetInstance()->SCR_WIDTH), 0.0f, static_cast<GLfloat>(CameraManager::GetInstance()->SCR_HEIGHT));
 	glm::vec3 NewPos = glm::vec3(position, 0);
-	NewPos.y = CameraManager::GetInstance()->SCR_HEIGHT - position.y;
+	// NewPos.y = CameraManager::GetInstance()->SCR_HEIGHT - position.y;
 	NewPos = Utils::GetAncoredPosition2D(NewPos, glm::vec2(iWidth, iHeight), ImageAnchor); // = glm::vec3(position.x, CameraManager::GetInstance()->SCR_HEIGHT - position.y, 0);
 
 	proj = translate(proj, NewPos);

@@ -29,8 +29,7 @@ void CViewportLayer::OnAttach()
 	EngineWindow->GetGraphicsWindow()->GetGraphicsInstance()->ClearColour = SkyColour;
 	
 	// TODO: Change from singleton to graphics instance
-	CameraManager::GetInstance()->Init(MainWindowSize.X, MainWindowSize.Y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
-	CameraManager::GetInstance()->MainWindow = EngineWindow;
+	CameraManager::GetInstance()->Init(EngineWindow, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
 }
 
 void CViewportLayer::OnDetach()

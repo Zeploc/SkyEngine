@@ -76,25 +76,14 @@ namespace SkyEngine
 		if (ApplicationSetup())
 		{
 			while (!ApplicationWindow->ShouldWindowClose())
-			{
-				// TODO: odd... find reason and remove
-				CAM->SCR_WIDTH = MainWindowSize.X;
-				CAM->SCR_HEIGHT = MainWindowSize.Y;
-				CAM->VIEWPORT_X = 0;
-				CAM->VIEWPORT_Y = 0;
-				
+			{				
 				Update();
-				CAM->SCR_WIDTH = MainWindowSize.X;
-				CAM->SCR_HEIGHT = MainWindowSize.Y;
-				CAM->VIEWPORT_X = 0;
-				CAM->VIEWPORT_Y = 0;
-
 				RenderScene();
 			}
 		}
 		else
 		{
-			// TODO: Log error
+			LogManager::GetInstance()->DisplayLogError("Application failed to setup, could not start run loop!");
 		}
 		
 		OnExit();
@@ -146,8 +135,6 @@ namespace SkyEngine
 	void Application::ChangeSize(int w, int h)
 	{
 		// TODO: Move to relevant place
-		CAM->SCR_HEIGHT = h;
-		CAM->SCR_WIDTH = w;
 	}
 
 	void Application::OnExit()

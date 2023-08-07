@@ -53,7 +53,7 @@ void Text::Render(std::string Text, std::string Font, int iSize, glm::vec2 Posit
 	{
 		YOffset = static_cast<int>((float)iSize * 0.35f);
 	}
-	glm::vec2 textPos = glm::vec2(NewPos.x, static_cast<GLfloat>(CameraManager::GetInstance()->SCR_HEIGHT) - NewPos.y - YOffset); // - TextFont.Characters[0].Size.y / 2);
+	glm::vec2 textPos;// = glm::vec2(NewPos.x, static_cast<GLfloat>(CameraManager::GetInstance()->SCR_HEIGHT) - NewPos.y - YOffset); // - TextFont.Characters[0].Size.y / 2);
 	// Enable blending
 	glCullFace(GL_BACK); // Cull the Back faces
 	glFrontFace(GL_CW); // Front face is Clockwise order
@@ -63,7 +63,7 @@ void Text::Render(std::string Text, std::string Font, int iSize, glm::vec2 Posit
 	// Activate corresponding render state
 	//glUseProgram(Shader::Textprogram);
 	glUniform3f(glGetUniformLocation(ShaderManager::GetShader("TextUIprogram")->GetShaderProgram(), "textColor"), colour.x, colour.y, colour.z);
-	glm::mat4 proj = glm::ortho(0.0f, static_cast<GLfloat>(CameraManager::GetInstance()->SCR_WIDTH), 0.0f, static_cast<GLfloat>(CameraManager::GetInstance()->SCR_HEIGHT));
+	glm::mat4 proj ;//= glm::ortho(0.0f, static_cast<GLfloat>(CameraManager::GetInstance()->SCR_WIDTH), 0.0f, static_cast<GLfloat>(CameraManager::GetInstance()->SCR_HEIGHT));
 	glUniformMatrix4fv(glGetUniformLocation(ShaderManager::GetShader("TextUIprogram")->GetShaderProgram(), "proj"), 1, GL_FALSE, value_ptr(proj));
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(TextFont.VAO);

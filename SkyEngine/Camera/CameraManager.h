@@ -33,17 +33,11 @@ struct STransform;
 
 class ENGINE_API CameraManager
 {
-public:
-
-	uint32_t SCR_WIDTH = 800;
-	uint32_t SCR_HEIGHT = 800;
-	uint32_t VIEWPORT_X = 0;
-	uint32_t VIEWPORT_Y = 0;
-		
+public:		
 	Matrix4 View;
 	Matrix4 Projection;
 
-	void Init(int ScreenWidth, int ScreenHeight, SVector CamPos, SVector ForwardVec, SVector UpVec);
+	void Init(TPointer<EngineWindow> InViewportWindow, SVector CamPos, SVector ForwardVec, SVector UpVec);
 
 	void UpdateViewMatrix();
 
@@ -88,9 +82,9 @@ public:
 	bool bSpectatorMovement = true;
 	float MouseSensitivity = 0.15f;
 
-	TPointer<EngineWindow> MainWindow;
 
 protected:
+	TPointer<EngineWindow> ViewportWindow;
 	
 private:
 	// FPS CONTROLS
