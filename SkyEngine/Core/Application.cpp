@@ -56,14 +56,14 @@ namespace SkyEngine
 		GraphicsApi = IGraphicsAPI::CreateGraphicsAPI(GraphicsApiType);
 
 		ApplicationWindow = EngineWindow::CreateEngineWindow("Application Window", MainWindowSize, false);
-		if (!ApplicationWindow)
+		if (!ENSURE(ApplicationWindow != NULL, "Failed to setup application window"))
 		{
-			// TODO: Error management
 			return false;
 		}
 		ApplicationWindow->GetGraphicsWindow()->FocusWindow();
 
 		CTimeManager::Start();
+		SoundManager::GetInstance()->InitFMod();
 		
 		PushLayer(new CViewportLayer());
 		PushOverlay(new CUILayer());
@@ -97,26 +97,27 @@ namespace SkyEngine
 
 	void Application::Update()
 	{
-		if (bLoading)
+		CTimeManager::Update();
+		if (CTimeManager::CanTickThisFrame())
 		{
-			SoundManager::GetInstance()->InitFMod();
+			// TODO: Once linking events system, would work backwards in layer based on highest first
 			for (CLayer* Layer : LayerStack)
 			{
 				Layer->OnUpdate();
 			}
+
+			OnEvent(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 		}
-		else
+	}
+
+	void Application::OnEvent()
+	{
+		for (auto it = LayerStack.end(); it != LayerStack.begin();)
 		{
-			CTimeManager::Update();
-			if (CTimeManager::CanTickThisFrame())
+			const bool bHandledEvent = (*--it)->OnEvent();
+			if (bHandledEvent)
 			{
-				// TODO: Once linking events system, would work backwards in layer based on highest first
-				for (CLayer* Layer : LayerStack)
-				{
-					Layer->OnUpdate();
-				}
-				
-				Input::GetInstance()->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
+				break;
 			}
 		}
 	}

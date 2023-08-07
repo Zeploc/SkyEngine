@@ -18,6 +18,7 @@ public:
 	virtual void OnAttach() {}
 	virtual void OnDetach() {}
 	virtual void OnUpdate() {}
+	virtual bool OnEvent() { return false; }
 	virtual void OnRender() {}
 	// TODO:
 	// virtual void OnEvent() {}

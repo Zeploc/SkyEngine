@@ -14,6 +14,7 @@ public:
 	void OnDetach() override;
 	void OnUpdate() override;
 	void OnRender() override;
+	bool OnEvent() override;
 
 protected:
 	SVector SkyColour;

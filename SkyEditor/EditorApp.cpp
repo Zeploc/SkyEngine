@@ -32,11 +32,6 @@ public:
 	void Update() override
 	{
 		Application::Update();
-
-		if (bLoading)
-		{			
-			bLoading = false;
-		}
 	}
 
 	void ChangeSize(int w, int h) override

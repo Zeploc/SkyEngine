@@ -28,9 +28,9 @@ using Scope = std::unique_ptr<T>;
 
 #ifdef SE_ENABLE_ASSERTS
 	#define ASSERT(x, ...)\
-	{ if (!x) { /* TODO: Error*/__M_Assert(#x, x, __FILE__, __LINE__, Msg); __debugbreak();}}
+	{ if (!x) { /* TODO: Error*/__M_Assert(#x, x, __FILE__, __LINE__, __VA_ARGS__); __debugbreak();}}
 	#define ASSERT_CORE(x, ...)\
-	{ if (!x) { /* TODO: Error*/__M_Assert(#x, x, __FILE__, __LINE__, Msg); __debugbreak();}}
+	{ if (!x) { /* TODO: Error*/__M_Assert(#x, x, __FILE__, __LINE__, __VA_ARGS__); __debugbreak();}}
 	#define ENSURE(x, ...)\
 	 __M_Assert(#x, x, __FILE__, __LINE__, __VA_ARGS__)
 	#define ENSURE_CORE(x, ...)\

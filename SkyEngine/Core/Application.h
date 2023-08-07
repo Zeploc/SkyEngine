@@ -31,6 +31,7 @@ namespace SkyEngine
 		void Quit();
 
 		virtual void Update();
+		virtual void OnEvent();
 		virtual void RenderScene();
 		virtual void ChangeSize(int w, int h);
 		virtual void OnExit();
@@ -38,8 +39,6 @@ namespace SkyEngine
 		void PushLayer(CLayer* InLayer);
 		void PushOverlay(CLayer* InLayer);
 		
-		bool bLoading = true;
-
 		SVector2i MainWindowSize;
 
 		TPointer<IGraphicsAPI> GraphicsApi;

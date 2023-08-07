@@ -76,7 +76,7 @@ void CUILayer::OnUpdate()
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
-	ImGui::NewFrame();	
+	ImGui::NewFrame();
 }
 
 void CUILayer::OnRender()
@@ -86,4 +86,10 @@ void CUILayer::OnRender()
 	
 	ImGui::Render();
 	GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->GetGraphicsInstance()->RenderImGui();
+}
+
+bool CUILayer::OnEvent()
+{
+	
+	return true;
 }

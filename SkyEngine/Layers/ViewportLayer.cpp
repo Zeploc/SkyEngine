@@ -5,6 +5,7 @@
 #include "Core/Application.h"
 #include "Core/EngineWindow.h"
 #include "Graphics/GraphicsInstance.h"
+#include "Input/Input.h"
 #include "Platform/Window/GraphicsWindow.h"
 #include "Render/Lighting.h"
 #include "Scene/SceneManager.h"
@@ -41,7 +42,7 @@ void CViewportLayer::OnDetach()
 void CViewportLayer::OnUpdate()
 {
 	SceneManager::GetInstance()->UpdateCurrentScene();
-	CameraManager::GetInstance()->UpdateViewMatrix();
+	CameraManager::GetInstance()->UpdateViewMatrix();	
 }
 
 void CViewportLayer::OnRender()
@@ -56,4 +57,10 @@ void CViewportLayer::OnRender()
 	// }
 	// else
 	SceneManager::GetInstance()->RenderCurrentScene();
+}
+
+bool CViewportLayer::OnEvent()
+{
+	Input::GetInstance()->Update();
+	return true;
 }
