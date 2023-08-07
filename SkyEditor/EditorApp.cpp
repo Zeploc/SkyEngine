@@ -19,7 +19,14 @@ public:
 
 	bool ApplicationSetup() override
 	{
-		return Application::ApplicationSetup();
+		const bool bSuccessfulSetup = Application::ApplicationSetup();
+		// TODO: Move to application base default scene
+		if (bSuccessfulSetup)
+		{			
+			TPointer<EditorScene> NewScene = TPointer<EditorScene>(new EditorScene("Editor"));			
+			SceneManager::GetInstance()->AddScene(NewScene);
+		}
+		return bSuccessfulSetup;
 	}
 	
 	void Update() override
@@ -27,13 +34,7 @@ public:
 		Application::Update();
 
 		if (bLoading)
-		{
-			TPointer<EditorScene> NewScene = TPointer<EditorScene>(new EditorScene("Editor"));			
-			SceneManager::GetInstance()->AddScene(NewScene);
-			
-			// Pointer<Scene> NewScene = Pointer<Scene>(new Scene("Empty"));
-			// SceneManager::GetInstance()->AddScene(NewScene);
-			
+		{			
 			bLoading = false;
 		}
 	}

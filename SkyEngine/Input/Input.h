@@ -81,7 +81,7 @@ public:
 	// Singleton
 	static Input* GetInstance();
 
-	static void DestoryInstance();
+	static void DestroyInstance();
 
 	// Prototypes //
 	static void LprocessNormalKeysDown(unsigned char key, int x, int y);

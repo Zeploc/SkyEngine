@@ -78,7 +78,7 @@ Input* Input::GetInstance()
 #--Parameters--#:	NA
 #--Return--#: 		NA
 ************************************************************/
-void Input::DestoryInstance()
+void Input::DestroyInstance()
 {
 	//int currentWindow = glutGetWindow();
 	//auto it = m_pInputs.find(currentWindow);

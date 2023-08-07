@@ -64,9 +64,9 @@ void IGraphicsInstance::Render(TPointer<IGraphicsWindow> GraphicsWindow, std::ve
 		}
 	}
 	
-	for (const TPointer<UIElement>& UIElement : UIElements)
-	{
-		RenderUIElement(UIElement);
-	}
+	// for (const TPointer<UIElement>& UIElement : UIElements)
+	// {
+	// 	RenderUIElement(UIElement);
+	// }
 	ActiveShader = nullptr;
 }

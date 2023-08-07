@@ -17,6 +17,7 @@
 #include "Layers/Layer.h"
 #include "Layers/LayerStack.h"
 #include "Layers/UILayer.h"
+#include "Layers/ViewportLayer.h"
 #include "Math/Vector4.h"
 #include "Platform/Window/GraphicsWindow.h"
 #include "Platform/Windows/WindowsPlatform.h"
@@ -36,7 +37,6 @@ namespace SkyEngine
 		ensure(!EngineApplication, "Application already exist!");
 		EngineApplication = this;
 		MainWindowSize = SVector2i(1920, 1080);
-		SkyColour = SVector(0.3f, 0.8f, 0.9f);
 		GraphicsApiType = EGraphicsAPI::OPENGL;
 	}
 
@@ -47,17 +47,13 @@ namespace SkyEngine
 	// Types //
 	using namespace std;
 
-	#define SI Input::GetInstance()
 	#define CAM CameraManager::GetInstance() 
-	#define SM SceneManager::GetInstance()
 
 	bool Application::ApplicationSetup()
 	{
 		PlatformInterface = std::make_shared<WindowsPlatform>();
 		LogManager::GetInstance()->Init();
 		GraphicsApi = IGraphicsAPI::CreateGraphicsAPI(GraphicsApiType);
-
-		Lighting::SetFogColour(SVector4(SkyColour, 1.0f));
 
 		ApplicationWindow = EngineWindow::CreateEngineWindow("Application Window", MainWindowSize, false);
 		if (!ApplicationWindow)
@@ -66,15 +62,10 @@ namespace SkyEngine
 			return false;
 		}
 		ApplicationWindow->GetGraphicsWindow()->FocusWindow();
-		// TODO: Move sky colour to scene
-		ApplicationWindow->GetGraphicsWindow()->GetGraphicsInstance()->ClearColour = SkyColour;
 
 		CTimeManager::Start();
-
-		// TODO: Change from singleton to graphics instance
-		CAM->Init(MainWindowSize.X, MainWindowSize.Y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
-		CAM->MainWindow = ApplicationWindow;
 		
+		PushLayer(new CViewportLayer());
 		PushOverlay(new CUILayer());
 		
 		return true;
@@ -130,35 +121,20 @@ namespace SkyEngine
 			CTimeManager::Update();
 			if (CTimeManager::CanTickThisFrame())
 			{
-				SceneManager::GetInstance()->UpdateCurrentScene();
-				CameraManager::GetInstance()->UpdateViewMatrix();				
-
 				// TODO: Once linking events system, would work backwards in layer based on highest first
 				for (CLayer* Layer : LayerStack)
 				{
 					Layer->OnUpdate();
 				}
 				
-				// SI->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
+				Input::GetInstance()->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 			}
 		}
 	}
 
 	void Application::RenderScene()
 	{
-		ApplicationWindow->GetGraphicsWindow()->PreRender();
-		// TODO: Link loading
-		// if (bLoading)
-		// {
-		// 	// TODO: Change to graphics instance
-		// 	glClearColor(0.8f, 0.8f, 0.8f, 1.0); // clear grey
-		// 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		// 	LogManager::GetInstance()->Render();
-		// }
-		// else
-		{
-			SM->RenderCurrentScene();
-		}
+		ApplicationWindow->GetGraphicsWindow()->PreRender();		
 		
 		for (CLayer* Layer : LayerStack)
 		{
@@ -179,9 +155,13 @@ namespace SkyEngine
 		ApplicationWindow.reset();
 		GraphicsApi.reset();
 		ShaderManager::CleanUp();
-		SceneManager::DestoryInstance();
-		CameraManager::DestoryInstance();
-		//Input::DestoryInstance();
+		
+		for (CLayer* Layer : LayerStack)
+		{
+			Layer->OnDetach();
+		}
+		
+		Input::DestroyInstance();
 		SoundManager::DestoryInstance();
 		Text::Fonts.~vector();
 	}

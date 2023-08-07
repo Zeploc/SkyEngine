@@ -16,6 +16,7 @@ CLayerStack::~CLayerStack()
 	{
 		delete Layer;
 	}
+	Layers.clear();
 }
 
 void CLayerStack::PushLayer(CLayer* InLayer)

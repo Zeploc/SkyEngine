@@ -6,7 +6,6 @@
 #include "Core/Core.h"
 #include "Graphics/GraphicsAPI.h"
 #include "Layers/LayerStack.h"
-#include "Math/Vector.h"
 #include "Math/Vector2.h"
 
 class CLayer;
@@ -42,7 +41,6 @@ namespace SkyEngine
 		bool bLoading = true;
 
 		SVector2i MainWindowSize;
-		SVector SkyColour;
 
 		TPointer<IGraphicsAPI> GraphicsApi;
 		TPointer<IPlatformInterface> PlatformInterface;

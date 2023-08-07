@@ -1,0 +1,60 @@
+#include "SEPCH.h"
+#include "ViewportLayer.h"
+
+#include "Camera/CameraManager.h"
+#include "Core/Application.h"
+#include "Core/EngineWindow.h"
+#include "Graphics/GraphicsInstance.h"
+#include "Platform/Window/GraphicsWindow.h"
+#include "Render/Lighting.h"
+#include "Scene/SceneManager.h"
+
+CViewportLayer::CViewportLayer()
+	: CLayer("Viewport Layer")
+{
+	SkyColour = SVector(0.3f, 0.8f, 0.9f);
+}
+
+CViewportLayer::~CViewportLayer()
+{
+}
+
+void CViewportLayer::OnAttach()
+{
+	const TPointer<EngineWindow> EngineWindow = GetApplication()->GetApplicationWindow();
+	const SVector2i MainWindowSize = EngineWindow->GetSize();
+	
+	Lighting::SetFogColour(SVector4(SkyColour, 1.0f));
+	// TODO: Move sky colour to scene
+	EngineWindow->GetGraphicsWindow()->GetGraphicsInstance()->ClearColour = SkyColour;
+	
+	// TODO: Change from singleton to graphics instance
+	CameraManager::GetInstance()->Init(MainWindowSize.X, MainWindowSize.Y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
+	CameraManager::GetInstance()->MainWindow = EngineWindow;
+}
+
+void CViewportLayer::OnDetach()
+{
+	SceneManager::DestoryInstance();
+	CameraManager::DestoryInstance();
+}
+
+void CViewportLayer::OnUpdate()
+{
+	SceneManager::GetInstance()->UpdateCurrentScene();
+	CameraManager::GetInstance()->UpdateViewMatrix();
+}
+
+void CViewportLayer::OnRender()
+{
+	// TODO: Link loading
+	// if (bLoading)
+	// {
+	// 	// TODO: Change to graphics instance
+	// 	glClearColor(0.8f, 0.8f, 0.8f, 1.0); // clear grey
+	// 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// 	LogManager::GetInstance()->Render();
+	// }
+	// else
+	SceneManager::GetInstance()->RenderCurrentScene();
+}
