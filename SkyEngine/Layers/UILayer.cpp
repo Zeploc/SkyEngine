@@ -10,9 +10,10 @@
 #include "Graphics/GL/imgui_impl_opengl3.h"
 #include "Platform/Window/GLFW/GLFWWindow.h"
 #include "Platform/Window/GLFW/imgui_impl_glfw.h"
+#include "System/LogManager.h"
 #include "System/TimeManager.h"
 
-CUILayer::CUILayer() : CLayer("UI Layer")
+CUILayer::CUILayer(TWeakPointer<CEngineWindow> InOwningWindow) : CLayer(InOwningWindow, "UI Layer")
 {
 }
 
@@ -28,35 +29,35 @@ void CUILayer::OnAttach()
 	ImGui::StyleColorsDark();
 	
 	TPointer<CGLFWWindow> GraphicsWindow = std::static_pointer_cast<CGLFWWindow>(GetApplication()->GetApplicationWindow());
-	ImGui_ImplGlfw_InitForOpenGL(GraphicsWindow->GetGlWindow(), true);
+	// ImGui_ImplGlfw_InitForOpenGL(GraphicsWindow->GetGlWindow(), true);
 	
-	// ImGuiIO& Io = ImGui::GetIO();
-	// Io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
-	// Io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
-	//
-	// // TODO: TEMPORARY: swap with sky engine keycodes
-	// // Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
-	// Io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
-	// Io.KeyMap[ImGuiKey_LeftArrow] = GLFW_KEY_LEFT;
-	// Io.KeyMap[ImGuiKey_RightArrow] = GLFW_KEY_RIGHT;
-	// Io.KeyMap[ImGuiKey_UpArrow] = GLFW_KEY_UP;
-	// Io.KeyMap[ImGuiKey_DownArrow] = GLFW_KEY_DOWN;
-	// Io.KeyMap[ImGuiKey_PageUp] = GLFW_KEY_PAGE_UP;
-	// Io.KeyMap[ImGuiKey_PageDown] = GLFW_KEY_PAGE_DOWN;
-	// Io.KeyMap[ImGuiKey_Home] = GLFW_KEY_HOME;
-	// Io.KeyMap[ImGuiKey_End] = GLFW_KEY_END;
-	// Io.KeyMap[ImGuiKey_Insert] = GLFW_KEY_INSERT;
-	// Io.KeyMap[ImGuiKey_Delete] = GLFW_KEY_DELETE;
-	// Io.KeyMap[ImGuiKey_Backspace] = GLFW_KEY_BACKSPACE;
-	// Io.KeyMap[ImGuiKey_Space] = GLFW_KEY_SPACE;
-	// Io.KeyMap[ImGuiKey_Enter] = GLFW_KEY_ENTER;
-	// Io.KeyMap[ImGuiKey_Escape] = GLFW_KEY_ESCAPE;
-	// Io.KeyMap[ImGuiKey_A] = GLFW_KEY_A;
-	// Io.KeyMap[ImGuiKey_C] = GLFW_KEY_C;
-	// Io.KeyMap[ImGuiKey_V] = GLFW_KEY_V;
-	// Io.KeyMap[ImGuiKey_X] = GLFW_KEY_X;
-	// Io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
-	// Io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
+	ImGuiIO& Io = ImGui::GetIO();
+	Io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
+	Io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
+	
+	// TODO: TEMPORARY: swap with sky engine keycodes
+	// Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
+	Io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
+	Io.KeyMap[ImGuiKey_LeftArrow] = GLFW_KEY_LEFT;
+	Io.KeyMap[ImGuiKey_RightArrow] = GLFW_KEY_RIGHT;
+	Io.KeyMap[ImGuiKey_UpArrow] = GLFW_KEY_UP;
+	Io.KeyMap[ImGuiKey_DownArrow] = GLFW_KEY_DOWN;
+	Io.KeyMap[ImGuiKey_PageUp] = GLFW_KEY_PAGE_UP;
+	Io.KeyMap[ImGuiKey_PageDown] = GLFW_KEY_PAGE_DOWN;
+	Io.KeyMap[ImGuiKey_Home] = GLFW_KEY_HOME;
+	Io.KeyMap[ImGuiKey_End] = GLFW_KEY_END;
+	Io.KeyMap[ImGuiKey_Insert] = GLFW_KEY_INSERT;
+	Io.KeyMap[ImGuiKey_Delete] = GLFW_KEY_DELETE;
+	Io.KeyMap[ImGuiKey_Backspace] = GLFW_KEY_BACKSPACE;
+	Io.KeyMap[ImGuiKey_Space] = GLFW_KEY_SPACE;
+	Io.KeyMap[ImGuiKey_Enter] = GLFW_KEY_ENTER;
+	Io.KeyMap[ImGuiKey_Escape] = GLFW_KEY_ESCAPE;
+	Io.KeyMap[ImGuiKey_A] = GLFW_KEY_A;
+	Io.KeyMap[ImGuiKey_C] = GLFW_KEY_C;
+	Io.KeyMap[ImGuiKey_V] = GLFW_KEY_V;
+	Io.KeyMap[ImGuiKey_X] = GLFW_KEY_X;
+	Io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
+	Io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
 	//
 	ImGui_ImplOpenGL3_Init("#version 410 core");
 }
@@ -73,7 +74,7 @@ void CUILayer::OnUpdate()
 	Io.DisplaySize = { WindowSize.X, WindowSize.Y};
 
 	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
+	// ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 }
 
@@ -86,10 +87,76 @@ void CUILayer::OnRender()
 	GetApplication()->GetApplicationWindow()->GetGraphicsInstance()->RenderImGui();
 }
 
-bool CUILayer::OnEvent(CEvent& Event)
+void CUILayer::OnEvent(CEvent& Event)
 {
+	EventDispatcher dispatcher(Event);
+	dispatcher.Dispatch<CMouseButtonPressedEvent>(SE_BIND_EVENT_FN(CUILayer::OnMouseButtonPressedEvent));
+	dispatcher.Dispatch<CMouseButtonReleasedEvent>(SE_BIND_EVENT_FN(CUILayer::OnMouseButtonReleasedEvent));
+	dispatcher.Dispatch<CMouseMovedEvent>(SE_BIND_EVENT_FN(CUILayer::OnMouseMovedEvent));
+	dispatcher.Dispatch<CMouseScrolledEvent>(SE_BIND_EVENT_FN(CUILayer::OnMouseScrolledEvent));
+	dispatcher.Dispatch<CKeyPressedEvent>(SE_BIND_EVENT_FN(CUILayer::OnKeyPressedEvent));
+	dispatcher.Dispatch<CKeyReleasedEvent>(SE_BIND_EVENT_FN(CUILayer::OnKeyReleasedEvent));
 	// TEMP TEST
 	// SVector2i MousePos = GetApplication()->GetApplicationWindow()->GetInput().MousePos;
 	// return MousePos.X < 500 && MousePos.Y < 500;
+	// return ImGui::IsAnyWindowFocused();
+}
+
+bool CUILayer::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
+{
+	// Update buttons
+	ImGuiIO& io = ImGui::GetIO();
+	for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++)
+	{
+		CInput::InputState MouseButtonState = (CInput::InputState)OwningWindow.lock()->GetInput().MouseState[i];
+		// If a mouse press event came, always pass it as "mouse held this frame", so we don't miss click-release events that are shorter than 1 frame.
+		io.MouseDown[i] = MouseButtonState == CInput::INPUT_FIRST_PRESS || MouseButtonState == CInput::INPUT_HOLD;
+	}
+
+	// Won't be hovered properly since mouse pos only updated in imgui when window is focused
+	LogManager::GetInstance()->DisplayLogMessage(std::format("hovering: {}", ImGui::IsMouseHoveringAnyWindow()));
+	
+	return ImGui::IsMouseHoveringAnyWindow();
+}
+
+bool CUILayer::OnMouseButtonReleasedEvent(CMouseButtonReleasedEvent& Event)
+{
+	return false;
+}
+
+bool CUILayer::OnMouseMovedEvent(CMouseMovedEvent& Event)
+{
+	ImGuiIO& io = ImGui::GetIO();
+	const ImVec2 mouse_pos_backup = io.MousePos;
+	io.MousePos = ImVec2(-FLT_MAX, -FLT_MAX);
+	const bool bFocused = OwningWindow.lock()->IsFocused();
+	if (bFocused)
+	{
+		if (io.WantSetMousePos)
+		{
+			OwningWindow.lock()->SetCursorPosition({(int)mouse_pos_backup.x, (int)mouse_pos_backup.y});
+		}
+		else
+		{
+			SVector2i MousePos = OwningWindow.lock()->GetInput().MousePos;
+			io.MousePos = ImVec2((float)MousePos.X, (float)MousePos.Y);
+		}
+		return true;
+	}
+	return false;
+}
+
+bool CUILayer::OnMouseScrolledEvent(CMouseScrolledEvent& Event)
+{
+	return false;
+}
+
+bool CUILayer::OnKeyPressedEvent(CKeyPressedEvent& Event)
+{
+	return false;
+}
+
+bool CUILayer::OnKeyReleasedEvent(CKeyReleasedEvent& Event)
+{
 	return false;
 }

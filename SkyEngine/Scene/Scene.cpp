@@ -208,17 +208,15 @@ void Scene::Update()
 	Button3DEntity::bButtonPressedThisFrame = false;	
 }
 
-bool Scene::OnEvent(CEvent& Event)
+void Scene::OnEvent(CEvent& Event)
 {
 	EventDispatcher dispatcher(Event);
-	bool bHandled = false;
-	bHandled |= dispatcher.Dispatch<CMouseButtonPressedEvent>(SE_BIND_EVENT_FN(Scene::OnMouseButtonPressedEvent));
-	bHandled |= dispatcher.Dispatch<CMouseButtonReleasedEvent>(SE_BIND_EVENT_FN(Scene::OnMouseButtonReleasedEvent));
-	bHandled |= dispatcher.Dispatch<CMouseMovedEvent>(SE_BIND_EVENT_FN(Scene::OnMouseMovedEvent));
-	bHandled |= dispatcher.Dispatch<CMouseScrolledEvent>(SE_BIND_EVENT_FN(Scene::OnMouseScrolledEvent));
-	bHandled |= dispatcher.Dispatch<CKeyPressedEvent>(SE_BIND_EVENT_FN(Scene::OnKeyPressedEvent));
-	bHandled |= dispatcher.Dispatch<CKeyReleasedEvent>(SE_BIND_EVENT_FN(Scene::OnKeyReleasedEvent));
-	return bHandled;
+	dispatcher.Dispatch<CMouseButtonPressedEvent>(SE_BIND_EVENT_FN(Scene::OnMouseButtonPressedEvent));
+	dispatcher.Dispatch<CMouseButtonReleasedEvent>(SE_BIND_EVENT_FN(Scene::OnMouseButtonReleasedEvent));
+	dispatcher.Dispatch<CMouseMovedEvent>(SE_BIND_EVENT_FN(Scene::OnMouseMovedEvent));
+	dispatcher.Dispatch<CMouseScrolledEvent>(SE_BIND_EVENT_FN(Scene::OnMouseScrolledEvent));
+	dispatcher.Dispatch<CKeyPressedEvent>(SE_BIND_EVENT_FN(Scene::OnKeyPressedEvent));
+	dispatcher.Dispatch<CKeyReleasedEvent>(SE_BIND_EVENT_FN(Scene::OnKeyReleasedEvent));
 }
 
 void Scene::OnLoadScene()

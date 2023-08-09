@@ -148,8 +148,9 @@ void CEngineWindow::SubscribeEventListener(IEventListener* NewEventListener)
 	EventListeners.push_back(NewEventListener);
 }
 
-void CEngineWindow::OnFocusChanged(bool bIsFocused)
+void CEngineWindow::OnFocusChanged(bool bInIsFocused)
 {
+	bIsFocused = bInIsFocused;
 	// TODO: Param
 	OnFocusChangedDelete.Broadcast();
 }

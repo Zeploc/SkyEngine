@@ -445,18 +445,16 @@ void EditorScene::SaveCurrentLevel()
 	LevelFile.close();
 }
 
-bool EditorScene::OnEvent(CEvent& Event)
+void EditorScene::OnEvent(CEvent& Event)
 {
 	// TODO: Placeholder as base scene doesn't call derived functions with bind
 	EventDispatcher dispatcher(Event);
-	bool bHandled = false;
-	bHandled |= dispatcher.Dispatch<CMouseButtonPressedEvent>(SE_BIND_EVENT_FN(EditorScene::OnMouseButtonPressedEvent));
-	bHandled |= dispatcher.Dispatch<CMouseButtonReleasedEvent>(SE_BIND_EVENT_FN(EditorScene::OnMouseButtonReleasedEvent));
-	bHandled |= dispatcher.Dispatch<CMouseMovedEvent>(SE_BIND_EVENT_FN(EditorScene::OnMouseMovedEvent));
-	bHandled |= dispatcher.Dispatch<CMouseScrolledEvent>(SE_BIND_EVENT_FN(EditorScene::OnMouseScrolledEvent));
-	bHandled |= dispatcher.Dispatch<CKeyPressedEvent>(SE_BIND_EVENT_FN(EditorScene::OnKeyPressedEvent));
-	bHandled |= dispatcher.Dispatch<CKeyReleasedEvent>(SE_BIND_EVENT_FN(EditorScene::OnKeyReleasedEvent));
-	return bHandled;
+	dispatcher.Dispatch<CMouseButtonPressedEvent>(SE_BIND_EVENT_FN(EditorScene::OnMouseButtonPressedEvent));
+	dispatcher.Dispatch<CMouseButtonReleasedEvent>(SE_BIND_EVENT_FN(EditorScene::OnMouseButtonReleasedEvent));
+	dispatcher.Dispatch<CMouseMovedEvent>(SE_BIND_EVENT_FN(EditorScene::OnMouseMovedEvent));
+	dispatcher.Dispatch<CMouseScrolledEvent>(SE_BIND_EVENT_FN(EditorScene::OnMouseScrolledEvent));
+	dispatcher.Dispatch<CKeyPressedEvent>(SE_BIND_EVENT_FN(EditorScene::OnKeyPressedEvent));
+	dispatcher.Dispatch<CKeyReleasedEvent>(SE_BIND_EVENT_FN(EditorScene::OnKeyReleasedEvent));
 }
 
 bool EditorScene::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)

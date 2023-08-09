@@ -163,7 +163,7 @@ void CGLFWWindow::PostRender()
 
 void CGLFWWindow::FocusWindow() const
 {
-	// TODO: 	
+	glfwFocusWindow(GlWindow);
 }
 void CGLFWWindow::SetCursorPosition(SVector2i InCursorPosition)
 {
@@ -203,6 +203,7 @@ void CGLFWWindow::OnWindowResized(int NewWidth, int NewHeight)
 
 void CGLFWWindow::OnFocusChanged(bool bIsFocused)
 {
+	CEngineWindow::OnFocusChanged(bIsFocused);
 }
 
 void CGLFWWindow::OnFrameBufferResized(int NewWidth, int NewHeight)

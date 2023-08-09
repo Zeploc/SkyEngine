@@ -27,7 +27,7 @@ public:
 	void SaveAsNew();
 	void SaveCurrentLevel();
 
-	bool OnEvent(CEvent& Event) override;
+	void OnEvent(CEvent& Event) override;
 protected:
 	bool OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event) override;
 	bool OnMouseButtonReleasedEvent(CMouseButtonReleasedEvent& Event) override;

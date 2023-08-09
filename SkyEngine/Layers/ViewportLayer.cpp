@@ -10,8 +10,8 @@
 #include "Scene/Scene.h"
 #include "Scene/SceneManager.h"
 
-CViewportLayer::CViewportLayer()
-	: CLayer("Viewport Layer")
+CViewportLayer::CViewportLayer(TWeakPointer<CEngineWindow> InOwningWindow)
+	: CLayer(InOwningWindow, "Viewport Layer")
 {
 	SkyColour = SVector(0.3f, 0.8f, 0.9f);
 }
@@ -59,7 +59,7 @@ void CViewportLayer::OnRender()
 	SceneManager::GetInstance()->RenderCurrentScene();
 }
 
-bool CViewportLayer::OnEvent(CEvent& Event)
+void CViewportLayer::OnEvent(CEvent& Event)
 {
-	return SceneManager::GetInstance()->GetCurrentScene()->OnEvent(Event);
+	SceneManager::GetInstance()->GetCurrentScene()->OnEvent(Event);
 }

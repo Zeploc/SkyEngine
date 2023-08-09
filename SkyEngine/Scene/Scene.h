@@ -42,7 +42,7 @@ public:
 	void DestroyUIElement(TPointer<UIElement> _Element);
 
 	virtual void Update();
-	virtual bool OnEvent(CEvent& Event);
+	virtual void OnEvent(CEvent& Event);
 
 	virtual void OnLoadScene();
 

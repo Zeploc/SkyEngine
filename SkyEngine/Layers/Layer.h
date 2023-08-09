@@ -10,22 +10,25 @@
 // TODO: Warnings with exporting class containing STDL
 #pragma warning (disable : 4251)
 
+class CEngineWindow;
+
 class ENGINE_API CLayer
 {
 public:
-	CLayer(const std::string& InDebugName = "Layer");
+	CLayer(TWeakPointer<CEngineWindow> InOwningWindow, const std::string& InDebugName = "Layer");
 	virtual ~CLayer();
 
 	virtual void OnAttach() {}
 	virtual void OnDetach() {}
 	virtual void OnUpdate() {}
-	virtual bool OnEvent(CEvent& Event) { return false; }
+	virtual void OnEvent(CEvent& Event) = 0;
 	virtual void OnRender() {}
 	// TODO:
 	// virtual void OnEvent() {}
 	inline const std::string& GetName() const { return DebugName; }
 
 protected:
+	TWeakPointer<CEngineWindow> OwningWindow;
 	std::string DebugName;
 	
 };

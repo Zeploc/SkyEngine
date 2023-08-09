@@ -36,6 +36,7 @@ public:
 	virtual SVector2i GetPosition() const { return WindowPosition; }
 	virtual void SetWindowPosition(SVector2i InPosition);	
 	virtual void SetCursorPosition(SVector2i InCursorPosition);
+	bool IsFocused() const { return bIsFocused; }
 
 	SVector2i GetScreenHalfSize();
 	
@@ -55,7 +56,7 @@ public:
 protected:
 	virtual void OnWindowResized(int NewWidth, int NewHeight) = 0;
 	virtual void OnFrameBufferResized(int NewWidth, int NewHeight) = 0;
-	virtual void OnFocusChanged(bool bIsFocused);
+	virtual void OnFocusChanged(bool bInIsFocused);
 	
 	virtual void MouseButtonPress(int button, CInput::KeyEventType EventType, int mods);
 	virtual void KeyPress(int key, int scancode, CInput::KeyEventType EventType, int mods);
@@ -68,6 +69,7 @@ protected:
 	SVector2i WindowPosition;
 	bool bFullscreen = false;
 	bool bCursorVisible = true;
+	bool bIsFocused = true;
 	CInput Input;
 	
 	std::vector<IEventListener*> EventListeners;

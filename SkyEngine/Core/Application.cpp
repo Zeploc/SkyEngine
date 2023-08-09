@@ -61,8 +61,8 @@ namespace SkyEngine
 		CTimeManager::Start();
 		SoundManager::GetInstance()->InitFMod();
 		
-		PushLayer(new CViewportLayer());
-		// PushOverlay(new CUILayer());	
+		PushLayer(new CViewportLayer(ApplicationWindow));
+		PushOverlay(new CUILayer(ApplicationWindow));	
 		
 		return true;
 	}
@@ -109,7 +109,8 @@ namespace SkyEngine
 	{
 		for (auto it = LayerStack.end(); it != LayerStack.begin();)
 		{
-			const bool bHandledEvent = (*--it)->OnEvent(Event);
+			(*--it)->OnEvent(Event);
+			const bool bHandledEvent = Event.WasHandled();
 			if (bHandledEvent)
 			{
 				break;
