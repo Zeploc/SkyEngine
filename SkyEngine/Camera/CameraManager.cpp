@@ -12,13 +12,12 @@
 #include <glm/gtc/type_ptr.hpp>
 
 // Engine Includes //
-#include "Core/EngineWindow.h"
+#include "Platform/Window/EngineWindow.h"
 #include "Input/Input.h"
 #include "Math/Transform.h"
 #include "Math/Matrix.h"
 #include "Math/Vector.h"
 #include "Math/Vector4.h"
-#include "Platform/Window/GraphicsWindow.h"
 #include "System/LogManager.h"
 #include "System/TimeManager.h"
 
@@ -32,7 +31,7 @@ CameraManager* CameraManager::m_pCamera;
 #--Parameters--#: 	Takes in screen size and camera vectors
 #--Return--#: 		NA
 ************************************************************/
-void CameraManager::Init(TPointer<EngineWindow> InViewportWindow, SVector CamPos, SVector ForwardVec, SVector UpVec)
+void CameraManager::Init(TPointer<CEngineWindow> InViewportWindow, SVector CamPos, SVector ForwardVec, SVector UpVec)
 {
 	ViewportWindow = InViewportWindow;
 	CameraPosition = CamPos;
@@ -100,11 +99,11 @@ void CameraManager::EnableSpectatorControls(bool _bSpectatorControls)
 	if (bUseSpectatorControls)
 	{
 		PreviousMousePosition = Input::GetInstance()->MousePos;
-		ViewportWindow->GetGraphicsWindow()->SetCursorPosition(GetScreenCenter());
+		ViewportWindow->SetCursorPosition(GetScreenCenter());
 	}
 	else
 	{		
-		ViewportWindow->GetGraphicsWindow()->SetCursorPosition(PreviousMousePosition);
+		ViewportWindow->SetCursorPosition(PreviousMousePosition);
 	}
 }
 
@@ -161,7 +160,7 @@ void CameraManager::SpectatorUpdate()
 			CameraPosition -= UpMovement;
 		}
 	}
-	ViewportWindow->GetGraphicsWindow()->SetCursorPosition(GetScreenCenter());
+	ViewportWindow->SetCursorPosition(GetScreenCenter());
 }
 
 /************************************************************

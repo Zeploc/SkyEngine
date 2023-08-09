@@ -12,18 +12,18 @@
 #include <UI/Legacy/UIButton.h>
 
 #include "Graphics/GraphicsInstance.h"
-#include "Platform/Window/GraphicsWindow.h"
+#include "Platform/Window/EngineWindow.h"
 
 void EditorWindow::CreateExternalWindow()
 {
-	LinkedWindow = EngineWindow::CreateEngineWindow(WindowName, Size, false);
+	LinkedWindow = CEngineWindow::CreateEngineWindow(WindowName, Size, false);
 	LinkedWindow->SetWindowPosition(Position);
 	
 	// The input function registration
 	Input::GetInstance()->Init(LinkedWindow);
 }
 
-EditorWindow::EditorWindow(std::string InWindowName, TPointer<EngineWindow> InLinkedWindow, SVector2 InSize, SVector2 InPosition)
+EditorWindow::EditorWindow(std::string InWindowName, TPointer<CEngineWindow> InLinkedWindow, SVector2 InSize, SVector2 InPosition)
 : WindowName(InWindowName), LinkedWindow(InLinkedWindow), Size(InSize), Position(InPosition)
 {
 	if (!LinkedWindow)
@@ -73,21 +73,21 @@ void EditorWindow::RenderWindow()
 {	
 	if (LinkedWindow != EditorWindowManager::GetMainWindow()) // Separate window
 	{
-		LinkedWindow->GetGraphicsWindow()->GetGraphicsInstance()->ClearColour = BackColour;
-		LinkedWindow->GetGraphicsWindow()->PreRender();
+		LinkedWindow->GetGraphicsInstance()->ClearColour = BackColour;
+		LinkedWindow->PreRender();
 	}
 	else
 	{
 		// Position viewport within existing main window
 		const SVector2i MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
-		LinkedWindow->GetGraphicsWindow()->GetGraphicsInstance()->SetRenderViewport({Position.X, MainWindowSize.Y - Position.Y - Size.Y}, {Size.X, Size.Y});
+		LinkedWindow->GetGraphicsInstance()->SetRenderViewport({Position.X, MainWindowSize.Y - Position.Y - Size.Y}, {Size.X, Size.Y});
 	}
 
-	LinkedWindow->GetGraphicsWindow()->Render({}, UIElements);
+	LinkedWindow->Render({}, UIElements);
 	
 	if (LinkedWindow != EditorWindowManager::GetMainWindow()) // Separate window
 	{
-		LinkedWindow->GetGraphicsWindow()->PostRender();
+		LinkedWindow->PostRender();
 	}
 }
 
@@ -220,7 +220,7 @@ void EditorWindow::UpdateWindow()
 		}
 	}
 
-	LinkedWindow->GetGraphicsWindow()->FocusWindow();
+	LinkedWindow->FocusWindow();
 
 	if (DraggingWindow)
 	{

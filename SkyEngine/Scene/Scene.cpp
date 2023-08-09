@@ -17,10 +17,9 @@
 
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"
-#include "Core/EngineWindow.h"
+#include "Platform/Window/EngineWindow.h"
 #include "Entity/Button3DEntity.h"
 #include "Input/Input.h"
-#include "Platform/Window/GraphicsWindow.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -70,7 +69,7 @@ void Scene::DeleteScene()
 void Scene::RenderScene()
 {
 	// TODO: Properly link to graphics interface
-	GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->Render(Entities, UIElements);
+	GetApplication()->GetApplicationWindow()->Render(Entities, UIElements);
 }
 
 /************************************************************

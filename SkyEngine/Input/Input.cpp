@@ -13,7 +13,7 @@
 
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"
-#include "Core/EngineWindow.h"
+#include "Platform/Window/EngineWindow.h"
 #include "Platform/Window/GLFW/GLFWWindow.h"
 
 // Static Variables //
@@ -50,21 +50,6 @@ Input::~Input()
 ************************************************************/
 Input* Input::GetInstance()
 {
-	//int currentWindow = glutGetWindow();
-	//Input* CurrentFound = nullptr;
-	//auto it = m_pInputs.find(currentWindow);
-	//if (it == m_pInputs.end())// null or doesn't exist
-	//{
-	//	Input* NewInput = new Input;
-	//	NewInput->Init();
-	//	m_pInputs.insert(std::pair<int, Input*>(currentWindow, NewInput));
-	//	CurrentFound = NewInput;
-	//}
-	//else
-	//	CurrentFound = (*it).second;
-
-	//return CurrentFound;
-
 	if (!m_pInput)
 	{
 		m_pInput = new Input;
@@ -80,13 +65,6 @@ Input* Input::GetInstance()
 ************************************************************/
 void Input::DestroyInstance()
 {
-	//int currentWindow = glutGetWindow();
-	//auto it = m_pInputs.find(currentWindow);
-	//if (it._Ptr)// exists
-	//{
-	//	delete (*it).second;
-	//	m_pInputs.erase(currentWindow);
-	//}
 	if (m_pInput)
 	{
 		delete m_pInput;
@@ -100,15 +78,8 @@ void Input::DestroyInstance()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Input::Init(TPointer<EngineWindow> Window)
+void Input::Init(TPointer<CEngineWindow> Window)
 {
-	// TODO: Temp until input interface is made generic
-	TPointer<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(Window->GetGraphicsWindow());
-	GLFWwindow* glfwWindow = GlfwWindow->GetGlWindow();
-
-	glfwSetKeyCallback(glfwWindow, LprocessKeys);
-	glfwSetCursorPosCallback(glfwWindow, LMouseInput);
-	glfwSetMouseButtonCallback(glfwWindow, LMouseButton);
 	/*
 	glutSpecialFunc(Input::LprocessSpecialKeys);*/
 	//glutJoystickFunc(LJoystick, (float)GLUT_JOYSTICK_POLL_RATE / 100.0f);
@@ -179,18 +150,22 @@ void Input::MouseInput(int x, int y)
 #--Parameters--#: 	Takes in the the button and the state and mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void Input::MouseButton(int button, int action, int mods)
+void Input::MouseButton(int button, KeyEventType EventType, int mods)
 {
 	//MousePos = glm::vec2(x, y);
 	if (button < 3)
 	{
-		if (action == GLFW_PRESS)
+		if (EventType == Pressed)
 		{
 			MouseState[button] = INPUT_FIRST_PRESS;
 		}
-		else if (action == GLFW_RELEASE)
+		else if (EventType == Released)
 		{
 			MouseState[button] = INPUT_FIRST_RELEASE;
+		}
+		else if (EventType == Repeat)
+		{
+			// TODO: mouse repeat
 		}
 		else
 		{
@@ -198,7 +173,7 @@ void Input::MouseButton(int button, int action, int mods)
 		}
 	}
 
-	if (mods & GLFW_MOD_SHIFT)
+	if (mods & ModiferType::Shift)
 	{
 		if (MouseSHIFT != INPUT_HOLD && MouseSHIFT != INPUT_FIRST_PRESS)
 		{
@@ -220,7 +195,7 @@ void Input::MouseButton(int button, int action, int mods)
 			MouseSHIFT = INPUT_RELEASED;
 		}
 	}
-	if (mods & GLFW_MOD_ALT)
+	if (mods & ModiferType::Alt)
 	{
 		if (MouseALT != INPUT_HOLD && MouseALT != INPUT_FIRST_PRESS)
 		{
@@ -242,7 +217,7 @@ void Input::MouseButton(int button, int action, int mods)
 			MouseALT = INPUT_RELEASED;
 		}
 	}
-	if (mods & GLFW_MOD_CONTROL)
+	if (mods & ModiferType::Control)
 	{
 		if (MouseCTRL != INPUT_HOLD && MouseCTRL != INPUT_FIRST_PRESS)
 		{
@@ -266,26 +241,30 @@ void Input::MouseButton(int button, int action, int mods)
 	}
 }
 
-void Input::processKeys(GLFWwindow* window, int key, int scancode, int action, int mods)
+void Input::ProcessKeys(int key, int scancode, KeyEventType EventType, int mods)
 {
 	bKBHit = true;
 	cLastKey = key;
-	if (action == GLFW_PRESS)
+	if (EventType == Pressed)
 	{
 		if (KeyState[key] == (INPUT_RELEASED | INPUT_FIRST_RELEASE))
 		{
 			KeyState[key] = INPUT_FIRST_PRESS;
 		}
 	}
-	else if (action == GLFW_RELEASE)
+	else if (EventType == Released)
 	{
 		if (KeyState[key] == (INPUT_HOLD | INPUT_FIRST_PRESS))
 		{
 			KeyState[key] = INPUT_FIRST_RELEASE;
 		}
 	}
+	else if (EventType == Repeat)
+	{
+		// TODO: repeat
+	}
 
-	if (mods & GLFW_MOD_SHIFT)
+	if (mods & ModiferType::Shift)
 	{
 		std::cout << "SHIFT DOWN\n";
 	}
@@ -351,87 +330,4 @@ std::string Input::InputStateString(unsigned int State)
 		default:
 			return "ERROR";
 	}
-}
-
-void Input::SetCursorVisible(bool _bIsVisible)
-{
-	// TODO: Temp until input interface is made generic	
-	TPointer<GLFWWindow> GlfwWindow = std::static_pointer_cast<GLFWWindow>(GetApplication()->GetApplicationWindow()->GetGraphicsWindow());
-	GLFWwindow* glfwWindow = GlfwWindow->GetGlWindow();
-	
-	if (_bIsVisible)
-	{
-		glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	}
-	else
-	{
-		glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-	}
-	bCursorVisible = _bIsVisible;
-}
-
-void Input::ToggleCursorVisible()
-{
-	bCursorVisible = !bCursorVisible;
-	SetCursorVisible(bCursorVisible);
-}
-
-/************************************************************
-#--Description--#:	Local function to pass opengl input to singleton input function 
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	Takes in key and mouse pos
-#--Return--#: 		NA
-************************************************************/
-void Input::LprocessNormalKeysDown(unsigned char key, int x, int y)
-{
-	GetInstance()->processNormalKeysDown(key, x, y);
-}
-
-/************************************************************
-#--Description--#:	Local function to pass opengl input to singleton input function
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	Takes in key and mouse pos
-#--Return--#: 		NA
-************************************************************/
-void Input::LprocessNormalKeysUp(unsigned char key, int x, int y)
-{
-	GetInstance()->processNormalKeysUp(key, x, y);
-}
-
-/************************************************************
-#--Description--#:	Local function to pass opengl input to singleton input function
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	Takes in key and mouse pos
-#--Return--#: 		NA
-************************************************************/
-void Input::LprocessSpecialKeys(int key, int x, int y)
-{
-	GetInstance()->processSpecialKeys(key, x, y);
-}
-
-/************************************************************
-#--Description--#:	Local function to pass opengl input to singleton input function
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	Takes mouse pos
-#--Return--#: 		NA
-************************************************************/
-void Input::LMouseInput(GLFWwindow* window, double x, double y)
-{
-	GetInstance()->MouseInput((int)x, (int)y);
-}
-
-/************************************************************
-#--Description--#:	Local function to pass opengl input to singleton input function
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	Takes in mouse key and state and mouse pos
-#--Return--#: 		NA
-************************************************************/
-void Input::LMouseButton(GLFWwindow* window, int button, int action, int mods)
-{
-	GetInstance()->MouseButton(button, action, mods);
-}
-
-void Input::LprocessKeys(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	GetInstance()->processKeys(window, key, scancode, action, mods);
 }

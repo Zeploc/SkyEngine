@@ -28,8 +28,7 @@
 #include <Windows.h>
 
 #include "Core/Application.h"
-#include "Core/Application.h"
-#include "Platform/Window/GraphicsWindow.h"
+#include "Platform/Window/EngineWindow.h"
 #include "Render/Materials/Material.h"
 #include "Render/Shaders/PBRShader.h"
 #include "Render/Shaders/UndefinedShader.h"
@@ -37,7 +36,7 @@
 
 EditorScene::EditorScene(const std::string& InSceneName) : Scene(InSceneName)
 {
-	const TPointer<EngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
+	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 	const SVector2i WindowSize = ApplicationWindow->GetSize();
 
 	TPointer<UIButton> QuitBtn(new UIButton(glm::vec2(WindowSize.X - 20, WindowSize.Y - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
@@ -238,6 +237,7 @@ void EditorScene::Update()
 	Scene::Update();
 	LevelNameText->sText = SceneName;
 	CameraManager* CameraInstance = CameraManager::GetInstance();
+	TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 
 	SVector2i ScreenCenter = CameraInstance->GetScreenCenter();
 	const SVector2i ScreenOffset = Input::GetInstance()->MousePos - ScreenCenter;
@@ -253,25 +253,25 @@ void EditorScene::Update()
 		//Input::GetInstance()->ToggleCursorVisible();
 		//CameraManager::GetInstance()->EnableSpectatorControls(!Input::GetInstance()->GetCursorVisible());
 
-		Input::GetInstance()->SetCursorVisible(true);
+		ApplicationWindow->SetCursorVisible(true);
 		CameraInstance->EnableSpectatorControls(false);
 	}
 	if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_FIRST_PRESS && !bAltDown && !bShiftDown)
 	{
 		PreviousMousePosition = Input::GetInstance()->MousePos;
-		Input::GetInstance()->SetCursorVisible(false);
+		ApplicationWindow->SetCursorVisible(false);
 		CameraInstance->EnableSpectatorControls(true);
 	}
 	else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_FIRST_RELEASE)
 	{
-		Input::GetInstance()->SetCursorVisible(true);
+		ApplicationWindow->SetCursorVisible(true);
 		CameraInstance->EnableSpectatorControls(false);
-		GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->SetCursorPosition(PreviousMousePosition);
+		ApplicationWindow->SetCursorPosition(PreviousMousePosition);
 	}
 	if (Input::GetInstance()->KeyState[GLFW_KEY_G] == Input::INPUT_FIRST_PRESS)
 	{
 		Wireframe = !Wireframe;
-		GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->GetGraphicsInstance()->SetWireframeMode(Wireframe);
+		ApplicationWindow->GetGraphicsInstance()->SetWireframeMode(Wireframe);
 	}
 	if (Input::GetInstance()->KeyState[GLFW_KEY_F] == Input::INPUT_FIRST_PRESS)
 	{
@@ -289,7 +289,7 @@ void EditorScene::Update()
 		{
 			if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_PRESS)
 			{
-				Input::GetInstance()->SetCursorVisible(false);
+				ApplicationWindow->SetCursorVisible(false);
 				PreviousMousePosition = Input::GetInstance()->MousePos;
 			}
 			else
@@ -299,33 +299,33 @@ void EditorScene::Update()
 				NewCameraForwardVector.Rotate(Offset.Y, CameraInstance->GetCameraRightVector());
 				CameraInstance->SetCameraForwardVector(NewCameraForwardVector);
 			}
-			GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->SetCursorPosition(ScreenCenter);
+			ApplicationWindow->SetCursorPosition(ScreenCenter);
 		}
 		else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_FIRST_PRESS || Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_HOLD)
 		{
 			if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_RIGHT] == Input::INPUT_FIRST_PRESS)
 			{
-				Input::GetInstance()->SetCursorVisible(false);
+				ApplicationWindow->SetCursorVisible(false);
 				PreviousMousePosition = Input::GetInstance()->MousePos;
 			}
 			else
 			{
 				CurrentFocusDistance += Offset.Y * .3f;
 			}
-			GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->SetCursorPosition(ScreenCenter);
+			ApplicationWindow->SetCursorPosition(ScreenCenter);
 		}
 		else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_RELEASE)
 		{
-			Input::GetInstance()->SetCursorVisible(true);
-			GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->SetCursorPosition(PreviousMousePosition);
+			ApplicationWindow->SetCursorVisible(true);
+			ApplicationWindow->SetCursorPosition(PreviousMousePosition);
 		}
 		CameraInstance->SetCameraPos(CameraPivotPoint + (-CameraInstance->GetCameraForwardVector() * CurrentFocusDistance));
 	}
 	// TODO: Refine release of alt
 	else if (Input::GetInstance()->KeyState[GLFW_KEY_LEFT_ALT] == Input::INPUT_FIRST_RELEASE)
 	{
-		Input::GetInstance()->SetCursorVisible(true);
-		GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->SetCursorPosition(PreviousMousePosition);
+		ApplicationWindow->SetCursorVisible(true);
+		ApplicationWindow->SetCursorPosition(PreviousMousePosition);
 		// glfwSetCursorPos(CameraInstance->MainWindow, PreviousMousePosition.X, PreviousMousePosition.Y);
 	}
 	if (bShiftDown)
@@ -334,7 +334,7 @@ void EditorScene::Update()
 		{
 			if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_PRESS)
 			{
-				Input::GetInstance()->SetCursorVisible(false);
+				ApplicationWindow->SetCursorVisible(false);
 				PreviousMousePosition = Input::GetInstance()->MousePos;
 			}
 			else
@@ -344,11 +344,11 @@ void EditorScene::Update()
 				NewCameraPosition += -CameraInstance->GetCameraUpVector() * Offset.Y * CameraInstance->MouseSensitivity;
 				CameraInstance->SetCameraPos(NewCameraPosition);
 			}
-			GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->SetCursorPosition(ScreenCenter);
+			ApplicationWindow->SetCursorPosition(ScreenCenter);
 		}
 		else if (Input::GetInstance()->MouseState[GLFW_MOUSE_BUTTON_LEFT] == Input::INPUT_FIRST_RELEASE)
 		{
-			Input::GetInstance()->SetCursorVisible(true);
+			ApplicationWindow->SetCursorVisible(true);
 			// glfwSetCursorPos(CameraInstance->MainWindow, PreviousMousePosition.X, PreviousMousePosition.Y);
 		}
 	}

@@ -7,6 +7,7 @@ extern SkyEngine::Application* SkyEngine::CreateApplication();
 int main(int argc, char** argv)
 {
 	const auto App = SkyEngine::CreateApplication();
+	// TPointer<SkyEngine::Application> ApplicationLifetimePointer(App);
 	int AppExitState = App->Run();
 	delete App;
 	return AppExitState;

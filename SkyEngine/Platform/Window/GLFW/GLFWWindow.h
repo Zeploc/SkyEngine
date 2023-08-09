@@ -3,39 +3,37 @@
 #pragma once
 
 #include "GLFWIncludes.h"
+#include "Platform/Window/EngineWindow.h"
 
-#include "Platform/Window/GraphicsWindow.h"
-
-class GLFWWindow : public IGraphicsWindow
+class CGLFWWindow : public CEngineWindow
 {
 public:
-	~GLFWWindow() override;
-	GLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool bFullScreen);
+	CGLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool bFullScreen);
+	~CGLFWWindow() override;
 	void CreateGraphicsInstance() override;
 	
-	void SetWindowFullScreen(bool bFullScreen) override;
+	void SetWindowFullScreen(bool bInFullScreen) override;
 	bool ShouldWindowClose() const override;
-
+	bool CloseWindow() override;
+	void FocusWindow() const override;
+	
 	void PreRender() override;
 	void PostRender() override;
 	
 	// TODO: Remove once systems moved to interfaces/not glfw specific
 	GLFWwindow* GetGlWindow() const { return GlWindow; }
 
-	void FocusWindow() const override;
-
 	void SetCursorPosition(SVector2i InCursorPosition) override;
-
-	bool CloseWindow() override;
-
-	SVector2i GetWindowPosition() override;
-
 	void SetWindowPosition(SVector2i InWindowPosition) override;
-
-	SVector2i GetWindowSize() override;
+	void SetCursorVisible(bool bSetVisible) override;
 
 
 protected:
+	void OnWindowResized(int NewWidth, int NewHeight) override;
+	void OnFocusChanged(bool bIsFocused) override;
+	void OnFrameBufferResized(int NewWidth, int NewHeight) override;
+
+	static int ConvertModiferToCustomInputMod(int GlfwMods);
 	
 	GLFWwindow* GlWindow = nullptr;
 };

@@ -10,5 +10,5 @@ public:
 	~WindowsPlatform() override;
 	std::string GetPlatformDisplayName() override;
 	
-	TPointer<IGraphicsWindow> CreateNewWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bFullScreen) override;
+	TPointer<CEngineWindow> CreateNewWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bFullScreen) override;
 };

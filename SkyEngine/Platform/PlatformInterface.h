@@ -6,14 +6,14 @@
 
 #include "Math/Internal/Vector2.decl.h"
 
-class IGraphicsWindow;
+class CEngineWindow;
 
 class ENGINE_API IPlatformInterface
 {
 public:
 	virtual ~IPlatformInterface() = default;
 	
-	virtual TPointer<IGraphicsWindow> CreateNewWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bFullScreen) = 0;
+	virtual TPointer<CEngineWindow> CreateNewWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bFullScreen) = 0;
 
 	virtual std::string GetPlatformDisplayName() = 0;
 };

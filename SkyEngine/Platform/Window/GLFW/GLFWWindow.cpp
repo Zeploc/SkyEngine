@@ -12,16 +12,15 @@
 #include "System/LogManager.h"
 
 void glfw_onError(int error, const char * description);
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void FocusChanged(struct GLFWwindow* window, int focused);
 
-GLFWWindow::~GLFWWindow()
+CGLFWWindow::~CGLFWWindow()
 {
 	glfwDestroyWindow(GlWindow);
 	GlWindow = nullptr;
 }
 
-GLFWWindow::GLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool bFullScreen) : IGraphicsWindow(InWindowName, InWindowSize, bFullScreen)
+CGLFWWindow::CGLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool bFullScreen)
+: CEngineWindow(InWindowName, InWindowSize, bFullScreen)
 {
 	// TODO: Only call below once for whole program
 	glfwInit();
@@ -31,6 +30,7 @@ GLFWWindow::GLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool bF
 	
 	// Enable debugging context
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+	// TODO: Only needed once, should be in main glfw api separate to per window?
 	glfwSetErrorCallback(glfw_onError);
 	
 	GLFWmonitor* FullscreenMonitor = nullptr;
@@ -56,86 +56,180 @@ GLFWWindow::GLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool bF
 		return;// -1;
 	}
 	glfwMakeContextCurrent(GlWindow);
+	glfwSetWindowUserPointer(GlWindow, reinterpret_cast<void *>(this));
 
 	if (!bFullScreen)
 	{
 		glfwSetWindowPos(GlWindow, WindowPosition.X, WindowPosition.Y);
 	}
+
+	glfwSetWindowSizeCallback(GlWindow, [](GLFWwindow* window, int width, int height)
+	{
+		CGLFWWindow* OwningGlfwWindow = reinterpret_cast<CGLFWWindow*>(glfwGetWindowUserPointer(window));
+		OwningGlfwWindow->OnWindowResized(width, height);
+	});
 	
-	// TODO: link properly
-	glfwSetFramebufferSizeCallback(GlWindow, framebuffer_size_callback);	
-	glfwSetWindowFocusCallback(GlWindow, FocusChanged);
+	glfwSetFramebufferSizeCallback(GlWindow, [](GLFWwindow* window, int width, int height)
+	{
+		CGLFWWindow* OwningGlfwWindow = reinterpret_cast<CGLFWWindow*>(glfwGetWindowUserPointer(window));
+		OwningGlfwWindow->OnFrameBufferResized(width, height);
+	});	
+	glfwSetWindowFocusCallback(GlWindow, [](GLFWwindow* window, int focused)
+	{
+		CGLFWWindow* OwningGlfwWindow = reinterpret_cast<CGLFWWindow*>(glfwGetWindowUserPointer(window));
+		OwningGlfwWindow->OnFocusChanged(focused);
+	});
+	
+	glfwSetKeyCallback(GlWindow, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		CGLFWWindow* OwningGlfwWindow = reinterpret_cast<CGLFWWindow*>(glfwGetWindowUserPointer(window));
+		Input::KeyEventType EventType = Input::KeyEventType::Pressed;
+		switch (action)
+		{
+		case GLFW_PRESS:
+			EventType  = Input::KeyEventType::Pressed;
+			break;
+		case GLFW_REPEAT:
+			EventType  = Input::KeyEventType::Repeat;
+			break;
+		case GLFW_RELEASE:
+			EventType  = Input::KeyEventType::Released;			
+			break;
+		}
+		OwningGlfwWindow->KeyPress(key, scancode, EventType, ConvertModiferToCustomInputMod(mods));
+	});
+	glfwSetCursorPosCallback(GlWindow, [](GLFWwindow* window, double xpos, double ypos)
+	{
+		CGLFWWindow* OwningGlfwWindow = reinterpret_cast<CGLFWWindow*>(glfwGetWindowUserPointer(window));
+		OwningGlfwWindow->CursorMoved((int)xpos, (int)ypos);
+	});
+	glfwSetMouseButtonCallback(GlWindow, [](GLFWwindow* window, int button, int action, int mods)
+	{
+		CGLFWWindow* OwningGlfwWindow = reinterpret_cast<CGLFWWindow*>(glfwGetWindowUserPointer(window));
+		Input::KeyEventType EventType = Input::KeyEventType::Pressed;
+		switch (action)
+		{
+		case GLFW_PRESS:
+			EventType  = Input::KeyEventType::Pressed;
+			break;
+		case GLFW_REPEAT:
+			EventType  = Input::KeyEventType::Repeat;
+			break;
+		case GLFW_RELEASE:
+			EventType  = Input::KeyEventType::Released;			
+			break;
+		}
+		OwningGlfwWindow->MouseButtonPress(button, EventType, ConvertModiferToCustomInputMod(mods));
+	});
+
+	glfwSetScrollCallback(GlWindow, [](GLFWwindow* window, double xoffset, double yoffset)
+	{
+		CGLFWWindow* OwningGlfwWindow = reinterpret_cast<CGLFWWindow*>(glfwGetWindowUserPointer(window));
+		OwningGlfwWindow->ScrollWheel((int)xoffset, (int)yoffset);
+	});
 }
 
-void GLFWWindow::CreateGraphicsInstance()
+void CGLFWWindow::CreateGraphicsInstance()
 {
 	glfwMakeContextCurrent(GlWindow);
-	IGraphicsWindow::CreateGraphicsInstance();
+	CEngineWindow::CreateGraphicsInstance();
 }
 
-void GLFWWindow::SetWindowFullScreen(bool bFullscreen)
+void CGLFWWindow::SetWindowFullScreen(bool bInFullscreen)
 {
 	// TODO:
 }
 
-bool GLFWWindow::ShouldWindowClose() const
+bool CGLFWWindow::ShouldWindowClose() const
 {	
 	return glfwWindowShouldClose(GlWindow);
 }
 
-void GLFWWindow::PreRender()
+void CGLFWWindow::PreRender()
 {
 	glfwMakeContextCurrent(GlWindow);	
-	IGraphicsWindow::PreRender();
+	CEngineWindow::PreRender();
 }
 
-void GLFWWindow::PostRender()
+void CGLFWWindow::PostRender()
 {
-	IGraphicsWindow::PostRender();
+	CEngineWindow::PostRender();
 	glfwPollEvents();
 	glfwSwapBuffers(GlWindow);
 }
 
 // TODO: VSync with glfwSwapInterval(1);
 
-void GLFWWindow::FocusWindow() const
+void CGLFWWindow::FocusWindow() const
 {
-	// TODO: Is this correct?
-	
+	// TODO: 	
 }
-
-void GLFWWindow::SetCursorPosition(SVector2i InCursorPosition)
-{
-	IGraphicsWindow::SetCursorPosition(InCursorPosition);
-	
+void CGLFWWindow::SetCursorPosition(SVector2i InCursorPosition)
+{	
+	Input::GetInstance()->MouseInput(InCursorPosition.x, InCursorPosition.y);
 	glfwSetCursorPos(GlWindow, InCursorPosition.X, InCursorPosition.Y);
 }
 
-bool GLFWWindow::CloseWindow()
+bool CGLFWWindow::CloseWindow()
 {
 	glfwSetWindowShouldClose(GlWindow, true);
 	return true;
 }
 
-SVector2i GLFWWindow::GetWindowPosition()
-{
-	// TODO: Swap to Vector2i
-	int x, y;
-	glfwGetWindowPos(GlWindow, &x, &y);
-	return {x, y};
-}
+// SVector2i CGLFWWindow::GetWindowPosition()
+// {
+// 	int x, y;
+// 	glfwGetWindowPos(GlWindow, &x, &y);
+// 	return {x, y};
+// }
 
-void GLFWWindow::SetWindowPosition(SVector2i InWindowPosition)
+void CGLFWWindow::SetWindowPosition(SVector2i InWindowPosition)
 {
 	glfwSetWindowPos(GlWindow, InWindowPosition.X, InWindowPosition.Y);
 }
 
-SVector2i GLFWWindow::GetWindowSize()
+// SVector2i CGLFWWindow::GetWindowSize()
+// {
+// 	int WindowWidth, WindowHeight;
+// 	glfwGetWindowSize(GlWindow, &WindowWidth, &WindowHeight);
+// 	return {WindowWidth, WindowHeight};
+// }
+
+void CGLFWWindow::OnWindowResized(int NewWidth, int NewHeight)
 {
-	// TODO: Swap to Vector2i
-	int WindowWidth, WindowHeight;
-	glfwGetWindowSize(GlWindow, &WindowWidth, &WindowHeight);
-	return {WindowWidth, WindowHeight};
+	// TODO: Delegate?
+}
+
+void CGLFWWindow::OnFocusChanged(bool bIsFocused)
+{
+}
+
+void CGLFWWindow::OnFrameBufferResized(int NewWidth, int NewHeight)
+{
+}
+
+int CGLFWWindow::ConvertModiferToCustomInputMod(int GlfwMods)
+{
+	int NewMod = 0;
+	if (GlfwMods & GLFW_MOD_SHIFT)
+	{
+		NewMod |= Input::ModiferType::Shift;
+	}
+	if (GlfwMods & GLFW_MOD_ALT)
+	{
+		NewMod |= Input::ModiferType::Alt;
+	}
+	if (GlfwMods & GLFW_MOD_CONTROL)
+	{
+		NewMod |= Input::ModiferType::Control;
+	}
+	return NewMod;
+}
+
+void CGLFWWindow::SetCursorVisible(bool bSetVisible)
+{
+	CEngineWindow::SetCursorVisible(bSetVisible);
+	glfwSetInputMode(GlWindow, GLFW_CURSOR, bSetVisible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
 }
 
 void glfw_onError(int error, const char* description)
@@ -148,13 +242,4 @@ void glfw_onError(int error, const char* description)
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
-}
-
-void FocusChanged(GLFWwindow* window, int focused)
-{
-	if (focused == GLFW_TRUE)
-	{
-		// TODO: Focus changed link
-		//OnFocusChanged.Broadcast();
-	}
 }

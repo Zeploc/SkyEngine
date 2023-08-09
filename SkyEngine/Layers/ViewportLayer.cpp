@@ -3,10 +3,9 @@
 
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"
-#include "Core/EngineWindow.h"
+#include "Platform/Window/EngineWindow.h"
 #include "Graphics/GraphicsInstance.h"
 #include "Input/Input.h"
-#include "Platform/Window/GraphicsWindow.h"
 #include "Render/Lighting.h"
 #include "Scene/SceneManager.h"
 
@@ -22,12 +21,12 @@ CViewportLayer::~CViewportLayer()
 
 void CViewportLayer::OnAttach()
 {
-	const TPointer<EngineWindow> EngineWindow = GetApplication()->GetApplicationWindow();
+	const TPointer<CEngineWindow> EngineWindow = GetApplication()->GetApplicationWindow();
 	const SVector2i MainWindowSize = EngineWindow->GetSize();
 	
 	Lighting::SetFogColour(SVector4(SkyColour, 1.0f));
 	// TODO: Move sky colour to scene
-	EngineWindow->GetGraphicsWindow()->GetGraphicsInstance()->ClearColour = SkyColour;
+	EngineWindow->GetGraphicsInstance()->ClearColour = SkyColour;
 	
 	// TODO: Change from singleton to graphics instance
 	CameraManager::GetInstance()->Init(EngineWindow, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
@@ -59,8 +58,7 @@ void CViewportLayer::OnRender()
 	SceneManager::GetInstance()->RenderCurrentScene();
 }
 
-bool CViewportLayer::OnEvent()
+bool CViewportLayer::OnEvent(CEvent& Event)
 {
-	Input::GetInstance()->Update();
 	return true;
 }

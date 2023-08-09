@@ -25,7 +25,7 @@ enum class EProjectionMode
 	Perspective
 };
 
-class EngineWindow;
+class CEngineWindow;
 struct STransform;
 
 // TODO: Warnings with exporting class containing STDL
@@ -37,7 +37,7 @@ public:
 	Matrix4 View;
 	Matrix4 Projection;
 
-	void Init(TPointer<EngineWindow> InViewportWindow, SVector CamPos, SVector ForwardVec, SVector UpVec);
+	void Init(TPointer<CEngineWindow> InViewportWindow, SVector CamPos, SVector ForwardVec, SVector UpVec);
 
 	void UpdateViewMatrix();
 
@@ -84,7 +84,7 @@ public:
 
 
 protected:
-	TPointer<EngineWindow> ViewportWindow;
+	TPointer<CEngineWindow> ViewportWindow;
 	
 private:
 	// FPS CONTROLS

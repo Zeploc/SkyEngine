@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Events/Event.h"
 
 #pragma once
 
@@ -18,7 +19,7 @@ public:
 	virtual void OnAttach() {}
 	virtual void OnDetach() {}
 	virtual void OnUpdate() {}
-	virtual bool OnEvent() { return false; }
+	virtual bool OnEvent(CEvent& Event) { return false; }
 	virtual void OnRender() {}
 	// TODO:
 	// virtual void OnEvent() {}

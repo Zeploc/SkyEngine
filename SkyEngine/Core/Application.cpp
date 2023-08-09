@@ -7,22 +7,17 @@
 //#include <vld.h>
 
 // Engine Includes //
-#include "EngineWindow.h"
+#include "Events/MouseEvent.h"
 #include "Input/Input.h"
-#include "Scene/SceneManager.h"
 #include "Sound/SoundManager.h"
 #include "System/LogManager.h"
-#include "Camera/CameraManager.h"
-#include "Graphics/GraphicsInstance.h"
 #include "Layers/Layer.h"
 #include "Layers/LayerStack.h"
 #include "Layers/UILayer.h"
 #include "Layers/ViewportLayer.h"
-#include "Math/Vector4.h"
-#include "Platform/Window/GraphicsWindow.h"
+#include "Platform/Window/EngineWindow.h"
 #include "Platform/Windows/WindowsPlatform.h"
 #include "Render/Shaders/ShaderManager.h"
-#include "Render/Lighting.h"
 #include "System/TimeManager.h"
 
 // make sure the winsock lib is included...
@@ -31,6 +26,8 @@
 namespace SkyEngine
 {
 	Application* Application::EngineApplication = nullptr;
+
+#define BIND_EVENT_FN(x) std::bind(&(x), this, std::placeholders::_1)
 	
 	Application::Application()
 	{
@@ -47,26 +44,25 @@ namespace SkyEngine
 	// Types //
 	using namespace std;
 
-	#define CAM CameraManager::GetInstance() 
-
 	bool Application::ApplicationSetup()
 	{
 		PlatformInterface = std::make_shared<WindowsPlatform>();
 		LogManager::GetInstance()->Init();
 		GraphicsApi = IGraphicsAPI::CreateGraphicsAPI(GraphicsApiType);
 
-		ApplicationWindow = EngineWindow::CreateEngineWindow("Application Window", MainWindowSize, false);
+		ApplicationWindow = CEngineWindow::CreateEngineWindow("Application Window", MainWindowSize, false);
 		if (!ENSURE(ApplicationWindow != NULL, "Failed to setup application window"))
 		{
 			return false;
 		}
-		ApplicationWindow->GetGraphicsWindow()->FocusWindow();
+		ApplicationWindow->FocusWindow();
+		ApplicationWindow->SubscribeEventListener(this);
 
 		CTimeManager::Start();
 		SoundManager::GetInstance()->InitFMod();
 		
 		PushLayer(new CViewportLayer());
-		PushOverlay(new CUILayer());
+		// PushOverlay(new CUILayer());		
 		
 		return true;
 	}
@@ -92,7 +88,7 @@ namespace SkyEngine
 
 	void Application::Quit()
 	{
-		ApplicationWindow->GetGraphicsWindow()->CloseWindow();
+		ApplicationWindow->CloseWindow();
 	}
 
 	void Application::Update()
@@ -106,15 +102,18 @@ namespace SkyEngine
 				Layer->OnUpdate();
 			}
 
-			OnEvent(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
+			// TODO:
+			CMouseMovedEvent Placeholder(2, 2);
+			OnEvent(Placeholder); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 		}
+		ApplicationWindow->Update();
 	}
 
-	void Application::OnEvent()
+	void Application::OnEvent(CEvent& Event)
 	{
 		for (auto it = LayerStack.end(); it != LayerStack.begin();)
 		{
-			const bool bHandledEvent = (*--it)->OnEvent();
+			const bool bHandledEvent = (*--it)->OnEvent(Event);
 			if (bHandledEvent)
 			{
 				break;
@@ -124,13 +123,13 @@ namespace SkyEngine
 
 	void Application::RenderScene()
 	{
-		ApplicationWindow->GetGraphicsWindow()->PreRender();		
+		ApplicationWindow->PreRender();		
 		
 		for (CLayer* Layer : LayerStack)
 		{
 			Layer->OnRender();
 		}
-		ApplicationWindow->GetGraphicsWindow()->PostRender();		
+		ApplicationWindow->PostRender();
 	}
 
 	void Application::ChangeSize(int w, int h)

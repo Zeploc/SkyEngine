@@ -27,6 +27,19 @@ public:
 		// Key is held Down
 	};
 
+	enum KeyEventType
+	{
+		Pressed,
+		Repeat,
+		Released
+	};
+	enum ModiferType
+	{
+		Alt = 1,
+		Shift = 1 << 1,
+		Control = 1 << 2
+	};
+
 	enum InputMouse
 	{
 		MOUSE_LEFT,
@@ -46,7 +59,7 @@ public:
 
 	std::vector<class XBOXController*> Players;
 
-	void Init(TPointer<EngineWindow> Window);
+	void Init(TPointer<CEngineWindow> Window);
 
 	void processNormalKeysDown(unsigned char key, int x, int y);
 
@@ -56,45 +69,23 @@ public:
 
 	void MouseInput(int x, int y);
 
-	void MouseButton(int button, int action, int mods);
+	void MouseButton(int button, KeyEventType EventType, int mods);
 
-	void processKeys(struct GLFWwindow* window, int key, int scancode, int action, int mods);
+	void ProcessKeys(int key, int scancode, KeyEventType EventType, int mods);
 
 	//void Joystick(unsigned int buttonMask, int x, int y, int z);
 	void Update();
 
 	std::string InputStateString(unsigned int State);
 
-	void SetCursorVisible(bool _bIsVisible);
-
-	void ToggleCursorVisible();
-
-	bool GetCursorVisible() { return bCursorVisible; };
-
 	bool bKBHit = false;
 	unsigned char cLastKey;
-
-private:
-	bool bCursorVisible = true;
 
 public:
 	// Singleton
 	static Input* GetInstance();
 
 	static void DestroyInstance();
-
-	// Prototypes //
-	static void LprocessNormalKeysDown(unsigned char key, int x, int y);
-
-	static void LprocessNormalKeysUp(unsigned char key, int x, int y);
-
-	static void LprocessSpecialKeys(int key, int x, int y);
-
-	static void LMouseInput(GLFWwindow* window, double x, double y);
-
-	static void LMouseButton(GLFWwindow* window, int button, int action, int mods);
-
-	static void LprocessKeys(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 	Input();
 

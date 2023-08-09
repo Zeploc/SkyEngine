@@ -17,8 +17,8 @@ public:
 	void CleanupMesh(TPointer<CMeshComponent> Mesh) override;
 
 
-	void PreRender(TPointer<IGraphicsWindow> GraphicsWindow) override;
-	void PostRender(TPointer<IGraphicsWindow> GraphicsWindow) override;
+	void PreRender(TPointer<CEngineWindow> GraphicsWindow) override;
+	void PostRender(TPointer<CEngineWindow> GraphicsWindow) override;
 
 	void StoreMVP(STransform Transform, unsigned int Program);
 	void PassAttributeToShader(int32_t ShaderID, float Attribute) override;

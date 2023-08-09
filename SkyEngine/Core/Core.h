@@ -19,9 +19,11 @@
 
 template<typename T>
 using TPointer = std::shared_ptr<T>;
+template<typename T>
+using TWeakPointer = std::weak_ptr<T>;
 
 template<typename T>
-using Scope = std::unique_ptr<T>;
+using TScope = std::unique_ptr<T>;
 
 // TODO: Move to premake preprocessor macros
 #define SE_ENABLE_ASSERTS

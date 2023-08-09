@@ -2,7 +2,8 @@
 
 #pragma once
 
-// #include "EngineWindow.h"
+// #include "CEngineWindow.h"
+#include "EventListener.h"
 #include "Core/Core.h"
 #include "Graphics/GraphicsAPI.h"
 #include "Layers/LayerStack.h"
@@ -10,7 +11,7 @@
 
 class CLayer;
 class IPlatformInterface;
-class EngineWindow;
+class CEngineWindow;
 
 // TODO: Warnings with exporting class containing STDL
 #pragma warning (disable : 4251)
@@ -18,7 +19,7 @@ class EngineWindow;
 namespace SkyEngine
 {	
 	// TODO: Namespace? More defined name?
-	class ENGINE_API Application
+	class ENGINE_API Application : public IEventListener//, public std::enable_shared_from_this<Application>
 	{
 	public:
 		Application();
@@ -31,7 +32,7 @@ namespace SkyEngine
 		void Quit();
 
 		virtual void Update();
-		virtual void OnEvent();
+		void OnEvent(CEvent& Event) override;
 		virtual void RenderScene();
 		virtual void ChangeSize(int w, int h);
 		virtual void OnExit();
@@ -45,13 +46,14 @@ namespace SkyEngine
 		TPointer<IPlatformInterface> PlatformInterface;
 		EGraphicsAPI GraphicsApiType;
 
-		TPointer<EngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
+		// TODO: Weak pointer to not hold ref
+		TPointer<CEngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
 		
 		inline static Application* Get();
 	private:
 		static Application* EngineApplication;
 
-		TPointer<EngineWindow> ApplicationWindow;
+		TPointer<CEngineWindow> ApplicationWindow;
 		CLayerStack LayerStack;
 	};
 

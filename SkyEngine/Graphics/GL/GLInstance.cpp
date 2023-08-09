@@ -12,7 +12,7 @@
 #include "Camera/CameraManager.h"
 #include "Entity/Entity.h"
 #include "Input/CXBOXController.h"
-#include "Platform/Window/GraphicsWindow.h"
+#include "Platform/Window/EngineWindow.h"
 #include "Render/Materials/InternalMaterial.h"
 #include "Render/Shaders/Shader.h"
 #include "Render/Shaders/ShaderManager.h"
@@ -43,11 +43,11 @@ GLInstance::GLInstance()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void GLInstance::PreRender(TPointer<IGraphicsWindow> GraphicsWindow)
+void GLInstance::PreRender(TPointer<CEngineWindow> GraphicsWindow)
 {
 	glClearColor(ClearColour.R, ClearColour.G, ClearColour.B, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	const SVector2i WindowSize = GraphicsWindow->GetWindowSize();
+	const SVector2i WindowSize = GraphicsWindow->GetSize();
 	// TODO: Option to expoose/override viewport position
 	// Fill whole window with viewport by default
 	glViewport(0, 0, WindowSize.X, WindowSize.Y);
@@ -316,7 +316,7 @@ void GLInstance::CleanupMesh(TPointer<CMeshComponent> Mesh)
 	// TODO: Look into further cleanup
 }
 
-void GLInstance::PostRender(TPointer<IGraphicsWindow> GraphicsWindow)
+void GLInstance::PostRender(TPointer<CEngineWindow> GraphicsWindow)
 {	
 }
 

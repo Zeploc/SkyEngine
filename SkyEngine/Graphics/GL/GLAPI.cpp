@@ -7,7 +7,6 @@
 #include <soil/SOIL2.h>
 
 #include "GLInstance.h"
-#include "Platform/Window/GraphicsWindow.h"
 #include "Render/Shaders/ShaderManager.h"
 #include "System/LogManager.h"
 

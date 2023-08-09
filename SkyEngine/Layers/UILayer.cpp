@@ -4,12 +4,10 @@
 #include "UILayer.h"
 
 #include "Core/Application.h"
-#include "Core/EngineWindow.h"
+#include "Platform/Window/EngineWindow.h"
 #include "Dependencies/ImGui/imgui.h"
 #include "Graphics/GraphicsInstance.h"
 #include "Graphics/GL/imgui_impl_opengl3.h"
-#include "Platform/Window/GraphicsWindow.h"
-#include "Platform/Window/GLFW/GLFWIncludes.h"
 #include "Platform/Window/GLFW/GLFWWindow.h"
 #include "Platform/Window/GLFW/imgui_impl_glfw.h"
 #include "System/TimeManager.h"
@@ -29,7 +27,7 @@ void CUILayer::OnAttach()
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
 	
-	TPointer<GLFWWindow> GraphicsWindow = std::static_pointer_cast<GLFWWindow>(GetApplication()->GetApplicationWindow()->GetGraphicsWindow());
+	TPointer<CGLFWWindow> GraphicsWindow = std::static_pointer_cast<CGLFWWindow>(GetApplication()->GetApplicationWindow());
 	ImGui_ImplGlfw_InitForOpenGL(GraphicsWindow->GetGlWindow(), true);
 	
 	// ImGuiIO& Io = ImGui::GetIO();
@@ -85,11 +83,11 @@ void CUILayer::OnRender()
 	ImGui::ShowDemoWindow(&show);
 	
 	ImGui::Render();
-	GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->GetGraphicsInstance()->RenderImGui();
+	GetApplication()->GetApplicationWindow()->GetGraphicsInstance()->RenderImGui();
 }
 
-bool CUILayer::OnEvent()
+bool CUILayer::OnEvent(CEvent& Event)
 {
 	
-	return true;
+	return false;
 }

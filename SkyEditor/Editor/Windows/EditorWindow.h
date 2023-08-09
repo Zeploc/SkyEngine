@@ -6,8 +6,9 @@
 
 #include <Math/Vector.h>
 
-#include "Core/EngineWindow.h"
+#include "Math/Vector2.h"
 
+class CEngineWindow;
 class UIElement;
 class UIImage;
 
@@ -16,7 +17,7 @@ class EditorWindow
 public:
 	void CreateExternalWindow();
 
-	EditorWindow(std::string InWindowName, TPointer<EngineWindow> InLinkedWindow = nullptr, SVector2 InSize = SVector2(100, 100), SVector2 InPosition = SVector2(0, 0));
+	EditorWindow(std::string InWindowName, TPointer<CEngineWindow> InLinkedWindow = nullptr, SVector2 InSize = SVector2(100, 100), SVector2 InPosition = SVector2(0, 0));
 
 	void SetupGlutBindings();
 
@@ -30,7 +31,7 @@ public:
 
 	void SetWindowPosition(SVector2i _position);
 
-	TPointer<EngineWindow> GetParentWindow() { return LinkedWindow; }
+	TPointer<CEngineWindow> GetParentWindow() { return LinkedWindow; }
 
 	void MainWindowSizeChanged(int _w, int _h);
 
@@ -56,7 +57,7 @@ protected:
 	glm::vec3 BackColour = glm::vec3(1, 1, 1);
 
 	std::string WindowName;
-	TPointer<EngineWindow> LinkedWindow;
+	TPointer<CEngineWindow> LinkedWindow;
 
 	TPointer<UIImage> BackImage;
 

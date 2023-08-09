@@ -4,7 +4,9 @@
 
 #include <vector>
 
-#include "Core/EngineWindow.h"
+#include "Core/Core.h"
+
+class CEngineWindow;
 
 class EditorWindowManager
 {
@@ -25,11 +27,11 @@ public:
 
 	static void FocusChanged();
 
-	static TPointer<EngineWindow> GetCurrentFocus() { return CurrentFocused; };
+	static TPointer<CEngineWindow> GetCurrentFocus() { return CurrentFocused; };
 
 	static std::vector<class EditorWindow*> GetWindows() { return EditorWindows; };
 
-	static TPointer<EngineWindow> GetMainWindow();	
+	static TPointer<CEngineWindow> GetMainWindow();	
 
 protected:
 	static bool IsRemovedID(EditorWindow* _Window);
@@ -38,7 +40,7 @@ public:
 
 protected:
 	// TODO: Link focus
-	static TPointer<EngineWindow> CurrentFocused;
+	static TPointer<CEngineWindow> CurrentFocused;
 
 	static std::vector<EditorWindow*> EditorWindows;
 	static std::vector<EditorWindow*> EditorWindowsToRemove;
