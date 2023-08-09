@@ -19,6 +19,7 @@
 #include "Core/Application.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Entity/Button3DEntity.h"
+#include "Events/KeyEvent.h"
 #include "Input/Input.h"
 
 /************************************************************
@@ -204,17 +205,20 @@ void Scene::Update()
 		UIElementsToBeDestroyed.clear();
 	}
 
-	Button3DEntity::bButtonPressedThisFrame = false;
+	Button3DEntity::bButtonPressedThisFrame = false;	
+}
 
-	// TODO: If not build check (editor only)
-	if (Input::GetInstance()->KeyState[GLFW_KEY_ESCAPE] == Input::INPUT_FIRST_PRESS) // Escape
-	{
-		if (Input::GetInstance()->KeyState[GLFW_KEY_LEFT_SHIFT] == Input::InputState::INPUT_HOLD)
-		{
-			GetApplication()->Quit();
-			return;
-		}
-	}
+bool Scene::OnEvent(CEvent& Event)
+{
+	EventDispatcher dispatcher(Event);
+	bool bHandled = false;
+	bHandled |= dispatcher.Dispatch<CMouseButtonPressedEvent>(SE_BIND_EVENT_FN(Scene::OnMouseButtonPressedEvent));
+	bHandled |= dispatcher.Dispatch<CMouseButtonReleasedEvent>(SE_BIND_EVENT_FN(Scene::OnMouseButtonReleasedEvent));
+	bHandled |= dispatcher.Dispatch<CMouseMovedEvent>(SE_BIND_EVENT_FN(Scene::OnMouseMovedEvent));
+	bHandled |= dispatcher.Dispatch<CMouseScrolledEvent>(SE_BIND_EVENT_FN(Scene::OnMouseScrolledEvent));
+	bHandled |= dispatcher.Dispatch<CKeyPressedEvent>(SE_BIND_EVENT_FN(Scene::OnKeyPressedEvent));
+	bHandled |= dispatcher.Dispatch<CKeyReleasedEvent>(SE_BIND_EVENT_FN(Scene::OnKeyReleasedEvent));
+	return bHandled;
 }
 
 void Scene::OnLoadScene()
@@ -246,6 +250,45 @@ bool Scene::operator==(const Scene& rhs) const
 	{
 		return true;
 	}
+	return false;
+}
+
+bool Scene::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
+{
+	return false;
+}
+
+bool Scene::OnMouseButtonReleasedEvent(CMouseButtonReleasedEvent& Event)
+{
+	return false;
+}
+
+bool Scene::OnMouseMovedEvent(CMouseMovedEvent& Event)
+{
+	return false;
+}
+
+bool Scene::OnMouseScrolledEvent(CMouseScrolledEvent& Event)
+{
+	return false;
+}
+
+bool Scene::OnKeyPressedEvent(CKeyPressedEvent& Event)
+{
+	// TODO: If not build check (editor only)
+	if (Event.GetKeyCode() == GLFW_KEY_ESCAPE) 
+	{
+		if (Event.GetMods() & CInput::ModiferType::Shift)
+		{
+			GetApplication()->Quit();
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Scene::OnKeyReleasedEvent(CKeyReleasedEvent& Event)
+{
 	return false;
 }
 

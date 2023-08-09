@@ -35,7 +35,9 @@ public:
 	virtual SVector2i GetSize() const { return WindowSize; }
 	virtual SVector2i GetPosition() const { return WindowPosition; }
 	virtual void SetWindowPosition(SVector2i InPosition);	
-	virtual void SetCursorPosition(SVector2i InCursorPosition) = 0;
+	virtual void SetCursorPosition(SVector2i InCursorPosition);
+
+	SVector2i GetScreenHalfSize();
 	
 	virtual void PreRender();
 	void Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements);
@@ -48,16 +50,17 @@ public:
 	FMulticastDelegate OnFocusChangedDelete;	
 
 	TPointer<IGraphicsInstance> GetGraphicsInstance() { return GraphicsInstance; }
+	CInput& GetInput() { return Input; }
 
 protected:
 	virtual void OnWindowResized(int NewWidth, int NewHeight) = 0;
 	virtual void OnFrameBufferResized(int NewWidth, int NewHeight) = 0;
 	virtual void OnFocusChanged(bool bIsFocused);
 	
-	virtual void MouseButtonPress(int button, Input::KeyEventType EventType, int mods);
-	virtual void KeyPress(int key, int scancode, Input::KeyEventType EventType, int mods);
+	virtual void MouseButtonPress(int button, CInput::KeyEventType EventType, int mods);
+	virtual void KeyPress(int key, int scancode, CInput::KeyEventType EventType, int mods);
 	virtual void CursorMoved(int X, int Y);
-	virtual void ScrollWheel(int X, int Y);
+	virtual void ScrollWheel(float X, float Y);
 	
 	TPointer<IGraphicsInstance> GraphicsInstance;
 	std::string WindowName;
@@ -65,6 +68,7 @@ protected:
 	SVector2i WindowPosition;
 	bool bFullscreen = false;
 	bool bCursorVisible = true;
+	CInput Input;
 	
 	std::vector<IEventListener*> EventListeners;
 };

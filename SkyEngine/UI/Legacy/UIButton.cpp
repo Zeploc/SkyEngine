@@ -5,7 +5,9 @@
 
 // Engine Includes //
 #include "Camera/CameraManager.h"
+#include "Core/Application.h"
 #include "Input/Input.h"
+#include "Platform/Window/EngineWindow.h"
 #include "Render/Shaders/Shader.h"
 #include "Render/Shaders/ShaderManager.h"
 #include "Sound/SoundManager.h"
@@ -140,37 +142,37 @@ void UIButton::Update()
 	{
 		return;
 	}
-	glm::vec2 MousePosViewport = Input::GetInstance()->MousePos;
+	glm::vec2 MousePosViewport = GetApplication()->GetApplicationWindow()->GetInput().MousePos;
 	glm::vec2 ViewportOffset;// = glm::vec2(CameraManager::GetInstance()->VIEWPORT_X, CameraManager::GetInstance()->VIEWPORT_Y);
 	//MousePosViewport += ViewportOffset;
 	glm::vec2 TopLeft = glm::vec2(position.x - ImageComponent.GetWidth() / 2, position.y - ImageComponent.GetHeight() / 2) + ViewportOffset;
 	glm::vec2 BottomRight = glm::vec2(position.x + ImageComponent.GetWidth() / 2, position.y + ImageComponent.GetHeight() / 2) + ViewportOffset;
-	if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_RELEASE)
-	{
-		ReleaseDelegate.Broadcast();
-
-		bPressed = false;
-	}
-	if (MousePosViewport.x > TopLeft.x && MousePosViewport.x < BottomRight.x && MousePosViewport.y < BottomRight.y && MousePosViewport.y > TopLeft.y)
-	{
-		Hovered();
-		if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_HOLD)
-		{
-			HoldDelegate.Broadcast();
-		}
-		else if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
-		{
-			Pressed();
-		}
-	}
-	else if (HoverOverride)
-	{
-		Hovered();
-	}
-	else
-	{
-		ImageComponent.Colour = btnColour;
-	}
+	// if (CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == CInput::InputState::INPUT_FIRST_RELEASE)
+	// {
+	// 	ReleaseDelegate.Broadcast();
+	//
+	// 	bPressed = false;
+	// }
+	// if (MousePosViewport.x > TopLeft.x && MousePosViewport.x < BottomRight.x && MousePosViewport.y < BottomRight.y && MousePosViewport.y > TopLeft.y)
+	// {
+	// 	Hovered();
+	// 	if (CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == CInput::InputState::INPUT_HOLD)
+	// 	{
+	// 		HoldDelegate.Broadcast();
+	// 	}
+	// 	else if (CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == CInput::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
+	// 	{
+	// 		Pressed();
+	// 	}
+	// }
+	// else if (HoverOverride)
+	// {
+	// 	Hovered();
+	// }
+	// else
+	// {
+	// 	ImageComponent.Colour = btnColour;
+	// }
 }
 
 /************************************************************

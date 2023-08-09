@@ -10,20 +10,22 @@ class ENGINE_API CKeyEvent : public CEvent
 {
 public:
 	inline int GetKeyCode() const { return KeyCode; }
+	inline int GetMods() const { return Mods; }
 
 	EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 protected:
-	CKeyEvent(int InKeycode)
-		: KeyCode(InKeycode) {}
+	CKeyEvent(int InKeycode, int InMods)
+		: KeyCode(InKeycode), Mods(InMods) {}
 
 	int KeyCode;
+	int Mods;
 };
 
 class ENGINE_API CKeyPressedEvent : public CKeyEvent
 {
 public:
-	CKeyPressedEvent(int InKeycode, int InRepeatCount)
-		: CKeyEvent(InKeycode), RepeatCount(InRepeatCount) {}
+	CKeyPressedEvent(int InKeycode, int InMods, int InRepeatCount)
+		: CKeyEvent(InKeycode, InMods), RepeatCount(InRepeatCount) {}
 
 	inline int GetRepeatCount() const { return RepeatCount; }
 
@@ -42,8 +44,8 @@ private:
 class ENGINE_API CKeyReleasedEvent : public CKeyEvent
 {
 public:
-	CKeyReleasedEvent(int InKeycode)
-		: CKeyEvent(InKeycode) {}
+	CKeyReleasedEvent(int InKeycode, int InMods)
+		: CKeyEvent(InKeycode, InMods) {}
 
 	std::string ToString() const override
 	{

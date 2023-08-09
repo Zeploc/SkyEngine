@@ -3,29 +3,32 @@
 #pragma once
 
 #include "Event.h"
+#include "Math/Vector2.h"
 
 // Credit: The Cherno
+
+// TODO: Warnings with exporting class containing STDL
+#pragma warning (disable : 4251)
 
 class ENGINE_API CMouseMovedEvent : public CEvent
 {
 public:
-	CMouseMovedEvent(float InX, float InY)
-		: MouseX(InX), MouseY(InY) {}
+	CMouseMovedEvent(SVector2i InPos)
+		: MousePos(InPos) {}
 
-	inline float GetX() const { return MouseX; }
-	inline float GetY() const { return MouseY; }
+	inline SVector2i GetMousePos() const { return MousePos; }
 
 	std::string ToString() const override
 	{
 		std::stringstream ss;
-		ss << "MouseMovedEvent: " << MouseX << ", " << MouseY;
+		ss << "MouseMovedEvent: " << MousePos.ToString();
 		return ss.str();
 	}
 
 	EVENT_CLASS_TYPE(MouseMoved)
 	EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 private:
-	float MouseX, MouseY;
+	SVector2i MousePos;
 };
 
 class ENGINE_API CMouseScrolledEvent : public CEvent
@@ -54,20 +57,22 @@ class ENGINE_API CMouseButtonEvent : public CEvent
 {
 public:
 	inline int GetMouseButton() const { return Button; }
+	inline int GetMods() const { return Mods; }
 
 	EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 protected:
-	CMouseButtonEvent(int InButton)
-		: Button(InButton) {}
+	CMouseButtonEvent(int InButton, int InMods)
+		: Button(InButton), Mods(InMods) {}
 
 	int Button; // TODO: Switch to enum
+	int Mods;
 };
 
 class ENGINE_API CMouseButtonPressedEvent : public CMouseButtonEvent
 {
 public:
-	CMouseButtonPressedEvent(int InButton)
-		: CMouseButtonEvent(InButton) {}
+	CMouseButtonPressedEvent(int InButton, int InMods)
+		: CMouseButtonEvent(InButton, InMods) {}
 
 	std::string ToString() const override
 	{
@@ -82,8 +87,8 @@ public:
 class ENGINE_API CMouseButtonReleasedEvent : public CMouseButtonEvent
 {
 public:
-	CMouseButtonReleasedEvent(int InButton)
-		: CMouseButtonEvent(InButton) {}
+	CMouseButtonReleasedEvent(int InButton, int InMods)
+		: CMouseButtonEvent(InButton, InMods) {}
 
 	std::string ToString() const override
 	{

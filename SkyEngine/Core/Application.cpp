@@ -62,7 +62,7 @@ namespace SkyEngine
 		SoundManager::GetInstance()->InitFMod();
 		
 		PushLayer(new CViewportLayer());
-		// PushOverlay(new CUILayer());		
+		// PushOverlay(new CUILayer());	
 		
 		return true;
 	}
@@ -101,10 +101,6 @@ namespace SkyEngine
 			{
 				Layer->OnUpdate();
 			}
-
-			// TODO:
-			CMouseMovedEvent Placeholder(2, 2);
-			OnEvent(Placeholder); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 		}
 		ApplicationWindow->Update();
 	}
@@ -148,7 +144,6 @@ namespace SkyEngine
 			Layer->OnDetach();
 		}
 		
-		Input::DestroyInstance();
 		SoundManager::DestoryInstance();
 		Text::Fonts.~vector();
 	}

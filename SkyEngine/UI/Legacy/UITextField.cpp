@@ -84,50 +84,51 @@ void UITextField::Update()
 {
 	glm::vec2 TopLeft = glm::vec2(position.x - BackImage.GetWidth() / 2, position.y - BackImage.GetHeight() / 2);
 	glm::vec2 BottomRight = glm::vec2(position.x + BackImage.GetWidth() / 2, position.y + BackImage.GetHeight() / 2);
-	if (Input::GetInstance()->MousePos.X > TopLeft.x && Input::GetInstance()->MousePos.X < BottomRight.x && Input::GetInstance()->MousePos.Y < BottomRight.y && Input::GetInstance()->MousePos.Y > TopLeft.y)
-	{
-		if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == (Input::InputState::INPUT_HOLD | Input::InputState::INPUT_FIRST_PRESS))
-		{
-			SetFocussed(true);
-			BackImage.Colour = {Colour.r / 2, Colour.g / 2, Colour.b / 2, Colour.a};
-		}
-	}
-	else if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == (Input::InputState::INPUT_HOLD | Input::InputState::INPUT_FIRST_PRESS))
-	{
-		SetFocussed(false);
-		BackImage.Colour = {Colour.r, Colour.g, Colour.b, Colour.a};
-	}
-	if (bIsFocussed && (Input::GetInstance()->bKBHit || Input::GetInstance()->KeyState[Input::GetInstance()->cLastKey] == Input::INPUT_HOLD))
-	{
-		//FieldText.Colour.a = 1.0f;
-		std::string NewText = FieldText.sText;
-		char cNext = Input::GetInstance()->cLastKey;
-		if (cNext == '\b' && dSpamDelay > fSpamTime)
-		{
-			dSpamDelay = 0;
-			NewText = NewText.substr(0, NewText.length() - 1);
-			//continue; // no good for the rest now we've deleted a character.
-		}
-		else if (cNext == '\n' || cNext == '\r')
-		{
-			//return true;
-		}
-		else if (Input::GetInstance()->KeyState[Input::GetInstance()->cLastKey] != Input::INPUT_HOLD)
-		{
-			if (bHintTextActive)
-			{
-				FieldText.sText = "";
-				NewText = FieldText.sText;
-				bHintTextActive = false;
-			}
-			if (!(static_cast<int>(cNext) < 32 || static_cast<int>(cNext) > 126))
-			{
-				NewText += cNext;
-			}
-		}
-
-		FieldText.sText = NewText;
-	}
+	// TODO: Link or remove
+	// if (CInput::GetInstance()->MousePos.X > TopLeft.x && CInput::GetInstance()->MousePos.X < BottomRight.x && CInput::GetInstance()->MousePos.Y < BottomRight.y && CInput::GetInstance()->MousePos.Y > TopLeft.y)
+	// {
+	// 	if (CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == (CInput::InputState::INPUT_HOLD | CInput::InputState::INPUT_FIRST_PRESS))
+	// 	{
+	// 		SetFocussed(true);
+	// 		BackImage.Colour = {Colour.r / 2, Colour.g / 2, Colour.b / 2, Colour.a};
+	// 	}
+	// }
+	// else if (CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == (CInput::InputState::INPUT_HOLD | CInput::InputState::INPUT_FIRST_PRESS))
+	// {
+	// 	SetFocussed(false);
+	// 	BackImage.Colour = {Colour.r, Colour.g, Colour.b, Colour.a};
+	// }
+	// if (bIsFocussed && (CInput::GetInstance()->bKBHit || CInput::GetInstance()->KeyState[CInput::GetInstance()->cLastKey] == CInput::INPUT_HOLD))
+	// {
+	// 	//FieldText.Colour.a = 1.0f;
+	// 	std::string NewText = FieldText.sText;
+	// 	char cNext = CInput::GetInstance()->cLastKey;
+	// 	if (cNext == '\b' && dSpamDelay > fSpamTime)
+	// 	{
+	// 		dSpamDelay = 0;
+	// 		NewText = NewText.substr(0, NewText.length() - 1);
+	// 		//continue; // no good for the rest now we've deleted a character.
+	// 	}
+	// 	else if (cNext == '\n' || cNext == '\r')
+	// 	{
+	// 		//return true;
+	// 	}
+	// 	else if (CInput::GetInstance()->KeyState[CInput::GetInstance()->cLastKey] != CInput::INPUT_HOLD)
+	// 	{
+	// 		if (bHintTextActive)
+	// 		{
+	// 			FieldText.sText = "";
+	// 			NewText = FieldText.sText;
+	// 			bHintTextActive = false;
+	// 		}
+	// 		if (!(static_cast<int>(cNext) < 32 || static_cast<int>(cNext) > 126))
+	// 		{
+	// 			NewText += cNext;
+	// 		}
+	// 	}
+	//
+	// 	FieldText.sText = NewText;
+	// }
 
 	BackImage.Update();
 	FieldText.Update();

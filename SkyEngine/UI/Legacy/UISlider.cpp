@@ -6,7 +6,9 @@
 // Library Includes //
 
 // Engine Includes //
+#include "Core/Application.h"
 #include "Input/Input.h"
+#include "Platform/Window/EngineWindow.h"
 
 // Static Variables //
 
@@ -59,7 +61,7 @@ void UISlider::DrawUIElement()
 ************************************************************/
 void UISlider::Update()
 {
-	glm::vec2 MousePos = Input::GetInstance()->MousePos;
+	glm::vec2 MousePos = GetApplication()->GetApplicationWindow()->GetInput().MousePos;
 
 	SliderBar.Update();
 	SliderHandle.Update();

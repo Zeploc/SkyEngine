@@ -7,6 +7,9 @@
 // Library Includes //
 #include <glm/detail/type_vec.hpp>
 
+#include "Events/Event.h"
+#include "Events/KeyEvent.h"
+#include "Events/MouseEvent.h"
 #include "System/Utils.h"
 
 // OpenGL Library Includes //
@@ -39,6 +42,7 @@ public:
 	void DestroyUIElement(TPointer<UIElement> _Element);
 
 	virtual void Update();
+	virtual bool OnEvent(CEvent& Event);
 
 	virtual void OnLoadScene();
 
@@ -52,7 +56,15 @@ public:
 	std::string SceneName;
 	std::vector<TPointer<Entity>> Entities;
 	std::vector<TPointer<UIElement>> UIElements;
+	
 protected:
+	virtual bool OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event);
+	virtual bool OnMouseButtonReleasedEvent(CMouseButtonReleasedEvent& Event);
+	virtual bool OnMouseMovedEvent(CMouseMovedEvent& Event);
+	virtual bool OnMouseScrolledEvent(CMouseScrolledEvent& Event);
+	virtual bool OnKeyPressedEvent(CKeyPressedEvent& Event);
+	virtual bool OnKeyReleasedEvent(CKeyReleasedEvent& Event);
+	
 	std::vector<TPointer<Entity>> DestroyedEntities;
 	std::vector<TPointer<UIElement>> UIElementsToBeDestroyed;
 	bool bIsPersistant = false;

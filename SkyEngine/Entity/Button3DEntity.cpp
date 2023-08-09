@@ -7,6 +7,7 @@
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"
 #include "Input/Input.h"
+#include "Platform/Window/EngineWindow.h"
 #include "Render/Materials/Material.h"
 #include "Render/Meshes/Basic/Cube.h"
 #include "Render/Shaders/UnlitShader.h"
@@ -63,13 +64,14 @@ void Button3DEntity::Update()
 			// TODO: Link stencil
 			// EntityMesh->MeshMaterial->bStencil = true;
 		}
-		if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
-		{
-			bPressed = true;
-			// TODO: Switch to order/depth system
-			bButtonPressedThisFrame = true;
-			PressDelegate.Broadcast();
-		}
+		// TODO:
+		// if (CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == CInput::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
+		// {
+		// 	bPressed = true;
+		// 	// TODO: Switch to order/depth system
+		// 	bButtonPressedThisFrame = true;
+		// 	PressDelegate.Broadcast();
+		// }
 		if (EntityMesh->MeshMaterial)
 		{
 			// TODO: Link runtime colour
@@ -93,12 +95,12 @@ bool Button3DEntity::CheckHit(glm::vec3 BottomLeftOffset, glm::vec3 TopRightOffs
 	return Utils::CheckFaceHit(BottomLeftOffset,
 		TopRightOffset,
 		CameraManager::GetInstance()->GetCameraPosition(),
-		CameraManager::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos),
+		CameraManager::GetInstance()->ScreenToWorldDirection(GetApplication()->GetApplicationWindow()->GetInput().MousePos),
 
 		this->shared_from_this(), 
 		HitPos);
 	
-	// glm::vec3 rayDirection = CameraManager::GetInstance()->ScreenToWorldDirection(Input::GetInstance()->MousePos);
+	// glm::vec3 rayDirection = CameraManager::GetInstance()->ScreenToWorldDirection(CInput::GetInstance()->MousePos);
 	//
 	// glm::vec3 AnchoredPosition = Utils::GetAncoredPosition(Transform.Position, glm::vec3(EntityMesh->m_fWidth, EntityMesh->m_fHeight, EntityMesh->m_fDepth), EntityAnchor);
 	// glm::vec3 lb = BottomLeftOffset + AnchoredPosition;

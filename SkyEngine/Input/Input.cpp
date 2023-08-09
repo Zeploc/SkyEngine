@@ -14,74 +14,21 @@
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"
 #include "Platform/Window/EngineWindow.h"
-#include "Platform/Window/GLFW/GLFWWindow.h"
 
-// Static Variables //
-std::map<int, Input*> Input::m_pInputs;
-Input* Input::m_pInput = nullptr;
-
-/************************************************************
-#--Description--#:  Constructor function
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	Takes contructor values
-#--Return--#: 		NA
-************************************************************/
-Input::Input()
+CInput::CInput()
 {
 	std::fill(KeyState, KeyState + 255, INPUT_RELEASED);
 	std::fill(MouseState, MouseState + 3, INPUT_RELEASED);
 }
 
-/************************************************************
-#--Description--#:  Destructor function
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	NA
-#--Return--#: 		NA
-************************************************************/
-Input::~Input()
+CInput::~CInput()
 {
 }
 
-/************************************************************
-#--Description--#:  Retrieves static instance pointer to this class
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	NA
-#--Return--#: 		Returns static pointer to self
-************************************************************/
-Input* Input::GetInstance()
-{
-	if (!m_pInput)
-	{
-		m_pInput = new Input;
-	}
-	return m_pInput;
-}
-
-/************************************************************
-#--Description--#:  Destroys static instance pointer to this class
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	NA
-#--Return--#: 		NA
-************************************************************/
-void Input::DestroyInstance()
-{
-	if (m_pInput)
-	{
-		delete m_pInput;
-	}
-	m_pInput = nullptr;
-}
-
-/************************************************************
-#--Description--#: 	Initialises the OpenGL inputs to the local functions
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
-void Input::Init(TPointer<CEngineWindow> Window)
+void CInput::Init(TPointer<CEngineWindow> Window)
 {
 	/*
-	glutSpecialFunc(Input::LprocessSpecialKeys);*/
+	glutSpecialFunc(CInput::LprocessSpecialKeys);*/
 	//glutJoystickFunc(LJoystick, (float)GLUT_JOYSTICK_POLL_RATE / 100.0f);
 
 	if (Players.size() <= 0)
@@ -99,7 +46,7 @@ void Input::Init(TPointer<CEngineWindow> Window)
 #--Parameters--#: 	Takes in the the key and the mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void Input::processNormalKeysDown(unsigned char key, int x, int y)
+void CInput::processNormalKeysDown(unsigned char key, int x, int y)
 {
 	bKBHit = true;
 	cLastKey = key;
@@ -115,7 +62,7 @@ void Input::processNormalKeysDown(unsigned char key, int x, int y)
 #--Parameters--#: 	Takes in the the key and the mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void Input::processNormalKeysUp(unsigned char key, int x, int y)
+void CInput::processNormalKeysUp(unsigned char key, int x, int y)
 {
 	if (KeyState[key] == (INPUT_HOLD | INPUT_FIRST_PRESS))
 	{
@@ -129,7 +76,7 @@ void Input::processNormalKeysUp(unsigned char key, int x, int y)
 #--Parameters--#: 	Takes in the the key and the mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void Input::processSpecialKeys(int key, int x, int y)
+void CInput::processSpecialKeys(int key, int x, int y)
 {
 }
 
@@ -139,7 +86,7 @@ void Input::processSpecialKeys(int key, int x, int y)
 #--Parameters--#: 	Takes in the the mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void Input::MouseInput(int x, int y)
+void CInput::MouseInput(int x, int y)
 {
 	MousePos = glm::tvec2(x, y);
 }
@@ -150,7 +97,7 @@ void Input::MouseInput(int x, int y)
 #--Parameters--#: 	Takes in the the button and the state and mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void Input::MouseButton(int button, KeyEventType EventType, int mods)
+void CInput::MouseButton(int button, KeyEventType EventType, int mods)
 {
 	//MousePos = glm::vec2(x, y);
 	if (button < 3)
@@ -241,7 +188,7 @@ void Input::MouseButton(int button, KeyEventType EventType, int mods)
 	}
 }
 
-void Input::ProcessKeys(int key, int scancode, KeyEventType EventType, int mods)
+void CInput::ProcessKeys(int key, int scancode, KeyEventType EventType, int mods)
 {
 	bKBHit = true;
 	cLastKey = key;
@@ -276,7 +223,7 @@ void Input::ProcessKeys(int key, int scancode, KeyEventType EventType, int mods)
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Input::Update()
+void CInput::Update()
 {
 	for (int i = 0; i < 350; i++)
 	{
@@ -315,7 +262,7 @@ void Input::Update()
 #--Parameters--#: 	Takes in enum value
 #--Return--#: 		Returns enum name as string
 ************************************************************/
-std::string Input::InputStateString(unsigned int State)
+std::string CInput::InputStateString(unsigned int State)
 {
 	switch (State)
 	{

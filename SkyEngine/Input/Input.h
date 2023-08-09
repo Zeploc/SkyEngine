@@ -12,7 +12,7 @@
 // TODO: Warnings with exporting class containing STDL
 #pragma warning (disable : 4251)
 
-class ENGINE_API Input
+class ENGINE_API CInput
 {
 public:
 	enum InputState
@@ -47,6 +47,8 @@ public:
 		MOUSE_RIGHT,
 	};
 
+	friend class CEngineWindow;
+
 	SVector2i MousePos;
 	unsigned int KeyState[350]; //255
 	unsigned int MouseState[3];
@@ -59,19 +61,22 @@ public:
 
 	std::vector<class XBOXController*> Players;
 
+protected:
+	CInput();
+	
 	void Init(TPointer<CEngineWindow> Window);
-
-	void processNormalKeysDown(unsigned char key, int x, int y);
-
-	void processNormalKeysUp(unsigned char key, int x, int y);
-
-	void processSpecialKeys(int key, int x, int y);
 
 	void MouseInput(int x, int y);
 
 	void MouseButton(int button, KeyEventType EventType, int mods);
 
 	void ProcessKeys(int key, int scancode, KeyEventType EventType, int mods);
+	
+	void processNormalKeysDown(unsigned char key, int x, int y);
+
+	void processNormalKeysUp(unsigned char key, int x, int y);
+
+	void processSpecialKeys(int key, int x, int y);
 
 	//void Joystick(unsigned int buttonMask, int x, int y, int z);
 	void Update();
@@ -81,20 +86,6 @@ public:
 	bool bKBHit = false;
 	unsigned char cLastKey;
 
-public:
-	// Singleton
-	static Input* GetInstance();
-
-	static void DestroyInstance();
-
-	Input();
-
 private:
-	static Input* m_pInput;
-	static std::map<int, Input*> m_pInputs;
-
-	~Input();
-
-	Input(const Input&); // Don't Implement
-	void operator=(const Input&); // Don't implement
+	~CInput();
 };

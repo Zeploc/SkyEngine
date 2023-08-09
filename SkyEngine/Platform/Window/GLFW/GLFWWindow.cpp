@@ -83,19 +83,20 @@ CGLFWWindow::CGLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool 
 	glfwSetKeyCallback(GlWindow, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
 		CGLFWWindow* OwningGlfwWindow = reinterpret_cast<CGLFWWindow*>(glfwGetWindowUserPointer(window));
-		Input::KeyEventType EventType = Input::KeyEventType::Pressed;
+		CInput::KeyEventType EventType = CInput::KeyEventType::Pressed;
 		switch (action)
 		{
 		case GLFW_PRESS:
-			EventType  = Input::KeyEventType::Pressed;
+			EventType  = CInput::KeyEventType::Pressed;
 			break;
 		case GLFW_REPEAT:
-			EventType  = Input::KeyEventType::Repeat;
+			EventType  = CInput::KeyEventType::Repeat;
 			break;
 		case GLFW_RELEASE:
-			EventType  = Input::KeyEventType::Released;			
+			EventType  = CInput::KeyEventType::Released;			
 			break;
 		}
+		// TODO: Convert to custom keycode
 		OwningGlfwWindow->KeyPress(key, scancode, EventType, ConvertModiferToCustomInputMod(mods));
 	});
 	glfwSetCursorPosCallback(GlWindow, [](GLFWwindow* window, double xpos, double ypos)
@@ -106,17 +107,17 @@ CGLFWWindow::CGLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool 
 	glfwSetMouseButtonCallback(GlWindow, [](GLFWwindow* window, int button, int action, int mods)
 	{
 		CGLFWWindow* OwningGlfwWindow = reinterpret_cast<CGLFWWindow*>(glfwGetWindowUserPointer(window));
-		Input::KeyEventType EventType = Input::KeyEventType::Pressed;
+		CInput::KeyEventType EventType = CInput::KeyEventType::Pressed;
 		switch (action)
 		{
 		case GLFW_PRESS:
-			EventType  = Input::KeyEventType::Pressed;
+			EventType  = CInput::KeyEventType::Pressed;
 			break;
 		case GLFW_REPEAT:
-			EventType  = Input::KeyEventType::Repeat;
+			EventType  = CInput::KeyEventType::Repeat;
 			break;
 		case GLFW_RELEASE:
-			EventType  = Input::KeyEventType::Released;			
+			EventType  = CInput::KeyEventType::Released;			
 			break;
 		}
 		OwningGlfwWindow->MouseButtonPress(button, EventType, ConvertModiferToCustomInputMod(mods));
@@ -125,7 +126,7 @@ CGLFWWindow::CGLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool 
 	glfwSetScrollCallback(GlWindow, [](GLFWwindow* window, double xoffset, double yoffset)
 	{
 		CGLFWWindow* OwningGlfwWindow = reinterpret_cast<CGLFWWindow*>(glfwGetWindowUserPointer(window));
-		OwningGlfwWindow->ScrollWheel((int)xoffset, (int)yoffset);
+		OwningGlfwWindow->ScrollWheel((float)xoffset, (float)yoffset);
 	});
 }
 
@@ -165,8 +166,8 @@ void CGLFWWindow::FocusWindow() const
 	// TODO: 	
 }
 void CGLFWWindow::SetCursorPosition(SVector2i InCursorPosition)
-{	
-	Input::GetInstance()->MouseInput(InCursorPosition.x, InCursorPosition.y);
+{
+	CEngineWindow::SetCursorPosition(InCursorPosition);
 	glfwSetCursorPos(GlWindow, InCursorPosition.X, InCursorPosition.Y);
 }
 
@@ -213,15 +214,15 @@ int CGLFWWindow::ConvertModiferToCustomInputMod(int GlfwMods)
 	int NewMod = 0;
 	if (GlfwMods & GLFW_MOD_SHIFT)
 	{
-		NewMod |= Input::ModiferType::Shift;
+		NewMod |= CInput::ModiferType::Shift;
 	}
 	if (GlfwMods & GLFW_MOD_ALT)
 	{
-		NewMod |= Input::ModiferType::Alt;
+		NewMod |= CInput::ModiferType::Alt;
 	}
 	if (GlfwMods & GLFW_MOD_CONTROL)
 	{
-		NewMod |= Input::ModiferType::Control;
+		NewMod |= CInput::ModiferType::Control;
 	}
 	return NewMod;
 }

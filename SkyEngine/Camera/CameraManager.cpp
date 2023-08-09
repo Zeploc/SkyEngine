@@ -12,6 +12,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 // Engine Includes //
+#include "Core/Application.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Input/Input.h"
 #include "Math/Transform.h"
@@ -90,7 +91,7 @@ void CameraManager::MoveCamera(SVector _Movement)
 
 SVector2i CameraManager::GetScreenCenter() const
 {
-	return SVector2i(ViewportWindow->GetSize().X / 2, ViewportWindow->GetSize().Y / 2);
+	return ViewportWindow->GetSize() / 2;
 }
 
 void CameraManager::EnableSpectatorControls(bool _bSpectatorControls)
@@ -98,7 +99,7 @@ void CameraManager::EnableSpectatorControls(bool _bSpectatorControls)
 	bUseSpectatorControls = _bSpectatorControls;
 	if (bUseSpectatorControls)
 	{
-		PreviousMousePosition = Input::GetInstance()->MousePos;
+		PreviousMousePosition = GetApplication()->GetApplicationWindow()->GetInput().MousePos;
 		ViewportWindow->SetCursorPosition(GetScreenCenter());
 	}
 	else
@@ -114,7 +115,7 @@ void CameraManager::SpectatorUpdate()
 		return;
 	}
 
-	const SVector2i ScreenOffset = Input::GetInstance()->MousePos - GetScreenCenter();
+	const SVector2i ScreenOffset = GetApplication()->GetApplicationWindow()->GetInput().MousePos - GetScreenCenter();
 	const SVector2 Offset = SVector2(ScreenOffset) * MouseSensitivity;
 	CameraForward.Rotate(Offset.X, SVector(0,1,0));
 	CameraForward.Rotate(Offset.Y, GetCameraRightVector());
@@ -130,32 +131,33 @@ void CameraManager::SpectatorUpdate()
 
 	if (bSpectatorMovement)
 	{
+		const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 		const SVector ForwardMovement = CameraForward * CameraSpeed * CTimeManager::GetDeltaTime();
-		if (Input::GetInstance()->KeyState[GLFW_KEY_W] == Input::INPUT_HOLD)
+		if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_W] == CInput::INPUT_HOLD)
 		{
 			CameraPosition += ForwardMovement;
 		}
-		else if (Input::GetInstance()->KeyState[GLFW_KEY_S] == Input::INPUT_HOLD)
+		else if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_S] == CInput::INPUT_HOLD)
 		{
 			CameraPosition -= ForwardMovement;
 		}
-
+		
 		const SVector RightMovement = GetCameraRightVector() * CameraSpeed * CTimeManager::GetDeltaTime();
-		if (Input::GetInstance()->KeyState[GLFW_KEY_A] == Input::INPUT_HOLD)
+		if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_A] == CInput::INPUT_HOLD)
 		{
 			CameraPosition -= RightMovement;
 		}
-		else if (Input::GetInstance()->KeyState[GLFW_KEY_D] == Input::INPUT_HOLD)
+		else if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_D] == CInput::INPUT_HOLD)
 		{
 			CameraPosition += RightMovement;
 		}
-
+		
 		const SVector UpMovement = CameraUp * CameraSpeed * CTimeManager::GetDeltaTime();
-		if (Input::GetInstance()->KeyState[GLFW_KEY_E] == Input::INPUT_HOLD)
+		if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_E] == CInput::INPUT_HOLD)
 		{
 			CameraPosition += UpMovement;
 		}
-		else if (Input::GetInstance()->KeyState[GLFW_KEY_Q] == Input::INPUT_HOLD)
+		else if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_Q] == CInput::INPUT_HOLD)
 		{
 			CameraPosition -= UpMovement;
 		}

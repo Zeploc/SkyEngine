@@ -7,6 +7,7 @@
 #include "Graphics/GraphicsInstance.h"
 #include "Input/Input.h"
 #include "Render/Lighting.h"
+#include "Scene/Scene.h"
 #include "Scene/SceneManager.h"
 
 CViewportLayer::CViewportLayer()
@@ -60,5 +61,5 @@ void CViewportLayer::OnRender()
 
 bool CViewportLayer::OnEvent(CEvent& Event)
 {
-	return true;
+	return SceneManager::GetInstance()->GetCurrentScene()->OnEvent(Event);
 }

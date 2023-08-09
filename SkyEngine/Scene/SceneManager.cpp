@@ -116,8 +116,8 @@ void SceneManager::SwitchScene(std::string SceneName, bool _bInstant)
 	if (_bInstant)
 	{
 		CurrentScene = SceneName;
-		LogManager::GetInstance()->DisplayLogMessage("Switching to Scene \"" + Scenes[CurrentScene]->SceneName + "\"");
-		Scenes[CurrentScene]->OnLoadScene();
+		LogManager::GetInstance()->DisplayLogMessage("Switching to Scene \"" + GetCurrentScene()->SceneName + "\"");
+		GetCurrentScene()->OnLoadScene();
 	}
 	else
 	{
@@ -133,7 +133,7 @@ void SceneManager::SwitchScene(std::string SceneName, bool _bInstant)
 ************************************************************/
 void SceneManager::UpdateCurrentScene()
 {
-	Scenes[CurrentScene]->Update();
+	GetCurrentScene()->Update();
 	// Switch to scene flag has been set
 	if (SceneToSwitch != CurrentScene)
 	{
@@ -151,7 +151,7 @@ void SceneManager::UpdateCurrentScene()
 ************************************************************/
 void SceneManager::RenderCurrentScene()
 {
-	Scenes[CurrentScene]->RenderScene();
+	GetCurrentScene()->RenderScene();
 }
 
 TPointer<Scene> SceneManager::GetCurrentScene()

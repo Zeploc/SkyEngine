@@ -257,9 +257,6 @@
     <ClCompile Include="Entity\CollisionBounds.cpp" />
     <ClCompile Include="Entity\Component.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
-    <ClCompile Include="Events\Event.cpp" />
-    <ClCompile Include="Events\KeyEvent.cpp" />
-    <ClCompile Include="Events\MouseEvent.cpp" />
     <ClCompile Include="Graphics\GL\GLAPI.cpp" />
     <ClCompile Include="Graphics\GL\GLInstance.cpp" />
     <ClCompile Include="Graphics\GL\imgui_impl_opengl3.cpp" />

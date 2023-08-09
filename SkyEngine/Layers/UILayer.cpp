@@ -88,6 +88,8 @@ void CUILayer::OnRender()
 
 bool CUILayer::OnEvent(CEvent& Event)
 {
-	
+	// TEMP TEST
+	// SVector2i MousePos = GetApplication()->GetApplicationWindow()->GetInput().MousePos;
+	// return MousePos.X < 500 && MousePos.Y < 500;
 	return false;
 }
