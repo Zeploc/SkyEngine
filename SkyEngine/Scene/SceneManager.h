@@ -4,6 +4,7 @@
 
 #include "Core/Core.h"
 
+class IGraphicsInstance;
 class Scene;
 
 // TODO: STDL warnings with exporting class with vector
@@ -23,7 +24,7 @@ public:
 
 	void UpdateCurrentScene();
 
-	void RenderCurrentScene();
+	void RenderCurrentScene(TPointer<IGraphicsInstance> InGraphicsInstance);
 
 	TPointer<Scene> GetCurrentScene();
 

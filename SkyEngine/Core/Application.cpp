@@ -33,7 +33,7 @@ namespace SkyEngine
 	{
 		ensure(!EngineApplication, "Application already exist!");
 		EngineApplication = this;
-		MainWindowSize = SVector2i(1920, 1080);
+		MainWindowSize = SVector2i(1280, 720);
 		GraphicsApiType = EGraphicsAPI::OPENGL;
 	}
 
@@ -61,8 +61,8 @@ namespace SkyEngine
 		CTimeManager::Start();
 		SoundManager::GetInstance()->InitFMod();
 		
-		PushLayer(new CViewportLayer(ApplicationWindow));
-		PushOverlay(new CUILayer(ApplicationWindow));	
+		ApplicationWindow->PushLayer(new CViewportLayer(ApplicationWindow));
+		ApplicationWindow->PushOverlay(new CUILayer(ApplicationWindow));	
 		
 		return true;
 	}
@@ -74,7 +74,7 @@ namespace SkyEngine
 			while (!ApplicationWindow->ShouldWindowClose())
 			{				
 				Update();
-				RenderScene();
+				Render();
 			}
 		}
 		else
@@ -94,39 +94,16 @@ namespace SkyEngine
 	void Application::Update()
 	{
 		CTimeManager::Update();
-		if (CTimeManager::CanTickThisFrame())
-		{
-			// TODO: Once linking events system, would work backwards in layer based on highest first
-			for (CLayer* Layer : LayerStack)
-			{
-				Layer->OnUpdate();
-			}
-		}
 		ApplicationWindow->Update();
 	}
 
 	void Application::OnEvent(CEvent& Event)
 	{
-		for (auto it = LayerStack.end(); it != LayerStack.begin();)
-		{
-			(*--it)->OnEvent(Event);
-			const bool bHandledEvent = Event.WasHandled();
-			if (bHandledEvent)
-			{
-				break;
-			}
-		}
 	}
 
-	void Application::RenderScene()
-	{
-		ApplicationWindow->PreRender();		
-		
-		for (CLayer* Layer : LayerStack)
-		{
-			Layer->OnRender();
-		}
-		ApplicationWindow->PostRender();
+	void Application::Render()
+	{		
+		ApplicationWindow->Render();
 	}
 
 	void Application::ChangeSize(int w, int h)
@@ -140,25 +117,8 @@ namespace SkyEngine
 		GraphicsApi.reset();
 		ShaderManager::CleanUp();
 		
-		for (CLayer* Layer : LayerStack)
-		{
-			Layer->OnDetach();
-		}
-		
 		SoundManager::DestoryInstance();
 		Text::Fonts.~vector();
-	}
-
-	void Application::PushLayer(CLayer* InLayer)
-	{
-		LayerStack.PushLayer(InLayer);
-		InLayer->OnAttach();
-	}
-
-	void Application::PushOverlay(CLayer* InLayer)
-	{
-		LayerStack.PushOverlay(InLayer);
-		InLayer->OnAttach();
 	}
 }
 

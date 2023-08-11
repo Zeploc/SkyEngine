@@ -64,7 +64,7 @@ public:
 protected:
 	CInput();
 	
-	void Init(TPointer<CEngineWindow> Window);
+	void Init(TWeakPointer<CEngineWindow> Window);
 
 	void MouseInput(int x, int y);
 

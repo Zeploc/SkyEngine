@@ -25,7 +25,7 @@ CInput::~CInput()
 {
 }
 
-void CInput::Init(TPointer<CEngineWindow> Window)
+void CInput::Init(TWeakPointer<CEngineWindow> Window)
 {
 	/*
 	glutSpecialFunc(CInput::LprocessSpecialKeys);*/

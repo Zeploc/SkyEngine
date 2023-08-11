@@ -9,12 +9,19 @@
 #include "Graphics/GraphicsAPI.h"
 #include "Graphics/GraphicsInstance.h"
 #include "Input/Input.h"
+#include "Layers/Layer.h"
 #include "Platform/PlatformInterface.h"
+#include "System/TimeManager.h"
 
 CEngineWindow::~CEngineWindow()
 {
 	GraphicsInstance.reset();
-	EventListeners.clear();
+	EventListeners.clear();	
+		
+	for (CLayer* Layer : LayerStack)
+	{
+		Layer->OnDetach();
+	}
 }
 
 TPointer<CEngineWindow> CEngineWindow::CreateEngineWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bInFullScreen)
@@ -40,18 +47,31 @@ void CEngineWindow::PreRender()
 	GraphicsInstance->PreRender(shared_from_this());
 }
 
-void CEngineWindow::Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements)
-{
-	GraphicsInstance->Render(shared_from_this(), Entities, UIElements);
-}
-
 void CEngineWindow::PostRender()
 {
 	GraphicsInstance->PostRender(shared_from_this());
 }
 
+void CEngineWindow::Render()
+{
+	PreRender();
+	for (CLayer* Layer : LayerStack)
+	{
+		Layer->OnRender();
+	}
+	PostRender();
+}
+
 void CEngineWindow::Update()
 {
+	if (CTimeManager::CanTickThisFrame())
+	{
+		// TODO: Once linking events system, would work backwards in layer based on highest first
+		for (CLayer* Layer : LayerStack)
+		{
+			Layer->OnUpdate();
+		}
+	}
 	Input.Update();
 }
 
@@ -66,18 +86,26 @@ void CEngineWindow::MouseButtonPress(int button, CInput::KeyEventType EventType,
 	CMouseButtonEvent* MouseEvent;
 	if (EventType == CInput::Pressed)
 	{
-		CMouseButtonPressedEvent KeyPressedEvent = CMouseButtonPressedEvent(button, mods);
-		MouseEvent = &KeyPressedEvent;
+		CMouseButtonPressedEvent ButtonPressedEvent = CMouseButtonPressedEvent(button, mods);
+		MouseEvent = &ButtonPressedEvent;
 	}
 	else
 	{
-		CMouseButtonReleasedEvent KeyPressedEvent = CMouseButtonReleasedEvent(button, mods);
-		MouseEvent = &KeyPressedEvent;
+		CMouseButtonReleasedEvent ButtonReleasedEvent = CMouseButtonReleasedEvent(button, mods);
+		MouseEvent = &ButtonReleasedEvent;
 	}
-	
-	for (IEventListener* EventListener : EventListeners)
+
+	CLayer* NewCapturedLayer = SendEvent(*MouseEvent);
+	if (NewCapturedLayer)
 	{
-		EventListener->OnEvent(*MouseEvent);
+		if (EventType == CInput::Pressed)
+		{
+			CapturedLayer = NewCapturedLayer;
+		}
+		else if (NewCapturedLayer == CapturedLayer && MouseEvent->WasHandled())
+		{
+			CapturedLayer = nullptr;
+		}
 	}
 }
 
@@ -103,29 +131,52 @@ void CEngineWindow::KeyPress(int key, int scancode, CInput::KeyEventType EventTy
 		KeyEvent = &KeyPressedEvent;
 	}
 	
-	for (IEventListener* EventListener : EventListeners)
-	{
-		EventListener->OnEvent(*KeyEvent);
-	}
+	SendEvent(*KeyEvent);
+}
+
+void CEngineWindow::KeyTyped(int KeyCode)
+{
+	CKeyTypedEvent KeyTypedEvent(KeyCode, 0);
+	SendEvent(KeyTypedEvent);
 }
 
 void CEngineWindow::CursorMoved(int X, int Y)
 {
 	Input.MouseInput(X, Y);
 	CMouseMovedEvent MouseEvent(SVector2i(X, Y));
-	for (IEventListener* EventListener : EventListeners)
-	{
-		EventListener->OnEvent(MouseEvent);
-	}
+	SendEvent(MouseEvent);
 }
 
 void CEngineWindow::ScrollWheel(float X, float Y)
 {
 	CMouseScrolledEvent ScrollEvent(X, Y);
+	SendEvent(ScrollEvent);
+}
+
+CLayer* CEngineWindow::SendEvent(CEvent& Event)
+{
 	for (IEventListener* EventListener : EventListeners)
 	{
-		EventListener->OnEvent(ScrollEvent);
+		EventListener->OnEvent(Event);
 	}
+	if (CapturedLayer)
+	{
+		CapturedLayer->OnEvent(Event);
+		return CapturedLayer;
+	}
+	
+	CLayer* HandledLayer = nullptr;
+	for (auto it = LayerStack.end(); it != LayerStack.begin();)
+	{
+		(*--it)->OnEvent(Event);
+		const bool bHandledEvent = Event.WasHandled();
+		if (bHandledEvent)
+		{
+			HandledLayer = *it;
+			break;
+		}
+	}
+	return HandledLayer;
 }
 
 void CEngineWindow::SetWindowPosition(SVector2i InPosition)
@@ -146,6 +197,18 @@ SVector2i CEngineWindow::GetScreenHalfSize()
 void CEngineWindow::SubscribeEventListener(IEventListener* NewEventListener)
 {
 	EventListeners.push_back(NewEventListener);
+}
+
+void CEngineWindow::PushLayer(CLayer* InLayer)
+{
+	LayerStack.PushLayer(InLayer);
+	InLayer->OnAttach();
+}
+
+void CEngineWindow::PushOverlay(CLayer* InLayer)
+{
+	LayerStack.PushOverlay(InLayer);
+	InLayer->OnAttach();
 }
 
 void CEngineWindow::OnFocusChanged(bool bInIsFocused)

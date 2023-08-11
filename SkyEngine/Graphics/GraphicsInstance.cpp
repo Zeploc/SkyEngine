@@ -19,7 +19,7 @@ void IGraphicsInstance::InsertEntityMeshToRenderList(std::map<TPointer<CMaterial
 	MeshesByMaterial[Material].push_back(EntityToRender->EntityMesh);
 }
 
-void IGraphicsInstance::Render(TPointer<CEngineWindow> GraphicsWindow, std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements)
+void IGraphicsInstance::Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements)
 {
 	// TODO: Later store in/update list as new meshes added
 	std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>> MeshesByMaterial;

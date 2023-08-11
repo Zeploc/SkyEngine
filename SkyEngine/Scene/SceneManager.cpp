@@ -149,9 +149,9 @@ void SceneManager::UpdateCurrentScene()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void SceneManager::RenderCurrentScene()
+void SceneManager::RenderCurrentScene(TPointer<IGraphicsInstance> InGraphicsInstance)
 {
-	GetCurrentScene()->RenderScene();
+	GetCurrentScene()->RenderScene(InGraphicsInstance);
 }
 
 TPointer<Scene> SceneManager::GetCurrentScene()

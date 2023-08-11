@@ -250,11 +250,9 @@ void EditorScene::Update()
 	EditorWindowManager::UpdateWindows();
 }
 
-void EditorScene::RenderScene()
+void EditorScene::RenderScene(TPointer<IGraphicsInstance> InGraphicsInstance)
 {
-	Scene::RenderScene();
-
-	EditorWindowManager::RenderWindows();	
+	Scene::RenderScene(InGraphicsInstance);
 }
 
 void EditorScene::OpenFile()
@@ -466,6 +464,7 @@ bool EditorScene::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
 	
 	// TODO: Refine mouse visibility toggle/state
 
+	bool bHandled = false;
 	if (Event.GetMods() == 0)
 	{
 		// Right click with no mods
@@ -474,10 +473,12 @@ bool EditorScene::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
 			PreviousMousePosition = MousePos;
 			ApplicationWindow->SetCursorVisible(false);
 			CameraInstance->EnableSpectatorControls(true);
+			bHandled = true;
 		}
 		else if (Event.GetMouseButton() == GLFW_MOUSE_BUTTON_LEFT)
 		{
 			UpdateSelectedEntity();
+			bHandled = true;
 		}
 	}
 
@@ -508,6 +509,14 @@ bool EditorScene::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
 			bPanning = true;
 		}
 	}
+
+	bHandled |= bRotatingAroundPoint;
+	bHandled |= bLookingAround;
+	bHandled |= bPanning;
+	if (bHandled)
+	{
+		return true;
+	}
 	
 	return Scene::OnMouseButtonPressedEvent(Event);
 }
@@ -531,6 +540,10 @@ bool EditorScene::OnMouseButtonReleasedEvent(CMouseButtonReleasedEvent& Event)
 		ApplicationWindow->SetCursorPosition(PreviousMousePosition);
 		bPanning = false;
 		bRotatingAroundPoint = false;
+		return true;
+	}
+	if (Event.GetMouseButton() == GLFW_MOUSE_BUTTON_LEFT)
+	{
 		return true;
 	}
 	return Scene::OnMouseButtonReleasedEvent(Event);

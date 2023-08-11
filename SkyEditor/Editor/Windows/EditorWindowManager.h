@@ -14,6 +14,7 @@ public:
 	EditorWindowManager();
 
 	~EditorWindowManager();
+	static void CleanupWindows();
 
 	static void NewWindowCreated(class EditorWindow* InWindow);
 
@@ -27,7 +28,7 @@ public:
 
 	static void FocusChanged();
 
-	static TPointer<CEngineWindow> GetCurrentFocus() { return CurrentFocused; };
+	static TWeakPointer<CEngineWindow> GetCurrentFocus() { return CurrentFocused; };
 
 	static std::vector<class EditorWindow*> GetWindows() { return EditorWindows; };
 
@@ -40,7 +41,7 @@ public:
 
 protected:
 	// TODO: Link focus
-	static TPointer<CEngineWindow> CurrentFocused;
+	static TWeakPointer<CEngineWindow> CurrentFocused;
 
 	static std::vector<EditorWindow*> EditorWindows;
 	static std::vector<EditorWindow*> EditorWindowsToRemove;

@@ -18,7 +18,7 @@ public:
 	void UpdateSelectedEntity();
 
 	void Update() override;
-	void RenderScene() override;
+	void RenderScene(TPointer<IGraphicsInstance> InGraphicsInstance) override;
 	
 	void OpenFile();
 

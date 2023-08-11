@@ -33,12 +33,9 @@ namespace SkyEngine
 
 		virtual void Update();
 		void OnEvent(CEvent& Event) override;
-		virtual void RenderScene();
+		virtual void Render();
 		virtual void ChangeSize(int w, int h);
 		virtual void OnExit();
-
-		void PushLayer(CLayer* InLayer);
-		void PushOverlay(CLayer* InLayer);
 		
 		SVector2i MainWindowSize;
 
@@ -54,7 +51,6 @@ namespace SkyEngine
 		static Application* EngineApplication;
 
 		TPointer<CEngineWindow> ApplicationWindow;
-		CLayerStack LayerStack;
 	};
 
 	// To be defined in client

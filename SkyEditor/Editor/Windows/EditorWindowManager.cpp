@@ -13,7 +13,7 @@
 
 std::vector<EditorWindow*> EditorWindowManager::EditorWindows;
 std::vector<EditorWindow*> EditorWindowManager::EditorWindowsToRemove;
-TPointer<CEngineWindow> EditorWindowManager::CurrentFocused = nullptr;
+TWeakPointer<CEngineWindow> EditorWindowManager::CurrentFocused;
 
 EditorWindowManager::EditorWindowManager()
 {
@@ -21,6 +21,12 @@ EditorWindowManager::EditorWindowManager()
 
 EditorWindowManager::~EditorWindowManager()
 {
+}
+
+void EditorWindowManager::CleanupWindows()
+{
+	EditorWindows.clear();
+	EditorWindowsToRemove.clear();
 }
 
 TPointer<CEngineWindow> EditorWindowManager::GetMainWindow()

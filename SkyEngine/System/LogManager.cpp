@@ -44,10 +44,11 @@ void LogManager::Render()
 void LogManager::DisplayLogMessage(const std::string& InMessage)
 {
 	std::cout << InMessage << std::endl;
-	if (LoadingMessage)
-	{
-		LoadingMessage->sText = InMessage;
-	}
+	// TODO: Log
+	// if (LoadingMessage)
+	// {
+	// 	LoadingMessage->sText = InMessage;
+	// }
 }
 
 void LogManager::DisplayLogWarning(const std::string& InMessage)

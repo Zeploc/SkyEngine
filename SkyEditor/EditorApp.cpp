@@ -34,11 +34,23 @@ public:
 		Application::Update();
 	}
 
+	void Render() override
+	{
+		Application::Render();
+
+		EditorWindowManager::RenderWindows();	
+	}
+
 	void ChangeSize(int w, int h) override
 	{
 		Application::ChangeSize(w, h);		
 
 		EditorWindowManager::MainWindowSizeChanged(w, h);
+	}
+	void OnExit() override
+	{
+		EditorWindowManager::CleanupWindows();
+		Application::OnExit();
 	}
 };
 

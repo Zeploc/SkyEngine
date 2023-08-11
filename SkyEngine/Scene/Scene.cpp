@@ -20,6 +20,7 @@
 #include "Platform/Window/EngineWindow.h"
 #include "Entity/Button3DEntity.h"
 #include "Events/KeyEvent.h"
+#include "Graphics/GraphicsInstance.h"
 #include "Input/Input.h"
 
 /************************************************************
@@ -67,10 +68,9 @@ void Scene::DeleteScene()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Scene::RenderScene()
+void Scene::RenderScene(TPointer<IGraphicsInstance> InGraphicsInstance)
 {
-	// TODO: Properly link to graphics interface
-	GetApplication()->GetApplicationWindow()->Render(Entities, UIElements);
+	InGraphicsInstance->Render(Entities, UIElements);
 }
 
 /************************************************************

@@ -4,7 +4,9 @@
 #include "Core/Core.h"
 
 #include "Core/Delegates.h"
+#include "Events/Event.h"
 #include "Input/Input.h"
+#include "Layers/LayerStack.h"
 #include "Math/Vector2.h"
 
 class IGraphicsWindow;
@@ -39,19 +41,24 @@ public:
 	bool IsFocused() const { return bIsFocused; }
 
 	SVector2i GetScreenHalfSize();
-	
+
 	virtual void PreRender();
-	void Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements);
+	void Render();
 	virtual void PostRender();
+	
+	// void Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements);
 	virtual void Update();
 
 	void SubscribeEventListener(IEventListener* NewEventListener);
+	void PushLayer(CLayer* InLayer);
+	void PushOverlay(CLayer* InLayer);
 
 	// TODO: Pass in window in delegate
 	FMulticastDelegate OnFocusChangedDelete;	
 
 	TPointer<IGraphicsInstance> GetGraphicsInstance() { return GraphicsInstance; }
 	CInput& GetInput() { return Input; }
+	CLayer* GetCapturedLayer() const { return CapturedLayer; }
 
 protected:
 	virtual void OnWindowResized(int NewWidth, int NewHeight) = 0;
@@ -60,8 +67,12 @@ protected:
 	
 	virtual void MouseButtonPress(int button, CInput::KeyEventType EventType, int mods);
 	virtual void KeyPress(int key, int scancode, CInput::KeyEventType EventType, int mods);
+	virtual void KeyTyped(int KeyCode);
 	virtual void CursorMoved(int X, int Y);
 	virtual void ScrollWheel(float X, float Y);
+
+	/* Returns the handled layer, if there was one */
+	virtual CLayer* SendEvent(CEvent& Event);
 	
 	TPointer<IGraphicsInstance> GraphicsInstance;
 	std::string WindowName;
@@ -72,5 +83,7 @@ protected:
 	bool bIsFocused = true;
 	CInput Input;
 	
+	CLayerStack LayerStack;
+	CLayer* CapturedLayer = nullptr;
 	std::vector<IEventListener*> EventListeners;
 };

@@ -22,7 +22,7 @@ public:
 	virtual ~IGraphicsInstance() = default;
 
 	void InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender);
-	virtual void Render(TPointer<CEngineWindow> GraphicsWindow, std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements);
+	virtual void Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements);
 	virtual void RenderMesh(TPointer<CMeshComponent> Mesh, STransform Transform) = 0;
 	virtual void RenderUIElement(TPointer<UIElement> UserInterfaceItem) = 0;
 	virtual void CleanupMesh(TPointer<CMeshComponent> Mesh) = 0;

@@ -78,11 +78,39 @@ void CUILayer::OnUpdate()
 	ImGui::NewFrame();
 }
 
+void CUILayer::DisplayInfoStats()
+{
+	bool bOpen = true;
+	const float DISTANCE = 10.0f;
+	static int corner = 0;
+	ImVec2 window_pos = ImVec2((corner & 1) ? ImGui::GetIO().DisplaySize.x - DISTANCE : DISTANCE, (corner & 2) ? ImGui::GetIO().DisplaySize.y - DISTANCE : DISTANCE);
+	ImVec2 window_pos_pivot = ImVec2((corner & 1) ? 1.0f : 0.0f, (corner & 2) ? 1.0f : 0.0f);
+	if (corner != -1)
+		ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
+	ImGui::SetNextWindowBgAlpha(0.3f); // Transparent background
+	if (ImGui::Begin("Example: Simple Overlay", &bOpen, (corner != -1 ? ImGuiWindowFlags_NoMove : 0) | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav))
+	{
+		CLayer* CapturedLayer = OwningWindow.lock()->GetCapturedLayer();
+		if (CapturedLayer)
+		{			
+			ImGui::Text("CAPTURED LAYER:");
+			ImGui::Separator();
+			ImGui::Text(CapturedLayer->GetName().c_str());
+		}
+		else
+		{
+			ImGui::Text("No Captured layer");
+		}
+	}
+	ImGui::End();
+}
+
 void CUILayer::OnRender()
 {
 	static bool show = true;
 	ImGui::ShowDemoWindow(&show);
-	
+
+	DisplayInfoStats();
 	ImGui::Render();
 	GetApplication()->GetApplicationWindow()->GetGraphicsInstance()->RenderImGui();
 }
@@ -95,6 +123,7 @@ void CUILayer::OnEvent(CEvent& Event)
 	dispatcher.Dispatch<CMouseMovedEvent>(SE_BIND_EVENT_FN(CUILayer::OnMouseMovedEvent));
 	dispatcher.Dispatch<CMouseScrolledEvent>(SE_BIND_EVENT_FN(CUILayer::OnMouseScrolledEvent));
 	dispatcher.Dispatch<CKeyPressedEvent>(SE_BIND_EVENT_FN(CUILayer::OnKeyPressedEvent));
+	dispatcher.Dispatch<CKeyTypedEvent>(SE_BIND_EVENT_FN(CUILayer::OnKeyTypedEvent));
 	dispatcher.Dispatch<CKeyReleasedEvent>(SE_BIND_EVENT_FN(CUILayer::OnKeyReleasedEvent));
 	// TEMP TEST
 	// SVector2i MousePos = GetApplication()->GetApplicationWindow()->GetInput().MousePos;
@@ -104,6 +133,11 @@ void CUILayer::OnEvent(CEvent& Event)
 
 bool CUILayer::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
 {
+	if (!ImGui::IsMouseHoveringAnyWindow())
+	{
+		ImGui::SetWindowFocus();
+		return false;
+	}
 	// Update buttons
 	ImGuiIO& io = ImGui::GetIO();
 	for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++)
@@ -115,13 +149,19 @@ bool CUILayer::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
 
 	// Won't be hovered properly since mouse pos only updated in imgui when window is focused
 	LogManager::GetInstance()->DisplayLogMessage(std::format("hovering: {}", ImGui::IsMouseHoveringAnyWindow()));
-	
-	return ImGui::IsMouseHoveringAnyWindow();
+
+	// TODO: Handle viewport lost focus if input taken (happens on centered mouse)
+	return true;
 }
 
 bool CUILayer::OnMouseButtonReleasedEvent(CMouseButtonReleasedEvent& Event)
 {
-	return false;
+	// Update buttons
+	ImGuiIO& io = ImGui::GetIO();
+	io.MouseDown[Event.GetMouseButton()] = false;
+
+	// If hovering window on release or mouse is not released (captured by button), then the release is handled
+	return ImGui::IsMouseHoveringAnyWindow() || !ImGui::IsMouseReleased(Event.GetMouseButton());
 }
 
 bool CUILayer::OnMouseMovedEvent(CMouseMovedEvent& Event)
@@ -148,15 +188,56 @@ bool CUILayer::OnMouseMovedEvent(CMouseMovedEvent& Event)
 
 bool CUILayer::OnMouseScrolledEvent(CMouseScrolledEvent& Event)
 {
+	if (ImGui::IsMouseHoveringAnyWindow())
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseWheelH += Event.GetXOffset();
+		io.MouseWheel += Event.GetYOffset();
+		return true;
+	}
 	return false;
 }
 
 bool CUILayer::OnKeyPressedEvent(CKeyPressedEvent& Event)
 {
-	return false;
+	ImGuiIO& io = ImGui::GetIO();
+	io.KeysDown[Event.GetKeyCode()] = true;
+	
+	// io.KeyCtrl = Event.GetMods() & CInput::ModiferType::Control;
+	// io.KeyShift = Event.GetMods() & CInput::ModiferType::Shift;
+	// io.KeyAlt = Event.GetMods() & CInput::ModiferType::Alt;
+	// TODO: What is super???
+	// io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+	
+	// Modifiers are not reliable across systems
+	io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
+	io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
+	io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
+	io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+	
+	return ImGui::IsAnyWindowFocused();
+}
+
+bool CUILayer::OnKeyTypedEvent(CKeyTypedEvent& Event)
+{
+	ImGuiIO& io = ImGui::GetIO();
+	if (Event.GetKeyCode() > 0 && Event.GetKeyCode() < 0x10000)
+	{
+		io.AddInputCharacter((unsigned short)Event.GetKeyCode());
+	}
+	return ImGui::IsAnyWindowFocused();
 }
 
 bool CUILayer::OnKeyReleasedEvent(CKeyReleasedEvent& Event)
 {
-	return false;
+	ImGuiIO& io = ImGui::GetIO();
+	io.KeysDown[Event.GetKeyCode()] = false;
+	
+	// Modifiers are not reliable across systems
+	io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
+	io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
+	io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
+	io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+	
+	return ImGui::IsAnyWindowFocused();
 }

@@ -14,6 +14,7 @@ public:
 	void OnAttach() override;
 	void OnDetach() override;
 	void OnUpdate() override;
+	void DisplayInfoStats();
 	void OnRender() override;
 	void OnEvent(CEvent& Event) override;
 
@@ -23,5 +24,6 @@ protected:
 	virtual bool OnMouseMovedEvent(CMouseMovedEvent& Event);
 	virtual bool OnMouseScrolledEvent(CMouseScrolledEvent& Event);
 	virtual bool OnKeyPressedEvent(CKeyPressedEvent& Event);
+	virtual bool OnKeyTypedEvent(CKeyTypedEvent& Event);
 	virtual bool OnKeyReleasedEvent(CKeyReleasedEvent& Event);
 };

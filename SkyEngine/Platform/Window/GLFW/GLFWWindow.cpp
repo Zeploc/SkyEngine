@@ -99,6 +99,12 @@ CGLFWWindow::CGLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool 
 		// TODO: Convert to custom keycode
 		OwningGlfwWindow->KeyPress(key, scancode, EventType, ConvertModiferToCustomInputMod(mods));
 	});
+	glfwSetCharCallback(GlWindow, [](GLFWwindow* window, unsigned int codepoint)
+	{
+		CGLFWWindow* OwningGlfwWindow = reinterpret_cast<CGLFWWindow*>(glfwGetWindowUserPointer(window));
+		// TODO: Convert to custom keycode
+		OwningGlfwWindow->KeyTyped(codepoint);
+	});
 	glfwSetCursorPosCallback(GlWindow, [](GLFWwindow* window, double xpos, double ypos)
 	{
 		CGLFWWindow* OwningGlfwWindow = reinterpret_cast<CGLFWWindow*>(glfwGetWindowUserPointer(window));

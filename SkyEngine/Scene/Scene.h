@@ -14,6 +14,7 @@
 
 // OpenGL Library Includes //
 
+class IGraphicsInstance;
 class UIText;
 class UIElement;
 class Entity;
@@ -27,7 +28,7 @@ public:
 
 	void DeleteScene();
 
-	virtual void RenderScene();
+	virtual void RenderScene(TPointer<IGraphicsInstance> InGraphicsInstance);
 
 	void AddEntity(TPointer<Entity> _Entity, bool IsInitial = false);
 

@@ -71,7 +71,8 @@ void EditorWindow::RenderWindow()
 	if (LinkedWindow != EditorWindowManager::GetMainWindow()) // Separate window
 	{
 		LinkedWindow->GetGraphicsInstance()->ClearColour = BackColour;
-		LinkedWindow->PreRender();
+		// LinkedWindow->PreRender();
+		LinkedWindow->Render();
 	}
 	else
 	{
@@ -80,12 +81,12 @@ void EditorWindow::RenderWindow()
 		LinkedWindow->GetGraphicsInstance()->SetRenderViewport({Position.X, MainWindowSize.Y - Position.Y - Size.Y}, {Size.X, Size.Y});
 	}
 
-	LinkedWindow->Render({}, UIElements);
+	// LinkedWindow->Render({}, UIElements);
 	
-	if (LinkedWindow != EditorWindowManager::GetMainWindow()) // Separate window
-	{
-		LinkedWindow->PostRender();
-	}
+	// if (LinkedWindow != EditorWindowManager::GetMainWindow()) // Separate window
+	// {
+	// 	LinkedWindow->PostRender();
+	// }
 }
 
 void EditorWindow::PopOut()
@@ -217,7 +218,7 @@ void EditorWindow::UpdateWindow()
 		}
 	}
 
-	LinkedWindow->FocusWindow();
+	// LinkedWindow->FocusWindow();
 
 	if (DraggingWindow)
 	{

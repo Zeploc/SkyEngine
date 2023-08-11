@@ -56,7 +56,9 @@ void CViewportLayer::OnRender()
 	// 	LogManager::GetInstance()->Render();
 	// }
 	// else
-	SceneManager::GetInstance()->RenderCurrentScene();
+	
+	// TODO: Move to scene viewport
+	SceneManager::GetInstance()->RenderCurrentScene(OwningWindow.lock()->GetGraphicsInstance());
 }
 
 void CViewportLayer::OnEvent(CEvent& Event)

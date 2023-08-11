@@ -56,3 +56,19 @@ public:
 
 	EVENT_CLASS_TYPE(KeyReleased)
 };
+
+class ENGINE_API CKeyTypedEvent : public CKeyEvent
+{
+public:
+	CKeyTypedEvent(int InKeycode, int InMods)
+		: CKeyEvent(InKeycode, InMods) {}
+
+	std::string ToString() const override
+	{
+		std::stringstream ss;
+		ss << "KeyTypedEvent: " << KeyCode;
+		return ss.str();
+	}
+
+	EVENT_CLASS_TYPE(KeyTyped)
+};
