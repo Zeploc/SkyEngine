@@ -144,7 +144,8 @@ project "SkyEditor"
 
    links
    {
-      "SkyEngine"
+      "SkyEngine",
+      "ImGui"
    }
 
    filter "system:windows"

@@ -12,6 +12,7 @@
 #include "Platform/Window/GLFW/imgui_impl_glfw.h"
 #include "System/LogManager.h"
 #include "System/TimeManager.h"
+#include "UI/UIWidget.h"
 
 CUILayer::CUILayer(TWeakPointer<CEngineWindow> InOwningWindow) : CLayer(InOwningWindow, "UI Layer")
 {
@@ -24,8 +25,7 @@ CUILayer::~CUILayer()
 
 void CUILayer::OnAttach()
 {
-	
-	ImGui::CreateContext();
+	GuiContext = ImGui::CreateContext();
 	ImGui::StyleColorsDark();
 	
 	TPointer<CGLFWWindow> GraphicsWindow = std::static_pointer_cast<CGLFWWindow>(GetApplication()->GetApplicationWindow());
@@ -76,33 +76,11 @@ void CUILayer::OnUpdate()
 	ImGui_ImplOpenGL3_NewFrame();
 	// ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
-}
-
-void CUILayer::DisplayInfoStats()
-{
-	bool bOpen = true;
-	const float DISTANCE = 10.0f;
-	static int corner = 0;
-	ImVec2 window_pos = ImVec2((corner & 1) ? ImGui::GetIO().DisplaySize.x - DISTANCE : DISTANCE, (corner & 2) ? ImGui::GetIO().DisplaySize.y - DISTANCE : DISTANCE);
-	ImVec2 window_pos_pivot = ImVec2((corner & 1) ? 1.0f : 0.0f, (corner & 2) ? 1.0f : 0.0f);
-	if (corner != -1)
-		ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
-	ImGui::SetNextWindowBgAlpha(0.3f); // Transparent background
-	if (ImGui::Begin("Example: Simple Overlay", &bOpen, (corner != -1 ? ImGuiWindowFlags_NoMove : 0) | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav))
+	
+	for (TPointer<CUIWidget> Widget : Widgets)
 	{
-		CLayer* CapturedLayer = OwningWindow.lock()->GetCapturedLayer();
-		if (CapturedLayer)
-		{			
-			ImGui::Text("CAPTURED LAYER:");
-			ImGui::Separator();
-			ImGui::Text(CapturedLayer->GetName().c_str());
-		}
-		else
-		{
-			ImGui::Text("No Captured layer");
-		}
+		Widget->Update();
 	}
-	ImGui::End();
 }
 
 void CUILayer::OnRender()
@@ -110,7 +88,17 @@ void CUILayer::OnRender()
 	static bool show = true;
 	ImGui::ShowDemoWindow(&show);
 
-	DisplayInfoStats();
+	const float DISTANCE = 10.0f;
+	static int corner = 0;
+	ImVec2 window_pos = ImVec2((corner & 1) ? ImGui::GetIO().DisplaySize.x - DISTANCE : DISTANCE, (corner & 2) ? ImGui::GetIO().DisplaySize.y - DISTANCE : DISTANCE);
+	ImVec2 window_pos_pivot = ImVec2((corner & 1) ? 1.0f : 0.0f, (corner & 2) ? 1.0f : 0.0f);
+	if (corner != -1)
+		ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
+	
+	for (TPointer<CUIWidget> Widget : Widgets)
+	{
+		Widget->DrawUI();
+	}
 	ImGui::Render();
 	GetApplication()->GetApplicationWindow()->GetGraphicsInstance()->RenderImGui();
 }
@@ -129,6 +117,12 @@ void CUILayer::OnEvent(CEvent& Event)
 	// SVector2i MousePos = GetApplication()->GetApplicationWindow()->GetInput().MousePos;
 	// return MousePos.X < 500 && MousePos.Y < 500;
 	// return ImGui::IsAnyWindowFocused();
+}
+
+void CUILayer::AddWidget(TPointer<CUIWidget> InWidget)
+{
+	Widgets.push_back(InWidget);	
+	InWidget->SetUILayer(this);
 }
 
 bool CUILayer::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)

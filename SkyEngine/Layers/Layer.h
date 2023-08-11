@@ -12,7 +12,8 @@
 
 class CEngineWindow;
 
-class ENGINE_API CLayer
+// Could remove export if other projects should not make their own layers but used derived ones
+class ENGINE_API CLayer : public std::enable_shared_from_this<CLayer>
 {
 public:
 	CLayer(TWeakPointer<CEngineWindow> InOwningWindow, const std::string& InDebugName = "Layer");
@@ -26,6 +27,7 @@ public:
 	// TODO:
 	// virtual void OnEvent() {}
 	inline const std::string& GetName() const { return DebugName; }
+	TWeakPointer<CEngineWindow> GetOwningWindow() const { return OwningWindow; }
 
 protected:
 	TWeakPointer<CEngineWindow> OwningWindow;

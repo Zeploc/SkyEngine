@@ -8,8 +8,11 @@
 #include <Dependencies/include/glew/glew.h>
 #include <Dependencies/include/GLFW/glfw3.h>
 
+#include "Dependencies/ImGui/imgui.h"
 #include "Editor/Scene/EditorScene.h"
+#include "Editor/UI/LayerInfoWidget.h"
 #include "Editor/Windows/EditorWindowManager.h"
+#include "Layers/UILayer.h"
 
 class EditorApplication : public SkyEngine::Application
 {
@@ -26,6 +29,12 @@ public:
 			TPointer<EditorScene> NewScene = TPointer<EditorScene>(new EditorScene("Editor"));			
 			SceneManager::GetInstance()->AddScene(NewScene);
 		}
+		TPointer<CLayerInfoWidget> LayerInfoWidget = std::make_shared<CLayerInfoWidget>();
+		UILayer->AddWidget(LayerInfoWidget);
+		
+		// Needed to be in this project to have context global variable
+		ImGui::SetCurrentContext(UILayer->GetGuiContext());
+		
 		return bSuccessfulSetup;
 	}
 	

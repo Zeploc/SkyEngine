@@ -5,7 +5,10 @@
 #include "Events/MouseEvent.h"
 #include "Layers/Layer.h"
 
-class CUILayer : public CLayer
+struct ImGuiContext;
+class CUIWidget;
+
+class ENGINE_API CUILayer : public CLayer
 {
 public:
 	CUILayer(TWeakPointer<CEngineWindow> InOwningWindow);
@@ -14,9 +17,10 @@ public:
 	void OnAttach() override;
 	void OnDetach() override;
 	void OnUpdate() override;
-	void DisplayInfoStats();
 	void OnRender() override;
 	void OnEvent(CEvent& Event) override;
+	void AddWidget(TPointer<CUIWidget> InWidget);
+	ImGuiContext* GetGuiContext() const { return GuiContext; }
 
 protected:
 	virtual bool OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event);
@@ -26,4 +30,7 @@ protected:
 	virtual bool OnKeyPressedEvent(CKeyPressedEvent& Event);
 	virtual bool OnKeyTypedEvent(CKeyTypedEvent& Event);
 	virtual bool OnKeyReleasedEvent(CKeyReleasedEvent& Event);
+
+	std::vector<TPointer<CUIWidget>> Widgets;
+	ImGuiContext* GuiContext;
 };

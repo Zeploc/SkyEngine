@@ -7,6 +7,9 @@
     <Filter Include="Editor\Scene">
       <UniqueIdentifier>{A940DD3E-95A3-6CE3-3E29-A5992A6B3866}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Editor\UI">
+      <UniqueIdentifier>{3972AF4A-A5DC-63C1-EE1A-15675AC44116}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Editor\Windows">
       <UniqueIdentifier>{C690B5AD-B25E-A9B3-9BF2-19DA875F8518}</UniqueIdentifier>
     </Filter>
@@ -39,6 +42,9 @@
     <ClInclude Include="Editor\Scene\TransformationWidget.h">
       <Filter>Editor\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Editor\UI\LayerInfoWidget.h">
+      <Filter>Editor\UI</Filter>
+    </ClInclude>
     <ClInclude Include="Editor\Windows\EditorWindow.h">
       <Filter>Editor\Windows</Filter>
     </ClInclude>
@@ -53,6 +59,9 @@
     </ClCompile>
     <ClCompile Include="Editor\Scene\TransformationWidget.cpp">
       <Filter>Editor\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\UI\LayerInfoWidget.cpp">
+      <Filter>Editor\UI</Filter>
     </ClCompile>
     <ClCompile Include="Editor\Windows\EditorWindow.cpp">
       <Filter>Editor\Windows</Filter>

@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClInclude Include="Editor\Scene\EditorScene.h" />
     <ClInclude Include="Editor\Scene\TransformationWidget.h" />
+    <ClInclude Include="Editor\UI\LayerInfoWidget.h" />
     <ClInclude Include="Editor\Windows\EditorWindow.h" />
     <ClInclude Include="Editor\Windows\EditorWindowManager.h" />
     <ClInclude Include="Particle.h" />
@@ -140,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="Editor\Scene\EditorScene.cpp" />
     <ClCompile Include="Editor\Scene\TransformationWidget.cpp" />
+    <ClCompile Include="Editor\UI\LayerInfoWidget.cpp" />
     <ClCompile Include="Editor\Windows\EditorWindow.cpp" />
     <ClCompile Include="Editor\Windows\EditorWindowManager.cpp" />
     <ClCompile Include="EditorApp.cpp" />
@@ -246,6 +248,9 @@
   <ItemGroup>
     <ProjectReference Include="..\SkyEngine\SkyEngine.vcxproj">
       <Project>{52A23481-BE0C-E9F7-074B-9A9D73F4C64C}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\SkyEngine\Dependencies\ImGui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

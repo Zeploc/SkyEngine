@@ -10,6 +10,9 @@
     <Filter Include="Entity">
       <UniqueIdentifier>{A2E9DAB0-8E8B-0587-7746-19DB63878CD7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{3A8963B1-262B-8E87-0FE6-A1DBFB2615D8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Graphics">
       <UniqueIdentifier>{1653CE33-0220-293F-2B39-17E717655ECD}</UniqueIdentifier>
     </Filter>
@@ -93,10 +96,10 @@
     <ClInclude Include="Core\Delegates.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\EngineWindow.h">
+    <ClInclude Include="Core\EntryPoint.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\EntryPoint.h">
+    <ClInclude Include="Core\EventListener.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Entity\2DParticleSystem.h">
@@ -113,6 +116,15 @@
     </ClInclude>
     <ClInclude Include="Entity\Entity.h">
       <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\Event.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\KeyEvent.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\MouseEvent.h">
+      <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\GL\GLAPI.h">
       <Filter>Graphics\GL</Filter>
@@ -198,6 +210,9 @@
     <ClInclude Include="Platform\PlatformInterface.h">
       <Filter>Platform</Filter>
     </ClInclude>
+    <ClInclude Include="Platform\Window\EngineWindow.h">
+      <Filter>Platform\Window</Filter>
+    </ClInclude>
     <ClInclude Include="Platform\Window\GLFW\GLFWIncludes.h">
       <Filter>Platform\Window\GLFW</Filter>
     </ClInclude>
@@ -206,9 +221,6 @@
     </ClInclude>
     <ClInclude Include="Platform\Window\GLFW\imgui_impl_glfw.h">
       <Filter>Platform\Window\GLFW</Filter>
-    </ClInclude>
-    <ClInclude Include="Platform\Window\GraphicsWindow.h">
-      <Filter>Platform\Window</Filter>
     </ClInclude>
     <ClInclude Include="Platform\Windows\WindowsPlatform.h">
       <Filter>Platform\Windows</Filter>
@@ -350,6 +362,9 @@
     <ClInclude Include="UI\Legacy\Widget.h">
       <Filter>UI\Legacy</Filter>
     </ClInclude>
+    <ClInclude Include="UI\UIWidget.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera\CameraManager.cpp">
@@ -361,7 +376,7 @@
     <ClCompile Include="Core\Core.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Core\EngineWindow.cpp">
+    <ClCompile Include="Core\EventListener.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Entity\2DParticleSystem.cpp">
@@ -424,14 +439,14 @@
     <ClCompile Include="Platform\PlatformInterface.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
+    <ClCompile Include="Platform\Window\EngineWindow.cpp">
+      <Filter>Platform\Window</Filter>
+    </ClCompile>
     <ClCompile Include="Platform\Window\GLFW\GLFWWindow.cpp">
       <Filter>Platform\Window\GLFW</Filter>
     </ClCompile>
     <ClCompile Include="Platform\Window\GLFW\imgui_impl_glfw.cpp">
       <Filter>Platform\Window\GLFW</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform\Window\GraphicsWindow.cpp">
-      <Filter>Platform\Window</Filter>
     </ClCompile>
     <ClCompile Include="Platform\Windows\WindowsPlatform.cpp">
       <Filter>Platform\Windows</Filter>
@@ -559,6 +574,9 @@
     </ClCompile>
     <ClCompile Include="UI\Legacy\Widget.cpp">
       <Filter>UI\Legacy</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIWidget.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>

@@ -62,7 +62,8 @@ namespace SkyEngine
 		SoundManager::GetInstance()->InitFMod();
 		
 		ApplicationWindow->PushLayer(new CViewportLayer(ApplicationWindow));
-		ApplicationWindow->PushOverlay(new CUILayer(ApplicationWindow));	
+		UILayer = new CUILayer(ApplicationWindow);
+		ApplicationWindow->PushOverlay(UILayer);	
 		
 		return true;
 	}

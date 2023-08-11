@@ -9,6 +9,7 @@
 #include "Layers/LayerStack.h"
 #include "Math/Vector2.h"
 
+class CUILayer;
 class CLayer;
 class IPlatformInterface;
 class CEngineWindow;
@@ -47,6 +48,9 @@ namespace SkyEngine
 		TPointer<CEngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
 		
 		inline static Application* Get();
+	protected:
+		CUILayer* UILayer;
+		
 	private:
 		static Application* EngineApplication;
 
