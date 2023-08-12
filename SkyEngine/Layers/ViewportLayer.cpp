@@ -53,7 +53,7 @@ void CViewportLayer::OnRender()
 	// 	// TODO: Change to graphics instance
 	// 	glClearColor(0.8f, 0.8f, 0.8f, 1.0); // clear grey
 	// 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	// 	LogManager::GetInstance()->Render();
+	// 	CLogManager::GetInstance()->Render();
 	// }
 	// else
 	

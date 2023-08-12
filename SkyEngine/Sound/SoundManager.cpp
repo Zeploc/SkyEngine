@@ -76,7 +76,7 @@ const bool SoundManager::AddAudio(const char* Path, bool bLoop, std::string sNam
 	}
 	SoundObject NewSoundObj = {CreatedSound, sName};
 	Sounds.push_back(NewSoundObj);
-	LogManager::GetInstance()->DisplayLogMessage("Loading audio file at \"" + std::string(Path) + "\"");
+	CLogManager::GetInstance()->DisplayLogMessage("Loading audio file at \"" + std::string(Path) + "\"");
 	return true;
 }
 

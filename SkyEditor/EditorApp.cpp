@@ -2,66 +2,77 @@
 
 #pragma once
 
+#include "EditorApp.h"
+
 #include "SEPCH.h"
 #include <SkyEngine.h>
 #include <Scene/SceneManager.h>
-#include <Dependencies/include/glew/glew.h>
-#include <Dependencies/include/GLFW/glfw3.h>
 
 #include "Dependencies/ImGui/imgui.h"
+#include "Editor/EditorLogManager.h"
 #include "Editor/Scene/EditorScene.h"
+#include "Editor/UI/ConsoleLog.h"
+#include "Editor/UI/EntityPropertiesPanel.h"
 #include "Editor/UI/LayerInfoWidget.h"
 #include "Editor/Windows/EditorWindowManager.h"
 #include "Layers/UILayer.h"
 
-class EditorApplication : public SkyEngine::Application
-{
-public:	
-	EditorApplication() : Application() {}
-	~EditorApplication() {}
-
-	bool ApplicationSetup() override
-	{
-		const bool bSuccessfulSetup = Application::ApplicationSetup();
-		// TODO: Move to application base default scene
-		if (bSuccessfulSetup)
-		{			
-			TPointer<EditorScene> NewScene = TPointer<EditorScene>(new EditorScene("Editor"));			
-			SceneManager::GetInstance()->AddScene(NewScene);
-		}
-		TPointer<CLayerInfoWidget> LayerInfoWidget = std::make_shared<CLayerInfoWidget>();
-		UILayer->AddWidget(LayerInfoWidget);
-		
-		// Needed to be in this project to have context global variable
-		ImGui::SetCurrentContext(UILayer->GetGuiContext());
-		
-		return bSuccessfulSetup;
-	}
 	
-	void Update() override
-	{
-		Application::Update();
-	}
+EditorApplication::EditorApplication() : Application()
+{
+	EditorApp = this;
+}
 
-	void Render() override
-	{
-		Application::Render();
-
-		EditorWindowManager::RenderWindows();	
+bool EditorApplication::ApplicationSetup()
+{
+	const bool bSuccessfulSetup = Application::ApplicationSetup();
+	// TODO: Move to application base default scene
+	if (bSuccessfulSetup)
+	{			
+		TPointer<EditorScene> NewScene = TPointer<EditorScene>(new EditorScene("Editor"));			
+		SceneManager::GetInstance()->AddScene(NewScene);
 	}
+	TPointer<CLayerInfoWidget> LayerInfoWidget = std::make_shared<CLayerInfoWidget>();
+	UILayer->AddWidget(LayerInfoWidget);
+	TPointer<CEntityPropertiesPanel> EntityPropertiesPanel = std::make_shared<CEntityPropertiesPanel>();
+	UILayer->AddWidget(EntityPropertiesPanel);
+	ConsoleLog = std::make_shared<CConsoleLog>();
+	UILayer->AddWidget(ConsoleLog);
+	
+	// Needed to be in this project to have context global variable
+	ImGui::SetCurrentContext(UILayer->GetGuiContext());
+	
+	return bSuccessfulSetup;
+}
 
-	void ChangeSize(int w, int h) override
-	{
-		Application::ChangeSize(w, h);		
+void EditorApplication::SetupLogManager()
+{
+	LogManager = std::make_shared<CEditorLogManager>();
+}
 
-		EditorWindowManager::MainWindowSizeChanged(w, h);
-	}
-	void OnExit() override
-	{
-		EditorWindowManager::CleanupWindows();
-		Application::OnExit();
-	}
-};
+void EditorApplication::Update()
+{
+	Application::Update();
+}
+
+void EditorApplication::Render()
+{
+	Application::Render();
+
+	EditorWindowManager::RenderWindows();	
+}
+
+void EditorApplication::ChangeSize(int w, int h)
+{
+	Application::ChangeSize(w, h);		
+
+	EditorWindowManager::MainWindowSizeChanged(w, h);
+}
+void EditorApplication::OnExit()
+{
+	EditorWindowManager::CleanupWindows();
+	Application::OnExit();
+}
 
 SkyEngine::Application* SkyEngine::CreateApplication()
 {

@@ -131,16 +131,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="EditorApp.h" />
+    <ClInclude Include="Editor\EditorLogManager.h" />
     <ClInclude Include="Editor\Scene\EditorScene.h" />
     <ClInclude Include="Editor\Scene\TransformationWidget.h" />
+    <ClInclude Include="Editor\UI\ConsoleLog.h" />
+    <ClInclude Include="Editor\UI\EntityPropertiesPanel.h" />
     <ClInclude Include="Editor\UI\LayerInfoWidget.h" />
     <ClInclude Include="Editor\Windows\EditorWindow.h" />
     <ClInclude Include="Editor\Windows\EditorWindowManager.h" />
     <ClInclude Include="Particle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Editor\EditorLogManager.cpp" />
     <ClCompile Include="Editor\Scene\EditorScene.cpp" />
     <ClCompile Include="Editor\Scene\TransformationWidget.cpp" />
+    <ClCompile Include="Editor\UI\ConsoleLog.cpp" />
+    <ClCompile Include="Editor\UI\EntityPropertiesPanel.cpp" />
     <ClCompile Include="Editor\UI\LayerInfoWidget.cpp" />
     <ClCompile Include="Editor\Windows\EditorWindow.cpp" />
     <ClCompile Include="Editor\Windows\EditorWindowManager.cpp" />

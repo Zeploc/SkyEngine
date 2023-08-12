@@ -18,6 +18,7 @@
 #include "Platform/Window/EngineWindow.h"
 #include "Platform/Windows/WindowsPlatform.h"
 #include "Render/Shaders/ShaderManager.h"
+#include "Scene/SceneManager.h"
 #include "System/TimeManager.h"
 
 // make sure the winsock lib is included...
@@ -47,7 +48,9 @@ namespace SkyEngine
 	bool Application::ApplicationSetup()
 	{
 		PlatformInterface = std::make_shared<WindowsPlatform>();
-		LogManager::GetInstance()->Init();
+		SetupLogManager();
+		ENSURE(LogManager != nullptr, "Log manager not created!");
+		LogManager->Init();
 		GraphicsApi = IGraphicsAPI::CreateGraphicsAPI(GraphicsApiType);
 
 		ApplicationWindow = CEngineWindow::CreateEngineWindow("Application Window", MainWindowSize, false);
@@ -68,6 +71,11 @@ namespace SkyEngine
 		return true;
 	}
 
+	void Application::SetupLogManager()
+	{
+		LogManager = std::make_shared<CLogManager>();
+	}
+
 	int Application::Run()
 	{
 		if (ApplicationSetup())
@@ -80,7 +88,7 @@ namespace SkyEngine
 		}
 		else
 		{
-			LogManager::GetInstance()->DisplayLogError("Application failed to setup, could not start run loop!");
+			CLogManager::GetInstance()->DisplayLogError("Application failed to setup, could not start run loop!");
 		}
 		
 		OnExit();
@@ -117,9 +125,13 @@ namespace SkyEngine
 		ApplicationWindow.reset();
 		GraphicsApi.reset();
 		ShaderManager::CleanUp();
+		// TODO: Placeholders until layer/windows properly get cleaned up
+		SceneManager::DestoryInstance();
+		CameraManager::DestoryInstance();
 		
 		SoundManager::DestoryInstance();
 		Text::Fonts.~vector();
+		LogManager.reset();
 	}
 }
 

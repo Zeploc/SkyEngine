@@ -9,32 +9,23 @@
 
 class UIText;
 
-class LogManager
+class ENGINE_API CLogManager
 {
 public:
 	void Init();
 
 	void Render();
 
-	void DisplayLogMessage(const std::string& InMessage);
-	void DisplayLogWarning(const std::string& InMessage);
-	void DisplayLogError(const std::string& InMessage);
+	virtual void DisplayLogMessage(const std::string& InMessage);
+	virtual void DisplayLogWarning(const std::string& InMessage);
+	virtual void DisplayLogError(const std::string& InMessage);
 
 	TPointer<UIText> LoadingMessage;
 
 	// Singleton
 public:
-	static TPointer<LogManager> GetInstance();
+	static TPointer<CLogManager> GetInstance();
 
-	static void DestoryInstance();
-
-	~LogManager(); // Shared pointer has to be able to call destructor so can't be private
-
-private:
-	static TPointer<LogManager> m_pLogManager;
-
-	LogManager();
-
-	LogManager(const LogManager&); // Don't Implement
-	void operator=(const LogManager&); // Don't implement
+	CLogManager();
+	~CLogManager(); // Shared pointer has to be able to call destructor so can't be private
 };

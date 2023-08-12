@@ -60,8 +60,8 @@ EditorScene::EditorScene(const std::string& InSceneName) : Scene(InSceneName)
 	OpenBtn->BindPress(this, &EditorScene::OpenFile);
 	AddUIElement(OpenBtn);
 
-	LevelNameText = std::make_shared<UIText>(glm::vec2(WindowSize.X - 540, WindowSize.Y - 15.0f), 0.0f, glm::vec4(0.3, 0.3, 0.3, 1.0f), "Level Name", "Resources/Fonts/Roboto-Regular.ttf", 20, EANCHOR::BOTTOM_RIGHT);
-	AddUIElement(LevelNameText);
+	// LevelNameText = std::make_shared<UIText>(glm::vec2(WindowSize.X - 540, WindowSize.Y - 15.0f), 0.0f, glm::vec4(0.3, 0.3, 0.3, 1.0f), "Level Name", "Resources/Fonts/Roboto-Regular.ttf", 20, EANCHOR::BOTTOM_RIGHT);
+	// AddUIElement(LevelNameText);
 
 	TPointer<UIText> TipText(new UIText({WindowSize.X - 20, 15.0f}, 0, {0.3, 0.3, 0.3, 1.0f}, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 22, EANCHOR::TOP_RIGHT));
 	AddUIElement(TipText);
@@ -234,7 +234,8 @@ void EditorScene::UpdateSelectedEntity()
 void EditorScene::Update()
 {	
 	Scene::Update();
-	LevelNameText->sText = SceneName;
+	// TODO:
+	// LevelNameText->sText = SceneName;
 	CameraManager* CameraInstance = CameraManager::GetInstance();
 	TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 

@@ -142,7 +142,7 @@ bool CUILayer::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
 	}
 
 	// Won't be hovered properly since mouse pos only updated in imgui when window is focused
-	LogManager::GetInstance()->DisplayLogMessage(std::format("hovering: {}", ImGui::IsMouseHoveringAnyWindow()));
+	CLogManager::GetInstance()->DisplayLogMessage(std::format("hovering: {}", ImGui::IsMouseHoveringAnyWindow()));
 
 	// TODO: Handle viewport lost focus if input taken (happens on centered mouse)
 	return true;

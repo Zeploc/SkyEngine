@@ -29,7 +29,7 @@ UIElement::UIElement() : fRotation(0.0f), Colour(glm::vec4(1)), position(glm::ve
 ************************************************************/
 UIElement::~UIElement()
 {
-	LogManager::GetInstance()->DisplayLogMessage("UI Element was destroyed!");	
+	CLogManager::GetInstance()->DisplayLogMessage("UI Element was destroyed!");	
 }
 
 /************************************************************

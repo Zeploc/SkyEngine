@@ -109,7 +109,7 @@ void ShaderManager::ShaderCreated(const TPointer<CShader>NewShader)
 		return;
 	}
 	Shaders.insert(std::pair(ShaderName, NewShader));
-	LogManager::GetInstance()->DisplayLogMessage("Loading Shader \"" + ShaderName + "\"");
+	CLogManager::GetInstance()->DisplayLogMessage("Loading Shader \"" + ShaderName + "\"");
 }
 
 TPointer<CShader> ShaderManager::GetShader(std::string ShaderName)

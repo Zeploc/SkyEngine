@@ -54,7 +54,7 @@ void CTimeManager::Update()
 	DeltaTime = static_cast<float>(DoubleDeltaTime);
 	FPS = 1.0 / DeltaTime;
 	
-	// LogManager::GetInstance()->DisplayLogMessage("delta time " + std::to_string(DeltaTime));
+	// CLogManager::GetInstance()->DisplayLogMessage("delta time " + std::to_string(DeltaTime));
 }
 
 double CTimeManager::GetElapsedEngineTime()

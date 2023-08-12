@@ -122,7 +122,7 @@ void Scene::DestroyEntity(TPointer<Entity> _Entity)
 ************************************************************/
 void Scene::AddUIElement(TPointer<UIElement> Element)
 {
-	UIElements.push_back(Element);
+	// UIElements.push_back(Element);
 }
 
 /************************************************************
@@ -133,7 +133,7 @@ void Scene::AddUIElement(TPointer<UIElement> Element)
 ************************************************************/
 void Scene::AddUITextElement(TPointer<UIText> Element)
 {
-	UIElements.push_back(Element);
+	// UIElements.push_back(Element);
 }
 
 /************************************************************
@@ -144,8 +144,8 @@ void Scene::AddUITextElement(TPointer<UIText> Element)
 ************************************************************/
 void Scene::AddUITextElement(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string font, int iPSize, EANCHOR _Anchor)
 {
-	TPointer<UIText> NewElement(new UIText(_Position, _fRotation, _Colour, _sText, font, iPSize, _Anchor));
-	UIElements.push_back(NewElement);
+	// TPointer<UIText> NewElement(new UIText(_Position, _fRotation, _Colour, _sText, font, iPSize, _Anchor));
+	// UIElements.push_back(NewElement);
 }
 
 /************************************************************

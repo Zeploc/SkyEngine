@@ -3,12 +3,7 @@
 #include "SEPCH.h"
 #include "LogManager.h"
 
-#include "UI/Legacy/UIText.h"
-
-// Library Includes //
-
-// Static Variables //
-TPointer<LogManager> LogManager::m_pLogManager;
+#include "Core/Application.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -16,7 +11,7 @@ TPointer<LogManager> LogManager::m_pLogManager;
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-LogManager::LogManager()
+CLogManager::CLogManager()
 {
 	//LoadingMessage = std::make_shared<UIText>(UIText({ Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2 }, 0, { 0.7f, 0.7f, 0.7f, 1.0f }, "Log Message", "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::CENTER));;
 }
@@ -27,21 +22,21 @@ LogManager::LogManager()
 #--Parameters--#:	NA
 #--Return--#: 		NA
 ************************************************************/
-LogManager::~LogManager()
+CLogManager::~CLogManager()
 {
 }
 
-void LogManager::Init()
+void CLogManager::Init()
 {
 	DisplayLogMessage("Loading Game");
 }
 
-void LogManager::Render()
+void CLogManager::Render()
 {
-	LoadingMessage->DrawUIElement();
+	// LoadingMessage->DrawUIElement();
 }
 
-void LogManager::DisplayLogMessage(const std::string& InMessage)
+void CLogManager::DisplayLogMessage(const std::string& InMessage)
 {
 	std::cout << InMessage << std::endl;
 	// TODO: Log
@@ -51,38 +46,17 @@ void LogManager::DisplayLogMessage(const std::string& InMessage)
 	// }
 }
 
-void LogManager::DisplayLogWarning(const std::string& InMessage)
+void CLogManager::DisplayLogWarning(const std::string& InMessage)
 {
 	std::cerr << InMessage << std::endl;
 }
 
-void LogManager::DisplayLogError(const std::string& InMessage)
+void CLogManager::DisplayLogError(const std::string& InMessage)
 {
 	std::cerr << InMessage << std::endl;
 }
 
-/************************************************************
-#--Description--#:  Retrieves static instance pointer to this class
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	NA
-#--Return--#: 		Returns static pointer to self
-************************************************************/
-TPointer<LogManager> LogManager::GetInstance()
+TPointer<CLogManager> CLogManager::GetInstance()
 {
-	if (!m_pLogManager) // null or doesn't exist
-	{
-		m_pLogManager = TPointer<LogManager>(new LogManager());
-	}
-	return m_pLogManager;
-}
-
-/************************************************************
-#--Description--#:  Destroys static instance pointer to this class
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	NA
-#--Return--#: 		NA
-************************************************************/
-void LogManager::DestoryInstance()
-{
-	m_pLogManager = nullptr;
+	return GetApplication()->LogManager;
 }

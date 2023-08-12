@@ -243,7 +243,7 @@ void CGLFWWindow::SetCursorVisible(bool bSetVisible)
 void glfw_onError(int error, const char* description)
 {
 	// print message in Windows popup dialog box
-	LogManager::GetInstance()->DisplayLogError(description);
+	CLogManager::GetInstance()->DisplayLogError(description);
 	MessageBoxA(NULL, description, "GLFW error", MB_OK);
 }
 

@@ -125,7 +125,7 @@ TPointer<CTexture> IGLAPI::GetTexture(const std::string& TextureSource, bool bAA
 			glBindTexture(GL_TEXTURE_2D, 0);
 
 			ShaderManager::Textures.insert(std::pair(TextureSource, Texture));
-			LogManager::GetInstance()->DisplayLogMessage("Adding Texture, \"" + std::string(TextureSource) + "\", Total Texture Count : " + std::to_string(ShaderManager::Textures.size()));
+			CLogManager::GetInstance()->DisplayLogMessage("Adding Texture, \"" + std::string(TextureSource) + "\", Total Texture Count : " + std::to_string(ShaderManager::Textures.size()));
 		}
 		else
 		{

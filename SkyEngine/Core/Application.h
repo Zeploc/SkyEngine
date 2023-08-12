@@ -9,6 +9,7 @@
 #include "Layers/LayerStack.h"
 #include "Math/Vector2.h"
 
+class CLogManager;
 class CUILayer;
 class CLayer;
 class IPlatformInterface;
@@ -27,6 +28,7 @@ namespace SkyEngine
 		virtual ~Application();
 
 		virtual bool ApplicationSetup();
+		virtual void SetupLogManager();
 
 		// TODO: Add return type for error handling
 		int Run();
@@ -43,6 +45,7 @@ namespace SkyEngine
 		TPointer<IGraphicsAPI> GraphicsApi;
 		TPointer<IPlatformInterface> PlatformInterface;
 		EGraphicsAPI GraphicsApiType;
+		TPointer<CLogManager> LogManager;
 
 		// TODO: Weak pointer to not hold ref
 		TPointer<CEngineWindow> GetApplicationWindow() const { return ApplicationWindow; }

@@ -37,7 +37,7 @@ Entity::Entity(std::string _FromString)
 Entity::Entity(STransform _Transform, EANCHOR _Anchor) : Transform(_Transform), EntityAnchor(_Anchor)
 {
 	iEntityID = Utils::AddEntityID();
-	LogManager::GetInstance()->DisplayLogMessage("New Entity created with ID #" + std::to_string(iEntityID));
+	CLogManager::GetInstance()->DisplayLogMessage("New Entity created with ID #" + std::to_string(iEntityID));
 }
 
 /************************************************************
@@ -49,7 +49,7 @@ Entity::Entity(STransform _Transform, EANCHOR _Anchor) : Transform(_Transform), 
 Entity::~Entity()
 {
 	EntityMesh = nullptr;
-	LogManager::GetInstance()->DisplayLogMessage("Entity " + std::to_string(iEntityID) + " destroyed!");	
+	CLogManager::GetInstance()->DisplayLogMessage("Entity " + std::to_string(iEntityID) + " destroyed!");	
 }
 
 void Entity::AddMesh(TPointer<CMeshComponent> _NewMesh)
@@ -160,7 +160,7 @@ bool Entity::CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos)
 ************************************************************/
 void Entity::OnDestroy()
 {
-	LogManager::GetInstance()->DisplayLogMessage("Entity with ID #" + std::to_string(iEntityID) + " destroyed!");
+	CLogManager::GetInstance()->DisplayLogMessage("Entity with ID #" + std::to_string(iEntityID) + " destroyed!");
 	if (body)
 	{
 		body->SetEnabled(false);
@@ -300,7 +300,7 @@ void Entity::SetupB2BoxBody(b2World& Box2DWorld, b2BodyType BodyType, bool bCanR
 	}
 	else
 	{
-		LogManager::GetInstance()->DisplayLogMessage("Failed to add Box2D body to Entity #" + std::to_string(iEntityID) + ", Entity has no Mesh");
+		CLogManager::GetInstance()->DisplayLogMessage("Failed to add Box2D body to Entity #" + std::to_string(iEntityID) + ", Entity has no Mesh");
 	}
 }
 
@@ -342,7 +342,7 @@ void Entity::SetupB2CircleBody(b2World& Box2DWorld, b2BodyType BodyType, bool bC
 	}
 	else
 	{
-		LogManager::GetInstance()->DisplayLogMessage("Failed to add Box2D body to Entity #" + std::to_string(iEntityID) + ", Entity has no Mesh");
+		CLogManager::GetInstance()->DisplayLogMessage("Failed to add Box2D body to Entity #" + std::to_string(iEntityID) + ", Entity has no Mesh");
 	}
 }
 

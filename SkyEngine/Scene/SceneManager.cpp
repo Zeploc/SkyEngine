@@ -72,7 +72,7 @@ void SceneManager::RemoveScene(std::string SceneName)
 	if (Scenes.count(SceneName) == 0)
 	{
 		// Scene Doesn't exist
-		LogManager::GetInstance()->DisplayLogMessage("Could not find scene " + SceneName);
+		CLogManager::GetInstance()->DisplayLogMessage("Could not find scene " + SceneName);
 		return;
 	}
 	Scenes[SceneName]->DeleteScene();
@@ -109,14 +109,14 @@ void SceneManager::SwitchScene(std::string SceneName, bool _bInstant)
 	if (Scenes.count(SceneName) == 0)
 	{
 		// Scene Doesn't exist
-		LogManager::GetInstance()->DisplayLogMessage("Could not find scene " + SceneName);
+		CLogManager::GetInstance()->DisplayLogMessage("Could not find scene " + SceneName);
 		return;
 	}
 
 	if (_bInstant)
 	{
 		CurrentScene = SceneName;
-		LogManager::GetInstance()->DisplayLogMessage("Switching to Scene \"" + GetCurrentScene()->SceneName + "\"");
+		CLogManager::GetInstance()->DisplayLogMessage("Switching to Scene \"" + GetCurrentScene()->SceneName + "\"");
 		GetCurrentScene()->OnLoadScene();
 	}
 	else
@@ -138,7 +138,7 @@ void SceneManager::UpdateCurrentScene()
 	if (SceneToSwitch != CurrentScene)
 	{
 		CurrentScene = SceneToSwitch;
-		LogManager::GetInstance()->DisplayLogMessage("Switching to Scene \"" + Scenes[SceneToSwitch]->SceneName + "\"");
+		CLogManager::GetInstance()->DisplayLogMessage("Switching to Scene \"" + Scenes[SceneToSwitch]->SceneName + "\"");
 		Scenes[SceneToSwitch]->OnLoadScene();
 	}
 }

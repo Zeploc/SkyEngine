@@ -35,7 +35,7 @@ CMeshComponent::~CMeshComponent()
 	//if (MeshCollisionBounds) delete MeshCollisionBounds;
 	MeshCollisionBounds = nullptr;
 	// TODO: Give id (component system?) and link to parent
-	LogManager::GetInstance()->DisplayLogMessage("Mesh was destroyed!");	
+	CLogManager::GetInstance()->DisplayLogMessage("Mesh was destroyed!");	
 }
 
 // TODO: Remove the need for entity passed through (use transforms/matrix)
@@ -43,7 +43,7 @@ bool CMeshComponent::CheckHit(SVector RayStart, SVector RayDirection, SVector& H
 {
 	// TODO: Check against basic box bounds before considering
 	
-	LogManager::GetInstance()->DisplayLogMessage("No Check Hit for mesh ray hit check!");
+	CLogManager::GetInstance()->DisplayLogMessage("No Check Hit for mesh ray hit check!");
 
 	return false;
 }

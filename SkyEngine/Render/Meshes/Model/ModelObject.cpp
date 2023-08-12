@@ -180,7 +180,7 @@ GLint ModelObject::TextureFromFile(const char* path, string directory)
 	string filename = string(path);
 	filename = directory + '/' + filename;
 
-	LogManager::GetInstance()->DisplayLogMessage("Loading model with texture at filename: " + filename);
+	CLogManager::GetInstance()->DisplayLogMessage("Loading model with texture at filename: " + filename);
 
 	GLuint textureID;
 	glGenTextures(1, &textureID);

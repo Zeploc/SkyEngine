@@ -275,7 +275,7 @@ void GLInstance::RenderMesh(const TPointer<CMeshComponent> Mesh, const STransfor
 	// glBindTexture(GL_TEXTURE_2D, 0);
 
 	// TODO: Check all errors and log any
-	// LogManager::GetInstance()->DisplayLogMessage("Open GL Error: " + std::to_string(glGetError(0)));
+	// CLogManager::GetInstance()->DisplayLogMessage("Open GL Error: " + std::to_string(glGetError(0)));
 	// glCheckError_
 }
 
@@ -331,7 +331,7 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum se
 	const std::string OutputString = std::format("GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
 	                                             ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
 	                                             type, severity, message);
-	LogManager::GetInstance()->DisplayLogError(OutputString);
+	CLogManager::GetInstance()->DisplayLogError(OutputString);
 	// fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
 	//          ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
 	//          type, severity, message );
