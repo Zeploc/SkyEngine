@@ -61,7 +61,6 @@ A custom project for developing an engine and editor for experience purposes.
 
 # Next Steps
 - Link up cursor to ImGui
-- Link up window resizing to Imgui and window systems
 - Full pass on input system (allow per window)
 - Component structure
 - Log manager/system pass

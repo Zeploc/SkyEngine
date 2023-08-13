@@ -105,7 +105,7 @@ void CUILayer::OnRender()
 	for (TPointer<CUIWidget> Widget : Widgets)
 	{
 		// TODO: Temp until overall style setup
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(.1,.1,.1,1));
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(.1f,.1f,.1f,1.0f));
 		Widget->DrawUI(UICanvas);
 		ImGui::PopStyleColor(1);	
 	}

@@ -8,6 +8,8 @@
 #include <Render/Meshes/Basic/Cube.h>
 #include <Scene/Scene.h>
 
+#include "Core/Application.h"
+#include "Platform/Window/EngineWindow.h"
 #include "Render/Materials/Material.h"
 #include "Render/Shaders/ShaderManager.h"
 #include "Render/Shaders/UnlitShader.h"
@@ -73,90 +75,93 @@ void TransformationWidget::Update()
 	// Clear states
 	XHovered = false;
 	YHovered = false;
-	ZHovered = false;	
+	ZHovered = false;
 
+	CInput& Input = GetApplication()->GetApplicationWindow()->GetInput();
 	// TODO:
-	// const bool bMouseBegin = CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == CInput::INPUT_FIRST_PRESS;
-	//
-	// // Check for hit
-	// const SVector RayStart = CameraManager::GetInstance()->GetCameraPosition();
-	// const SVector RayDirection = CameraManager::GetInstance()->ScreenToWorldDirection(CInput::GetInstance()->MousePos);
-	// SVector HitPos;
-	// // TODO: Change hover to lighter colour
-	// // TODO: Allow for multi axis (use plane/triangle check between axis)
-	// if (XMoveTransform->CheckHit(RayStart, RayDirection, HitPos))
-	// {
-	// 	if (bMouseBegin)
-	// 	{
-	// 		XHeld = true;
-	// 	}
-	// 	XHovered = true;
-	// 	HitPosition = HitPos;
-	// }
-	// else if (YMoveTransform->CheckHit(RayStart, RayDirection, HitPos))
-	// {
-	// 	if (bMouseBegin)
-	// 	{
-	// 		YHeld = true;
-	// 	}
-	// 	YHovered = true;
-	// 	HitPosition = HitPos;
-	// }
-	// else if (ZMoveTransform->CheckHit(RayStart, RayDirection, HitPos))
-	// {
-	// 	if (bMouseBegin)
-	// 	{
-	// 		ZHeld = true;
-	// 	}
-	// 	ZHovered = true;
-	// 	HitPosition = HitPos;
-	// }
-	//
-	// if (bMouseBegin)
-	// {
-	// 	// TODO: Store initial hit offset
-	// 	if (XHeld)
-	// 	{
-	// 		const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
-	// 		GrabOffset = Transform.Position.X - HitPoint.X;
-	// 	}
-	// 	else if (YHeld)
-	// 	{
-	// 		const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 0.0f, 1.0f));
-	// 		GrabOffset = Transform.Position.Y - HitPoint.Y;
-	// 	}
-	// 	else if (ZHeld)
-	// 	{
-	// 		const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
-	// 		GrabOffset = Transform.Position.Z - HitPoint.Z;
-	// 	}
-	// }
-	// else if (CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == CInput::INPUT_FIRST_RELEASE)
-	// {
-	// 	XHeld = false;
-	// 	YHeld = false;
-	// 	ZHeld = false;
-	// }
-	//
-	// if (CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == CInput::INPUT_HOLD && SelectedEntity)
-	// {
-	// 	if (XHeld)
-	// 	{
-	// 		const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
-	// 		Transform.Position.X = HitPoint.X + GrabOffset;
-	// 	}
-	// 	else if (YHeld)
-	// 	{
-	// 		const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 0.0f, 1.0f));
-	// 		Transform.Position.Y = HitPoint.Y + GrabOffset;
-	// 	}
-	// 	else if (ZHeld)
-	// 	{
-	// 		const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
-	// 		Transform.Position.Z = HitPoint.Z + GrabOffset;
-	// 	}
-	// 	SelectedEntity->Transform.Position = Transform.Position;
-	// }
+	const bool bMouseBegin = Input.MouseState[CInput::MOUSE_LEFT] == CInput::INPUT_FIRST_PRESS;
+	
+	// Check for hit
+	const SVector RayStart = CameraManager::GetInstance()->GetCameraPosition();
+	const SVector RayDirection = CameraManager::GetInstance()->ScreenToWorldDirection(Input.MousePos);
+	SVector HitPos;
+	// TODO: Change hover to lighter colour
+	// TODO: Allow for multi axis (use plane/triangle check between axis)
+	if (XMoveTransform->CheckHit(RayStart, RayDirection, HitPos))
+	{
+		if (bMouseBegin)
+		{
+			XHeld = true;
+		}
+		XHovered = true;
+		HitPosition = HitPos;
+	}
+	else if (YMoveTransform->CheckHit(RayStart, RayDirection, HitPos))
+	{
+		if (bMouseBegin)
+		{
+			YHeld = true;
+		}
+		YHovered = true;
+		HitPosition = HitPos;
+	}
+	else if (ZMoveTransform->CheckHit(RayStart, RayDirection, HitPos))
+	{
+		if (bMouseBegin)
+		{
+			ZHeld = true;
+		}
+		ZHovered = true;
+		HitPosition = HitPos;
+	}
+	
+	if (bMouseBegin)
+	{
+		// TODO: Store initial hit offset
+		if (XHeld)
+		{
+			const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
+			GrabOffset = Transform.Position.X - HitPoint.X;
+		}
+		else if (YHeld)
+		{
+			const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 0.0f, 1.0f));
+			GrabOffset = Transform.Position.Y - HitPoint.Y;
+		}
+		else if (ZHeld)
+		{
+			const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
+			GrabOffset = Transform.Position.Z - HitPoint.Z;
+		}
+	}
+	else if (Input.MouseState[CInput::MOUSE_LEFT] == CInput::INPUT_FIRST_RELEASE)
+	{
+		XHeld = false;
+		YHeld = false;
+		ZHeld = false;
+	}
+	
+	if (Input.MouseState[CInput::MOUSE_LEFT] == CInput::INPUT_HOLD && SelectedEntity)
+	{
+		if (XHeld)
+		{
+			const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
+			Transform.Position.X = HitPoint.X + GrabOffset;
+		SelectedEntity->Transform.Position = Transform.Position;
+		}
+		else if (YHeld)
+		{
+			const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 0.0f, 1.0f));
+			Transform.Position.Y = HitPoint.Y + GrabOffset;
+		SelectedEntity->Transform.Position = Transform.Position;
+		}
+		else if (ZHeld)
+		{
+			const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
+			Transform.Position.Z = HitPoint.Z + GrabOffset;
+		SelectedEntity->Transform.Position = Transform.Position;
+		}
+	}
 
 	// TODO: Update so colour gets updated (only happens on bind
 	// XMoveTransform->EntityMesh->MeshMaterial->bStencil = XHovered;
@@ -168,6 +173,11 @@ void TransformationWidget::Update()
 	// ZMoveTransform->EntityMesh->MeshMaterial->bStencil = ZHovered;
 	// ZMoveTransform->EntityMesh->MeshMaterial->Colour = ZColour * (ZHovered ? 2.0f : 1.0f);
 
+	if (SelectedEntity)
+	{
+		Transform.Position = SelectedEntity->Transform.Position;		
+	}
+	
 	// Update child transforms
 	// TODO: Remove need for component transform system
 	XMoveTransform->Transform.Position = Transform.Position + glm::vec3(XMoveTransform->EntityMesh->m_fWidth / 2.0f, 0, 0);

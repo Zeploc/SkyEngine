@@ -3,8 +3,13 @@
 #pragma once
 #include "UI/UIWidget.h"
 
+class EditorScene;
+
 class CEntityPropertiesPanel : public CUIWidget
 {
 public:
+	CEntityPropertiesPanel();
 	void DrawUI(const SCanvas& DrawCanvas) override;
+
+	TPointer<EditorScene> EditorScene;
 };

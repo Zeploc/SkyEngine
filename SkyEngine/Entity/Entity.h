@@ -79,6 +79,7 @@ public:
 	TPointer<CMeshComponent> EntityMesh;
 
 	int GetEntityValue() const { return iEntityID; }
+	std::string GetEntityName() const { return Name; }
 
 	// TODO: Remove?
 	void SetInitialEntity(bool IsInitial) { bIsInitialEntity = IsInitial; }
@@ -99,6 +100,7 @@ protected:
 	bool bActive = true;
 	bool bVisible = true;
 	bool bIsInitialEntity = false;
+	std::string Name;
 
 	int iEntityID;
 };

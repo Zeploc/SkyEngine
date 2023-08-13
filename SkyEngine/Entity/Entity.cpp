@@ -8,6 +8,8 @@
 #include <sstream>
 
 // Engine Includes //
+#include <format>
+
 #include "CollisionBounds.h"
 #include "Render/Meshes/Mesh.h"
 #include "System/LogManager.h"
@@ -38,6 +40,7 @@ Entity::Entity(STransform _Transform, EANCHOR _Anchor) : Transform(_Transform), 
 {
 	iEntityID = Utils::AddEntityID();
 	CLogManager::GetInstance()->DisplayLogMessage("New Entity created with ID #" + std::to_string(iEntityID));
+	Name = std::format("Entity {}", iEntityID);
 }
 
 /************************************************************
