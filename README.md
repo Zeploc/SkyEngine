@@ -8,7 +8,7 @@ A custom project for developing an engine and editor for experience purposes.
 - Download from: https://drive.google.com/drive/folders/1LyBMllvO4DkauYG2qWTw8TBa2GciBejx?usp=sharing
 - TODO: Include manual assimp compile steps (Uses CMake)
  
-# Currently supports:
+# Currently supports (out of date):
 ## Input
 - Key states
 - Gamepad [Rudimentary]
@@ -61,6 +61,19 @@ A custom project for developing an engine and editor for experience purposes.
 
 # Next Steps
 - Link up cursor to ImGui
+- outliner
+- switch to new transform gizmo
+- create new enitities
+- set mesh of entity
+- Content browser
+- Setup base mesh asset
+- Setup basic shapes as assets
+- drag and drop meshes to entity (or level)
+- material asset
+- drag amd drop material to entity
+- material properties editor
+- shader reloading (prompt on file change)
+- Improve entity selection 
 - Full pass on input system (allow per window)
 - Component structure
 - Log manager/system pass
@@ -69,9 +82,6 @@ A custom project for developing an engine and editor for experience purposes.
 - Change light from static to light objects
 - Further Refine Material/shader pipeline
 - Complete Saving/Loading entities from save
-- Move Hit check to mesh instead of entity and account for rotation
-- Fix/Complete translating entities in editor
-- Rotate + Scale entities in editor
 - Change editor movement/look to state based input + Improve "Spectator" controls structure
 - Link up model/fbx
 - Add Transform math functions
@@ -127,12 +137,11 @@ A custom project for developing an engine and editor for experience purposes.
 - Widget system -ImGui
 - Save and load widgets
 ## Save and Loading
-- Save Mesh Type
+- Save entity Mesh info
 - Save Specific properties
  - Save Particles
 ## Rendering
 - Setup placeholder for DirectX and Vulkan
-- Generic shader system to use across rendering pipeline
 - No Depth test render order
 - Live shader compiling/editing (hot reload shaders)
 ## Component system
