@@ -27,7 +27,9 @@
 
 #include <Windows.h>
 
+#include "EditorApp.h"
 #include "Core/Application.h"
+#include "Editor/EditorViewportLayer.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Render/Materials/Material.h"
 #include "Render/Shaders/PBRShader.h"
@@ -460,7 +462,7 @@ bool EditorScene::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
 {
 	CameraManager* CameraInstance = CameraManager::GetInstance();
 	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
-	const SVector2i ScreenCenter = CameraInstance->GetScreenCenter();
+	const SVector2i ScreenCenter = EditorApp->EditorViewportLayer->GetViewportPosition() + CameraInstance->GetScreenCenter();
 	const SVector2i MousePos = ApplicationWindow->GetInput().MousePos;
 	
 	// TODO: Refine mouse visibility toggle/state
@@ -553,7 +555,7 @@ bool EditorScene::OnMouseButtonReleasedEvent(CMouseButtonReleasedEvent& Event)
 bool EditorScene::OnMouseMovedEvent(CMouseMovedEvent& Event)
 {
 	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
-	const SVector2i ScreenCenter = ApplicationWindow->GetSize() / 2;
+	const SVector2i ScreenCenter = EditorApp->EditorViewportLayer->GetViewportPosition() + EditorApp->EditorViewportLayer->GetViewportSize() / 2;
 	CameraManager* CameraInstance = CameraManager::GetInstance();
 	const SVector2i ScreenOffset = Event.GetMousePos() - ScreenCenter;
 	const SVector2 Offset = SVector2(ScreenOffset) * CameraInstance->MouseSensitivity;	
