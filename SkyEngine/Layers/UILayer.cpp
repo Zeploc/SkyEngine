@@ -90,11 +90,21 @@ void CUILayer::OnUpdate()
 void CUILayer::OnRender()
 {	
 	static bool show = true;
+	// TODO: Temp until overall style setup
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(.1,.1,.1,1));
 	ImGui::ShowDemoWindow(&show);
+	ImGui::PopStyleColor(1);
+
+	SCanvas UICanvas;
+	UICanvas.Position = {0,0};
+	UICanvas.Size = {ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y};
 	
 	for (TPointer<CUIWidget> Widget : Widgets)
 	{
-		Widget->DrawUI();
+		// TODO: Temp until overall style setup
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(.1,.1,.1,1));
+		Widget->DrawUI(UICanvas);
+		ImGui::PopStyleColor(1);	
 	}
 	ImGui::Render();
 	GetApplication()->GetApplicationWindow()->GetGraphicsInstance()->RenderImGui();

@@ -53,7 +53,7 @@ namespace SkyEngine
 		LogManager->Init();
 		GraphicsApi = IGraphicsAPI::CreateGraphicsAPI(GraphicsApiType);
 
-		ApplicationWindow = CEngineWindow::CreateEngineWindow("Application Window", MainWindowSize, false);
+		ApplicationWindow = CEngineWindow::CreateEngineWindow("Sky Engine", MainWindowSize, false);
 		if (!ENSURE(ApplicationWindow != NULL, "Failed to setup application window"))
 		{
 			return false;

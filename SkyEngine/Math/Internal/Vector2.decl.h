@@ -13,6 +13,9 @@
 
 struct SRotator;
 
+// TODO: Warnings with exporting class containing STDL
+#pragma warning (disable : 4251)
+
 template <typename T = float>
 struct TVector2 : glm::tvec2<T, glm::highp>
 {	

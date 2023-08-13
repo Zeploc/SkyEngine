@@ -15,6 +15,7 @@
 #include "Core/Application.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Input/Input.h"
+#include "Layers/ViewportLayer.h"
 #include "Math/Transform.h"
 #include "Math/Matrix.h"
 #include "Math/Vector.h"
@@ -32,9 +33,9 @@ CameraManager* CameraManager::m_pCamera;
 #--Parameters--#: 	Takes in screen size and camera vectors
 #--Return--#: 		NA
 ************************************************************/
-void CameraManager::Init(TPointer<CEngineWindow> InViewportWindow, SVector CamPos, SVector ForwardVec, SVector UpVec)
+void CameraManager::Init(CViewportLayer* InViewportLayer, SVector CamPos, SVector ForwardVec, SVector UpVec)
 {
-	ViewportWindow = InViewportWindow;
+	Viewport = InViewportLayer;
 	CameraPosition = CamPos;
 	CameraForward = ForwardVec;
 	CameraUp = UpVec;
@@ -91,7 +92,7 @@ void CameraManager::MoveCamera(SVector _Movement)
 
 SVector2i CameraManager::GetScreenCenter() const
 {
-	return ViewportWindow->GetSize() / 2;
+	return Viewport->GetViewportSize() / 2;
 }
 
 void CameraManager::EnableSpectatorControls(bool _bSpectatorControls)
@@ -100,11 +101,11 @@ void CameraManager::EnableSpectatorControls(bool _bSpectatorControls)
 	if (bUseSpectatorControls)
 	{
 		PreviousMousePosition = GetApplication()->GetApplicationWindow()->GetInput().MousePos;
-		ViewportWindow->SetCursorPosition(GetScreenCenter());
+		Viewport->GetOwningWindow().lock()->SetCursorPosition(GetScreenCenter());
 	}
 	else
 	{		
-		ViewportWindow->SetCursorPosition(PreviousMousePosition);
+		Viewport->GetOwningWindow().lock()->SetCursorPosition(PreviousMousePosition);
 	}
 }
 
@@ -162,7 +163,7 @@ void CameraManager::SpectatorUpdate()
 			CameraPosition -= UpMovement;
 		}
 	}
-	ViewportWindow->SetCursorPosition(GetScreenCenter());
+	Viewport->GetOwningWindow().lock()->SetCursorPosition(GetScreenCenter());
 }
 
 /************************************************************
@@ -184,8 +185,10 @@ void CameraManager::SetWindowScale(float _fNewScale)
 
 SVector CameraManager::ScreenToWorldDirection(SVector2i InScreenPosition)
 {
-	float x = (2.0f * (float)InScreenPosition.X) / (float)ViewportWindow->GetSize().X - 1.0f;
-	float y = 1.0f - (2.0f * (float)InScreenPosition.Y) / (float)ViewportWindow->GetSize().Y;
+	SVector2i ViewportPosition = Viewport->GetViewportPosition();
+	SVector2i ViewportSize = Viewport->GetViewportSize();
+	float x = (2.0f * ((float)InScreenPosition.X - ViewportPosition.X)) / (float)ViewportSize.X - 1.0f;
+	float y = 1.0f - (2.0f * ((float)InScreenPosition.Y - ViewportPosition.Y)) / (float)ViewportSize.Y;
 	const SVector2 RayNds = {x, y};
 
 	const SVector4 RayClip = SVector4(RayNds.X, RayNds.Y, -1.0f, 1.0f);
@@ -244,8 +247,8 @@ void CameraManager::SwitchProjection(EProjectionMode InMode)
 	{
 		case EProjectionMode::Orthographic:
 			{
-				const float HalfWidth = static_cast<float>(ViewportWindow->GetSize().X) / fWindowScale;
-				const float HalfHeight = static_cast<float>(ViewportWindow->GetSize().Y) / fWindowScale;
+				const float HalfWidth = static_cast<float>(Viewport->GetViewportSize().X) / fWindowScale;
+				const float HalfHeight = static_cast<float>(Viewport->GetViewportSize().Y) / fWindowScale;
 				//projection = glm::ortho(-HalfWidth, HalfWidth, -HalfHeight, HalfHeight, 0.1f, fMaxViewClipping);
 				OrthoProjInfo ProjectionInfo;
 				ProjectionInfo.Left = -HalfWidth;
@@ -261,8 +264,8 @@ void CameraManager::SwitchProjection(EProjectionMode InMode)
 			{
 				PersProjInfo ProjectionInfo;
 				ProjectionInfo.FOV = 45.0f;
-				ProjectionInfo.Width = static_cast<float>(ViewportWindow->GetSize().X);
-				ProjectionInfo.Height = static_cast<float>(ViewportWindow->GetSize().Y);
+				ProjectionInfo.Width = static_cast<float>(Viewport->GetViewportSize().X);
+				ProjectionInfo.Height = static_cast<float>(Viewport->GetViewportSize().Y);
 				ProjectionInfo.zNear = 0.1f;
 				ProjectionInfo.zFar = fMaxViewClipping;
 				Projection.SetPerspectiveProjection(ProjectionInfo);

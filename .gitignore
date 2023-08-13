@@ -271,3 +271,4 @@ SkyEngine/Dependencies/lib/Win64/assimp/assimp-vc142-mtd.lib
 # *.sln
 # *.vcxproj
 # *.filters
+SkyEditor/imgui.ini

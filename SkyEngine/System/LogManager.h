@@ -7,8 +7,6 @@
 // Engine Includes //
 #include "Core/Core.h"
 
-class UIText;
-
 class ENGINE_API CLogManager
 {
 public:
@@ -19,8 +17,6 @@ public:
 	virtual void DisplayLogMessage(const std::string& InMessage);
 	virtual void DisplayLogWarning(const std::string& InMessage);
 	virtual void DisplayLogError(const std::string& InMessage);
-
-	TPointer<UIText> LoadingMessage;
 
 	// Singleton
 public:

@@ -4,6 +4,7 @@
 #include "Layer.h"
 
 #include "Math/Vector.h"
+#include "Math/Vector2.h"
 
 class ENGINE_API CViewportLayer : public CLayer
 {
@@ -16,6 +17,9 @@ public:
 	void OnRender() override;
 	void OnEvent(CEvent& Event) override;
 
+	virtual SVector2i GetViewportSize();
+	virtual SVector2i GetViewportPosition();
+	
 protected:
 	SVector SkyColour;
 };

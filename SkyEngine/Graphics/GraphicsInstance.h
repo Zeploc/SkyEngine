@@ -33,6 +33,7 @@ public:
 	virtual void PostRender(TPointer<CEngineWindow> GraphicsWindow) {}
 	
 	virtual void SetWireframeMode(bool bInWireframeEnabled) = 0;
+	/* Where Y=0 is the top of the screen */
 	virtual void SetRenderViewport(const SVector2i InViewportPosition, const SVector2i InViewportSize) = 0;
 	virtual void RenderImGui() = 0;
 	

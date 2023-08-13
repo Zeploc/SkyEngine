@@ -14,6 +14,8 @@ public:
 
 	
 	void AddViewportWidget(TPointer<CUIWidget> InWidget);
+	SVector2i GetViewportSize() override;
+	SVector2i GetViewportPosition() override;
 
 protected:
 	std::vector<TPointer<CUIWidget>> Widgets;

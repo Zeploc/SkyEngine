@@ -10,6 +10,7 @@
 #include "imgui.h"
 #include "imgui_impl_opengl3.h"
 #include "Camera/CameraManager.h"
+#include "Core/Application.h"
 #include "Entity/Entity.h"
 #include "Input/CXBOXController.h"
 #include "Platform/Window/EngineWindow.h"
@@ -105,8 +106,11 @@ void GLInstance::SetWireframeMode(bool bInWireframeEnabled)
 
 void GLInstance::SetRenderViewport(const SVector2i InViewportPosition, const SVector2i InViewportSize)
 {
+	// TODO: Place holder
+	SVector2i WindowSize = GetApplication()->GetApplicationWindow()->GetSize();
 	// TODO: Safety checks
-	glViewport(InViewportPosition.X, InViewportPosition.Y, InViewportSize.X, InViewportSize.Y);
+	// Y flipped since gl uses y=0 as bottom of screen instead of top
+	glViewport(InViewportPosition.X, (WindowSize.Y - InViewportSize.Y) - InViewportPosition.Y, InViewportSize.X, InViewportSize.Y);
 }
 
 void GLInstance::RenderImGui()

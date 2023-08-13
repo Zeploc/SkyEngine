@@ -6,5 +6,5 @@
 class CEntityPropertiesPanel : public CUIWidget
 {
 public:
-	void DrawUI() override;
+	void DrawUI(const SCanvas& DrawCanvas) override;
 };

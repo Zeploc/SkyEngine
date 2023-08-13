@@ -10,7 +10,7 @@ public:
 	CConsoleLog();
 	void Clear();
 	void AddLog(const char* fmt, ...);
-	void DrawUI() override;
+	void DrawUI(const SCanvas& DrawCanvas) override;
 
 protected:
 	ImGuiTextBuffer     Buf;

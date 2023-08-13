@@ -30,7 +30,7 @@ void CConsoleLog::AddLog(const char* fmt, ...) IM_FMTARGS(2)
 	ScrollToBottom = true;
 }
 
-void CConsoleLog::DrawUI()
+void CConsoleLog::DrawUI(const SCanvas& DrawCanvas)
 {
 	static bool bOpen = true;
 	ImGui::SetNextWindowSize(ImVec2(500,400), ImGuiCond_FirstUseEver);

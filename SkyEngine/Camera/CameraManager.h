@@ -25,7 +25,7 @@ enum class EProjectionMode
 	Perspective
 };
 
-class CEngineWindow;
+class CViewportLayer;
 struct STransform;
 
 // TODO: Warnings with exporting class containing STDL
@@ -37,7 +37,7 @@ public:
 	Matrix4 View;
 	Matrix4 Projection;
 
-	void Init(TPointer<CEngineWindow> InViewportWindow, SVector CamPos, SVector ForwardVec, SVector UpVec);
+	void Init(CViewportLayer* InViewportLayer, SVector CamPos, SVector ForwardVec, SVector UpVec);
 
 	void UpdateViewMatrix();
 
@@ -82,9 +82,8 @@ public:
 	bool bSpectatorMovement = true;
 	float MouseSensitivity = 0.15f;
 
-
 protected:
-	TPointer<CEngineWindow> ViewportWindow;
+	CViewportLayer* Viewport;
 	
 private:
 	// FPS CONTROLS

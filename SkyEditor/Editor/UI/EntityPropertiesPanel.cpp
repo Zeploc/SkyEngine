@@ -4,7 +4,7 @@
 
 #include "Dependencies/ImGui/imgui.h"
 
-void CEntityPropertiesPanel::DrawUI()
+void CEntityPropertiesPanel::DrawUI(const SCanvas& DrawCanvas)
 {
     static bool bOpen = true;
     ImGui::SetNextWindowSize(ImVec2(430,450), ImGuiCond_FirstUseEver);

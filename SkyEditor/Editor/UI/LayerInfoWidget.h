@@ -7,5 +7,5 @@
 class CLayerInfoWidget : public CUIWidget
 {
 public:
-	void DrawUI() override;
+	void DrawUI(const SCanvas& DrawCanvas) override;
 };

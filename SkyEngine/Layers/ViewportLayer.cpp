@@ -24,14 +24,13 @@ CViewportLayer::~CViewportLayer()
 void CViewportLayer::OnAttach()
 {
 	const TPointer<CEngineWindow> EngineWindow = GetApplication()->GetApplicationWindow();
-	const SVector2i MainWindowSize = EngineWindow->GetSize();
 	
 	Lighting::SetFogColour(SVector4(SkyColour, 1.0f));
 	// TODO: Move sky colour to scene
 	EngineWindow->GetGraphicsInstance()->ClearColour = SkyColour;
 	
 	// TODO: Change from singleton to graphics instance
-	CameraManager::GetInstance()->Init(EngineWindow, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
+	CameraManager::GetInstance()->Init(this, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
 }
 
 void CViewportLayer::OnDetach()
@@ -65,4 +64,16 @@ void CViewportLayer::OnRender()
 void CViewportLayer::OnEvent(CEvent& Event)
 {
 	SceneManager::GetInstance()->GetCurrentScene()->OnEvent(Event);
+}
+
+SVector2i CViewportLayer::GetViewportSize()
+{
+	const TPointer<CEngineWindow> EngineWindow = GetApplication()->GetApplicationWindow();
+	const SVector2i MainWindowSize = EngineWindow->GetSize();
+	return MainWindowSize;
+}
+
+SVector2i CViewportLayer::GetViewportPosition()
+{
+	return {0,0};
 }
