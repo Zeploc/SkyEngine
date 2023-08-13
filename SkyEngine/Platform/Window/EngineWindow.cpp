@@ -4,6 +4,7 @@
 #include "EngineWindow.h"
 
 #include "Core/Application.h"
+#include "Events/ApplicationEvent.h"
 #include "Events/KeyEvent.h"
 #include "Events/MouseEvent.h"
 #include "Graphics/GraphicsAPI.h"
@@ -12,6 +13,13 @@
 #include "Layers/Layer.h"
 #include "Platform/PlatformInterface.h"
 #include "System/TimeManager.h"
+
+CEngineWindow::CEngineWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bInFullScreen)
+{
+	WindowName = InWindowName;
+	WindowSize = InWindowSize;
+	bFullscreen = bInFullScreen;
+}
 
 CEngineWindow::~CEngineWindow()
 {
@@ -153,6 +161,14 @@ void CEngineWindow::ScrollWheel(float X, float Y)
 	SendEvent(ScrollEvent);
 }
 
+void CEngineWindow::OnWindowResized(int NewWidth, int NewHeight)
+{
+	WindowSize = {NewWidth, NewHeight};
+	// TODO: Delegate?
+	CWindowResizeEvent ResizeEvent(NewWidth, NewHeight);
+	SendEvent(ResizeEvent);
+}
+
 CLayer* CEngineWindow::SendEvent(CEvent& Event)
 {
 	for (IEventListener* EventListener : EventListeners)
@@ -216,11 +232,4 @@ void CEngineWindow::OnFocusChanged(bool bInIsFocused)
 	bIsFocused = bInIsFocused;
 	// TODO: Param
 	OnFocusChangedDelete.Broadcast();
-}
-
-CEngineWindow::CEngineWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bInFullScreen)
-{
-	WindowName = InWindowName;
-	WindowSize = InWindowSize;
-	bFullscreen = bInFullScreen;
 }

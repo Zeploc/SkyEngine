@@ -163,6 +163,7 @@
     <ClInclude Include="Entity\CollisionBounds.h" />
     <ClInclude Include="Entity\Component.h" />
     <ClInclude Include="Entity\Entity.h" />
+    <ClInclude Include="Events\ApplicationEvent.h" />
     <ClInclude Include="Events\Event.h" />
     <ClInclude Include="Events\KeyEvent.h" />
     <ClInclude Include="Events\MouseEvent.h" />

@@ -1,6 +1,7 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
+#include "Events/ApplicationEvent.h"
 #include "Events/KeyEvent.h"
 #include "Events/MouseEvent.h"
 #include "Layers/Layer.h"
@@ -30,6 +31,7 @@ protected:
 	virtual bool OnKeyPressedEvent(CKeyPressedEvent& Event);
 	virtual bool OnKeyTypedEvent(CKeyTypedEvent& Event);
 	virtual bool OnKeyReleasedEvent(CKeyReleasedEvent& Event);
+	virtual bool OnWindowResizeEvent(CWindowResizeEvent& Event);
 
 	std::vector<TPointer<CUIWidget>> Widgets;
 	ImGuiContext* GuiContext;

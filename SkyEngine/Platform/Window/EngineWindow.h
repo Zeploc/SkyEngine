@@ -61,7 +61,7 @@ public:
 	CLayer* GetCapturedLayer() const { return CapturedLayer; }
 
 protected:
-	virtual void OnWindowResized(int NewWidth, int NewHeight) = 0;
+	virtual void OnWindowResized(int NewWidth, int NewHeight);
 	virtual void OnFrameBufferResized(int NewWidth, int NewHeight) = 0;
 	virtual void OnFocusChanged(bool bInIsFocused);
 	

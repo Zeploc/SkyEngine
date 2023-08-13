@@ -204,7 +204,7 @@ void CGLFWWindow::SetWindowPosition(SVector2i InWindowPosition)
 
 void CGLFWWindow::OnWindowResized(int NewWidth, int NewHeight)
 {
-	// TODO: Delegate?
+	CEngineWindow::OnWindowResized(NewWidth, NewHeight);	
 }
 
 void CGLFWWindow::OnFocusChanged(bool bIsFocused)

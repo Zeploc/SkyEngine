@@ -7,6 +7,7 @@
 #include "Core/Application.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Dependencies/ImGui/imgui.h"
+#include "Events/ApplicationEvent.h"
 #include "Graphics/GraphicsInstance.h"
 #include "Graphics/GL/imgui_impl_opengl3.h"
 #include "Platform/Window/GLFW/GLFWWindow.h"
@@ -72,6 +73,8 @@ void CUILayer::OnUpdate()
 {
 	ImGuiIO& Io  = ImGui::GetIO();
 	Io.DeltaTime = CTimeManager::GetDeltaTime();
+
+	// TODO: Any overhead? Can be moved to update on window resize event
 	const SVector2 WindowSize = SVector2(GetApplication()->GetApplicationWindow()->GetSize());
 	Io.DisplaySize = { WindowSize.X, WindowSize.Y};
 
@@ -120,6 +123,7 @@ void CUILayer::OnEvent(CEvent& Event)
 	dispatcher.Dispatch<CKeyPressedEvent>(SE_BIND_EVENT_FN(CUILayer::OnKeyPressedEvent));
 	dispatcher.Dispatch<CKeyTypedEvent>(SE_BIND_EVENT_FN(CUILayer::OnKeyTypedEvent));
 	dispatcher.Dispatch<CKeyReleasedEvent>(SE_BIND_EVENT_FN(CUILayer::OnKeyReleasedEvent));
+	dispatcher.Dispatch<CWindowResizeEvent>(SE_BIND_EVENT_FN(CUILayer::OnWindowResizeEvent));
 	// TEMP TEST
 	// SVector2i MousePos = GetApplication()->GetApplicationWindow()->GetInput().MousePos;
 	// return MousePos.X < 500 && MousePos.Y < 500;
@@ -134,8 +138,8 @@ void CUILayer::AddWidget(TPointer<CUIWidget> InWidget)
 
 bool CUILayer::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
 {
-	if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
-	//if (!ImGui::GetIO().WantCaptureMouse)
+	//if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+	if (!ImGui::GetIO().WantCaptureMouse)
 	{
 		ImGui::SetWindowFocus();
 		return false;
@@ -150,7 +154,7 @@ bool CUILayer::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
 	}
 
 	// Won't be hovered properly since mouse pos only updated in imgui when window is focused
-	CLogManager::GetInstance()->DisplayLogMessage(std::format("hovering: {}", ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)));
+	CLogManager::GetInstance()->DisplayLogMessage(std::format("wants capture: {}", ImGui::GetIO().WantCaptureMouse));
 
 	// if (!ImGui::GetIO().WantCaptureMouse)
 	// {
@@ -196,7 +200,8 @@ bool CUILayer::OnMouseMovedEvent(CMouseMovedEvent& Event)
 
 bool CUILayer::OnMouseScrolledEvent(CMouseScrolledEvent& Event)
 {
-	if (ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+	//if (ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+	if (ImGui::GetIO().WantCaptureMouse)
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		io.MouseWheelH += Event.GetXOffset();
@@ -222,8 +227,10 @@ bool CUILayer::OnKeyPressedEvent(CKeyPressedEvent& Event)
 	io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
 	io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
 	io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
-	
-	return ImGui::IsWindowFocused(ImGuiHoveredFlags_AnyWindow);
+
+	CLogManager::GetInstance()->DisplayLogMessage(std::format("wants keyboard capture: {}", ImGui::GetIO().WantCaptureKeyboard));
+	// If window is focused (not viewport), have keyboard input go there instead
+	return ImGui::GetIO().WantCaptureKeyboard || ImGui::IsWindowFocused(ImGuiHoveredFlags_AnyWindow);
 }
 
 bool CUILayer::OnKeyTypedEvent(CKeyTypedEvent& Event)
@@ -233,7 +240,7 @@ bool CUILayer::OnKeyTypedEvent(CKeyTypedEvent& Event)
 	{
 		io.AddInputCharacter((unsigned short)Event.GetKeyCode());
 	}
-	return ImGui::IsWindowFocused(ImGuiHoveredFlags_AnyWindow);
+	return ImGui::GetIO().WantCaptureKeyboard || ImGui::IsWindowFocused(ImGuiHoveredFlags_AnyWindow);
 }
 
 bool CUILayer::OnKeyReleasedEvent(CKeyReleasedEvent& Event)
@@ -247,5 +254,13 @@ bool CUILayer::OnKeyReleasedEvent(CKeyReleasedEvent& Event)
 	io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
 	io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
 	
-	return ImGui::IsWindowFocused(ImGuiHoveredFlags_AnyWindow);
+	return ImGui::GetIO().WantCaptureKeyboard || ImGui::IsWindowFocused(ImGuiHoveredFlags_AnyWindow);
 }
+
+bool CUILayer::OnWindowResizeEvent(CWindowResizeEvent& Event)
+{
+	// TODO: Switch window resize event to update Imgui here?
+	
+	return false;
+}
+
