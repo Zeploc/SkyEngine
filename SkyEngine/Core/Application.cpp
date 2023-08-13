@@ -34,7 +34,7 @@ namespace SkyEngine
 	{
 		ensure(!EngineApplication, "Application already exist!");
 		EngineApplication = this;
-		MainWindowSize = SVector2i(1280, 720);
+		MainWindowSize = SVector2i(1920, 1080);
 		GraphicsApiType = EGraphicsAPI::OPENGL;
 	}
 
@@ -63,8 +63,9 @@ namespace SkyEngine
 
 		CTimeManager::Start();
 		SoundManager::GetInstance()->InitFMod();
-		
-		ApplicationWindow->PushLayer(new CViewportLayer(ApplicationWindow));
+
+		SetupViewportLayer();
+		ApplicationWindow->PushLayer(ViewportLayer);
 		UILayer = new CUILayer(ApplicationWindow);
 		ApplicationWindow->PushOverlay(UILayer);	
 		
@@ -74,6 +75,10 @@ namespace SkyEngine
 	void Application::SetupLogManager()
 	{
 		LogManager = std::make_shared<CLogManager>();
+	}
+	void Application::SetupViewportLayer()
+	{
+		ViewportLayer = new CViewportLayer(ApplicationWindow);
 	}
 
 	int Application::Run()

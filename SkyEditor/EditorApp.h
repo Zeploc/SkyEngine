@@ -4,6 +4,7 @@
 #include "Core/Application.h"
 #include "Core/Core.h"
 
+class CEditorViewportLayer;
 class CConsoleLog;
 class EditorApplication;
 
@@ -20,6 +21,7 @@ public:
 	bool ApplicationSetup() override;
 
 	void SetupLogManager() override;
+	void SetupViewportLayer() override;
 	
 	void Update() override;
 
@@ -27,4 +29,8 @@ public:
 
 	void ChangeSize(int w, int h) override;
 	void OnExit() override;
+
+	unsigned int DockSpaceID = 0;
+	
+	CEditorViewportLayer* EditorViewportLayer;
 };

@@ -5,7 +5,7 @@
 
 #include "Math/Vector.h"
 
-class CViewportLayer : public CLayer
+class ENGINE_API CViewportLayer : public CLayer
 {
 public:
 	CViewportLayer(TWeakPointer<CEngineWindow> InOwningWindow);

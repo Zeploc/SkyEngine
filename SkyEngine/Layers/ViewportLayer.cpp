@@ -1,6 +1,7 @@
 #include "SEPCH.h"
 #include "ViewportLayer.h"
 
+#include "imgui.h"
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"
 #include "Platform/Window/EngineWindow.h"
@@ -46,7 +47,8 @@ void CViewportLayer::OnUpdate()
 }
 
 void CViewportLayer::OnRender()
-{
+{	
+	
 	// TODO: Link loading
 	// if (bLoading)
 	// {
@@ -57,7 +59,6 @@ void CViewportLayer::OnRender()
 	// }
 	// else
 	
-	// TODO: Move to scene viewport
 	SceneManager::GetInstance()->RenderCurrentScene(OwningWindow.lock()->GetGraphicsInstance());
 }
 

@@ -36,11 +36,23 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Editor\EditorLogManager.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorViewportLayer.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
     <ClInclude Include="Editor\Scene\EditorScene.h">
       <Filter>Editor\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Editor\Scene\TransformationWidget.h">
       <Filter>Editor\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\UI\ConsoleLog.h">
+      <Filter>Editor\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\UI\EntityPropertiesPanel.h">
+      <Filter>Editor\UI</Filter>
     </ClInclude>
     <ClInclude Include="Editor\UI\LayerInfoWidget.h">
       <Filter>Editor\UI</Filter>
@@ -51,14 +63,27 @@
     <ClInclude Include="Editor\Windows\EditorWindowManager.h">
       <Filter>Editor\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="EditorApp.h" />
     <ClInclude Include="Particle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Editor\EditorLogManager.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorViewportLayer.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
     <ClCompile Include="Editor\Scene\EditorScene.cpp">
       <Filter>Editor\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Editor\Scene\TransformationWidget.cpp">
       <Filter>Editor\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\UI\ConsoleLog.cpp">
+      <Filter>Editor\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\UI\EntityPropertiesPanel.cpp">
+      <Filter>Editor\UI</Filter>
     </ClCompile>
     <ClCompile Include="Editor\UI\LayerInfoWidget.cpp">
       <Filter>Editor\UI</Filter>

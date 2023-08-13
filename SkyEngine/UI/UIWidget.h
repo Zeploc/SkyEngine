@@ -3,7 +3,7 @@
 #pragma once
 #include "Core/Core.h"
 
-class CUILayer;
+class CLayer;
 
 class ENGINE_API CUIWidget
 {
@@ -11,9 +11,9 @@ public:
 	virtual void DrawUI() = 0;
 	virtual void Update() {}
 
-	void SetUILayer(CUILayer* InLayer);
+	void SetOwningLayer(CLayer* InLayer);
 
 protected:
-	CUILayer* OwningLayer = nullptr;
+	CLayer* OwningLayer = nullptr;
 	
 };

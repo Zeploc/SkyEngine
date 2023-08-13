@@ -6,7 +6,7 @@
 #include "imgui.h"
 #include "Layers/UILayer.h"
 
-void CUIWidget::SetUILayer(CUILayer* InLayer)
+void CUIWidget::SetOwningLayer(CLayer* InLayer)
 {
 	OwningLayer = InLayer;
 }

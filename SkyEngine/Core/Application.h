@@ -9,6 +9,7 @@
 #include "Layers/LayerStack.h"
 #include "Math/Vector2.h"
 
+class CViewportLayer;
 class CLogManager;
 class CUILayer;
 class CLayer;
@@ -29,6 +30,7 @@ namespace SkyEngine
 
 		virtual bool ApplicationSetup();
 		virtual void SetupLogManager();
+		virtual void SetupViewportLayer();
 
 		// TODO: Add return type for error handling
 		int Run();
@@ -53,11 +55,12 @@ namespace SkyEngine
 		inline static Application* Get();
 	protected:
 		CUILayer* UILayer;
+		CViewportLayer* ViewportLayer;
 		
+		TPointer<CEngineWindow> ApplicationWindow;
 	private:
 		static Application* EngineApplication;
 
-		TPointer<CEngineWindow> ApplicationWindow;
 	};
 
 	// To be defined in client

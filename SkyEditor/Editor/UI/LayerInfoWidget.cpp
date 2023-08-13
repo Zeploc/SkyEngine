@@ -7,7 +7,6 @@
 
 void CLayerInfoWidget::DrawUI()
 {
-	// ImGui::SetCurrentContext(OwningLayer->GetGuiContext());
 	bool bOpen = true;
 	const float DISTANCE = 10.0f;
 	static int corner = 0;

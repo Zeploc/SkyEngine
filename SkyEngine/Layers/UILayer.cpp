@@ -3,6 +3,7 @@
 #include "SEPCH.h"
 #include "UILayer.h"
 
+#include "imgui_internal.h"
 #include "Core/Application.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Dependencies/ImGui/imgui.h"
@@ -34,6 +35,7 @@ void CUILayer::OnAttach()
 	ImGuiIO& Io = ImGui::GetIO();
 	Io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
 	Io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
+	Io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	
 	// TODO: TEMPORARY: swap with sky engine keycodes
 	// Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
@@ -81,19 +83,14 @@ void CUILayer::OnUpdate()
 	{
 		Widget->Update();
 	}
+	bool WantCaptureMouse = ImGui::GetIO().WantCaptureMouse;
+	// CLogManager::GetInstance()->DisplayLogMessage(std::format("Wants mouse capture: {}", WantCaptureMouse));
 }
 
 void CUILayer::OnRender()
-{
+{	
 	static bool show = true;
 	ImGui::ShowDemoWindow(&show);
-
-	const float DISTANCE = 10.0f;
-	static int corner = 0;
-	ImVec2 window_pos = ImVec2((corner & 1) ? ImGui::GetIO().DisplaySize.x - DISTANCE : DISTANCE, (corner & 2) ? ImGui::GetIO().DisplaySize.y - DISTANCE : DISTANCE);
-	ImVec2 window_pos_pivot = ImVec2((corner & 1) ? 1.0f : 0.0f, (corner & 2) ? 1.0f : 0.0f);
-	if (corner != -1)
-		ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
 	
 	for (TPointer<CUIWidget> Widget : Widgets)
 	{
@@ -122,12 +119,13 @@ void CUILayer::OnEvent(CEvent& Event)
 void CUILayer::AddWidget(TPointer<CUIWidget> InWidget)
 {
 	Widgets.push_back(InWidget);	
-	InWidget->SetUILayer(this);
+	InWidget->SetOwningLayer(this);
 }
 
 bool CUILayer::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
 {
-	if (!ImGui::IsMouseHoveringAnyWindow())
+	if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+	//if (!ImGui::GetIO().WantCaptureMouse)
 	{
 		ImGui::SetWindowFocus();
 		return false;
@@ -142,20 +140,26 @@ bool CUILayer::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
 	}
 
 	// Won't be hovered properly since mouse pos only updated in imgui when window is focused
-	CLogManager::GetInstance()->DisplayLogMessage(std::format("hovering: {}", ImGui::IsMouseHoveringAnyWindow()));
+	CLogManager::GetInstance()->DisplayLogMessage(std::format("hovering: {}", ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)));
 
-	// TODO: Handle viewport lost focus if input taken (happens on centered mouse)
+	// if (!ImGui::GetIO().WantCaptureMouse)
+	// {
+	// 	ImGui::SetWindowFocus();
+	// 	return false;
+	// }
 	return true;
 }
 
 bool CUILayer::OnMouseButtonReleasedEvent(CMouseButtonReleasedEvent& Event)
 {
+	bool bHadCapture = ImGui::GetIO().WantCaptureMouse;
+	
 	// Update buttons
 	ImGuiIO& io = ImGui::GetIO();
 	io.MouseDown[Event.GetMouseButton()] = false;
 
 	// If hovering window on release or mouse is not released (captured by button), then the release is handled
-	return ImGui::IsMouseHoveringAnyWindow() || !ImGui::IsMouseReleased(Event.GetMouseButton());
+	return ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) || !ImGui::IsMouseReleased(Event.GetMouseButton());
 }
 
 bool CUILayer::OnMouseMovedEvent(CMouseMovedEvent& Event)
@@ -182,7 +186,7 @@ bool CUILayer::OnMouseMovedEvent(CMouseMovedEvent& Event)
 
 bool CUILayer::OnMouseScrolledEvent(CMouseScrolledEvent& Event)
 {
-	if (ImGui::IsMouseHoveringAnyWindow())
+	if (ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		io.MouseWheelH += Event.GetXOffset();
@@ -209,7 +213,7 @@ bool CUILayer::OnKeyPressedEvent(CKeyPressedEvent& Event)
 	io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
 	io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
 	
-	return ImGui::IsAnyWindowFocused();
+	return ImGui::IsWindowFocused(ImGuiHoveredFlags_AnyWindow);
 }
 
 bool CUILayer::OnKeyTypedEvent(CKeyTypedEvent& Event)
@@ -219,7 +223,7 @@ bool CUILayer::OnKeyTypedEvent(CKeyTypedEvent& Event)
 	{
 		io.AddInputCharacter((unsigned short)Event.GetKeyCode());
 	}
-	return ImGui::IsAnyWindowFocused();
+	return ImGui::IsWindowFocused(ImGuiHoveredFlags_AnyWindow);
 }
 
 bool CUILayer::OnKeyReleasedEvent(CKeyReleasedEvent& Event)
@@ -233,5 +237,5 @@ bool CUILayer::OnKeyReleasedEvent(CKeyReleasedEvent& Event)
 	io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
 	io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
 	
-	return ImGui::IsAnyWindowFocused();
+	return ImGui::IsWindowFocused(ImGuiHoveredFlags_AnyWindow);
 }
