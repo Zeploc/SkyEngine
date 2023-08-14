@@ -161,6 +161,7 @@ void CGLFWWindow::PreRender()
 void CGLFWWindow::PostRender()
 {
 	CEngineWindow::PostRender();
+	
 	glfwPollEvents();
 	glfwSwapBuffers(GlWindow);
 }

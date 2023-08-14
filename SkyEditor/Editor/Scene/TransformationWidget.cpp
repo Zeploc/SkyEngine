@@ -14,7 +14,7 @@
 #include "Render/Shaders/ShaderManager.h"
 #include "Render/Shaders/UnlitShader.h"
 
-TransformationWidget::TransformationWidget(STransform _Transform, Scene* OwningScene)
+CTransformationWidget::CTransformationWidget(STransform _Transform, Scene* OwningScene)
 : Entity(_Transform, EANCHOR::CENTER)
 {	
 	XMoveTransform = std::make_shared<Entity>(Transform, EANCHOR::CENTER);
@@ -25,11 +25,11 @@ TransformationWidget::TransformationWidget(STransform _Transform, Scene* OwningS
 	OwningScene->AddEntity(ZMoveTransform, true);
 }
 
-TransformationWidget::~TransformationWidget()
+CTransformationWidget::~CTransformationWidget()
 {
 }
 
-void TransformationWidget::CreateWidgets()
+void CTransformationWidget::CreateWidgets()
 {
 	// TODO: Convert to components
 	XColour = {0.6f, 0.1f, 0.1f, 1.0f};
@@ -66,7 +66,15 @@ void TransformationWidget::CreateWidgets()
 	//AddMesh(XMoveTransform);
 }
 
-void TransformationWidget::Update()
+void CTransformationWidget::SetVisible(bool _bIsVisible)
+{
+	Entity::SetVisible(_bIsVisible);
+	XMoveTransform->SetVisible(_bIsVisible);
+	YMoveTransform->SetVisible(_bIsVisible);
+	ZMoveTransform->SetVisible(_bIsVisible);	
+}
+
+void CTransformationWidget::Update()
 {
 	Entity::Update();
 
@@ -147,19 +155,19 @@ void TransformationWidget::Update()
 		{
 			const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
 			Transform.Position.X = HitPoint.X + GrabOffset;
-		SelectedEntity->Transform.Position = Transform.Position;
+			SelectedEntity->Transform.Position = Transform.Position;
 		}
 		else if (YHeld)
 		{
 			const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 0.0f, 1.0f));
 			Transform.Position.Y = HitPoint.Y + GrabOffset;
-		SelectedEntity->Transform.Position = Transform.Position;
+			SelectedEntity->Transform.Position = Transform.Position;
 		}
 		else if (ZHeld)
 		{
 			const SVector HitPoint = Utils::LinePlaneIntersect(RayStart, RayDirection, Transform.Position, glm::vec3(0.0f, 1.0f, 0.0f));
 			Transform.Position.Z = HitPoint.Z + GrabOffset;
-		SelectedEntity->Transform.Position = Transform.Position;
+			SelectedEntity->Transform.Position = Transform.Position;
 		}
 	}
 
@@ -185,7 +193,7 @@ void TransformationWidget::Update()
 	ZMoveTransform->Transform.Position = Transform.Position + glm::vec3(0, 0, ZMoveTransform->EntityMesh->m_fDepth / 2.0f);
 }
 
-std::vector<TPointer<Entity>> TransformationWidget::GetAdditionalEntitiesToRender()
+std::vector<TPointer<Entity>> CTransformationWidget::GetAdditionalEntitiesToRender()
 {
 	return {};//{XMoveTransform, YMoveTransform, ZMoveTransform};
 }

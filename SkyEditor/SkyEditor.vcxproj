@@ -138,6 +138,7 @@
     <ClInclude Include="Editor\UI\ConsoleLog.h" />
     <ClInclude Include="Editor\UI\EntityPropertiesPanel.h" />
     <ClInclude Include="Editor\UI\LayerInfoWidget.h" />
+    <ClInclude Include="Editor\UI\SceneOutliner.h" />
     <ClInclude Include="Editor\Windows\EditorWindow.h" />
     <ClInclude Include="Editor\Windows\EditorWindowManager.h" />
     <ClInclude Include="EditorApp.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="Editor\UI\ConsoleLog.cpp" />
     <ClCompile Include="Editor\UI\EntityPropertiesPanel.cpp" />
     <ClCompile Include="Editor\UI\LayerInfoWidget.cpp" />
+    <ClCompile Include="Editor\UI\SceneOutliner.cpp" />
     <ClCompile Include="Editor\Windows\EditorWindow.cpp" />
     <ClCompile Include="Editor\Windows\EditorWindowManager.cpp" />
     <ClCompile Include="EditorApp.cpp" />

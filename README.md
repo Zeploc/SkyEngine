@@ -3,6 +3,7 @@
 A custom project for developing an engine and editor for experience purposes.
 
 # Install
+- Make sure to git sync all modules
 - Visual studio 2019 or higher required with v142
 - The static library of `assimp-vc142-mtd.lib` will need to be compiled for wind64 and added to `\Engine\Dependencies\lib\Win64\assimp`
 - Download from: https://drive.google.com/drive/folders/1LyBMllvO4DkauYG2qWTw8TBa2GciBejx?usp=sharing
@@ -11,30 +12,26 @@ A custom project for developing an engine and editor for experience purposes.
 # Currently supports (out of date):
 ## Input
 - Key states
-- Gamepad [Rudimentary]
+- ~~Gamepad [Rudimentary]~~
 ## Editor
 - Editor scene/mode
 - Basic movement
-- On screen windows to external windows and back
+- ~~On screen windows to external windows and back~~
 - Translation Gizmo [Rudimentary]
 - Focus and rotate around selected object [Rudimentary]
-- Loading transforms from save [Rudimentary]
+- ~~Loading transforms from save [Rudimentary]~~
 - Toggle Wireframe mode
 ## Entity
-- Render system
 - Basic Shapes
-- Particle system
-- 2D Particle system
-- Animated Model
-- 3D Button
+- ~~Particle system~~
+- ~~2D Particle system~~
+- ~~Animated Model~~
+- ~~3D Button~~
 ## UI
-- Basic UI to screen
-- Slider
-- Buttons
-- Text Field
-- Image
+- Docking windows/widgets
+- Multiple tabs on docked window
+- Viewport vs UI panel input capture
 ## System
-- Basic Utils
 - Void Delegates
 - Log system [Rudimentary]
 ## Math
@@ -46,123 +43,10 @@ A custom project for developing an engine and editor for experience purposes.
 ## Rendering
 - Shader programs
 - External shader files
-- Reflection [Rudimentary]
-- Lit Shader
-- Cubemap
-- Fog
-- Particle Shader
-- 2D Particle Shader
+- ~~Reflection [Rudimentary]~~
+- ~~Cubemap~~
+- ~~Fog~~
+- ~~Particle Shader~~
+- ~~2D Particle Shader~~
 - Mesh Renderer
-- Basic Shapes: Cube, Sphere, Triangle, Pyramid, Plane, custom geometry shape
-## Physics
-- 2D Collision
-- Basic 3D Collision
-- Collision Bounds
-
-# Next Steps
-- Link up cursor to ImGui
-- outliner
-- switch to new transform gizmo
-- create new enitities
-- set mesh of entity
-- Content browser
-- Setup base mesh asset
-- Setup basic shapes as assets
-- drag and drop meshes to entity (or level)
-- material asset
-- drag amd drop material to entity
-- material properties editor
-- shader reloading (prompt on file change)
-- Improve entity selection 
-- Full pass on input system (allow per window)
-- Component structure
-- Log manager/system pass
-- Play editor level
-- Dynamic link engine (and game for editor) when working on project, static link when building the game as an exe
-- Change light from static to light objects
-- Further Refine Material/shader pipeline
-- Complete Saving/Loading entities from save
-- Change editor movement/look to state based input + Improve "Spectator" controls structure
-- Link up model/fbx
-- Add Transform math functions
-- Link up cubemap
-- Multi Param Delegates
-- Switch input to delegates
-- Link dependencies git modules to solution as projects
-- Link remaining dependencies PDBs
-- Update dependencies to recent versions
-- Update VS project to latest
-- Add release binaries (Fix 32?)
-- Fix assimp model loading for DAE (update to fbx?)
-- Try finder lighter option for assimp static library
-- Confirm soil2 is a good option
-- Add back vld
-
-# Further Development
-
-## Editor
-- Content Panel
-- Open and Save level
-- Play level
-- Details panel
-- Rotate
-- Fix up translate gizmo movement
-- Scale
-- Shader/Material editor
-- Editor Settings
-## Examples
-- Reflection
-- Refraction
-- Standard Lighting
-- Basic Shapes
-- Custom Model
-- Animated Model
-- 3D Collision
-- 3D Particles
-- Cubemap
-- 2D Sprites + View
-- 2D Collision
-- 2D Particles
-## Production Cycle
-- Ability to inject (hot reload) game into editor when playing
-- Differientate development vs shipping
-## Systems
-- Custom Pointer Wrapper type
-- Log system
-- Delegates create multiple parameters with templates
-- Create macro to define custom multi param delegates
-- Add timers to timer manager
-## UI
-- UI Editor - creator for ImGui
-- Widget system -ImGui
-- Save and load widgets
-## Save and Loading
-- Save entity Mesh info
-- Save Specific properties
- - Save Particles
-## Rendering
-- Setup placeholder for DirectX and Vulkan
-- No Depth test render order
-- Live shader compiling/editing (hot reload shaders)
-## Component system
-- Base Component
-- Mesh Component
-- Skeletal Mesh Component
-## Math Libraries
-- Transform operations
-- Quaternion operations
-- Rotator operations
-- Vector math Helpers (project point, plane, etc)
-## Memory Management
-- Custom memory allocation
-- Memory types
-- Memory record
-- Development vs shipping memory handled
-## Input
-- Switch/Expose to delegates
-- Player index system for local
-## Physics
-- Link physics to component/mesh
-- Abstract physics
-- Link PhysX?
-- Option to switch to Box 2D
+- Basic Shapes: Cube, Sphere, Triangle, Pyramid, Plane, ~~custom geometry shape~~

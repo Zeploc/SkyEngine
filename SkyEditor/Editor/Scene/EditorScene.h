@@ -7,13 +7,14 @@
 #include "Math/Vector2.h"
 
 class UIText;
-class TransformationWidget;
+class CTransformationWidget;
 
 class EditorScene : public Scene
 {
 public:
 	EditorScene(const std::string& InSceneName);
 	void AddSampleEntities();
+	void SelectEntity(TPointer<Entity> HitEntity);
 
 	void UpdateSelectedEntity();
 
@@ -40,7 +41,7 @@ public:
 	
 	TPointer<UIText> LevelNameText;
 
-	TPointer<TransformationWidget> LocationBox;
+	TPointer<CTransformationWidget> TransformationWidget;
 	bool bRotatingAroundPoint = false;
 	bool bLookingAround = false;
 	bool bPanning = false;

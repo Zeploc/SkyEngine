@@ -16,6 +16,7 @@
 #include "Editor/UI/ConsoleLog.h"
 #include "Editor/UI/EntityPropertiesPanel.h"
 #include "Editor/UI/LayerInfoWidget.h"
+#include "Editor/UI/SceneOutliner.h"
 #include "Editor/Windows/EditorWindowManager.h"
 #include "Layers/UILayer.h"
 #include "Layers/ViewportLayer.h"
@@ -39,6 +40,8 @@ bool EditorApplication::ApplicationSetup()
 	EditorViewportLayer->AddViewportWidget(LayerInfoWidget);
 	TPointer<CEntityPropertiesPanel> EntityPropertiesPanel = std::make_shared<CEntityPropertiesPanel>();
 	UILayer->AddWidget(EntityPropertiesPanel);
+	TPointer<CSceneOutliner> SceneOutliner = std::make_shared<CSceneOutliner>();
+	UILayer->AddWidget(SceneOutliner);
 	ConsoleLog = std::make_shared<CConsoleLog>();
 	UILayer->AddWidget(ConsoleLog);
 	

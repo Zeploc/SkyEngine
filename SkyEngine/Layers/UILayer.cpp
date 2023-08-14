@@ -37,6 +37,7 @@ void CUILayer::OnAttach()
 	Io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
 	Io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 	Io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	Io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; 
 	
 	// TODO: TEMPORARY: swap with sky engine keycodes
 	// Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
@@ -111,6 +112,11 @@ void CUILayer::OnRender()
 	}
 	ImGui::Render();
 	GetApplication()->GetApplicationWindow()->GetGraphicsInstance()->RenderImGui();
+
+	// TODO: Try link up multi-viewport
+	// Update and Render additional Platform Windows
+	ImGui::UpdatePlatformWindows();
+	ImGui::RenderPlatformWindowsDefault();
 }
 
 void CUILayer::OnEvent(CEvent& Event)

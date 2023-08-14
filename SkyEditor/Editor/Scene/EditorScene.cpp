@@ -88,11 +88,11 @@ EditorScene::EditorScene(const std::string& InSceneName) : Scene(InSceneName)
 
 	// Last added to appear on top
 	// TODO: Depth test order to always be infront of loaded level objects
-	LocationBox = std::make_shared<TransformationWidget>(STransform{{0.0f, 0.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, this);
-	LocationBox->CreateWidgets();	
-	AddEntity(LocationBox, true);
-	LocationBox->SetVisible(false);
-	LocationBox->bRayCast = false;
+	TransformationWidget = std::make_shared<CTransformationWidget>(STransform{{0.0f, 0.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, this);
+	TransformationWidget->CreateWidgets();	
+	AddEntity(TransformationWidget, true);
+	TransformationWidget->SetVisible(false);
+	TransformationWidget->bRayCast = false;
 }
 
 void EditorScene::AddSampleEntities()
@@ -184,6 +184,28 @@ void EditorScene::AddSampleEntities()
 	AddEntity(PlaneEntity, true);
 }
 
+void EditorScene::SelectEntity(TPointer<Entity> HitEntity)
+{
+	if (HitEntity == TransformationWidget->SelectedEntity)
+	{
+		return;
+	}
+	TransformationWidget->SelectedEntity = HitEntity;
+	if (HitEntity)
+	{
+		TransformationWidget->Transform.Position = HitEntity->Transform.Position;
+	}
+	const bool bNewVisibleState = HitEntity != nullptr;
+	if (TransformationWidget->IsVisible() != bNewVisibleState)
+	{
+		TransformationWidget->SetVisible(bNewVisibleState);
+		if (bNewVisibleState)
+		{
+			CurrentFocusDistance = 7.0f;
+		}
+	}
+}
+
 void EditorScene::UpdateSelectedEntity()
 {
 	TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
@@ -220,15 +242,9 @@ void EditorScene::UpdateSelectedEntity()
 		TPointer<Entity> HitEntity = HitEntities[ClosestHitID]; // Hit ent
 		HitPos = HitPosition[ClosestHitID];
 
-		if (LocationBox)
+		if (TransformationWidget)
 		{
-			LocationBox->Transform.Position = HitEntity->Transform.Position;
-			LocationBox->SelectedEntity = HitEntity;
-			if (!LocationBox->IsVisible())
-			{
-				LocationBox->SetVisible(true);
-				CurrentFocusDistance = 7.0f;
-			}
+			SelectEntity(HitEntity);
 		}
 	}
 }
@@ -303,18 +319,18 @@ void EditorScene::OpenFile()
 	
 	OpenedFile.close();
 	
-	DestroyEntity(LocationBox);
-	DestroyEntity(LocationBox->XMoveTransform);
-	DestroyEntity(LocationBox->YMoveTransform);
-	DestroyEntity(LocationBox->ZMoveTransform);
-	AddEntity(LocationBox);
-	AddEntity(LocationBox->XMoveTransform);
-	AddEntity(LocationBox->YMoveTransform);
-	AddEntity(LocationBox->ZMoveTransform);
-	LocationBox->SetActive(true);
-	LocationBox->XMoveTransform->SetActive(true);
-	LocationBox->YMoveTransform->SetActive(true);
-	LocationBox->ZMoveTransform->SetActive(true);
+	DestroyEntity(TransformationWidget);
+	DestroyEntity(TransformationWidget->XMoveTransform);
+	DestroyEntity(TransformationWidget->YMoveTransform);
+	DestroyEntity(TransformationWidget->ZMoveTransform);
+	AddEntity(TransformationWidget);
+	AddEntity(TransformationWidget->XMoveTransform);
+	AddEntity(TransformationWidget->YMoveTransform);
+	AddEntity(TransformationWidget->ZMoveTransform);
+	TransformationWidget->SetActive(true);
+	TransformationWidget->XMoveTransform->SetActive(true);
+	TransformationWidget->YMoveTransform->SetActive(true);
+	TransformationWidget->ZMoveTransform->SetActive(true);
 }
 
 void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
@@ -325,10 +341,10 @@ void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
 	std::vector< TPointer<Entity>> EntitiesCopy = Entities;
 	for (TPointer<Entity> CurrentEnt : EntitiesCopy)
 	{
-		if (CurrentEnt == LocationBox
-			|| CurrentEnt == LocationBox->XMoveTransform
-			|| CurrentEnt == LocationBox->YMoveTransform
-			|| CurrentEnt == LocationBox->ZMoveTransform)
+		if (CurrentEnt == TransformationWidget
+			|| CurrentEnt == TransformationWidget->XMoveTransform
+			|| CurrentEnt == TransformationWidget->YMoveTransform
+			|| CurrentEnt == TransformationWidget->ZMoveTransform)
 		{
 			continue;
 		}
@@ -379,18 +395,18 @@ void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
 	// 	}
 	// }
 	
-	DestroyEntity(LocationBox);
-	DestroyEntity(LocationBox->XMoveTransform);
-	DestroyEntity(LocationBox->YMoveTransform);
-	DestroyEntity(LocationBox->ZMoveTransform);
-	AddEntity(LocationBox);
-	AddEntity(LocationBox->XMoveTransform);
-	AddEntity(LocationBox->YMoveTransform);
-	AddEntity(LocationBox->ZMoveTransform);
-	LocationBox->SetActive(true);
-	LocationBox->XMoveTransform->SetActive(true);
-	LocationBox->YMoveTransform->SetActive(true);
-	LocationBox->ZMoveTransform->SetActive(true);
+	DestroyEntity(TransformationWidget);
+	DestroyEntity(TransformationWidget->XMoveTransform);
+	DestroyEntity(TransformationWidget->YMoveTransform);
+	DestroyEntity(TransformationWidget->ZMoveTransform);
+	AddEntity(TransformationWidget);
+	AddEntity(TransformationWidget->XMoveTransform);
+	AddEntity(TransformationWidget->YMoveTransform);
+	AddEntity(TransformationWidget->ZMoveTransform);
+	TransformationWidget->SetActive(true);
+	TransformationWidget->XMoveTransform->SetActive(true);
+	TransformationWidget->YMoveTransform->SetActive(true);
+	TransformationWidget->ZMoveTransform->SetActive(true);
 }
 
 void EditorScene::SaveAsNew()
@@ -432,10 +448,10 @@ void EditorScene::SaveCurrentLevel()
 	 LevelFile << "[" + SceneName + "]\n";
 	 for (TPointer<Entity> Entity : Entities)
 	 {
-	 	if (Entity == LocationBox
-	 		|| Entity == LocationBox->XMoveTransform
-	 		|| Entity == LocationBox->YMoveTransform
-	 		|| Entity == LocationBox->ZMoveTransform)
+	 	if (Entity == TransformationWidget
+	 		|| Entity == TransformationWidget->XMoveTransform
+	 		|| Entity == TransformationWidget->YMoveTransform
+	 		|| Entity == TransformationWidget->ZMoveTransform)
 	 	{
 	 		continue;
 	 	}
@@ -598,11 +614,16 @@ bool EditorScene::OnMouseScrolledEvent(CMouseScrolledEvent& Event)
 
 bool EditorScene::OnKeyPressedEvent(CKeyPressedEvent& Event)
 {
-	// if (CInput::GetInstance()->KeyState[GLFW_KEY_ESCAPE] == CInput::INPUT_FIRST_PRESS) // Escape
-	// {
-	// 	ApplicationWindow->SetCursorVisible(true);
-	// 	CameraInstance->EnableSpectatorControls(false);
-	// }
+	if (Event.GetKeyCode() == GLFW_KEY_ESCAPE) // Escape
+	{
+		if (TransformationWidget->SelectedEntity)
+		{
+			SelectEntity(nullptr);
+			return true;
+		}
+		// ApplicationWindow->SetCursorVisible(true);
+		// CameraInstance->EnableSpectatorControls(false);
+	}
 	
 	if (Event.GetKeyCode() == GLFW_KEY_G)
 	{
@@ -613,10 +634,10 @@ bool EditorScene::OnKeyPressedEvent(CKeyPressedEvent& Event)
 	}
 	if (Event.GetKeyCode() == GLFW_KEY_F)
 	{
-		if (LocationBox && LocationBox->SelectedEntity)
+		if (TransformationWidget && TransformationWidget->SelectedEntity)
 		{
 			CameraManager* CameraInstance = CameraManager::GetInstance();
-			CameraInstance->SetCameraPos(LocationBox->SelectedEntity->Transform.Position + (-CameraInstance->GetCameraForwardVector() * CurrentFocusDistance));
+			CameraInstance->SetCameraPos(TransformationWidget->SelectedEntity->Transform.Position + (-CameraInstance->GetCameraForwardVector() * CurrentFocusDistance));
 			return true;
 		}
 	}

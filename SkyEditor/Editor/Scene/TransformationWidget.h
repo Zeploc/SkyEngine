@@ -7,14 +7,16 @@
 
 #include "Math/Vector4.h"
 
-class TransformationWidget : public Entity
+class CTransformationWidget : public Entity
 {
 public:
-	TransformationWidget(STransform _Transform, class Scene* OwningScene);
+	CTransformationWidget(STransform _Transform, class Scene* OwningScene);
 
-	~TransformationWidget();
+	~CTransformationWidget();
 	void CreateWidgets();
 
+
+	void SetVisible(bool _bIsVisible) override;
 	void Update() override;
 
 	std::vector<TPointer<Entity>> GetAdditionalEntitiesToRender() override;
