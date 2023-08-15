@@ -7,6 +7,12 @@
     <Filter Include="Core">
       <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dependencies">
+      <UniqueIdentifier>{6C01343A-5864-C3DE-01EA-FB94ED2B8F61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies\ImGuizmo">
+      <UniqueIdentifier>{4CCD03EA-B839-BFE4-812D-5742ED58E14C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Entity">
       <UniqueIdentifier>{A2E9DAB0-8E8B-0587-7746-19DB63878CD7}</UniqueIdentifier>
     </Filter>
@@ -102,6 +108,9 @@
     <ClInclude Include="Core\EventListener.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Dependencies\ImGuizmo\ImGuizmo.h">
+      <Filter>Dependencies\ImGuizmo</Filter>
+    </ClInclude>
     <ClInclude Include="Entity\2DParticleSystem.h">
       <Filter>Entity</Filter>
     </ClInclude>
@@ -116,6 +125,9 @@
     </ClInclude>
     <ClInclude Include="Entity\Entity.h">
       <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\ApplicationEvent.h">
+      <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="Events\Event.h">
       <Filter>Events</Filter>
@@ -181,6 +193,9 @@
       <Filter>Math\Internal</Filter>
     </ClInclude>
     <ClInclude Include="Math\MathDefinitions.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\MathLibrary.h">
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="Math\MathTypes.h">
@@ -379,6 +394,9 @@
     <ClCompile Include="Core\EventListener.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Dependencies\ImGuizmo\ImGuizmo.cpp">
+      <Filter>Dependencies\ImGuizmo</Filter>
+    </ClCompile>
     <ClCompile Include="Entity\2DParticleSystem.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
@@ -426,6 +444,9 @@
     </ClCompile>
     <ClCompile Include="Layers\ViewportLayer.cpp">
       <Filter>Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\MathLibrary.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\Matrix.cpp">
       <Filter>Math</Filter>

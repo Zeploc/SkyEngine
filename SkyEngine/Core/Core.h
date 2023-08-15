@@ -27,8 +27,9 @@ using TScope = std::unique_ptr<T>;
 
 #define SE_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 
-// TODO: Move to premake preprocessor macros
-#define SE_ENABLE_ASSERTS
+#ifdef SKYENGINE_DEBUG
+	#define SE_ENABLE_ASSERTS
+#endif
 
 #ifdef SE_ENABLE_ASSERTS
 	#define ASSERT(x, ...)\

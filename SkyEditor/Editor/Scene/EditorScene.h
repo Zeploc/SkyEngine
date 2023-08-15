@@ -14,9 +14,6 @@ class EditorScene : public Scene
 public:
 	EditorScene(const std::string& InSceneName);
 	void AddSampleEntities();
-	void SelectEntity(TPointer<Entity> HitEntity);
-
-	void UpdateSelectedEntity();
 
 	void Update() override;
 	void RenderScene(TPointer<IGraphicsInstance> InGraphicsInstance) override;
@@ -37,15 +34,8 @@ protected:
 	bool OnKeyPressedEvent(CKeyPressedEvent& Event) override;
 	bool OnKeyReleasedEvent(CKeyReleasedEvent& Event) override;
 public:
-	bool Wireframe = false;
 	
 	TPointer<UIText> LevelNameText;
 
 	TPointer<CTransformationWidget> TransformationWidget;
-	bool bRotatingAroundPoint = false;
-	bool bLookingAround = false;
-	bool bPanning = false;
-	
-	float CurrentFocusDistance = 7.0f;
-	SVector2i PreviousMousePosition;
 };

@@ -3,7 +3,13 @@
 #include "SEPCH.h"
 #include "Transform.h"
 
+#include "MathLibrary.h"
 #include "System/Utils.h"
+
+bool STransform::FromMatrix(glm::mat4 Matrix)
+{
+	return CMath::DecomposeTransform(Matrix, *this);
+}
 
 std::string STransform::ToString() const
 {

@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>SEPCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLEW_STATIC;SE_PLATFORM_WINDOWS;SE_BUILD_DLL;SKYENGINE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;Dependencies\include;Dependencies\include\freetype;Dependencies\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;Dependencies\include;Dependencies\include\freetype;Dependencies\ImGui;Dependencies\ImGuizmo;Dependencies\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -103,7 +103,7 @@
       <PrecompiledHeaderFile>SEPCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLEW_STATIC;SE_PLATFORM_WINDOWS;SE_BUILD_DLL;SKYENGINE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;Dependencies\include;Dependencies\include\freetype;Dependencies\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;Dependencies\include;Dependencies\include\freetype;Dependencies\ImGui;Dependencies\ImGuizmo;Dependencies\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -130,7 +130,7 @@
       <PrecompiledHeaderFile>SEPCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLEW_STATIC;SE_PLATFORM_WINDOWS;SE_BUILD_DLL;SKYENGINE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;Dependencies\include;Dependencies\include\freetype;Dependencies\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;Dependencies\include;Dependencies\include\freetype;Dependencies\ImGui;Dependencies\ImGuizmo;Dependencies\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -158,6 +158,7 @@
     <ClInclude Include="Core\Delegates.h" />
     <ClInclude Include="Core\EntryPoint.h" />
     <ClInclude Include="Core\EventListener.h" />
+    <ClInclude Include="Dependencies\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="Entity\2DParticleSystem.h" />
     <ClInclude Include="Entity\Button3DEntity.h" />
     <ClInclude Include="Entity\CollisionBounds.h" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Math\Internal\Vector3.decl.h" />
     <ClInclude Include="Math\Internal\Vector3.impl.hpp" />
     <ClInclude Include="Math\MathDefinitions.h" />
+    <ClInclude Include="Math\MathLibrary.h" />
     <ClInclude Include="Math\MathTypes.h" />
     <ClInclude Include="Math\Matrix.h" />
     <ClInclude Include="Math\Quaternion.h" />
@@ -254,6 +256,9 @@
     <ClCompile Include="Core\Application.cpp" />
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Core\EventListener.cpp" />
+    <ClCompile Include="Dependencies\ImGuizmo\ImGuizmo.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Entity\2DParticleSystem.cpp" />
     <ClCompile Include="Entity\Button3DEntity.cpp" />
     <ClCompile Include="Entity\CollisionBounds.cpp" />
@@ -270,6 +275,7 @@
     <ClCompile Include="Layers\LayerStack.cpp" />
     <ClCompile Include="Layers\UILayer.cpp" />
     <ClCompile Include="Layers\ViewportLayer.cpp" />
+    <ClCompile Include="Math\MathLibrary.cpp" />
     <ClCompile Include="Math\Matrix.cpp" />
     <ClCompile Include="Math\Quaternion.cpp" />
     <ClCompile Include="Math\Transform.cpp" />

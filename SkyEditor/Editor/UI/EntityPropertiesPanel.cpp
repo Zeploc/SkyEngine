@@ -4,12 +4,14 @@
 
 #include "EditorApp.h"
 #include "Dependencies/ImGui/imgui.h"
+#include "Editor/EditorViewportLayer.h"
 #include "Editor/Scene/EditorScene.h"
 #include "Editor/Scene/TransformationWidget.h"
 #include "Scene/SceneManager.h"
 
 CEntityPropertiesPanel::CEntityPropertiesPanel()
 {
+	// TODO: Remove once redundant
     EditorScene = std::static_pointer_cast<class EditorScene>(SceneManager::GetInstance()->GetCurrentScene());
 }
 
@@ -25,7 +27,7 @@ void CEntityPropertiesPanel::DrawUI(const SCanvas& DrawCanvas)
 
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2,2));
 
-    TPointer<Entity> SelectedEntity = EditorScene->TransformationWidget->SelectedEntity;
+    TPointer<Entity> SelectedEntity = EditorApp->EditorViewportLayer->GetSelectedEntity();
 
     if (SelectedEntity)
     {
@@ -43,10 +45,10 @@ void CEntityPropertiesPanel::DrawUI(const SCanvas& DrawCanvas)
         Transform.Position.z = Position[2];
         ImGui::Spacing();
         
-        float Rotation[3] = { Transform.Rotation.Pitch, Transform.Rotation.Yaw, Transform.Rotation.Roll};
+        float Rotation[3] = { Transform.Rotation.Yaw, Transform.Rotation.Pitch, Transform.Rotation.Roll};
         ImGui::DragScalarN("Rotation", ImGuiDataType_Float, Rotation, 3, 0.2f, nullptr, nullptr, "%.2f");
-        Transform.Rotation.Pitch = Rotation[0];
-        Transform.Rotation.Yaw = Rotation[1];
+        Transform.Rotation.Yaw = Rotation[0];
+        Transform.Rotation.Pitch = Rotation[1];
         Transform.Rotation.Roll = Rotation[2];
         ImGui::Spacing();
         

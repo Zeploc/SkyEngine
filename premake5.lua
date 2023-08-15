@@ -6,6 +6,7 @@ workspace "SkyEngine"
       "Release",
       "Dist"
    }
+startproject "SkyEditor"
    
 outputdir = "%{cfg.buildcfg}-%{cfg.architecture}"
 -- outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
@@ -13,39 +14,50 @@ outputdir = "%{cfg.buildcfg}-%{cfg.architecture}"
 -- Include directors relative to root folder (solution directory)
 IncludeDir = {}
 IncludeDir["ImGui"] = "SkyEngine/Dependencies/ImGui"
+IncludeDir["ImGuizmo"] = "SkyEngine/Dependencies/ImGuizmo"
+IncludeDir["glm"] = "SkyEngine/Dependencies/glm"
 
 include "SkyEngine/Dependencies/ImGui"
+
 
 project "SkyEngine"
    location "SkyEngine"
    kind "SharedLib"
    language "C++"
+   staticruntime "off"
 
    targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
    objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
 
    pchheader "SEPCH.h"
-   pchsource "SkyEngine/SEPCH.cpp"
+   pchsource "SkyEngine/SEPCH.cpp"       
 
    files 
    { 
       "%{prj.name}/**.h", 
       "%{prj.name}/**.cpp",
       "%{prj.name}/**.hpp",
-      "README.md" 
+      "README.md"
    }
    
    removefiles 
    { 
       "%{prj.name}/Dependencies/**.*",
    }
+   files 
+  {          
+     "%{prj.name}/Dependencies/ImGuizmo/ImGuizmo.h",
+     "%{prj.name}/Dependencies/ImGuizmo/ImGuizmo.cpp",
+  }
 
    includedirs
    {
       "%{prj.name}",
       "%{prj.name}/Dependencies/include",
       "%{prj.name}/Dependencies/include/freetype",
-      "%{IncludeDir.ImGui}"
+      "%{IncludeDir.ImGui}",
+      "%{IncludeDir.ImGuizmo}",
+        "%{IncludeDir.glm}"
    }
 
    libdirs
@@ -76,10 +88,12 @@ project "SkyEngine"
       "soil2.lib",
       "ImGui"
    }
+   
+   filter "files:SkyEngine/Dependencies/**.cpp" --%{prj.name} -- Doesn't work
+       flags { "NoPCH" }
 
    filter "system:windows"
       cppdialect "C++20"
-      staticruntime "On"
       systemversion "latest"
 
       defines
@@ -103,27 +117,25 @@ project "SkyEngine"
       symbols "On"
       -- Used to make multie threaded do dll mode - otherwise lib linking fails - Can be replaced once relevant vendors switched to projects within solution
       runtime "Debug"
-      staticruntime "off"
 
    filter "configurations:Release"
       defines "SKYENGINE_RELEASE"
       optimize "On"
       -- Used to make multie threaded do dll mode - otherwise lib linking fails - Can be replaced once relevant vendors switched to projects within solution
       runtime "Release"
-      staticruntime "off"
 
    filter "configurations:Dist"
    defines "SKYENGINE_DIST"
       optimize "On"
       -- Used to make multie threaded do dll mode - otherwise lib linking fails - Can be replaced once relevant vendors switched to projects within solution
       runtime "Release"
-      staticruntime "off"
 
       
 project "SkyEditor"
    location "SkyEditor"
    kind "ConsoleApp"
    language "C++"
+   staticruntime "off"
 
    targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
    objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
@@ -134,12 +146,21 @@ project "SkyEditor"
       "%{prj.name}/**.cpp",
       "%{prj.name}/Resources/**.*"
    }
+   -- Has to double use files since ImGuizmo isn't exported
+   files 
+  {          
+     "SkyEngine/Dependencies/ImGuizmo/ImGuizmo.h",
+     "SkyEngine/Dependencies/ImGuizmo/ImGuizmo.cpp",
+  }
 
    includedirs
    {
       "SkyEngine",
       "SkyEditor",
       "SkyEngine/Dependencies/include",
+      "%{IncludeDir.ImGui}",
+      "%{IncludeDir.ImGuizmo}",
+       "%{IncludeDir.glm}"
    }
 
    links
@@ -150,7 +171,6 @@ project "SkyEditor"
 
    filter "system:windows"
       cppdialect "C++20"
-      staticruntime "On"
       systemversion "latest"
 
       defines
@@ -167,21 +187,18 @@ project "SkyEditor"
       symbols "On"
       -- Used to make multie threaded do dll mode - otherwise lib linking fails - Can be replaced once relevant vendors switched to projects within solution
       runtime "Debug"
-      staticruntime "off"
 
    filter "configurations:Release"
       defines "SKYENGINE_RELEASE"
       optimize "On"
       -- Used to make multie threaded do dll mode - otherwise lib linking fails - Can be replaced once relevant vendors switched to projects within solution
       runtime "Release"
-      staticruntime "off"
 
    filter "configurations:Dist"
    defines "SKYENGINE_DIST"
       optimize "On"
       -- Used to make multie threaded do dll mode - otherwise lib linking fails - Can be replaced once relevant vendors switched to projects within solution
       runtime "Release"
-      staticruntime "off"
 
 
 -- TODO SANDBOX

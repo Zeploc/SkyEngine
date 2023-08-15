@@ -22,6 +22,7 @@ public:
 	virtual void OnAttach() {}
 	virtual void OnDetach() {}
 	virtual void OnUpdate() {}
+	// TODO: Bind events here that works with inheritance so not needed in derived layers
 	virtual void OnEvent(CEvent& Event) = 0;
 	virtual void OnRender() {}
 	// TODO:

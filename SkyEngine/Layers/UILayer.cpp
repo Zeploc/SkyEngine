@@ -11,10 +11,11 @@
 #include "Graphics/GraphicsInstance.h"
 #include "Graphics/GL/imgui_impl_opengl3.h"
 #include "Platform/Window/GLFW/GLFWWindow.h"
-#include "Platform/Window/GLFW/imgui_impl_glfw.h"
 #include "System/LogManager.h"
 #include "System/TimeManager.h"
 #include "UI/UIWidget.h"
+
+#include "ImGuizmo.h"
 
 CUILayer::CUILayer(TWeakPointer<CEngineWindow> InOwningWindow) : CLayer(InOwningWindow, "UI Layer")
 {
@@ -82,6 +83,7 @@ void CUILayer::OnUpdate()
 	ImGui_ImplOpenGL3_NewFrame();
 	// ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
 	
 	for (TPointer<CUIWidget> Widget : Widgets)
 	{
@@ -95,7 +97,7 @@ void CUILayer::OnRender()
 {	
 	static bool show = true;
 	// TODO: Temp until overall style setup
-	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(.1,.1,.1,1));
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(.1f,.1f,.1f,1.0f));
 	ImGui::ShowDemoWindow(&show);
 	ImGui::PopStyleColor(1);
 

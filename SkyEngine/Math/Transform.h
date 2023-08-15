@@ -11,11 +11,13 @@
 
 struct ENGINE_API STransform
 {
+	
 	SVector Position;
 	SRotator Rotation;
 	SVector Scale;
 
 	std::string ToString() const;
+	bool FromMatrix(glm::mat4 Matrix);
 	void FromString(std::string sTransform);
 	
 	glm::mat4 GetModelMatrix() const;

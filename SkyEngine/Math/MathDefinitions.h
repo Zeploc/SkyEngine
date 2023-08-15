@@ -16,7 +16,6 @@
 
 #include <cassert>
 #include <glm/mat4x4.hpp>
-#include <glm/detail/type_vec.hpp>
 #include <glm/detail/type_vec3.hpp>
 
 #define M_PI   3.14159265358979323846

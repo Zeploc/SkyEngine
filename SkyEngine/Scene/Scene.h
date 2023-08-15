@@ -5,7 +5,6 @@
 #include "Core/Core.h"
 
 // Library Includes //
-#include <glm/detail/type_vec.hpp>
 
 #include "Events/Event.h"
 #include "Events/KeyEvent.h"

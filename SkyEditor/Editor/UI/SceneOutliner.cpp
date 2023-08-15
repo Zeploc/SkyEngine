@@ -1,6 +1,8 @@
 ﻿#include "SceneOutliner.h"
 
+#include "EditorApp.h"
 #include "Dependencies/ImGui/imgui.h"
+#include "Editor/EditorViewportLayer.h"
 #include "Editor/Scene/EditorScene.h"
 #include "Editor/Scene/TransformationWidget.h"
 #include "Entity/Entity.h"
@@ -8,7 +10,8 @@
 
 CSceneOutliner::CSceneOutliner()
 {
-    EditorScene = std::static_pointer_cast<class EditorScene>(SceneManager::GetInstance()->GetCurrentScene());
+	// TODO: Remove once redundant
+    EditorScene = std::static_pointer_cast<class EditorScene>(SceneManager::GetInstance()->GetCurrentScene());    
 }
 
 void CSceneOutliner::DrawUI(const SCanvas& DrawCanvas)
@@ -25,11 +28,11 @@ void CSceneOutliner::DrawUI(const SCanvas& DrawCanvas)
     
     if (ImGui::BeginListBox("##SceneOutlinerEntityList", ImVec2(-FLT_MIN, -FLT_MIN)))
     {
-        const TPointer<Entity> SelectedEntity = EditorScene->TransformationWidget->SelectedEntity;
+        const TPointer<Entity> SelectedEntity = EditorApp->EditorViewportLayer->GetSelectedEntity();
         TPointer<Entity> NewSelectedEntity = nullptr;
         for (TPointer<Entity> Entity : EditorScene->Entities)
         {
-            // Temp until gizmo updated
+            // TODO: Temp until gizmo updated
             if (Entity == EditorScene->TransformationWidget->XMoveTransform ||
                 Entity == EditorScene->TransformationWidget->YMoveTransform ||
                 Entity == EditorScene->TransformationWidget->ZMoveTransform)
@@ -43,7 +46,7 @@ void CSceneOutliner::DrawUI(const SCanvas& DrawCanvas)
         }
         if (NewSelectedEntity)
         {
-            EditorScene->SelectEntity(NewSelectedEntity);
+            EditorApp->EditorViewportLayer->SelectEntity(NewSelectedEntity);
         }
         ImGui::EndListBox();
     }

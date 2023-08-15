@@ -16,6 +16,7 @@ TVector3<T> TVector3<T>::Cross(const TVector3& V) const
 template <typename T>
 float TVector3<T>::Dot(const TVector3& V) const
 {
+	// return glm::dot<3, T>(*this, V);
 	return glm::dot<T>(*this, V);
 }
 
@@ -23,6 +24,7 @@ template <typename T>
 TVector3<T> TVector3<T>::GetNormalized() const
 {
 	static_assert(std::numeric_limits<T>::is_iec559, "'normalize' accepts only floating-point inputs");
+	// return glm::normalize<3, T, glm::precision::highp>(*this);
 	return glm::normalize<T, glm::precision::highp>(*this);
 }
 
@@ -30,6 +32,7 @@ template <typename T>
 TVector3<T>& TVector3<T>::Normalize()
 {
 	static_assert(std::numeric_limits<T>::is_iec559, "'normalize' accepts only floating-point inputs");
+	// return *this = glm::normalize<3, T, glm::precision::highp>(*this);
 	return *this = glm::normalize<T, glm::precision::highp>(*this);
 }
 

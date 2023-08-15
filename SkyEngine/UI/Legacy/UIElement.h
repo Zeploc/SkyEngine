@@ -6,6 +6,8 @@
 
 // OpenGL Library Includes //
 #include <glm/common.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
 
 // TODO: STDL warnings with exporting class with vector
 #pragma warning (disable : 4251)

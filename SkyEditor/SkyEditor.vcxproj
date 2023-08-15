@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>SE_PLATFORM_WINDOWS;SKYENGINE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\SkyEngine;.;..\SkyEngine\Dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\SkyEngine;.;..\SkyEngine\Dependencies\include;..\SkyEngine\Dependencies\ImGui;..\SkyEngine\Dependencies\ImGuizmo;..\SkyEngine\Dependencies\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -95,7 +95,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>SE_PLATFORM_WINDOWS;SKYENGINE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\SkyEngine;.;..\SkyEngine\Dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\SkyEngine;.;..\SkyEngine\Dependencies\include;..\SkyEngine\Dependencies\ImGui;..\SkyEngine\Dependencies\ImGuizmo;..\SkyEngine\Dependencies\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -115,7 +115,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>SE_PLATFORM_WINDOWS;SKYENGINE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\SkyEngine;.;..\SkyEngine\Dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\SkyEngine;.;..\SkyEngine\Dependencies\include;..\SkyEngine\Dependencies\ImGui;..\SkyEngine\Dependencies\ImGuizmo;..\SkyEngine\Dependencies\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\SkyEngine\Dependencies\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="Editor\EditorLogManager.h" />
     <ClInclude Include="Editor\EditorViewportLayer.h" />
     <ClInclude Include="Editor\Scene\EditorScene.h" />
@@ -145,6 +146,7 @@
     <ClInclude Include="Particle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\SkyEngine\Dependencies\ImGuizmo\ImGuizmo.cpp" />
     <ClCompile Include="Editor\EditorLogManager.cpp" />
     <ClCompile Include="Editor\EditorViewportLayer.cpp" />
     <ClCompile Include="Editor\Scene\EditorScene.cpp" />

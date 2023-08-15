@@ -34,8 +34,20 @@
     <Filter Include="Resources\Sounds">
       <UniqueIdentifier>{2BA8FA6E-17A1-19C1-40D3-FE452C2BF9CC}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SkyEngine">
+      <UniqueIdentifier>{52A23481-BE0C-E9F7-074B-9A9D73F4C64C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SkyEngine\Dependencies">
+      <UniqueIdentifier>{2853C2E8-144D-EB3A-FDB9-814BE95251A7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SkyEngine\Dependencies\ImGuizmo">
+      <UniqueIdentifier>{88D2FF27-F4B5-0E68-FDB8-3CA4691BD5B8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\SkyEngine\Dependencies\ImGuizmo\ImGuizmo.h">
+      <Filter>SkyEngine\Dependencies\ImGuizmo</Filter>
+    </ClInclude>
     <ClInclude Include="Editor\EditorLogManager.h">
       <Filter>Editor</Filter>
     </ClInclude>
@@ -57,6 +69,9 @@
     <ClInclude Include="Editor\UI\LayerInfoWidget.h">
       <Filter>Editor\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Editor\UI\SceneOutliner.h">
+      <Filter>Editor\UI</Filter>
+    </ClInclude>
     <ClInclude Include="Editor\Windows\EditorWindow.h">
       <Filter>Editor\Windows</Filter>
     </ClInclude>
@@ -67,6 +82,9 @@
     <ClInclude Include="Particle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\SkyEngine\Dependencies\ImGuizmo\ImGuizmo.cpp">
+      <Filter>SkyEngine\Dependencies\ImGuizmo</Filter>
+    </ClCompile>
     <ClCompile Include="Editor\EditorLogManager.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
@@ -86,6 +104,9 @@
       <Filter>Editor\UI</Filter>
     </ClCompile>
     <ClCompile Include="Editor\UI\LayerInfoWidget.cpp">
+      <Filter>Editor\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\UI\SceneOutliner.cpp">
       <Filter>Editor\UI</Filter>
     </ClCompile>
     <ClCompile Include="Editor\Windows\EditorWindow.cpp">

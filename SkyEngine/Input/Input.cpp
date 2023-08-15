@@ -88,7 +88,7 @@ void CInput::processSpecialKeys(int key, int x, int y)
 ************************************************************/
 void CInput::MouseInput(int x, int y)
 {
-	MousePos = glm::tvec2(x, y);
+	MousePos = glm::tvec2<int>(x, y);
 }
 
 /************************************************************

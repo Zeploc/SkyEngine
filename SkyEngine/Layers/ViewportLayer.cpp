@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"
+#include "Events/ApplicationEvent.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Graphics/GraphicsInstance.h"
 #include "Input/Input.h"
@@ -76,4 +77,44 @@ SVector2i CViewportLayer::GetViewportSize()
 SVector2i CViewportLayer::GetViewportPosition()
 {
 	return {0,0};
+}
+
+bool CViewportLayer::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
+{
+	return false;
+}
+
+bool CViewportLayer::OnMouseButtonReleasedEvent(CMouseButtonReleasedEvent& Event)
+{
+	return false;
+}
+
+bool CViewportLayer::OnMouseMovedEvent(CMouseMovedEvent& Event)
+{
+	return false;
+}
+
+bool CViewportLayer::OnMouseScrolledEvent(CMouseScrolledEvent& Event)
+{
+	return false;
+}
+
+bool CViewportLayer::OnKeyPressedEvent(CKeyPressedEvent& Event)
+{
+	return false;
+}
+
+bool CViewportLayer::OnKeyTypedEvent(CKeyTypedEvent& Event)
+{
+	return false;
+}
+
+bool CViewportLayer::OnKeyReleasedEvent(CKeyReleasedEvent& Event)
+{
+	return false;
+}
+
+bool CViewportLayer::OnWindowResizeEvent(CWindowResizeEvent& Event)
+{
+	return false;
 }
