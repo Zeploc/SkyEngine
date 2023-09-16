@@ -16,9 +16,10 @@ public:
 	void RenderUIElement(TPointer<UIElement> UserInterfaceItem) override;
 	void CleanupMesh(TPointer<CMeshComponent> Mesh) override;
 
-
 	void PreRender(TPointer<CEngineWindow> GraphicsWindow) override;
 	void PostRender(TPointer<CEngineWindow> GraphicsWindow) override;
+
+	// TODO: Resize function
 
 	void StoreMVP(STransform Transform, unsigned int Program);
 	void PassAttributeToShader(int32_t ShaderID, float Attribute) override;

@@ -138,7 +138,13 @@
     <ClInclude Include="Events\MouseEvent.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\Framebuffer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="Graphics\GL\GLAPI.h">
+      <Filter>Graphics\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GL\GLFramebuffer.h">
       <Filter>Graphics\GL</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\GL\GLIncludes.h">
@@ -412,7 +418,13 @@
     <ClCompile Include="Entity\Entity.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Framebuffer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="Graphics\GL\GLAPI.cpp">
+      <Filter>Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GL\GLFramebuffer.cpp">
       <Filter>Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\GL\GLInstance.cpp">

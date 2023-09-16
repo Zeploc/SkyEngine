@@ -13,9 +13,10 @@
 #include "Scene/SceneManager.h"
 
 CViewportLayer::CViewportLayer(TWeakPointer<CEngineWindow> InOwningWindow)
-	: CLayer(InOwningWindow, "Viewport Layer")
+	: CCanvas(InOwningWindow, "Viewport Layer")
 {
 	SkyColour = SVector(0.3f, 0.8f, 0.9f);
+	ViewportTexture = GetGraphicsAPI()->GetTexture("Resources/Images/StoneWall_2x2.jpg");
 }
 
 CViewportLayer::~CViewportLayer()
@@ -62,11 +63,6 @@ void CViewportLayer::OnRender()
 	SceneManager::GetInstance()->RenderCurrentScene(OwningWindow.lock()->GetGraphicsInstance());
 }
 
-void CViewportLayer::OnEvent(CEvent& Event)
-{
-	SceneManager::GetInstance()->GetCurrentScene()->OnEvent(Event);
-}
-
 SVector2i CViewportLayer::GetViewportSize()
 {
 	const TPointer<CEngineWindow> EngineWindow = GetApplication()->GetApplicationWindow();
@@ -79,42 +75,44 @@ SVector2i CViewportLayer::GetViewportPosition()
 	return {0,0};
 }
 
-bool CViewportLayer::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
+bool CViewportLayer::OnMouseButtonPressed(int Button, int Mods)
 {
+	return SceneManager::GetInstance()->GetCurrentScene()->OnMouseButtonPressed(Button, Mods);
+}
+
+bool CViewportLayer::OnMouseButtonReleased(int Button, int Mods)
+{
+	return SceneManager::GetInstance()->GetCurrentScene()->OnMouseButtonReleased(Button, Mods);
+}
+
+bool CViewportLayer::OnMouseMoved(SVector2i MousePos)
+{
+	return SceneManager::GetInstance()->GetCurrentScene()->OnMouseMoved(MousePos);
+}
+
+bool CViewportLayer::OnMouseScrolled(float XOffset, float YOffset)
+{
+	return SceneManager::GetInstance()->GetCurrentScene()->OnMouseScrolled(XOffset, YOffset);
+}
+
+bool CViewportLayer::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
+{
+	return SceneManager::GetInstance()->GetCurrentScene()->OnKeyPressed(KeyCode, Mods, RepeatCount);
+}
+
+bool CViewportLayer::OnKeyTyped(int KeyCode, int Mods)
+{
+	// return SceneManager::GetInstance()->GetCurrentScene()->OnKeyTyped(KeyCode, Mods);
 	return false;
 }
 
-bool CViewportLayer::OnMouseButtonReleasedEvent(CMouseButtonReleasedEvent& Event)
+bool CViewportLayer::OnKeyReleased(int KeyCode, int Mods)
 {
-	return false;
+	return SceneManager::GetInstance()->GetCurrentScene()->OnKeyReleased(KeyCode, Mods);
 }
 
-bool CViewportLayer::OnMouseMovedEvent(CMouseMovedEvent& Event)
+bool CViewportLayer::OnWindowResize(unsigned int Width, unsigned int Height)
 {
-	return false;
-}
-
-bool CViewportLayer::OnMouseScrolledEvent(CMouseScrolledEvent& Event)
-{
-	return false;
-}
-
-bool CViewportLayer::OnKeyPressedEvent(CKeyPressedEvent& Event)
-{
-	return false;
-}
-
-bool CViewportLayer::OnKeyTypedEvent(CKeyTypedEvent& Event)
-{
-	return false;
-}
-
-bool CViewportLayer::OnKeyReleasedEvent(CKeyReleasedEvent& Event)
-{
-	return false;
-}
-
-bool CViewportLayer::OnWindowResizeEvent(CWindowResizeEvent& Event)
-{
+	// return SceneManager::GetInstance()->GetCurrentScene()->OnWindowResize(Width, Height);
 	return false;
 }

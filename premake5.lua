@@ -6,7 +6,7 @@ workspace "SkyEngine"
       "Release",
       "Dist"
    }
-startproject "SkyEditor"
+    startproject "SkyEditor"
    
 outputdir = "%{cfg.buildcfg}-%{cfg.architecture}"
 -- outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
@@ -17,7 +17,9 @@ IncludeDir["ImGui"] = "SkyEngine/Dependencies/ImGui"
 IncludeDir["ImGuizmo"] = "SkyEngine/Dependencies/ImGuizmo"
 IncludeDir["glm"] = "SkyEngine/Dependencies/glm"
 
-include "SkyEngine/Dependencies/ImGui"
+group "Dependencies"
+    include "SkyEngine/Dependencies/ImGui"
+group ""
 
 
 project "SkyEngine"
@@ -109,7 +111,7 @@ project "SkyEngine"
 
       postbuildcommands
       {
-         ("{COPY} %{cfg.buildtarget.relpath} ../Binaries/" .. outputdir .. "/SkyEditor")
+         ("{COPY} %{cfg.buildtarget.relpath} \"../Binaries/" .. outputdir .. "/SkyEditor/\"")
       }
 
    filter "configurations:Debug"

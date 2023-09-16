@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Framebuffer.h"
 #include "Core/Core.h"
 
 #include "Math/Vector2.h"
@@ -43,4 +44,6 @@ public:
 	                               const char* FragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename) = 0;
 
 	virtual bool CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename) = 0;
+
+	virtual TPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) = 0;
 };

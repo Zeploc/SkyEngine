@@ -24,15 +24,8 @@ public:
 
 	void SaveAsNew();
 	void SaveCurrentLevel();
-
-	void OnEvent(CEvent& Event) override;
+	
 protected:
-	bool OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event) override;
-	bool OnMouseButtonReleasedEvent(CMouseButtonReleasedEvent& Event) override;
-	bool OnMouseMovedEvent(CMouseMovedEvent& Event) override;
-	bool OnMouseScrolledEvent(CMouseScrolledEvent& Event) override;
-	bool OnKeyPressedEvent(CKeyPressedEvent& Event) override;
-	bool OnKeyReleasedEvent(CKeyReleasedEvent& Event) override;
 public:
 	
 	TPointer<UIText> LevelNameText;

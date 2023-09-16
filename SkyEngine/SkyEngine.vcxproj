@@ -94,7 +94,7 @@
       <ImportLibrary>..\Binaries\Debug-x86_64\SkyEngine\SkyEngine.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\Binaries\Debug-x86_64\SkyEngine\SkyEngine.dll\ (xcopy /Q /E /Y /I ..\Binaries\Debug-x86_64\SkyEngine\SkyEngine.dll ..\Binaries\Debug-x86_64\SkyEditor &gt; nul) ELSE (xcopy /Q /Y /I ..\Binaries\Debug-x86_64\SkyEngine\SkyEngine.dll ..\Binaries\Debug-x86_64\SkyEditor &gt; nul)</Command>
+      <Command>IF EXIST ..\Binaries\Debug-x86_64\SkyEngine\SkyEngine.dll\ (xcopy /Q /E /Y /I ..\Binaries\Debug-x86_64\SkyEngine\SkyEngine.dll "..\Binaries\Debug-x86_64\SkyEditor\" &gt; nul) ELSE (xcopy /Q /Y /I ..\Binaries\Debug-x86_64\SkyEngine\SkyEngine.dll "..\Binaries\Debug-x86_64\SkyEditor\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -121,7 +121,7 @@
       <ImportLibrary>..\Binaries\Release-x86_64\SkyEngine\SkyEngine.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\Binaries\Release-x86_64\SkyEngine\SkyEngine.dll\ (xcopy /Q /E /Y /I ..\Binaries\Release-x86_64\SkyEngine\SkyEngine.dll ..\Binaries\Release-x86_64\SkyEditor &gt; nul) ELSE (xcopy /Q /Y /I ..\Binaries\Release-x86_64\SkyEngine\SkyEngine.dll ..\Binaries\Release-x86_64\SkyEditor &gt; nul)</Command>
+      <Command>IF EXIST ..\Binaries\Release-x86_64\SkyEngine\SkyEngine.dll\ (xcopy /Q /E /Y /I ..\Binaries\Release-x86_64\SkyEngine\SkyEngine.dll "..\Binaries\Release-x86_64\SkyEditor\" &gt; nul) ELSE (xcopy /Q /Y /I ..\Binaries\Release-x86_64\SkyEngine\SkyEngine.dll "..\Binaries\Release-x86_64\SkyEditor\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -148,7 +148,7 @@
       <ImportLibrary>..\Binaries\Dist-x86_64\SkyEngine\SkyEngine.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\Binaries\Dist-x86_64\SkyEngine\SkyEngine.dll\ (xcopy /Q /E /Y /I ..\Binaries\Dist-x86_64\SkyEngine\SkyEngine.dll ..\Binaries\Dist-x86_64\SkyEditor &gt; nul) ELSE (xcopy /Q /Y /I ..\Binaries\Dist-x86_64\SkyEngine\SkyEngine.dll ..\Binaries\Dist-x86_64\SkyEditor &gt; nul)</Command>
+      <Command>IF EXIST ..\Binaries\Dist-x86_64\SkyEngine\SkyEngine.dll\ (xcopy /Q /E /Y /I ..\Binaries\Dist-x86_64\SkyEngine\SkyEngine.dll "..\Binaries\Dist-x86_64\SkyEditor\" &gt; nul) ELSE (xcopy /Q /Y /I ..\Binaries\Dist-x86_64\SkyEngine\SkyEngine.dll "..\Binaries\Dist-x86_64\SkyEditor\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -168,7 +168,9 @@
     <ClInclude Include="Events\Event.h" />
     <ClInclude Include="Events\KeyEvent.h" />
     <ClInclude Include="Events\MouseEvent.h" />
+    <ClInclude Include="Graphics\Framebuffer.h" />
     <ClInclude Include="Graphics\GL\GLAPI.h" />
+    <ClInclude Include="Graphics\GL\GLFramebuffer.h" />
     <ClInclude Include="Graphics\GL\GLIncludes.h" />
     <ClInclude Include="Graphics\GL\GLInstance.h" />
     <ClInclude Include="Graphics\GL\imgui_impl_opengl3.h" />
@@ -176,10 +178,10 @@
     <ClInclude Include="Graphics\GraphicsInstance.h" />
     <ClInclude Include="Input\CXBOXController.h" />
     <ClInclude Include="Input\Input.h" />
-    <ClInclude Include="Layers\Layer.h" />
-    <ClInclude Include="Layers\LayerStack.h" />
-    <ClInclude Include="Layers\UILayer.h" />
-    <ClInclude Include="Layers\ViewportLayer.h" />
+    <ClInclude Include="Canvas\Canvas.h" />
+    <ClInclude Include="Canvas\CanvasManager.h" />
+    <ClInclude Include="Canvas\UICanvas.h" />
+    <ClInclude Include="Canvas\ViewportLayer.h" />
     <ClInclude Include="Math\Internal\Rotator.decl.h" />
     <ClInclude Include="Math\Internal\Rotator.impl.hpp" />
     <ClInclude Include="Math\Internal\Vector2.decl.h" />
@@ -264,17 +266,19 @@
     <ClCompile Include="Entity\CollisionBounds.cpp" />
     <ClCompile Include="Entity\Component.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
+    <ClCompile Include="Graphics\Framebuffer.cpp" />
     <ClCompile Include="Graphics\GL\GLAPI.cpp" />
+    <ClCompile Include="Graphics\GL\GLFramebuffer.cpp" />
     <ClCompile Include="Graphics\GL\GLInstance.cpp" />
     <ClCompile Include="Graphics\GL\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Graphics\GraphicsAPI.cpp" />
     <ClCompile Include="Graphics\GraphicsInstance.cpp" />
     <ClCompile Include="Input\CXBOXController.cpp" />
     <ClCompile Include="Input\Input.cpp" />
-    <ClCompile Include="Layers\Layer.cpp" />
-    <ClCompile Include="Layers\LayerStack.cpp" />
-    <ClCompile Include="Layers\UILayer.cpp" />
-    <ClCompile Include="Layers\ViewportLayer.cpp" />
+    <ClCompile Include="Canvas\Canvas.cpp" />
+    <ClCompile Include="Canvas\CanvasManager.cpp" />
+    <ClCompile Include="Canvas\UICanvas.cpp" />
+    <ClCompile Include="Canvas\ViewportLayer.cpp" />
     <ClCompile Include="Math\MathLibrary.cpp" />
     <ClCompile Include="Math\Matrix.cpp" />
     <ClCompile Include="Math\Quaternion.cpp" />

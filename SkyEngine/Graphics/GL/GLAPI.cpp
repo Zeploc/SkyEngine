@@ -6,6 +6,7 @@
 #include <fstream>
 #include <soil/SOIL2.h>
 
+#include "GLFramebuffer.h"
 #include "GLInstance.h"
 #include "Render/Shaders/ShaderManager.h"
 #include "System/LogManager.h"
@@ -82,6 +83,7 @@ unsigned IGLAPI::CreateBuffer(const MeshData& MeshData)
 
 TPointer<CTexture> IGLAPI::GetTexture(const std::string& TextureSource, bool bAA)
 {
+	// TODO: Can have a derived OpenGlTexture for custom aspects of the texture for OpenGL
 	TPointer<CTexture> Texture;
 
 	bool bTextureExists = false;
@@ -324,4 +326,9 @@ bool IGLAPI::CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShader
 		return false;
 	}
 	return true;
+}
+
+TPointer<IFramebuffer> IGLAPI::CreateFramebuffer(const SFramebufferSpecification& Specification)
+{
+	return CreatePointer<GLFramebuffer>(Specification);
 }

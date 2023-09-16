@@ -4,7 +4,7 @@
 #include "Core/Core.h"
 #include "Math/Internal/Vector2.decl.h"
 
-class CLayer;
+class CCanvas;
 
 struct ENGINE_API SCanvas
 {
@@ -18,9 +18,9 @@ public:
 	virtual void DrawUI(const SCanvas& DrawCanvas) = 0;
 	virtual void Update() {}
 
-	void SetOwningLayer(CLayer* InLayer);
+	void SetOwningLayer(CCanvas* InLayer);
 
 protected:
-	CLayer* OwningLayer = nullptr;
+	CCanvas* OwningCanvas = nullptr;
 	
 };

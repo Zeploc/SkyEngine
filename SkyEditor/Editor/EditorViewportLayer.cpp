@@ -7,6 +7,7 @@
 #include "Dependencies/ImGuizmo/ImGuizmo.h"
 #include "Graphics/GraphicsInstance.h"
 #include "Platform/Window/EngineWindow.h"
+#include "Render/Texture.h"
 #include "Scene/SceneManager.h"
 #include "System/LogManager.h"
 #include "UI/UIWidget.h"
@@ -29,6 +30,25 @@ void CEditorViewportLayer::OnUpdate()
 void CEditorViewportLayer::OnRender()
 {	
 	ImGuiDockNode* ViewportNode = ImGui::DockBuilderGetCentralNode(EditorApp->DockSpaceID);
+	
+	// Window in viewport instead
+	// ImGuiWindowClass centralAlways = {};
+	// centralAlways.DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoDockingOverMe | ImGuiDockNodeFlags_PassthruCentralNode;
+	// ImGuiWindowFlags window_flags = 0;
+	// window_flags |= ImGuiWindowFlags_NoBackground;
+	// window_flags |= ImGuiWindowFlags_NoMouseInputs;
+	// window_flags |= ImGuiWindowFlags_NoNavFocus;
+	// window_flags |= ImGuiWindowFlags_NoMove;
+	// ImGui::SetNextWindowClass(&centralAlways);
+	// ImGui::SetNextWindowDockID(ViewportNode->ID, ImGuiCond_Always);
+	// ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
+	// // ImGui::SetNextWindowBgAlpha(0.0f);
+	// ImGui::Begin("Render Viewport", nullptr, window_flags);
+	// ImGui::PopStyleVar();
+	// uint32_t TextureID = ViewportTexture->GetTextureRenderID();
+	// ImGui::Image((void*)TextureID, ImVec2(512.0f, 512.0f));
+	// ImGui::End();
+	
 	
 	SCanvas ViewportCanvas;
 	ViewportCanvas.Position = {ViewportNode->Pos.x,ViewportNode->Pos.y};
@@ -58,14 +78,15 @@ void CEditorViewportLayer::OnRender()
 	
 	CViewportLayer::OnRender();
 
-	if (SelectedEntity)
+	GizmoTransformSpace = ImGuizmo::MODE::LOCAL;
+	if (SelectedEntity && GizmoMode != -1)
 	{
 		ImGuizmo::SetOrthographic(false);
 		ImGuizmo::SetDrawlist();
 		ImGuizmo::SetRect(ViewportNode->Pos.x, ViewportNode->Pos.y, ViewportNode->Size.x, ViewportNode->Size.y);
 		glm::mat4 EntityModel = SelectedEntity->Transform.GetModelMatrix();
 		ImGuizmo::Manipulate(glm::value_ptr(Camera->View.ToGLM()), glm::value_ptr(Camera->Projection.ToGLM()),
-		                     ImGuizmo::OPERATION::ROTATE, ImGuizmo::MODE::LOCAL, value_ptr(EntityModel));
+		                     ImGuizmo::OPERATION(GizmoMode), ImGuizmo::MODE(GizmoTransformSpace), value_ptr(EntityModel));
 		const SRotator OriginalRotation = SelectedEntity->Transform.Rotation;
 		SelectedEntity->Transform.FromMatrix(EntityModel);
 		// Used to stop gimbol lock
@@ -73,22 +94,6 @@ void CEditorViewportLayer::OnRender()
 		// SelectedEntity->Transform.Rotation = OriginalRotation + DeltaRotation;
 	}
 
-	// Window in viewport instead
-	// ImGuiWindowClass centralAlways = {};
-	// centralAlways.DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoDockingOverMe | ImGuiDockNodeFlags_PassthruCentralNode;
-	// ImGuiWindowFlags window_flags = 0;
-	// window_flags |= ImGuiWindowFlags_NoBackground;
-	// window_flags |= ImGuiWindowFlags_NoMouseInputs;
-	// window_flags |= ImGuiWindowFlags_NoNavFocus;
-	// window_flags |= ImGuiWindowFlags_NoMove;
-	// ImGui::SetNextWindowClass(&centralAlways);
-	// ImGui::SetNextWindowDockID(node->ID, ImGuiCond_Always);
-	// ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
-	// // ImGui::SetNextWindowBgAlpha(0.0f);
-	// ImGui::Begin("Render Viewport", nullptr, window_flags);
-	// ImGui::PopStyleVar();
-	// // ImGui::Text("Central node: (%f, %f)..(%fx%f)", node->Pos.x, node->Pos.y, node->Size.x, node->Size.y);
-	// ImGui::End();	
 }
 
 void CEditorViewportLayer::AddViewportWidget(TPointer<CUIWidget> InWidget)
@@ -117,22 +122,7 @@ SVector2i CEditorViewportLayer::GetViewportPosition()
 	return {(int)CentralViewportNode->Pos.x, (int)CentralViewportNode->Pos.y};
 }
 
-void CEditorViewportLayer::OnEvent(CEvent& Event)
-{
-	CViewportLayer::OnEvent(Event);	
-	
-	EventDispatcher dispatcher(Event);
-	dispatcher.Dispatch<CMouseButtonPressedEvent>(SE_BIND_EVENT_FN(CEditorViewportLayer::OnMouseButtonPressedEvent));
-	dispatcher.Dispatch<CMouseButtonReleasedEvent>(SE_BIND_EVENT_FN(CEditorViewportLayer::OnMouseButtonReleasedEvent));
-	dispatcher.Dispatch<CMouseMovedEvent>(SE_BIND_EVENT_FN(CEditorViewportLayer::OnMouseMovedEvent));
-	dispatcher.Dispatch<CMouseScrolledEvent>(SE_BIND_EVENT_FN(CEditorViewportLayer::OnMouseScrolledEvent));
-	dispatcher.Dispatch<CKeyPressedEvent>(SE_BIND_EVENT_FN(CEditorViewportLayer::OnKeyPressedEvent));
-	dispatcher.Dispatch<CKeyTypedEvent>(SE_BIND_EVENT_FN(CEditorViewportLayer::OnKeyTypedEvent));
-	dispatcher.Dispatch<CKeyReleasedEvent>(SE_BIND_EVENT_FN(CEditorViewportLayer::OnKeyReleasedEvent));
-	dispatcher.Dispatch<CWindowResizeEvent>(SE_BIND_EVENT_FN(CEditorViewportLayer::OnWindowResizeEvent));
-}
-
-bool CEditorViewportLayer::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
+bool CEditorViewportLayer::OnMouseButtonPressed(int Button, int Mods)
 {
 	CameraManager* CameraInstance = CameraManager::GetInstance();
 	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
@@ -142,33 +132,33 @@ bool CEditorViewportLayer::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& E
 	// TODO: Refine mouse visibility toggle/state
 
 	bool bHandled = false;
-	if (Event.GetMods() == 0)
+	if (Mods == 0)
 	{
 		// Right click with no mods
-		if (Event.GetMouseButton() == GLFW_MOUSE_BUTTON_RIGHT)
+		if (Button == GLFW_MOUSE_BUTTON_RIGHT)
 		{
 			PreviousMousePosition = MousePos;
 			ApplicationWindow->SetCursorVisible(false);
 			CameraInstance->EnableSpectatorControls(true);
 			bHandled = true;
 		}
-		else if (Event.GetMouseButton() == GLFW_MOUSE_BUTTON_LEFT)
+		else if (Button == GLFW_MOUSE_BUTTON_LEFT)
 		{
 			UpdateSelectedEntity();
 			bHandled = true;
 		}
 	}
 
-	if (Event.GetMods() & CInput::ModiferType::Alt)
+	if (Mods & CInput::ModiferType::Alt)
 	{
-		if (Event.GetMouseButton() == GLFW_MOUSE_BUTTON_LEFT)
+		if (Button == GLFW_MOUSE_BUTTON_LEFT)
 		{
 			bRotatingAroundPoint = true;
 			ApplicationWindow->SetCursorVisible(false);
 			PreviousMousePosition = MousePos;
 			ApplicationWindow->SetCursorPosition(ScreenCenter);
 		}
-		else if (Event.GetMouseButton() == GLFW_MOUSE_BUTTON_RIGHT)
+		else if (Button == GLFW_MOUSE_BUTTON_RIGHT)
 		{
 			bLookingAround = true;
 			ApplicationWindow->SetCursorVisible(false);
@@ -176,9 +166,9 @@ bool CEditorViewportLayer::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& E
 			ApplicationWindow->SetCursorPosition(ScreenCenter);
 		}
 	}
-	if (Event.GetMods() & CInput::ModiferType::Shift)
+	if (Mods & CInput::ModiferType::Shift)
 	{
-		if (Event.GetMouseButton() == GLFW_MOUSE_BUTTON_LEFT)
+		if (Button == GLFW_MOUSE_BUTTON_LEFT)
 		{
 			ApplicationWindow->SetCursorVisible(false);
 			PreviousMousePosition = MousePos;
@@ -198,12 +188,12 @@ bool CEditorViewportLayer::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& E
 	return false;
 }
 
-bool CEditorViewportLayer::OnMouseButtonReleasedEvent(CMouseButtonReleasedEvent& Event)
+bool CEditorViewportLayer::OnMouseButtonReleased(int Button, int Mods)
 {	
 	CameraManager* CameraInstance = CameraManager::GetInstance();
 	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 	
-	if (Event.GetMouseButton() == GLFW_MOUSE_BUTTON_RIGHT)
+	if (Button == GLFW_MOUSE_BUTTON_RIGHT)
 	{
 		ApplicationWindow->SetCursorVisible(true);
 		CameraInstance->EnableSpectatorControls(false);
@@ -211,7 +201,7 @@ bool CEditorViewportLayer::OnMouseButtonReleasedEvent(CMouseButtonReleasedEvent&
 		bLookingAround = false;
 		return true;
 	}
-	if (Event.GetMouseButton() == GLFW_MOUSE_BUTTON_LEFT && (bPanning || bRotatingAroundPoint))
+	if (Button == GLFW_MOUSE_BUTTON_LEFT && (bPanning || bRotatingAroundPoint))
 	{
 		ApplicationWindow->SetCursorVisible(true);
 		ApplicationWindow->SetCursorPosition(PreviousMousePosition);
@@ -219,19 +209,19 @@ bool CEditorViewportLayer::OnMouseButtonReleasedEvent(CMouseButtonReleasedEvent&
 		bRotatingAroundPoint = false;
 		return true;
 	}
-	if (Event.GetMouseButton() == GLFW_MOUSE_BUTTON_LEFT)
+	if (Button == GLFW_MOUSE_BUTTON_LEFT)
 	{
 		return true;
 	}
 	return false;
 }
 
-bool CEditorViewportLayer::OnMouseMovedEvent(CMouseMovedEvent& Event)
+bool CEditorViewportLayer::OnMouseMoved(SVector2i MousePos)
 {
 	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 	const SVector2i ScreenCenter = EditorApp->EditorViewportLayer->GetViewportPosition() + EditorApp->EditorViewportLayer->GetViewportSize() / 2;
 	CameraManager* CameraInstance = CameraManager::GetInstance();
-	const SVector2i ScreenOffset = Event.GetMousePos() - ScreenCenter;
+	const SVector2i ScreenOffset = MousePos - ScreenCenter;
 	const SVector2 Offset = SVector2(ScreenOffset) * CameraInstance->MouseSensitivity;	
 	
 	const SVector CameraPivotPoint = CameraInstance->GetCameraPosition() + CameraInstance->GetCameraForwardVector() * CurrentFocusDistance;
@@ -265,14 +255,14 @@ bool CEditorViewportLayer::OnMouseMovedEvent(CMouseMovedEvent& Event)
 	return false;
 }
 
-bool CEditorViewportLayer::OnMouseScrolledEvent(CMouseScrolledEvent& Event)
+bool CEditorViewportLayer::OnMouseScrolled(float XOffset, float YOffset)
 {
 	return false;
 }
 
-bool CEditorViewportLayer::OnKeyPressedEvent(CKeyPressedEvent& Event)
+bool CEditorViewportLayer::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 {
-	if (Event.GetKeyCode() == GLFW_KEY_ESCAPE) // Escape
+	if (KeyCode == GLFW_KEY_ESCAPE) // Escape
 	{
 		if (SelectedEntity)
 		{
@@ -282,7 +272,7 @@ bool CEditorViewportLayer::OnKeyPressedEvent(CKeyPressedEvent& Event)
 		// ApplicationWindow->SetCursorVisible(true);
 		// CameraInstance->EnableSpectatorControls(false);
 	}
-	if (Event.GetKeyCode() == GLFW_KEY_F)
+	if (KeyCode == GLFW_KEY_F)
 	{
 		if (SelectedEntity)
 		{
@@ -291,27 +281,47 @@ bool CEditorViewportLayer::OnKeyPressedEvent(CKeyPressedEvent& Event)
 			return true;
 		}
 	}
-	if (Event.GetKeyCode() == GLFW_KEY_G)
+	if (KeyCode == GLFW_KEY_G)
 	{
 		bWireframe = !bWireframe;
 		const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 		ApplicationWindow->GetGraphicsInstance()->SetWireframeMode(bWireframe);
 		return true;
 	}
+	if (KeyCode == GLFW_KEY_Q)
+	{
+		GizmoMode = -1;
+		return true;
+	}
+	if (KeyCode == GLFW_KEY_W)
+	{
+		GizmoMode = ImGuizmo::OPERATION::TRANSLATE;
+		return true;
+	}
+	if (KeyCode == GLFW_KEY_E)
+	{
+		GizmoMode = ImGuizmo::OPERATION::ROTATE;
+		return true;
+	}
+	if (KeyCode == GLFW_KEY_R)
+	{
+		GizmoMode = ImGuizmo::OPERATION::SCALE;
+		return true;
+	}
 	return false;
 }
 
-bool CEditorViewportLayer::OnKeyTypedEvent(CKeyTypedEvent& Event)
+bool CEditorViewportLayer::OnKeyTyped(int KeyCode, int Mods)
 {
 	return false;
 }
 
-bool CEditorViewportLayer::OnKeyReleasedEvent(CKeyReleasedEvent& Event)
+bool CEditorViewportLayer::OnKeyReleased(int KeyCode, int Mods)
 {
 	return false;
 }
 
-bool CEditorViewportLayer::OnWindowResizeEvent(CWindowResizeEvent& Event)
+bool CEditorViewportLayer::OnWindowResize(unsigned int Width, unsigned int Height)
 {
 	return false;
 }

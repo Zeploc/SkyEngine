@@ -19,6 +19,7 @@ public:
 	bool CreateShaderProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* GeometryShaderFilename) override;
 	bool CreateTessProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename) override;
 	bool CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename) override;
+	TPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) override;
 	
 private:
 	std::string ReadShader(const char* filename);

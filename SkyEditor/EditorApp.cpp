@@ -18,8 +18,10 @@
 #include "Editor/UI/LayerInfoWidget.h"
 #include "Editor/UI/SceneOutliner.h"
 #include "Editor/Windows/EditorWindowManager.h"
-#include "Layers/UILayer.h"
-#include "Layers/ViewportLayer.h"
+#include "Canvas/Canvas.h"
+#include "Canvas/UICanvas.h"
+#include "Canvas/ViewportLayer.h"
+#include "Platform/Window/EngineWindow.h"
 
 
 EditorApplication::EditorApplication() : Application()
@@ -46,7 +48,7 @@ bool EditorApplication::ApplicationSetup()
 	UILayer->AddWidget(ConsoleLog);
 	
 	// Needed to be in this project to have context global variable
-	ImGui::SetCurrentContext(UILayer->GetGuiContext());
+	ImGui::SetCurrentContext(ApplicationWindow->GetCanvasManager().GetGuiContext());
 	
 	return bSuccessfulSetup;
 }

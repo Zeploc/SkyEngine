@@ -208,17 +208,6 @@ void Scene::Update()
 	Button3DEntity::bButtonPressedThisFrame = false;	
 }
 
-void Scene::OnEvent(CEvent& Event)
-{
-	EventDispatcher dispatcher(Event);
-	dispatcher.Dispatch<CMouseButtonPressedEvent>(SE_BIND_EVENT_FN(Scene::OnMouseButtonPressedEvent));
-	dispatcher.Dispatch<CMouseButtonReleasedEvent>(SE_BIND_EVENT_FN(Scene::OnMouseButtonReleasedEvent));
-	dispatcher.Dispatch<CMouseMovedEvent>(SE_BIND_EVENT_FN(Scene::OnMouseMovedEvent));
-	dispatcher.Dispatch<CMouseScrolledEvent>(SE_BIND_EVENT_FN(Scene::OnMouseScrolledEvent));
-	dispatcher.Dispatch<CKeyPressedEvent>(SE_BIND_EVENT_FN(Scene::OnKeyPressedEvent));
-	dispatcher.Dispatch<CKeyReleasedEvent>(SE_BIND_EVENT_FN(Scene::OnKeyReleasedEvent));
-}
-
 void Scene::OnLoadScene()
 {
 	if (!bIsPersistant)
@@ -251,32 +240,32 @@ bool Scene::operator==(const Scene& rhs) const
 	return false;
 }
 
-bool Scene::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
+bool Scene::OnMouseButtonPressed(int Button, int Mods)
 {
 	return false;
 }
 
-bool Scene::OnMouseButtonReleasedEvent(CMouseButtonReleasedEvent& Event)
+bool Scene::OnMouseButtonReleased(int Button, int Mods)
 {
 	return false;
 }
 
-bool Scene::OnMouseMovedEvent(CMouseMovedEvent& Event)
+bool Scene::OnMouseMoved(SVector2i MousePos)
 {
 	return false;
 }
 
-bool Scene::OnMouseScrolledEvent(CMouseScrolledEvent& Event)
+bool Scene::OnMouseScrolled(float XOffset, float YOffset)
 {
 	return false;
 }
 
-bool Scene::OnKeyPressedEvent(CKeyPressedEvent& Event)
+bool Scene::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 {
 	// TODO: If not build check (editor only)
-	if (Event.GetKeyCode() == GLFW_KEY_ESCAPE) 
+	if (KeyCode == GLFW_KEY_ESCAPE) 
 	{
-		if (Event.GetMods() & CInput::ModiferType::Shift)
+		if (KeyCode & CInput::ModiferType::Shift)
 		{
 			GetApplication()->Quit();
 			return true;
@@ -285,7 +274,7 @@ bool Scene::OnKeyPressedEvent(CKeyPressedEvent& Event)
 	return false;
 }
 
-bool Scene::OnKeyReleasedEvent(CKeyReleasedEvent& Event)
+bool Scene::OnKeyReleased(int KeyCode, int Mods)
 {
 	return false;
 }

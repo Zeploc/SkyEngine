@@ -4,9 +4,9 @@
 #include "UIWidget.h"
 
 #include "imgui.h"
-#include "Layers/UILayer.h"
+#include "Canvas/Canvas.h"
 
-void CUIWidget::SetOwningLayer(CLayer* InLayer)
+void CUIWidget::SetOwningLayer(CCanvas* InCanvas)
 {
-	OwningLayer = InLayer;
+	OwningCanvas = InCanvas;
 }

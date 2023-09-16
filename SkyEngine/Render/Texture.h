@@ -33,6 +33,12 @@ public:
 		TextureID = InTextureID;
 		bBound = true;
 	}
+	
+	uint32_t GetTextureRenderID() const
+	{
+		return TextureID;
+	}
+	
 
 protected:
 	

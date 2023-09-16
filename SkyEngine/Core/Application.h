@@ -6,13 +6,12 @@
 #include "EventListener.h"
 #include "Core/Core.h"
 #include "Graphics/GraphicsAPI.h"
-#include "Layers/LayerStack.h"
 #include "Math/Vector2.h"
 
 class CViewportLayer;
 class CLogManager;
-class CUILayer;
-class CLayer;
+class CUICanvas;
+class CCanvas;
 class IPlatformInterface;
 class CEngineWindow;
 
@@ -54,7 +53,8 @@ namespace SkyEngine
 		
 		inline static Application* Get();
 	protected:
-		CUILayer* UILayer;
+		// TODO: Remove since viewport layer should make game UI canvas
+		CUICanvas* UILayer;
 		CViewportLayer* ViewportLayer;
 		
 		TPointer<CEngineWindow> ApplicationWindow;

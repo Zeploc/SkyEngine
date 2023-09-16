@@ -1,8 +1,7 @@
 ﻿#include "LayerInfoWidget.h"
 
 #include "Dependencies/ImGui/imgui.h"
-#include "Layers/Layer.h"
-#include "Layers/UILayer.h"
+#include "Canvas/Canvas.h"
 #include "Platform/Window/EngineWindow.h"
 
 void CLayerInfoWidget::DrawUI(const SCanvas& DrawCanvas)
@@ -17,7 +16,7 @@ void CLayerInfoWidget::DrawUI(const SCanvas& DrawCanvas)
 	ImGui::SetNextWindowBgAlpha(0.3f); // Transparent background
 	if (ImGui::Begin("Example: Simple Overlay", &bOpen, (corner != -1 ? ImGuiWindowFlags_NoMove : 0) | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav))
 	{
-		CLayer* CapturedLayer = OwningLayer->GetOwningWindow().lock()->GetCapturedLayer();
+		CCanvas* CapturedLayer = OwningCanvas->GetOwningWindow().lock()->GetCapturedLayer();
 		if (CapturedLayer)
 		{			
 			ImGui::Text("CAPTURED LAYER:");

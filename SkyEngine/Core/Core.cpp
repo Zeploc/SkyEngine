@@ -8,7 +8,7 @@
 
 #include "Input/CXBOXController.h"
 
-bool __M_Assert(const char* expr_str, bool expr, const char* file, int line, const char* msg)
+bool __M_Ensure(const char* expr_str, bool expr, const char* file, int line, const char* msg)
 {
 	if (!expr)
 	{
@@ -26,4 +26,12 @@ bool __M_Assert(const char* expr_str, bool expr, const char* file, int line, con
 	}
 	//##__VA_ARGS__
 	return expr;
+}
+
+void __M_Assert(const char* expr_str, bool expr, const char* file, int line, const char* msg)
+{
+	if (!__M_Ensure(expr_str, expr, file, line, msg))
+	{
+		/* TODO: Error*/
+	}
 }

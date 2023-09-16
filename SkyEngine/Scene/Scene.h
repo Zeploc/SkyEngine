@@ -42,7 +42,12 @@ public:
 	void DestroyUIElement(TPointer<UIElement> _Element);
 
 	virtual void Update();
-	virtual void OnEvent(CEvent& Event);
+	virtual bool OnMouseButtonPressed(int Button, int Mods);
+	virtual bool OnMouseButtonReleased(int Button, int Mods);
+	virtual bool OnMouseMoved(SVector2i MousePos);
+	virtual bool OnMouseScrolled(float XOffset, float YOffset);
+	virtual bool OnKeyPressed(int KeyCode, int Mods, int RepeatCount);
+	virtual bool OnKeyReleased(int KeyCode, int Mods);
 
 	virtual void OnLoadScene();
 
@@ -58,12 +63,6 @@ public:
 	std::vector<TPointer<UIElement>> UIElements;
 	
 protected:
-	virtual bool OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event);
-	virtual bool OnMouseButtonReleasedEvent(CMouseButtonReleasedEvent& Event);
-	virtual bool OnMouseMovedEvent(CMouseMovedEvent& Event);
-	virtual bool OnMouseScrolledEvent(CMouseScrolledEvent& Event);
-	virtual bool OnKeyPressedEvent(CKeyPressedEvent& Event);
-	virtual bool OnKeyReleasedEvent(CKeyReleasedEvent& Event);
 	
 	std::vector<TPointer<Entity>> DestroyedEntities;
 	std::vector<TPointer<UIElement>> UIElementsToBeDestroyed;

@@ -8,6 +8,7 @@
 #include "Math/Vector4.h"
 #include "Math/Vector2.h"
 
+class IFramebuffer;
 class CEngineWindow;
 class UIElement;
 class Entity;
@@ -19,6 +20,7 @@ class CTexture;
 class IGraphicsInstance : public std::enable_shared_from_this<IGraphicsInstance>
 {
 public:
+	IGraphicsInstance();
 	virtual ~IGraphicsInstance() = default;
 
 	void InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender);
@@ -28,9 +30,12 @@ public:
 	virtual void CleanupMesh(TPointer<CMeshComponent> Mesh) = 0;
 	virtual void BindShader(uint32_t ShaderProgramID) = 0;
 	virtual void ApplyMaterialFlags(TPointer<CMaterialInterface> InMaterial) = 0;
-	
+
+	// TODO: Remove passing window
 	virtual void PreRender(TPointer<CEngineWindow> GraphicsWindow) {}
 	virtual void PostRender(TPointer<CEngineWindow> GraphicsWindow) {}
+	
+	// TODO: Resize function
 	
 	virtual void SetWireframeMode(bool bInWireframeEnabled) = 0;
 	/* Where Y=0 is the top of the screen */
@@ -52,6 +57,8 @@ public:
 	virtual void PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute) = 0;
 	virtual void PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture> Attribute) = 0;
 protected:
+	TPointer<IFramebuffer> Framebuffer;
+	SVector2ui InstanceSize;
 };
 
 // template <typename T>

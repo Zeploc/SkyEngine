@@ -21,9 +21,19 @@ template<typename T>
 using TPointer = std::shared_ptr<T>;
 template<typename T>
 using TWeakPointer = std::weak_ptr<T>;
+template<typename T, typename ... Args>
+constexpr TPointer<T> CreatePointer(Args&& ... args)
+{
+	return std::make_shared<T>(std::forward<Args>(args)...);
+}
 
 template<typename T>
 using TScope = std::unique_ptr<T>;
+template<typename T, typename ... Args>
+constexpr TScope<T> CreateScope(Args&& ... args)
+{
+	return std::make_unique<T>(std::forward<Args>(args)...);
+}
 
 #define SE_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 
@@ -33,13 +43,13 @@ using TScope = std::unique_ptr<T>;
 
 #ifdef SE_ENABLE_ASSERTS
 	#define ASSERT(x, ...)\
-	{ if (!x) { /* TODO: Error*/__M_Assert(#x, x, __FILE__, __LINE__, __VA_ARGS__); __debugbreak();}}
-	#define ASSERT_CORE(x, ...)\
-	{ if (!x) { /* TODO: Error*/__M_Assert(#x, x, __FILE__, __LINE__, __VA_ARGS__); __debugbreak();}}
-	#define ENSURE(x, ...)\
 	 __M_Assert(#x, x, __FILE__, __LINE__, __VA_ARGS__)
+	#define ASSERT_CORE(x, ...)\
+	 __M_Assert(#x, x, __FILE__, __LINE__, __VA_ARGS__)
+	#define ENSURE(x, ...)\
+	 __M_Ensure(#x, x, __FILE__, __LINE__, __VA_ARGS__)
 	#define ENSURE_CORE(x, ...)\
-	__M_Assert(#x, x, __FILE__, __LINE__, __VA_ARGS__)
+	__M_Ensure(#x, x, __FILE__, __LINE__, __VA_ARGS__)
 #else
 	#define ASSERT(x, ...)
 	#define ASSERT_CORE(x, ...)
@@ -49,10 +59,11 @@ using TScope = std::unique_ptr<T>;
 
 #ifndef NDEBUG
 #   define ensure(Expr, Msg) \
-__M_Assert(#Expr, Expr, __FILE__, __LINE__, Msg); \
+__M_Ensure(#Expr, Expr, __FILE__, __LINE__, Msg); \
 _ASSERTE(Expr)
 #else
 #   define M_Assert(Expr, Msg) ;
 #endif
 
-ENGINE_API bool __M_Assert(const char* expr_str, bool expr, const char* file, int line, const char* msg);
+ENGINE_API bool __M_Ensure(const char* expr_str, bool expr, const char* file, int line, const char* msg);
+ENGINE_API void __M_Assert(const char* expr_str, bool expr, const char* file, int line, const char* msg);

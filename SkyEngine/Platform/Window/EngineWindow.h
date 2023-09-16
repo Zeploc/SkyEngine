@@ -6,7 +6,7 @@
 #include "Core/Delegates.h"
 #include "Events/Event.h"
 #include "Input/Input.h"
-#include "Layers/LayerStack.h"
+#include "Canvas/CanvasManager.h"
 #include "Math/Vector2.h"
 
 class IGraphicsWindow;
@@ -22,6 +22,7 @@ class ENGINE_API CEngineWindow : public std::enable_shared_from_this<CEngineWind
 {
 public:
 	CEngineWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bInFullScreen);
+	bool SetupWindow();
 	virtual ~CEngineWindow();
 	static TPointer<CEngineWindow> CreateEngineWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bInFullScreen = false);
 	virtual void CreateGraphicsInstance();
@@ -50,15 +51,16 @@ public:
 	virtual void Update();
 
 	void SubscribeEventListener(IEventListener* NewEventListener);
-	void PushLayer(CLayer* InLayer);
-	void PushOverlay(CLayer* InLayer);
+	void PushLayer(CCanvas* InLayer);
+	void PushOverlay(CCanvas* InLayer);
 
 	// TODO: Pass in window in delegate
 	FMulticastDelegate OnFocusChangedDelete;	
 
 	TPointer<IGraphicsInstance> GetGraphicsInstance() { return GraphicsInstance; }
 	CInput& GetInput() { return Input; }
-	CLayer* GetCapturedLayer() const { return CapturedLayer; }
+	CCanvas* GetCapturedLayer() const { return CapturedLayer; }
+	CCanvasManager& GetCanvasManager() { return CanvasManager; }
 
 protected:
 	virtual void OnWindowResized(int NewWidth, int NewHeight);
@@ -72,7 +74,7 @@ protected:
 	virtual void ScrollWheel(float X, float Y);
 
 	/* Returns the handled layer, if there was one */
-	virtual CLayer* SendEvent(CEvent& Event);
+	virtual CCanvas* SendEvent(CEvent& Event);
 	
 	TPointer<IGraphicsInstance> GraphicsInstance;
 	std::string WindowName;
@@ -83,7 +85,8 @@ protected:
 	bool bIsFocused = true;
 	CInput Input;
 	
-	CLayerStack LayerStack;
-	CLayer* CapturedLayer = nullptr;
+	CCanvasManager CanvasManager;
+	// TODO: Move captured "layer" (canvas) to canvas manager
+	CCanvas* CapturedLayer = nullptr;
 	std::vector<IEventListener*> EventListeners;
 };

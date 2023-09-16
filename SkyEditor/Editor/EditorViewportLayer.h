@@ -1,7 +1,7 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
-#include "Layers/ViewportLayer.h"
+#include "Canvas/ViewportLayer.h"
 #include "Scene/EditorScene.h"
 
 class CUIWidget;
@@ -17,20 +17,19 @@ public:
 	void AddViewportWidget(TPointer<CUIWidget> InWidget);
 	SVector2i GetViewportSize() override;
 	SVector2i GetViewportPosition() override;
-	void OnEvent(CEvent& Event) override;
 	
 	TPointer<Entity> GetSelectedEntity() const { return SelectedEntity; }
 	void SelectEntity(TPointer<Entity> HitEntity);
 
 protected:
-	bool OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event);
-	bool OnMouseButtonReleasedEvent(CMouseButtonReleasedEvent& Event);
-	bool OnMouseMovedEvent(CMouseMovedEvent& Event);
-	bool OnMouseScrolledEvent(CMouseScrolledEvent& Event);
-	bool OnKeyPressedEvent(CKeyPressedEvent& Event);
-	bool OnKeyTypedEvent(CKeyTypedEvent& Event);
-	bool OnKeyReleasedEvent(CKeyReleasedEvent& Event);
-	bool OnWindowResizeEvent(CWindowResizeEvent& Event);
+	bool OnMouseButtonPressed(int Button, int Mods) override;
+	bool OnMouseButtonReleased(int Button, int Mods) override;
+	bool OnMouseMoved(SVector2i MousePos) override;
+	bool OnMouseScrolled(float XOffset, float YOffset) override;
+	bool OnKeyPressed(int KeyCode, int Mods, int RepeatCount) override;
+	bool OnKeyTyped(int KeyCode, int Mods) override;
+	bool OnKeyReleased(int KeyCode, int Mods) override;
+	bool OnWindowResize(unsigned int Width, unsigned int Height) override;
 	
 
 	void UpdateSelectedEntity();
@@ -39,6 +38,8 @@ protected:
 	TPointer<EditorScene> EditorScene;
 
 	TPointer<Entity> SelectedEntity;
+	int GizmoMode = -1;
+	int GizmoTransformSpace = 0;
 	
 	float CurrentFocusDistance = 7.0f;
 	

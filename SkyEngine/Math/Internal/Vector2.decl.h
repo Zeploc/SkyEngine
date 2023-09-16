@@ -129,3 +129,4 @@ protected:
 typedef TVector2<float> SVector2;
 typedef TVector2<float> SVector2f;
 typedef TVector2<int> SVector2i;
+typedef TVector2<uint32_t> SVector2ui;

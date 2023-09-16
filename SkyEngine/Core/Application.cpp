@@ -11,10 +11,9 @@
 #include "Input/Input.h"
 #include "Sound/SoundManager.h"
 #include "System/LogManager.h"
-#include "Layers/Layer.h"
-#include "Layers/LayerStack.h"
-#include "Layers/UILayer.h"
-#include "Layers/ViewportLayer.h"
+#include "Canvas/Canvas.h"
+#include "Canvas/UICanvas.h"
+#include "Canvas/ViewportLayer.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Platform/Windows/WindowsPlatform.h"
 #include "Render/Shaders/ShaderManager.h"
@@ -66,7 +65,7 @@ namespace SkyEngine
 
 		SetupViewportLayer();
 		ApplicationWindow->PushLayer(ViewportLayer);
-		UILayer = new CUILayer(ApplicationWindow);
+		UILayer = new CUICanvas(ApplicationWindow);
 		ApplicationWindow->PushOverlay(UILayer);	
 		
 		return true;

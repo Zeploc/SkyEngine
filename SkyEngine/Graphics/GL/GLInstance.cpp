@@ -42,6 +42,11 @@ GLInstance::GLInstance()
 		
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	SFramebufferSpecification FramebufferSpecification;
+	FramebufferSpecification.Size = InstanceSize;
+	Framebuffer = IFramebuffer::Create(FramebufferSpecification);
+	// TODO: Resize function updates/invalidates frame buffer
 }
 
 void GLInstance::PreRender(TPointer<CEngineWindow> GraphicsWindow)

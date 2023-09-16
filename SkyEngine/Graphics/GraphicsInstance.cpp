@@ -3,10 +3,15 @@
 #include "SEPCH.h"
 #include "GraphicsInstance.h"
 
+#include "Framebuffer.h"
 #include "Entity/Entity.h"
 #include "Render/Materials/InternalMaterial.h"
 #include "Render/Shaders/Shader.h"
 #include "UI/Legacy/UIElement.h"
+
+IGraphicsInstance::IGraphicsInstance()
+{
+}
 
 void IGraphicsInstance::InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender)
 {

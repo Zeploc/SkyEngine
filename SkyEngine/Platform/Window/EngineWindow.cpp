@@ -10,7 +10,7 @@
 #include "Graphics/GraphicsAPI.h"
 #include "Graphics/GraphicsInstance.h"
 #include "Input/Input.h"
-#include "Layers/Layer.h"
+#include "Canvas/Canvas.h"
 #include "Platform/PlatformInterface.h"
 #include "System/TimeManager.h"
 
@@ -21,12 +21,27 @@ CEngineWindow::CEngineWindow(const std::string& InWindowName, SVector2i InWindow
 	bFullscreen = bInFullScreen;
 }
 
+bool CEngineWindow::SetupWindow()
+{
+	CreateGraphicsInstance();	
+	if (!GetGraphicsInstance())
+	{
+		return false;
+	}
+	// The input function registration
+	Input.Init(shared_from_this());
+	
+	CanvasManager.SetupCanvasManager();
+
+	return true;
+}
+
 CEngineWindow::~CEngineWindow()
 {
 	GraphicsInstance.reset();
 	EventListeners.clear();	
 		
-	for (CLayer* Layer : LayerStack)
+	for (CCanvas* Layer : CanvasManager)
 	{
 		Layer->OnDetach();
 	}
@@ -35,13 +50,11 @@ CEngineWindow::~CEngineWindow()
 TPointer<CEngineWindow> CEngineWindow::CreateEngineWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bInFullScreen)
 {	
 	TPointer<CEngineWindow> NewWindow = GetApplication()->PlatformInterface->CreateNewWindow(InWindowName, InWindowSize, bInFullScreen);
-	NewWindow->CreateGraphicsInstance();	
-	if (!NewWindow->GetGraphicsInstance())
-	{
+	if (!NewWindow->SetupWindow())
+	{	
 		NewWindow.reset();
 	}
-	// The input function registration
-	NewWindow->Input.Init(NewWindow);
+	
 	return NewWindow;
 }
 
@@ -63,7 +76,7 @@ void CEngineWindow::PostRender()
 void CEngineWindow::Render()
 {
 	PreRender();
-	for (CLayer* Layer : LayerStack)
+	for (CCanvas* Layer : CanvasManager)
 	{
 		Layer->OnRender();
 	}
@@ -75,7 +88,7 @@ void CEngineWindow::Update()
 	if (CTimeManager::CanTickThisFrame())
 	{
 		// TODO: Once linking events system, would work backwards in layer based on highest first
-		for (CLayer* Layer : LayerStack)
+		for (CCanvas* Layer : CanvasManager)
 		{
 			Layer->OnUpdate();
 		}
@@ -103,7 +116,7 @@ void CEngineWindow::MouseButtonPress(int button, CInput::KeyEventType EventType,
 		MouseEvent = &ButtonReleasedEvent;
 	}
 
-	CLayer* NewCapturedLayer = SendEvent(*MouseEvent);
+	CCanvas* NewCapturedLayer = SendEvent(*MouseEvent);
 	if (NewCapturedLayer)
 	{
 		if (EventType == CInput::Pressed)
@@ -169,7 +182,7 @@ void CEngineWindow::OnWindowResized(int NewWidth, int NewHeight)
 	SendEvent(ResizeEvent);
 }
 
-CLayer* CEngineWindow::SendEvent(CEvent& Event)
+CCanvas* CEngineWindow::SendEvent(CEvent& Event)
 {
 	for (IEventListener* EventListener : EventListeners)
 	{
@@ -181,8 +194,8 @@ CLayer* CEngineWindow::SendEvent(CEvent& Event)
 		return CapturedLayer;
 	}
 	
-	CLayer* HandledLayer = nullptr;
-	for (auto it = LayerStack.end(); it != LayerStack.begin();)
+	CCanvas* HandledLayer = nullptr;
+	for (auto it = CanvasManager.end(); it != CanvasManager.begin();)
 	{
 		(*--it)->OnEvent(Event);
 		const bool bHandledEvent = Event.WasHandled();
@@ -215,15 +228,15 @@ void CEngineWindow::SubscribeEventListener(IEventListener* NewEventListener)
 	EventListeners.push_back(NewEventListener);
 }
 
-void CEngineWindow::PushLayer(CLayer* InLayer)
+void CEngineWindow::PushLayer(CCanvas* InLayer)
 {
-	LayerStack.PushLayer(InLayer);
+	CanvasManager.PushLayer(InLayer);
 	InLayer->OnAttach();
 }
 
-void CEngineWindow::PushOverlay(CLayer* InLayer)
+void CEngineWindow::PushOverlay(CCanvas* InLayer)
 {
-	LayerStack.PushOverlay(InLayer);
+	CanvasManager.PushOverlay(InLayer);
 	InLayer->OnAttach();
 }
 
