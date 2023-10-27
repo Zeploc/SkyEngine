@@ -12,8 +12,9 @@ inline EditorApplication* EditorApp = nullptr;
 
 class EditorApplication : public SkyEngine::Application
 {
-public:	
-	TPointer<CConsoleLog> ConsoleLog;
+public:
+	// TODO: Swap to shared pointer
+	CConsoleLog* ConsoleLog = nullptr;
 	
 	EditorApplication();
 	~EditorApplication() {}

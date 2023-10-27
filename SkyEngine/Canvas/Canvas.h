@@ -7,6 +7,7 @@
 #include "Events/ApplicationEvent.h"
 #include "Events/KeyEvent.h"
 #include "Events/MouseEvent.h"
+#include "Math/Internal/Vector2.decl.h"
 
 #pragma once
 
@@ -19,29 +20,36 @@ class CEngineWindow;
 class ENGINE_API CCanvas : public std::enable_shared_from_this<CCanvas>
 {
 public:
-	CCanvas(TWeakPointer<CEngineWindow> InOwningWindow, const std::string& InDebugName = "Layer");
+	CCanvas(TWeakPointer<CEngineWindow> InOwningWindow, const std::string& InCanvasName = "New Canvas");
 	virtual ~CCanvas();
 
 	virtual void OnAttach() {}
 	virtual void OnDetach() {}
 	virtual void OnUpdate() {}
 	void OnEvent(CEvent& Event);
-	virtual void OnRender() {}
-	inline const std::string& GetName() const { return DebugName; }
+	void Render();
+	inline const std::string& GetName() const { return CanvasName; }
 	TWeakPointer<CEngineWindow> GetOwningWindow() const { return OwningWindow; }
 
 protected:
-	virtual bool OnMouseButtonPressed(int Button, int Mods);
-	virtual bool OnMouseButtonReleased(int Button, int Mods);
+	virtual bool OnMouseButtonPressed(int MouseButton, int Mods);
+	virtual bool OnMouseButtonReleased(int MouseButton, int Mods);
 	virtual bool OnMouseMoved(SVector2i MousePos);
 	virtual bool OnMouseScrolled(float XOffset, float YOffset);
 	virtual bool OnKeyPressed(int KeyCode, int Mods, int RepeatCount);
 	virtual bool OnKeyTyped(int KeyCode, int Mods);
 	virtual bool OnKeyReleased(int KeyCode, int Mods);
 	virtual bool OnWindowResize(unsigned int Width, unsigned int Height);
+protected:
+	
+	virtual bool PreRender();
+	virtual void OnRender() {}
+	virtual void PostRender();
 	
 	TWeakPointer<CEngineWindow> OwningWindow;
-	std::string DebugName;
+	std::string CanvasName;
+	
+	SVector2 StartingSize;
 
 private:
 	virtual bool OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event);

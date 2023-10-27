@@ -8,49 +8,39 @@
 #include "Entity/Entity.h"
 #include "Scene/SceneManager.h"
 
-CSceneOutliner::CSceneOutliner()
+CSceneOutliner::CSceneOutliner(TWeakPointer<CEngineWindow> InOwningWindow)
+: CUICanvas(InOwningWindow, "Scene Outliner")
 {
 	// TODO: Remove once redundant
-    EditorScene = std::static_pointer_cast<class EditorScene>(SceneManager::GetInstance()->GetCurrentScene());    
+    EditorScene = std::static_pointer_cast<class EditorScene>(SceneManager::GetInstance()->GetCurrentScene());
+	StartingSize = {430, 450};    
 }
 
-void CSceneOutliner::DrawUI(const SCanvas& DrawCanvas)
+void CSceneOutliner::OnRender()
 {
-    static bool bOpen = true;
-    ImGui::SetNextWindowSize(ImVec2(430,450), ImGuiCond_FirstUseEver);
-    if (!ImGui::Begin("Scene Outliner", &bOpen))
-    {
-        ImGui::End();
-        return;
-    }
-
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2,2));
-    
-    if (ImGui::BeginListBox("##SceneOutlinerEntityList", ImVec2(-FLT_MIN, -FLT_MIN)))
-    {
-        const TPointer<Entity> SelectedEntity = EditorApp->EditorViewportLayer->GetSelectedEntity();
-        TPointer<Entity> NewSelectedEntity = nullptr;
-        for (TPointer<Entity> Entity : EditorScene->Entities)
-        {
-            // TODO: Temp until gizmo updated
-            if (Entity == EditorScene->TransformationWidget->XMoveTransform ||
-                Entity == EditorScene->TransformationWidget->YMoveTransform ||
-                Entity == EditorScene->TransformationWidget->ZMoveTransform)
-            {
-                continue;
-            }
-            if (ImGui::Selectable(Entity->GetEntityName().c_str(), Entity == SelectedEntity))
-            {
-                NewSelectedEntity = Entity;
-            }
-        }
-        if (NewSelectedEntity)
-        {
-            EditorApp->EditorViewportLayer->SelectEntity(NewSelectedEntity);
-        }
-        ImGui::EndListBox();
-    }
-
-    ImGui::PopStyleVar();
-    ImGui::End();
+	// TODO: Convert to widget and use base render
+	if (ImGui::BeginListBox("##SceneOutlinerEntityList", ImVec2(-FLT_MIN, -FLT_MIN)))
+	{
+		const TPointer<Entity> SelectedEntity = EditorApp->EditorViewportLayer->GetSelectedEntity();
+		TPointer<Entity> NewSelectedEntity = nullptr;
+		for (TPointer<Entity> Entity : EditorScene->Entities)
+		{
+			// TODO: Temp until gizmo updated
+			if (Entity == EditorScene->TransformationWidget->XMoveTransform ||
+				Entity == EditorScene->TransformationWidget->YMoveTransform ||
+				Entity == EditorScene->TransformationWidget->ZMoveTransform)
+			{
+				continue;
+			}
+			if (ImGui::Selectable(Entity->GetEntityName().c_str(), Entity == SelectedEntity))
+			{
+				NewSelectedEntity = Entity;
+			}
+		}
+		if (NewSelectedEntity)
+		{
+			EditorApp->EditorViewportLayer->SelectEntity(NewSelectedEntity);
+		}
+		ImGui::EndListBox();
+	}
 }

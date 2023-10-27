@@ -40,12 +40,16 @@ bool EditorApplication::ApplicationSetup()
 	}
 	TPointer<CLayerInfoWidget> LayerInfoWidget = std::make_shared<CLayerInfoWidget>();
 	EditorViewportLayer->AddViewportWidget(LayerInfoWidget);
-	TPointer<CEntityPropertiesPanel> EntityPropertiesPanel = std::make_shared<CEntityPropertiesPanel>();
-	UILayer->AddWidget(EntityPropertiesPanel);
-	TPointer<CSceneOutliner> SceneOutliner = std::make_shared<CSceneOutliner>();
-	UILayer->AddWidget(SceneOutliner);
-	ConsoleLog = std::make_shared<CConsoleLog>();
-	UILayer->AddWidget(ConsoleLog);
+	// TPointer<CEntityPropertiesPanel> EntityPropertiesPanel = std::make_shared<CEntityPropertiesPanel>(ApplicationWindow);
+	CEntityPropertiesPanel* EntityPropertiesPanel = new CEntityPropertiesPanel(ApplicationWindow);
+	ApplicationWindow->PushLayer(EntityPropertiesPanel);
+	// UILayer->AddWidget(EntityPropertiesPanel);
+	// TPointer<CSceneOutliner> SceneOutliner = std::make_shared<CSceneOutliner>(ApplicationWindow);
+	CSceneOutliner* SceneOutliner = new CSceneOutliner(ApplicationWindow);
+	ApplicationWindow->PushLayer(SceneOutliner);
+	// ConsoleLog = std::make_shared<CConsoleLog>();
+	ConsoleLog = new CConsoleLog(ApplicationWindow);
+	ApplicationWindow->PushLayer(ConsoleLog);
 	
 	// Needed to be in this project to have context global variable
 	ImGui::SetCurrentContext(ApplicationWindow->GetCanvasManager().GetGuiContext());

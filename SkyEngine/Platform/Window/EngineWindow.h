@@ -59,7 +59,6 @@ public:
 
 	TPointer<IGraphicsInstance> GetGraphicsInstance() { return GraphicsInstance; }
 	CInput& GetInput() { return Input; }
-	CCanvas* GetCapturedLayer() const { return CapturedLayer; }
 	CCanvasManager& GetCanvasManager() { return CanvasManager; }
 
 protected:
@@ -74,7 +73,7 @@ protected:
 	virtual void ScrollWheel(float X, float Y);
 
 	/* Returns the handled layer, if there was one */
-	virtual CCanvas* SendEvent(CEvent& Event);
+	virtual void SendEvent(CEvent& Event);
 	
 	TPointer<IGraphicsInstance> GraphicsInstance;
 	std::string WindowName;
@@ -86,7 +85,5 @@ protected:
 	CInput Input;
 	
 	CCanvasManager CanvasManager;
-	// TODO: Move captured "layer" (canvas) to canvas manager
-	CCanvas* CapturedLayer = nullptr;
 	std::vector<IEventListener*> EventListeners;
 };

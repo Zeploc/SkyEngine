@@ -33,7 +33,7 @@ namespace SkyEngine
 	{
 		ensure(!EngineApplication, "Application already exist!");
 		EngineApplication = this;
-		MainWindowSize = SVector2i(1920, 1080);
+		MainWindowSize = SVector2i(1280, 720);
 		GraphicsApiType = EGraphicsAPI::OPENGL;
 	}
 
@@ -65,8 +65,6 @@ namespace SkyEngine
 
 		SetupViewportLayer();
 		ApplicationWindow->PushLayer(ViewportLayer);
-		UILayer = new CUICanvas(ApplicationWindow);
-		ApplicationWindow->PushOverlay(UILayer);	
 		
 		return true;
 	}

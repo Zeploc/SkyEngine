@@ -1,16 +1,16 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
+#include "Canvas/UICanvas.h"
 #include "Dependencies/ImGui/imgui.h"
-#include "UI/UIWidget.h"
 
-class CConsoleLog : public CUIWidget
+class CConsoleLog : public CUICanvas
 {
 public:
-	CConsoleLog();
+	CConsoleLog(TWeakPointer<CEngineWindow> InOwningWindow);
 	void Clear();
 	void AddLog(const char* fmt, ...);
-	void DrawUI(const SCanvas& DrawCanvas) override;
+	virtual void OnRender() override;
 
 protected:
 	ImGuiTextBuffer     Buf;

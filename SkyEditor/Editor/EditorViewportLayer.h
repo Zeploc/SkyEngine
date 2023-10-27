@@ -22,8 +22,8 @@ public:
 	void SelectEntity(TPointer<Entity> HitEntity);
 
 protected:
-	bool OnMouseButtonPressed(int Button, int Mods) override;
-	bool OnMouseButtonReleased(int Button, int Mods) override;
+	bool OnMouseButtonPressed(int MouseButton, int Mods) override;
+	bool OnMouseButtonReleased(int MouseButton, int Mods) override;
 	bool OnMouseMoved(SVector2i MousePos) override;
 	bool OnMouseScrolled(float XOffset, float YOffset) override;
 	bool OnKeyPressed(int KeyCode, int Mods, int RepeatCount) override;
@@ -31,14 +31,14 @@ protected:
 	bool OnKeyReleased(int KeyCode, int Mods) override;
 	bool OnWindowResize(unsigned int Width, unsigned int Height) override;
 	
-
 	void UpdateSelectedEntity();
-	
+	bool PreRender() override;
+
 	std::vector<TPointer<CUIWidget>> Widgets;
 	TPointer<EditorScene> EditorScene;
 
 	TPointer<Entity> SelectedEntity;
-	int GizmoMode = -1;
+	int GizmoMode = 7;
 	int GizmoTransformSpace = 0;
 	
 	float CurrentFocusDistance = 7.0f;
@@ -49,4 +49,5 @@ protected:
 	bool bWireframe = false;
 	
 	SVector2i PreviousMousePosition;
+	SVector2 LastSize;
 };

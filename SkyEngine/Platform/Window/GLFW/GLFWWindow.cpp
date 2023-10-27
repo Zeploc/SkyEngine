@@ -7,6 +7,8 @@
 #include <glew/glew.h>
 #include <Render/Shaders/ShaderManager.h>
 
+#include "Graphics/Framebuffer.h"
+#include "Graphics/GraphicsInstance.h"
 #include "Input/CXBOXController.h"
 #include "Input/Input.h"
 #include "System/LogManager.h"

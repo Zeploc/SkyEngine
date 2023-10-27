@@ -75,14 +75,14 @@ SVector2i CViewportLayer::GetViewportPosition()
 	return {0,0};
 }
 
-bool CViewportLayer::OnMouseButtonPressed(int Button, int Mods)
+bool CViewportLayer::OnMouseButtonPressed(int MouseButton, int Mods)
 {
-	return SceneManager::GetInstance()->GetCurrentScene()->OnMouseButtonPressed(Button, Mods);
+	return SceneManager::GetInstance()->GetCurrentScene()->OnMouseButtonPressed(MouseButton, Mods);
 }
 
-bool CViewportLayer::OnMouseButtonReleased(int Button, int Mods)
+bool CViewportLayer::OnMouseButtonReleased(int MouseButton, int Mods)
 {
-	return SceneManager::GetInstance()->GetCurrentScene()->OnMouseButtonReleased(Button, Mods);
+	return SceneManager::GetInstance()->GetCurrentScene()->OnMouseButtonReleased(MouseButton, Mods);
 }
 
 bool CViewportLayer::OnMouseMoved(SVector2i MousePos)

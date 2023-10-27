@@ -25,8 +25,8 @@ public:
 	virtual SVector2i GetViewportPosition();
 	
 protected:
-	bool OnMouseButtonPressed(int Button, int Mods) override;
-	bool OnMouseButtonReleased(int Button, int Mods) override;
+	bool OnMouseButtonPressed(int MouseButton, int Mods) override;
+	bool OnMouseButtonReleased(int MouseButton, int Mods) override;
 	bool OnMouseMoved(SVector2i MousePos) override;
 	bool OnMouseScrolled(float XOffset, float YOffset) override;
 	bool OnKeyPressed(int KeyCode, int Mods, int RepeatCount) override;

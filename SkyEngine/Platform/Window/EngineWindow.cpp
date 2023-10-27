@@ -31,7 +31,7 @@ bool CEngineWindow::SetupWindow()
 	// The input function registration
 	Input.Init(shared_from_this());
 	
-	CanvasManager.SetupCanvasManager();
+	CanvasManager.SetupCanvasManager(shared_from_this());
 
 	return true;
 }
@@ -76,10 +76,7 @@ void CEngineWindow::PostRender()
 void CEngineWindow::Render()
 {
 	PreRender();
-	for (CCanvas* Layer : CanvasManager)
-	{
-		Layer->OnRender();
-	}
+	CanvasManager.Render();
 	PostRender();
 }
 
@@ -87,11 +84,7 @@ void CEngineWindow::Update()
 {
 	if (CTimeManager::CanTickThisFrame())
 	{
-		// TODO: Once linking events system, would work backwards in layer based on highest first
-		for (CCanvas* Layer : CanvasManager)
-		{
-			Layer->OnUpdate();
-		}
+		CanvasManager.Update();
 	}
 	Input.Update();
 }
@@ -116,18 +109,7 @@ void CEngineWindow::MouseButtonPress(int button, CInput::KeyEventType EventType,
 		MouseEvent = &ButtonReleasedEvent;
 	}
 
-	CCanvas* NewCapturedLayer = SendEvent(*MouseEvent);
-	if (NewCapturedLayer)
-	{
-		if (EventType == CInput::Pressed)
-		{
-			CapturedLayer = NewCapturedLayer;
-		}
-		else if (NewCapturedLayer == CapturedLayer && MouseEvent->WasHandled())
-		{
-			CapturedLayer = nullptr;
-		}
-	}
+	SendEvent(*MouseEvent);
 }
 
 // TODO: Mod type
@@ -182,30 +164,14 @@ void CEngineWindow::OnWindowResized(int NewWidth, int NewHeight)
 	SendEvent(ResizeEvent);
 }
 
-CCanvas* CEngineWindow::SendEvent(CEvent& Event)
+void CEngineWindow::SendEvent(CEvent& Event)
 {
 	for (IEventListener* EventListener : EventListeners)
 	{
 		EventListener->OnEvent(Event);
 	}
-	if (CapturedLayer)
-	{
-		CapturedLayer->OnEvent(Event);
-		return CapturedLayer;
-	}
 	
-	CCanvas* HandledLayer = nullptr;
-	for (auto it = CanvasManager.end(); it != CanvasManager.begin();)
-	{
-		(*--it)->OnEvent(Event);
-		const bool bHandledEvent = Event.WasHandled();
-		if (bHandledEvent)
-		{
-			HandledLayer = *it;
-			break;
-		}
-	}
-	return HandledLayer;
+	CanvasManager.OnEvent(Event);
 }
 
 void CEngineWindow::SetWindowPosition(SVector2i InPosition)

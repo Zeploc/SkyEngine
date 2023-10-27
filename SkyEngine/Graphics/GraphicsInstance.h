@@ -17,6 +17,7 @@ class CShader;
 class CMaterialInterface;
 class CTexture;
 
+// TODO: MOVE TO GRAPHICS API
 class IGraphicsInstance : public std::enable_shared_from_this<IGraphicsInstance>
 {
 public:
@@ -41,6 +42,8 @@ public:
 	/* Where Y=0 is the top of the screen */
 	virtual void SetRenderViewport(const SVector2i InViewportPosition, const SVector2i InViewportSize) = 0;
 	virtual void RenderImGui() = 0;
+
+	TPointer<IFramebuffer> GetFramebuffer() const { return Framebuffer; }
 	
 	// template <typename T>
 	// void PassAttributeToShader(int32_t ShaderLocation, T Attribute);
@@ -57,6 +60,7 @@ public:
 	virtual void PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute) = 0;
 	virtual void PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture> Attribute) = 0;
 protected:
+	// TODO: Multiple frame buffers (multiple windows, etc)
 	TPointer<IFramebuffer> Framebuffer;
 	SVector2ui InstanceSize;
 };

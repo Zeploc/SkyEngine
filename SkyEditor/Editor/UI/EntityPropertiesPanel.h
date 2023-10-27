@@ -1,15 +1,15 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
-#include "UI/UIWidget.h"
+#include "Canvas/UICanvas.h"
 
 class EditorScene;
 
-class CEntityPropertiesPanel : public CUIWidget
+class CEntityPropertiesPanel : public CUICanvas
 {
 public:
-	CEntityPropertiesPanel();
-	void DrawUI(const SCanvas& DrawCanvas) override;
+	CEntityPropertiesPanel(TWeakPointer<CEngineWindow> InOwningWindow);
+	virtual void OnRender() override;
 
 	TPointer<EditorScene> EditorScene;
 };
