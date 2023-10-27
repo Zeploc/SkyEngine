@@ -27,3 +27,8 @@ TPointer<CEngineWindow> WindowsPlatform::CreateNewWindow(const std::string& InWi
 	}
 	return NewWindow;
 }
+
+double WindowsPlatform::GetTime()
+{
+	return glfwGetTime();
+}

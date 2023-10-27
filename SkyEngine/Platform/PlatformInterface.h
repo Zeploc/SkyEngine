@@ -15,5 +15,8 @@ public:
 	
 	virtual TPointer<CEngineWindow> CreateNewWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bFullScreen) = 0;
 
+	// Get current system time using the highest resolution time source available on the platform
+	virtual double GetTime() = 0;
+
 	virtual std::string GetPlatformDisplayName() = 0;
 };
