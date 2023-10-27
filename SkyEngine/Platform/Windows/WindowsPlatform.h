@@ -11,4 +11,5 @@ public:
 	std::string GetPlatformDisplayName() override;
 	
 	TPointer<CEngineWindow> CreateNewWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bFullScreen) override;
+	double GetTime() override;
 };

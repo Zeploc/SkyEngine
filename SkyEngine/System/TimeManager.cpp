@@ -6,6 +6,8 @@
 #include <chrono>
 
 #include "LogManager.h"
+#include "Core/Application.h"
+#include "Platform/PlatformInterface.h"
 
 using std::chrono::milliseconds;
 using std::chrono::system_clock;
@@ -28,12 +30,18 @@ void CTimeManager::Start()
 {		
 	srand(unsigned int(time(NULL)));
 	StartSystemTime = InternalGetSystemTime();
+	SystemTime = StartSystemTime;
 }
 
 void CTimeManager::Update()
 {
-	const double DoubleDeltaTime = InternalGetSystemTime() - LastSystemTime;
+	LastSystemTime = SystemTime;
+	SystemTime = InternalGetSystemTime();
+	
+	const double DoubleDeltaTime = SystemTime - LastSystemTime;
 	CurrentFrameTime += DoubleDeltaTime;
+	DeltaTime = static_cast<float>(DoubleDeltaTime);
+	FPS = 1.0 / DeltaTime;
 
 	if (bTickRateEnabled)
 	{
@@ -49,11 +57,6 @@ void CTimeManager::Update()
 		}
 	}
 	
-	SystemTime = InternalGetSystemTime();
-	LastSystemTime = SystemTime;
-	DeltaTime = static_cast<float>(DoubleDeltaTime);
-	FPS = 1.0 / DeltaTime;
-	
 	// CLogManager::GetInstance()->DisplayLogMessage("delta time " + std::to_string(DeltaTime));
 }
 
@@ -64,7 +67,5 @@ double CTimeManager::GetElapsedEngineTime()
 
 double CTimeManager::InternalGetSystemTime()
 {
-	const auto MillisecondsSinceEpocLong = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-	const double MillisecondsSinceEpoc = static_cast<double>(MillisecondsSinceEpocLong);
-	return MillisecondsSinceEpoc / 1000.0;
+	return GetApplication()->PlatformInterface->GetTime();
 }
