@@ -59,7 +59,8 @@ project "SkyEngine"
       "%{prj.name}/Dependencies/include/freetype",
       "%{IncludeDir.ImGui}",
       "%{IncludeDir.ImGuizmo}",
-        "%{IncludeDir.glm}"
+      "%{IncludeDir.glm}",
+      "%{prj.name}/Dependencies/include/Vulkan"  
    }
 
    libdirs
@@ -74,6 +75,7 @@ project "SkyEngine"
       "%{prj.name}/Dependencies/lib/Win64/vld/",
       "%{prj.name}/Dependencies/lib/Win64/Box2D/",
       "%{prj.name}/Dependencies/lib/Win64/GLFW/",
+      "%{prj.name}/Dependencies/lib/Win64/Vulkan"
    }
 
    links
@@ -88,7 +90,8 @@ project "SkyEngine"
       "glfw3.lib",
       "glfw3dll.lib",
       "soil2.lib",
-      "ImGui"
+      "ImGui",
+      "Vulkan-1.lib"
    }
    
    filter "files:SkyEngine/Dependencies/**.cpp" --%{prj.name} -- Doesn't work

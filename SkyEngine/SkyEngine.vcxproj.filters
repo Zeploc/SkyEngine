@@ -4,6 +4,9 @@
     <Filter Include="Camera">
       <UniqueIdentifier>{CE7141AB-BA13-6C81-A3CE-7FD58F0FF3D1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Canvas">
+      <UniqueIdentifier>{614442AB-4DE6-6C81-36A1-80D522E2F3D1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
@@ -27,9 +30,6 @@
     </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{953A660D-014F-8EBE-CAD0-311E36A48AEF}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Layers">
-      <UniqueIdentifier>{157446C0-0116-7196-EAD0-84EAD611F8E6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Math">
       <UniqueIdentifier>{AFF4887C-9B2B-8A0D-4418-7010302E060F}</UniqueIdentifier>
@@ -92,6 +92,18 @@
   <ItemGroup>
     <ClInclude Include="Camera\CameraManager.h">
       <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Canvas\Canvas.h">
+      <Filter>Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="Canvas\CanvasManager.h">
+      <Filter>Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="Canvas\UICanvas.h">
+      <Filter>Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="Canvas\ViewportLayer.h">
+      <Filter>Canvas</Filter>
     </ClInclude>
     <ClInclude Include="Core\Application.h">
       <Filter>Core</Filter>
@@ -167,18 +179,6 @@
     </ClInclude>
     <ClInclude Include="Input\Input.h">
       <Filter>Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Layers\Layer.h">
-      <Filter>Layers</Filter>
-    </ClInclude>
-    <ClInclude Include="Layers\LayerStack.h">
-      <Filter>Layers</Filter>
-    </ClInclude>
-    <ClInclude Include="Layers\UILayer.h">
-      <Filter>Layers</Filter>
-    </ClInclude>
-    <ClInclude Include="Layers\ViewportLayer.h">
-      <Filter>Layers</Filter>
     </ClInclude>
     <ClInclude Include="Math\Internal\Rotator.decl.h">
       <Filter>Math\Internal</Filter>
@@ -391,6 +391,18 @@
     <ClCompile Include="Camera\CameraManager.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
+    <ClCompile Include="Canvas\Canvas.cpp">
+      <Filter>Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="Canvas\CanvasManager.cpp">
+      <Filter>Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="Canvas\UICanvas.cpp">
+      <Filter>Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="Canvas\ViewportLayer.cpp">
+      <Filter>Canvas</Filter>
+    </ClCompile>
     <ClCompile Include="Core\Application.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -444,18 +456,6 @@
     </ClCompile>
     <ClCompile Include="Input\Input.cpp">
       <Filter>Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Layers\Layer.cpp">
-      <Filter>Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="Layers\LayerStack.cpp">
-      <Filter>Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="Layers\UILayer.cpp">
-      <Filter>Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="Layers\ViewportLayer.cpp">
-      <Filter>Layers</Filter>
     </ClCompile>
     <ClCompile Include="Math\MathLibrary.cpp">
       <Filter>Math</Filter>
