@@ -172,10 +172,10 @@
     <ClInclude Include="Graphics\GL\GLAPI.h" />
     <ClInclude Include="Graphics\GL\GLFramebuffer.h" />
     <ClInclude Include="Graphics\GL\GLIncludes.h" />
-    <ClInclude Include="Graphics\GL\GLInstance.h" />
+    <ClInclude Include="Graphics\GL\GLRenderer.h" />
     <ClInclude Include="Graphics\GL\imgui_impl_opengl3.h" />
     <ClInclude Include="Graphics\GraphicsAPI.h" />
-    <ClInclude Include="Graphics\GraphicsInstance.h" />
+    <ClInclude Include="Graphics\Renderer.h" />
     <ClInclude Include="Input\CXBOXController.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Canvas\Canvas.h" />
@@ -269,10 +269,10 @@
     <ClCompile Include="Graphics\Framebuffer.cpp" />
     <ClCompile Include="Graphics\GL\GLAPI.cpp" />
     <ClCompile Include="Graphics\GL\GLFramebuffer.cpp" />
-    <ClCompile Include="Graphics\GL\GLInstance.cpp" />
+    <ClCompile Include="Graphics\GL\GLRenderer.cpp" />
     <ClCompile Include="Graphics\GL\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Graphics\GraphicsAPI.cpp" />
-    <ClCompile Include="Graphics\GraphicsInstance.cpp" />
+    <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Input\CXBOXController.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Canvas\Canvas.cpp" />

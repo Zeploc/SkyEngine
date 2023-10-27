@@ -5,7 +5,8 @@
 
 #include <glew/glew.h>
 
-#include "Graphics/GraphicsInstance.h"
+#include "Core/Application.h"
+
 
 CUnlitShader::CUnlitShader()
 : CShader("Unlit","Resources/Shaders/UnlitVertexShader.vs", "Resources/Shaders/UnlitFragmentShader.fs")
@@ -27,17 +28,17 @@ bool CUnlitShader::CompileShader()
 	return true;
 }
 
-void CUnlitShader::BindShader(const TPointer<IGraphicsInstance>& InGraphicsInterface)
+void CUnlitShader::BindShader()
 {
-	CShader::BindShader(InGraphicsInterface);
+	CShader::BindShader();
 }
 
-void CUnlitShader::UploadMaterialParameters(const TPointer<IGraphicsInstance>& InGraphicsInstance, const ShaderParameters& InParams)
+void CUnlitShader::UploadMaterialParameters(const ShaderParameters& InParams)
 {
-	InGraphicsInstance->PassAttributeToShader(Params.DiffuseTextureLocation, InParams.DiffuseTexture);
+	GetGraphicsAPI()->PassAttributeToShader(Params.DiffuseTextureLocation, InParams.DiffuseTexture);
 	const bool bHasTexture = InParams.DiffuseTexture != nullptr;
-	InGraphicsInstance->PassAttributeToShader(Params.HasDiffuseTextureLocation, bHasTexture);
-	InGraphicsInstance->PassAttributeToShader(Params.DiffuseColourLocation, InParams.DiffuseColour);
+	GetGraphicsAPI()->PassAttributeToShader(Params.HasDiffuseTextureLocation, bHasTexture);
+	GetGraphicsAPI()->PassAttributeToShader(Params.DiffuseColourLocation, InParams.DiffuseColour);
 }
 
 bool CUnlitShader::HasTexture(const ShaderParameters& InParams)

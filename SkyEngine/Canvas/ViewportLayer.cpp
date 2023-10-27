@@ -4,10 +4,8 @@
 #include "imgui.h"
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"
-#include "Events/ApplicationEvent.h"
+#include "Graphics/Renderer.h"
 #include "Platform/Window/EngineWindow.h"
-#include "Graphics/GraphicsInstance.h"
-#include "Input/Input.h"
 #include "Render/Lighting.h"
 #include "Scene/Scene.h"
 #include "Scene/SceneManager.h"
@@ -29,7 +27,7 @@ void CViewportLayer::OnAttach()
 	
 	Lighting::SetFogColour(SVector4(SkyColour, 1.0f));
 	// TODO: Move sky colour to scene
-	EngineWindow->GetGraphicsInstance()->ClearColour = SkyColour;
+	GetRenderer()->ClearColour = SkyColour;
 	
 	// TODO: Change from singleton to graphics instance
 	CameraManager::GetInstance()->Init(this, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
@@ -60,7 +58,7 @@ void CViewportLayer::OnRender()
 	// }
 	// else
 	
-	SceneManager::GetInstance()->RenderCurrentScene(OwningWindow.lock()->GetGraphicsInstance());
+	SceneManager::GetInstance()->RenderCurrentScene();
 }
 
 SVector2i CViewportLayer::GetViewportSize()

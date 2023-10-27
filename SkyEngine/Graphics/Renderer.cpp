@@ -1,7 +1,7 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #include "SEPCH.h"
-#include "GraphicsInstance.h"
+#include "Renderer.h"
 
 #include "Framebuffer.h"
 #include "Entity/Entity.h"
@@ -9,11 +9,11 @@
 #include "Render/Shaders/Shader.h"
 #include "UI/Legacy/UIElement.h"
 
-IGraphicsInstance::IGraphicsInstance()
+IRenderer::IRenderer()
 {
 }
 
-void IGraphicsInstance::InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender)
+void IRenderer::InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender)
 {
 	TPointer<CMaterialInterface> Material = EntityToRender->EntityMesh->MeshMaterial;
 	if (!MeshesByMaterial.contains(Material))
@@ -24,7 +24,7 @@ void IGraphicsInstance::InsertEntityMeshToRenderList(std::map<TPointer<CMaterial
 	MeshesByMaterial[Material].push_back(EntityToRender->EntityMesh);
 }
 
-void IGraphicsInstance::Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements)
+void IRenderer::Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements)
 {
 	// TODO: Later store in/update list as new meshes added
 	std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>> MeshesByMaterial;
@@ -55,11 +55,11 @@ void IGraphicsInstance::Render(std::vector<TPointer<Entity>> Entities, std::vect
 		if (ActiveShader != Shader)
 		{
 			ActiveShader = Shader;
-			Shader->BindShader(shared_from_this());
+			Shader->BindShader();
 		}
 		
 		// Bind material
-		Material->BindMaterial(shared_from_this());
+		Material->BindMaterial();
 
 		// Draw meshes
 		for (TPointer<CMeshComponent> MeshComponent : MaterialMeshSet.second)

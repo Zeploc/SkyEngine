@@ -11,7 +11,8 @@
 #include <System/Utils.h>
 #include <UI/Legacy/UIButton.h>
 
-#include "Graphics/GraphicsInstance.h"
+#include "Core/Application.h"
+#include "Graphics/Renderer.h"
 #include "Platform/Window/EngineWindow.h"
 
 void EditorWindow::CreateExternalWindow()
@@ -70,7 +71,7 @@ void EditorWindow::RenderWindow()
 {	
 	if (LinkedWindow != EditorWindowManager::GetMainWindow()) // Separate window
 	{
-		LinkedWindow->GetGraphicsInstance()->ClearColour = BackColour;
+		GetRenderer()->ClearColour = BackColour;
 		// LinkedWindow->PreRender();
 		LinkedWindow->Render();
 	}
@@ -78,7 +79,7 @@ void EditorWindow::RenderWindow()
 	{
 		// Position viewport within existing main window
 		const SVector2i MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
-		LinkedWindow->GetGraphicsInstance()->SetRenderViewport({Position.X, MainWindowSize.Y - Position.Y - Size.Y}, {Size.X, Size.Y});
+		GetRenderer()->SetRenderViewport({Position.X, MainWindowSize.Y - Position.Y - Size.Y}, {Size.X, Size.Y});
 	}
 
 	// LinkedWindow->Render({}, UIElements);

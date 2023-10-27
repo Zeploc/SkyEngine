@@ -3,7 +3,7 @@
 #include "SEPCH.h"
 #include "PBRShader.h"
 
-#include "Graphics/GraphicsInstance.h"
+#include "Core/Application.h"
 #include "Render/Lighting.h"
 
 CPBRShader::CPBRShader()
@@ -31,22 +31,22 @@ bool CPBRShader::CompileShader()
 	return true;
 }
 
-void CPBRShader::BindShader(const TPointer<IGraphicsInstance>& InGraphicsInterface)
+void CPBRShader::BindShader()
 {
-	CShader::BindShader(InGraphicsInterface);
+	CShader::BindShader();
 
 	// TODO: Improve with light objects
-	Lighting::PassLightingToShader(InGraphicsInterface);
+	Lighting::PassLightingToShader();
 }
 
-void CPBRShader::UploadMaterialParameters(const TPointer<IGraphicsInstance>& InGraphicsInstance, const ShaderParameters& InParams)
+void CPBRShader::UploadMaterialParameters(const ShaderParameters& InParams)
 {
-	InGraphicsInstance->PassAttributeToShader(Params.DiffuseTextureLocation, InParams.DiffuseTexture);
+	GetGraphicsAPI()->PassAttributeToShader(Params.DiffuseTextureLocation, InParams.DiffuseTexture);
 	const bool bHasTexture = InParams.DiffuseTexture != nullptr;
-	InGraphicsInstance->PassAttributeToShader(Params.HasDiffuseTextureLocation, bHasTexture);
-	InGraphicsInstance->PassAttributeToShader(Params.DiffuseColourLocation, InParams.DiffuseColour);
-	InGraphicsInstance->PassAttributeToShader(Params.SpecularStrengthLocation, InParams.SpecularStrength);
-	InGraphicsInstance->PassAttributeToShader(Params.ShininessLocation, InParams.Shininess);
+	GetGraphicsAPI()->PassAttributeToShader(Params.HasDiffuseTextureLocation, bHasTexture);
+	GetGraphicsAPI()->PassAttributeToShader(Params.DiffuseColourLocation, InParams.DiffuseColour);
+	GetGraphicsAPI()->PassAttributeToShader(Params.SpecularStrengthLocation, InParams.SpecularStrength);
+	GetGraphicsAPI()->PassAttributeToShader(Params.ShininessLocation, InParams.Shininess);
 }
 
 bool CPBRShader::HasTexture(const ShaderParameters& InParams)

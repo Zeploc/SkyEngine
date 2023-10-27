@@ -5,11 +5,9 @@
 #include "EditorApp.h"
 #include "Dependencies/ImGui/imgui_internal.h"
 #include "Dependencies/ImGuizmo/ImGuizmo.h"
-#include "Graphics/GraphicsInstance.h"
+#include "Graphics/Renderer.h"
 #include "Platform/Window/EngineWindow.h"
-#include "Render/Texture.h"
 #include "Scene/SceneManager.h"
-#include "System/LogManager.h"
 #include "UI/UIWidget.h"
 
 CEditorViewportLayer::CEditorViewportLayer(TWeakPointer<CEngineWindow> InOwningWindow)
@@ -64,10 +62,10 @@ void CEditorViewportLayer::OnRender()
 		Widget->DrawUI(ViewportCanvas);
 	}
 	
-	OwningWindow.lock()->GetGraphicsInstance()->SetRenderViewport(SVector2i(ViewportCanvas.Position), SVector2i(ViewportCanvas.Size));
+	GetRenderer()->SetRenderViewport(SVector2i(ViewportCanvas.Position), SVector2i(ViewportCanvas.Size));
 	// OwningWindow.lock()->GetGraphicsInstance()->SetRenderViewport(SVector2i(0,0), SVector2i(1920, 1080));
 
-	TPointer<IFramebuffer> Framebuffer = OwningWindow.lock()->GetGraphicsInstance()->GetFramebuffer();
+	TPointer<IFramebuffer> Framebuffer = GetRenderer()->GetFramebuffer();
 	CameraManager* Camera = CameraManager::GetInstance();
 	// TODO: Update to only setup projection when this node/viewport changes size
 	Camera->SwitchProjection(EProjectionMode::Perspective);
@@ -306,7 +304,7 @@ bool CEditorViewportLayer::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 	{
 		bWireframe = !bWireframe;
 		const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
-		ApplicationWindow->GetGraphicsInstance()->SetWireframeMode(bWireframe);
+		GetRenderer()->SetWireframeMode(bWireframe);
 		return true;
 	}
 	if (KeyCode == GLFW_KEY_Q)

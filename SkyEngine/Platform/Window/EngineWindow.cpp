@@ -8,9 +8,9 @@
 #include "Events/KeyEvent.h"
 #include "Events/MouseEvent.h"
 #include "Graphics/GraphicsAPI.h"
-#include "Graphics/GraphicsInstance.h"
 #include "Input/Input.h"
 #include "Canvas/Canvas.h"
+#include "Graphics/Renderer.h"
 #include "Platform/PlatformInterface.h"
 #include "System/TimeManager.h"
 
@@ -23,11 +23,6 @@ CEngineWindow::CEngineWindow(const std::string& InWindowName, SVector2i InWindow
 
 bool CEngineWindow::SetupWindow()
 {
-	CreateGraphicsInstance();	
-	if (!GetGraphicsInstance())
-	{
-		return false;
-	}
 	// The input function registration
 	Input.Init(shared_from_this());
 	
@@ -38,7 +33,6 @@ bool CEngineWindow::SetupWindow()
 
 CEngineWindow::~CEngineWindow()
 {
-	GraphicsInstance.reset();
 	EventListeners.clear();	
 		
 	for (CCanvas* Layer : CanvasManager)
@@ -58,19 +52,15 @@ TPointer<CEngineWindow> CEngineWindow::CreateEngineWindow(const std::string& InW
 	return NewWindow;
 }
 
-void CEngineWindow::CreateGraphicsInstance()
-{
-	GraphicsInstance = GetGraphicsAPI()->CreateNewInstance();
-}
 
 void CEngineWindow::PreRender()
 {
-	GraphicsInstance->PreRender(shared_from_this());
+	GetRenderer()->PreRender();
 }
 
 void CEngineWindow::PostRender()
 {
-	GraphicsInstance->PostRender(shared_from_this());
+	GetRenderer()->PostRender();
 }
 
 void CEngineWindow::Render()

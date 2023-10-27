@@ -63,7 +63,7 @@ void CMeshComponent::BindMeshData()
 {
 	MeshData MeshData = GetMeshData();
 	IndicesCount = MeshData.GetIndicesCount();
-	vao = GetGraphicsAPI()->CreateBuffer(MeshData);
+	vao = GetGraphicsAPI()->CreateVertexBuffer(MeshData);
 	MeshData.BindData(vao);
 	std::cout << "Created mesh with vao: " << vao << std::endl;
 }

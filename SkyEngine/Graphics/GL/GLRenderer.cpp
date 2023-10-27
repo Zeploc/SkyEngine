@@ -1,10 +1,9 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #include "SEPCH.h"
-#include "GLInstance.h"
+#include "GLRenderer.h"
 
 #include <format>
-#include "GLIncludes.h"
 #include <glm/gtc/type_ptr.inl>
 
 #include "imgui.h"
@@ -20,17 +19,8 @@
 #include "System/LogManager.h"
 #include "UI/Legacy/UIElement.h"
 
-void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
-
-GLInstance::GLInstance()
+GLRenderer::GLRenderer()
 {	
-	glEnable(GL_DEBUG_OUTPUT);
-	// TODO: Debug messages
-	//glDebugMessageCallback(MessageCallback, NULL);
-	// glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
-	
-	// OpenGL init
-	glewInit();
 
 	// TODO: Move to more relevant
 	// Settings Initialised
@@ -42,7 +32,8 @@ GLInstance::GLInstance()
 		
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+	
+	// TODO: Move creation/sizing
 	SFramebufferSpecification FramebufferSpecification;
 	InstanceSize = {1280,720};
 	FramebufferSpecification.Size = InstanceSize;
@@ -50,7 +41,7 @@ GLInstance::GLInstance()
 	// TODO: Resize function updates/invalidates frame buffer
 }
 
-void GLInstance::PreRender(TPointer<CEngineWindow> GraphicsWindow)
+void GLRenderer::PreRender()
 {
 	// glClearColor(ClearColour.R, ClearColour.G, ClearColour.B, 1.0f);
 	// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -60,57 +51,13 @@ void GLInstance::PreRender(TPointer<CEngineWindow> GraphicsWindow)
 	// glViewport(0, 0, WindowSize.X, WindowSize.Y);
 }
 
-void GLInstance::PassAttributeToShader(int32_t ShaderID, float Attribute)
-{
-	glUniform1f(ShaderID, Attribute);
-}
 
-void GLInstance::PassAttributeToShader(int32_t ShaderID, int Attribute)
-{
-	glUniform1i(ShaderID, Attribute);
-}
-
-void GLInstance::PassAttributeToShader(int32_t ShaderID, bool Attribute)
-{
-	glUniform1i(ShaderID, Attribute);
-}
-
-void GLInstance::PassAttributeToShader(int32_t ShaderID, SVector Attribute)
-{
-	glUniform3fv(ShaderID, 1, Attribute.ToValuePtr());
-}
-
-void GLInstance::PassAttributeToShader(int32_t ShaderID, SVector4 Attribute)
-{
-	glUniform4fv(ShaderID, 1, Attribute.ToValuePtr());
-}
-
-void GLInstance::PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute)
-{
-	glUniformMatrix4fv(ShaderLocation, 1, GL_FALSE, value_ptr(Attribute.ToGLM()));
-}
-
-void GLInstance::PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture> Attribute)
-{
-	if (!Attribute || !Attribute->IsValid())
-	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		return;
-	}
-	// Use shader location for index?
-	glEnable(GL_BLEND);
-	// TODO: Handle multiple
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, Attribute->TextureID);	
-}
-
-void GLInstance::SetWireframeMode(bool bInWireframeEnabled)
+void GLRenderer::SetWireframeMode(bool bInWireframeEnabled)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, bInWireframeEnabled ? GL_LINE : GL_FILL);
 }
 
-void GLInstance::SetRenderViewport(const SVector2i InViewportPosition, const SVector2i InViewportSize)
+void GLRenderer::SetRenderViewport(const SVector2i InViewportPosition, const SVector2i InViewportSize)
 {
 	// TODO: Place holder
 	SVector2i WindowSize = GetApplication()->GetApplicationWindow()->GetSize();
@@ -119,24 +66,12 @@ void GLInstance::SetRenderViewport(const SVector2i InViewportPosition, const SVe
 	// glViewport(InViewportPosition.X, (WindowSize.Y - InViewportSize.Y) - InViewportPosition.Y, InViewportSize.X, InViewportSize.Y);
 }
 
-void GLInstance::RenderImGui()
+void GLRenderer::RenderImGui()
 {
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());	
 }
 
-void GLInstance::BindShader(uint32_t ShaderProgramID)
-{
-	// TODO: Check if overhead and not change if current shader program is active
-	glUseProgram(ShaderProgramID);	
-	glFrontFace(GL_CW);
-	// TODO: properly work out where blending should be changed
-	// In case it was enabled
-	glDisable(GL_BLEND);
-	// Clear previous texture?
-	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-void GLInstance::StoreMVP(STransform Transform, GLuint Program)
+void GLRenderer::StoreMVP(STransform Transform, GLuint Program)
 {
 	const CameraManager* CameraInstance = CameraManager::GetInstance();
 	glm::mat4 ModelMatrix = Transform.GetModelMatrix();
@@ -149,7 +84,7 @@ void GLInstance::StoreMVP(STransform Transform, GLuint Program)
 	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, value_ptr(MVP));
 }
 
-void GLInstance::ApplyMaterialFlags(TPointer<CMaterialInterface>InMaterial)
+void GLRenderer::ApplyMaterialFlags(TPointer<CMaterialInterface>InMaterial)
 {
 	if (!InMaterial->bTwoSided)
 	{
@@ -169,7 +104,7 @@ void GLInstance::ApplyMaterialFlags(TPointer<CMaterialInterface>InMaterial)
 	}
 }
 
-void GLInstance::RenderMesh(const TPointer<CMeshComponent> Mesh, const STransform Transform)
+void GLRenderer::RenderMesh(const TPointer<CMeshComponent> Mesh, const STransform Transform)
 {
 	StoreMVP(Transform, ActiveShader->GetShaderProgram());
 	
@@ -289,34 +224,12 @@ void GLInstance::RenderMesh(const TPointer<CMeshComponent> Mesh, const STransfor
 	// glCheckError_
 }
 
-// GLenum glCheckError_(const char *file, int line)
-// {
-// 	GLenum errorCode;
-// 	while ((errorCode = glGetError()) != GL_NO_ERROR)
-// 	{
-// 		std::string error;
-// 		switch (errorCode)
-// 		{
-// 			case GL_INVALID_ENUM:                  error = "INVALID_ENUM"; break;
-// 			case GL_INVALID_VALUE:                 error = "INVALID_VALUE"; break;
-// 			case GL_INVALID_OPERATION:             error = "INVALID_OPERATION"; break;
-// 			case GL_STACK_OVERFLOW:                error = "STACK_OVERFLOW"; break;
-// 			case GL_STACK_UNDERFLOW:               error = "STACK_UNDERFLOW"; break;
-// 			case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
-// 			case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
-// 		}
-// 		std::cout << error << " | " << file << " (" << line << ")" << std::endl;
-// 	}
-// 	return errorCode;
-// }
-// #define glCheckError() glCheckError_(__FILE__, __LINE__)
-
-void GLInstance::RenderUIElement(TPointer<UIElement> UserInterfaceItem)
+void GLRenderer::RenderUIElement(TPointer<UIElement> UserInterfaceItem)
 {
 	UserInterfaceItem->DrawUIElement();
 }
 
-void GLInstance::CleanupMesh(TPointer<CMeshComponent> Mesh)
+void GLRenderer::CleanupMesh(TPointer<CMeshComponent> Mesh)
 {
 	if (!Mesh)
 	{
@@ -326,23 +239,6 @@ void GLInstance::CleanupMesh(TPointer<CMeshComponent> Mesh)
 	// TODO: Look into further cleanup
 }
 
-void GLInstance::PostRender(TPointer<CEngineWindow> GraphicsWindow)
+void GLRenderer::PostRender()
 {	
-}
-
-void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
-{
-	std::string sourceStr, typeStr, severityStr;
-	// Convert GLenum parameters to strings
-
-	// printf("%s:%s[%s](%d): %s\n", sourceStr, typeStr, severityStr, id, message);
-
-
-	const std::string OutputString = std::format("GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-	                                             ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-	                                             type, severity, message);
-	CLogManager::GetInstance()->DisplayLogError(OutputString);
-	// fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-	//          ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-	//          type, severity, message );
 }

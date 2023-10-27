@@ -3,19 +3,32 @@
 #include "SEPCH.h"
 #include "GraphicsAPI.h"
 
+#include "Entity/Entity.h"
 #include "GL/GLAPI.h"
+#include "Render/Materials/InternalMaterial.h"
+#include "Render/Shaders/Shader.h"
 #include "System/LogManager.h"
 
 TPointer<IGraphicsAPI> IGraphicsAPI::CreateGraphicsAPI(EGraphicsAPI APIType)
 {
+	TPointer<IGraphicsAPI> NewGraphicsApi = nullptr;
 	switch (APIType)
 	{
 	case EGraphicsAPI::OPENGL:
-		return std::make_shared<IGLAPI>();
+		NewGraphicsApi = std::make_shared<IGLAPI>();
 	case EGraphicsAPI::VULKAN:
+		break;
+	case EGraphicsAPI::DIRECTX:
 		break;
 	default: ;
 	}
-	CLogManager::GetInstance()->DisplayLogMessage("No valid Graphics API Set!");
-	return nullptr;
+	if (NewGraphicsApi)
+	{
+		NewGraphicsApi->Init();
+	}
+	else
+	{
+		CLogManager::GetInstance()->DisplayLogMessage("No valid Graphics API Set!");		
+	}
+	return NewGraphicsApi;
 }

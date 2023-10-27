@@ -18,6 +18,6 @@ bool CUndefinedShader::HasTexture(const ShaderParameters& InParams)
 	return false;
 }
 
-void CUndefinedShader::UploadMaterialParameters(const TPointer<IGraphicsInstance>& InGraphicsInstance, const ShaderParameters& InParams)
+void CUndefinedShader::UploadMaterialParameters(const ShaderParameters& InParams)
 {
 }

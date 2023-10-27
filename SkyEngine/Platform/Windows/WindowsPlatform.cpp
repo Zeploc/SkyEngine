@@ -4,7 +4,6 @@
 #include "WindowsPlatform.h"
 
 #include "Core/Application.h"
-#include "Graphics/GraphicsInstance.h"
 #include "Platform/Window/GLFW/GLFWWindow.h"
 
 WindowsPlatform::~WindowsPlatform()

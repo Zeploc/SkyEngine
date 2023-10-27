@@ -4,13 +4,12 @@
 #include <glew/glew.h>
 
 #include "Core/Application.h"
-#include "Graphics/GraphicsInstance.h"
+#include "Graphics/Renderer.h"
 #include "Platform/Window/EngineWindow.h"
 
 GLFramebuffer::GLFramebuffer(const SFramebufferSpecification& Specification)
 : Specification(Specification)
 {
-	Invalidate();
 }
 
 GLFramebuffer::~GLFramebuffer()
@@ -59,7 +58,7 @@ void GLFramebuffer::Bind()
 	glBindFramebuffer(GL_FRAMEBUFFER, RendererID);
 
 	// TODO: Shouldn't be here
-	SVector ClearColour = GetApplication()->GetApplicationWindow()->GetGraphicsInstance()->ClearColour;
+	SVector ClearColour = GetRenderer()->ClearColour;
 	glClearColor(ClearColour.R, ClearColour.G, ClearColour.B, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	const SVector2i WindowSize = GetApplication()->GetApplicationWindow()->GetSize();

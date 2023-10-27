@@ -6,9 +6,6 @@
 #include "Core/Application.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Dependencies/ImGui/imgui.h"
-#include "Graphics/GraphicsInstance.h"
-#include "Graphics/GL/imgui_impl_opengl3.h"
-#include "System/TimeManager.h"
 #include "UI/UIWidget.h"
 
 #include "ImGuizmo.h"

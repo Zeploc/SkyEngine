@@ -7,7 +7,7 @@
 // #include "Render/Materials/Material.h"
 
 class CMaterialInterface;
-class IGraphicsInstance;
+class IRenderer;
 
 // TODO: STDL warnings with exporting class with vector
 #pragma warning (disable : 4251)
@@ -26,8 +26,8 @@ public:
 	void SetTessShader(const std::string& InTessControlShaderPath, const std::string& InTessEvalShaderPath);
 
 	virtual bool CompileShader();
-	void BindMaterial(const TPointer<IGraphicsInstance>& InGraphicsInstance, TPointer<CMaterialInterface> InMaterial);
-	virtual void BindShader(const TPointer<IGraphicsInstance>& InGraphicsInstance);
+	void BindMaterial(TPointer<CMaterialInterface> InMaterial);
+	virtual void BindShader();
 
 
 	std::string GetShaderName() const { return ShaderName; }

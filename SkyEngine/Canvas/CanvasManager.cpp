@@ -6,11 +6,11 @@
 #include "Canvas.h"
 #include "Core/Application.h"
 #include "Dependencies/ImGui/imgui.h"
-#include "Graphics/GraphicsInstance.h"
 #include "Platform/Window/GLFW/GLFWWindow.h"
 #include "Graphics/GL/imgui_impl_opengl3.h"
 #include "System/TimeManager.h"
 #include "ImGuizmo.h"
+#include "Graphics/Renderer.h"
 #include "System/LogManager.h"
 
 CCanvasManager::CCanvasManager()
@@ -124,7 +124,7 @@ void CCanvasManager::Render()
 	ImGui::Render();
 
 	// TODO: Should the window do this instead?
-	OwningWindow.lock()->GetGraphicsInstance()->RenderImGui();
+	GetRenderer()->RenderImGui();
 
 	// TODO: Try link up multi-viewport
 	// Update and Render additional Platform Windows

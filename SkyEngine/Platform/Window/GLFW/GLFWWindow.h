@@ -10,7 +10,6 @@ class CGLFWWindow : public CEngineWindow
 public:
 	CGLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool bFullScreen);
 	~CGLFWWindow() override;
-	void CreateGraphicsInstance() override;
 	
 	void SetWindowFullScreen(bool bInFullScreen) override;
 	bool ShouldWindowClose() const override;

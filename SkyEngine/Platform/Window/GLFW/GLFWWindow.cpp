@@ -8,7 +8,6 @@
 #include <Render/Shaders/ShaderManager.h>
 
 #include "Graphics/Framebuffer.h"
-#include "Graphics/GraphicsInstance.h"
 #include "Input/CXBOXController.h"
 #include "Input/Input.h"
 #include "System/LogManager.h"
@@ -136,12 +135,6 @@ CGLFWWindow::CGLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool 
 		CGLFWWindow* OwningGlfwWindow = reinterpret_cast<CGLFWWindow*>(glfwGetWindowUserPointer(window));
 		OwningGlfwWindow->ScrollWheel((float)xoffset, (float)yoffset);
 	});
-}
-
-void CGLFWWindow::CreateGraphicsInstance()
-{
-	glfwMakeContextCurrent(GlWindow);
-	CEngineWindow::CreateGraphicsInstance();
 }
 
 void CGLFWWindow::SetWindowFullScreen(bool bInFullscreen)

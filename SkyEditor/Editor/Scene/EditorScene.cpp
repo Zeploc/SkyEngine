@@ -204,9 +204,9 @@ void EditorScene::Update()
 	EditorWindowManager::UpdateWindows();
 }
 
-void EditorScene::RenderScene(TPointer<IGraphicsInstance> InGraphicsInstance)
+void EditorScene::RenderScene()
 {
-	Scene::RenderScene(InGraphicsInstance);
+	Scene::RenderScene();
 }
 
 void EditorScene::OpenFile()

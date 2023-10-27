@@ -56,7 +56,7 @@ void GeometryObject::BindGeometryObject()
 	// };
 	//
 	// // If no texture, texture source is equal to ""
-	// vao = GetGraphicsAPI()->CreateBuffer(MeshMaterial.Texture, true);
+	// vao = GetGraphicsAPI()->CreateVertexBuffer(MeshMaterial.Texture, true);
 	// glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 }
 

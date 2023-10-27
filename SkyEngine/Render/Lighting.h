@@ -13,7 +13,7 @@
 #include "Math/Vector4.h"
 #include "Math/Vector.h"
 
-class IGraphicsInstance;
+class IRenderer;
 
 // TODO: STDL warnings with exporting class with vector
 #pragma warning (disable : 4251)
@@ -24,7 +24,7 @@ public:
 	Lighting();
 	~Lighting();
 
-	static void PassLightingToShader(const TPointer<IGraphicsInstance>& GraphicsInstance);
+	static void PassLightingToShader();
 
 	// Can't export static member variables directly if class is exported
 	static SVector GetLightPosition();

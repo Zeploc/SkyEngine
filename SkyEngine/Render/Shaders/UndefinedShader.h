@@ -25,5 +25,5 @@ public:
 	
 	// TODO: place holder, remove
 	bool HasTexture(const ShaderParameters& InParams);
-	void UploadMaterialParameters(const TPointer<IGraphicsInstance>& InGraphicsInstance, const ShaderParameters& InParams);
+	void UploadMaterialParameters(const ShaderParameters& InParams);
 };

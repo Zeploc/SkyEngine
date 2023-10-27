@@ -50,7 +50,6 @@ namespace SkyEngine
 		SetupLogManager();
 		ENSURE(LogManager != nullptr, "Log manager not created!");
 		LogManager->Init();
-		GraphicsApi = IGraphicsAPI::CreateGraphicsAPI(GraphicsApiType);
 
 		ApplicationWindow = CEngineWindow::CreateEngineWindow("Sky Engine", MainWindowSize, false);
 		if (!ENSURE(ApplicationWindow != NULL, "Failed to setup application window"))
@@ -59,6 +58,9 @@ namespace SkyEngine
 		}
 		ApplicationWindow->FocusWindow();
 		ApplicationWindow->SubscribeEventListener(this);
+		
+		GraphicsApi = IGraphicsAPI::CreateGraphicsAPI(GraphicsApiType);
+		Renderer = GraphicsApi->CreateNewRenderer();
 
 		CTimeManager::Start();
 		SoundManager::GetInstance()->InitFMod();
@@ -150,4 +152,9 @@ SkyEngine::Application* GetApplication()
 TPointer<IGraphicsAPI> GetGraphicsAPI()
 {
 	return SkyEngine::Application::Get()->GraphicsApi;
+}
+
+TPointer<IRenderer> GetRenderer()
+{
+	return SkyEngine::Application::Get()->Renderer;
 }

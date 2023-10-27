@@ -17,10 +17,8 @@
 
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"
-#include "Platform/Window/EngineWindow.h"
 #include "Entity/Button3DEntity.h"
-#include "Events/KeyEvent.h"
-#include "Graphics/GraphicsInstance.h"
+#include "Graphics/Renderer.h"
 #include "Input/Input.h"
 
 /************************************************************
@@ -68,9 +66,9 @@ void Scene::DeleteScene()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Scene::RenderScene(TPointer<IGraphicsInstance> InGraphicsInstance)
+void Scene::RenderScene()
 {
-	InGraphicsInstance->Render(Entities, UIElements);
+	GetRenderer()->Render(Entities, UIElements);
 }
 
 /************************************************************

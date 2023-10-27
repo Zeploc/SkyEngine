@@ -18,23 +18,22 @@ class CMaterialInterface;
 class CTexture;
 
 // TODO: MOVE TO GRAPHICS API
-class IGraphicsInstance : public std::enable_shared_from_this<IGraphicsInstance>
+class IRenderer : public std::enable_shared_from_this<IRenderer>
 {
 public:
-	IGraphicsInstance();
-	virtual ~IGraphicsInstance() = default;
-
+	IRenderer();
+	virtual ~IRenderer() = default;	
+	
 	void InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender);
 	virtual void Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements);
 	virtual void RenderMesh(TPointer<CMeshComponent> Mesh, STransform Transform) = 0;
 	virtual void RenderUIElement(TPointer<UIElement> UserInterfaceItem) = 0;
 	virtual void CleanupMesh(TPointer<CMeshComponent> Mesh) = 0;
-	virtual void BindShader(uint32_t ShaderProgramID) = 0;
 	virtual void ApplyMaterialFlags(TPointer<CMaterialInterface> InMaterial) = 0;
 
 	// TODO: Remove passing window
-	virtual void PreRender(TPointer<CEngineWindow> GraphicsWindow) {}
-	virtual void PostRender(TPointer<CEngineWindow> GraphicsWindow) {}
+	virtual void PreRender() {}
+	virtual void PostRender() {}
 	
 	// TODO: Resize function
 	
@@ -45,20 +44,10 @@ public:
 
 	TPointer<IFramebuffer> GetFramebuffer() const { return Framebuffer; }
 	
-	// template <typename T>
-	// void PassAttributeToShader(int32_t ShaderLocation, T Attribute);
+	TPointer<CShader> ActiveShader;
 	
 	// TODO: Create colour type
 	SVector ClearColour = SVector(0.3f, 0.8f, 0.9f);
-	TPointer<CShader> ActiveShader;
-
-	virtual void PassAttributeToShader(int32_t ShaderLocation, float Attribute) = 0;
-	virtual void PassAttributeToShader(int32_t ShaderLocation, int Attribute) = 0;
-	virtual void PassAttributeToShader(int32_t ShaderLocation, bool Attribute) = 0;
-	virtual void PassAttributeToShader(int32_t ShaderLocation, SVector Attribute) = 0;
-	virtual void PassAttributeToShader(int32_t ShaderLocation, SVector4 Attribute) = 0;
-	virtual void PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute) = 0;
-	virtual void PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture> Attribute) = 0;
 protected:
 	// TODO: Multiple frame buffers (multiple windows, etc)
 	TPointer<IFramebuffer> Framebuffer;
@@ -66,7 +55,7 @@ protected:
 };
 
 // template <typename T>
-// void IGraphicsInstance::PassAttributeToShader(int32_t ShaderLocation, T Attribute)
+// void IRenderer::PassAttributeToShader(int32_t ShaderLocation, T Attribute)
 // {
 // 	PassAttributeToShader(ShaderLocation, Attribute);
 // }

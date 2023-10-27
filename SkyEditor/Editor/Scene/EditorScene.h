@@ -16,7 +16,7 @@ public:
 	void AddSampleEntities();
 
 	void Update() override;
-	void RenderScene(TPointer<IGraphicsInstance> InGraphicsInstance) override;
+	void RenderScene() override;
 	
 	void OpenFile();
 

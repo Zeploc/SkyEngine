@@ -44,7 +44,8 @@ namespace SkyEngine
 		SVector2i MainWindowSize;
 
 		TPointer<IGraphicsAPI> GraphicsApi;
-		TPointer<IPlatformInterface> PlatformInterface;
+		TPointer<IPlatformInterface> PlatformInterface;		
+		TPointer<IRenderer> Renderer;
 		EGraphicsAPI GraphicsApiType;
 		TPointer<CLogManager> LogManager;
 
@@ -69,4 +70,5 @@ namespace SkyEngine
 
 ENGINE_API SkyEngine::Application* GetApplication();
 ENGINE_API TPointer<IGraphicsAPI> GetGraphicsAPI();
+ENGINE_API TPointer<IRenderer> GetRenderer();
 
