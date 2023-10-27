@@ -44,6 +44,7 @@ GLInstance::GLInstance()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	SFramebufferSpecification FramebufferSpecification;
+	InstanceSize = {1280,720};
 	FramebufferSpecification.Size = InstanceSize;
 	Framebuffer = IFramebuffer::Create(FramebufferSpecification);
 	// TODO: Resize function updates/invalidates frame buffer
@@ -51,12 +52,12 @@ GLInstance::GLInstance()
 
 void GLInstance::PreRender(TPointer<CEngineWindow> GraphicsWindow)
 {
-	glClearColor(ClearColour.R, ClearColour.G, ClearColour.B, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	const SVector2i WindowSize = GraphicsWindow->GetSize();
-	// TODO: Option to expoose/override viewport position
-	// Fill whole window with viewport by default
-	glViewport(0, 0, WindowSize.X, WindowSize.Y);
+	// glClearColor(ClearColour.R, ClearColour.G, ClearColour.B, 1.0f);
+	// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// const SVector2i WindowSize = GraphicsWindow->GetSize();
+	// // TODO: Option to expoose/override viewport position
+	// // Fill whole window with viewport by default
+	// glViewport(0, 0, WindowSize.X, WindowSize.Y);
 }
 
 void GLInstance::PassAttributeToShader(int32_t ShaderID, float Attribute)
@@ -115,7 +116,7 @@ void GLInstance::SetRenderViewport(const SVector2i InViewportPosition, const SVe
 	SVector2i WindowSize = GetApplication()->GetApplicationWindow()->GetSize();
 	// TODO: Safety checks
 	// Y flipped since gl uses y=0 as bottom of screen instead of top
-	glViewport(InViewportPosition.X, (WindowSize.Y - InViewportSize.Y) - InViewportPosition.Y, InViewportSize.X, InViewportSize.Y);
+	// glViewport(InViewportPosition.X, (WindowSize.Y - InViewportSize.Y) - InViewportPosition.Y, InViewportSize.X, InViewportSize.Y);
 }
 
 void GLInstance::RenderImGui()

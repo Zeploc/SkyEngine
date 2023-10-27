@@ -23,6 +23,9 @@ public:
 	virtual const SFramebufferSpecification& GetSpecification() const = 0;
 	virtual uint32_t GetColorAttachmentRendererID() const = 0;
 
+	/* Implies needs updating */
+	virtual void Invalidate()  = 0;
+	
 	/* Remove later to renderer */
 	virtual void Bind() = 0;
 	virtual void Unbind() = 0;
