@@ -4,13 +4,12 @@
 
 #include "InternalMaterial.h"
 #include "Core/Application.h"
-#include "Graphics/Renderer.h"
+#include "Render/Renderer.h"
 #include "Render/Lighting.h"
 #include "Render/Shaders/ShaderManager.h"
 
 class CTexture;
 class CShader;
-class IRenderer;
 
 enum class EAttributeType
 {

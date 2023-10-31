@@ -11,7 +11,6 @@
 
 class IGraphicsWindow;
 class IEventListener;
-class IRenderer;
 class UIElement;
 class Entity;
 
@@ -54,7 +53,7 @@ public:
 	// TODO: Pass in window in delegate
 	FMulticastDelegate OnFocusChangedDelete;	
 
-	CInput& GetInput() { return Input; }
+	CWindowInput& GetInput() { return Input; }
 	CCanvasManager& GetCanvasManager() { return CanvasManager; }
 
 protected:
@@ -64,8 +63,8 @@ protected:
 	virtual void OnFrameBufferResized(int NewWidth, int NewHeight) = 0;
 	virtual void OnFocusChanged(bool bInIsFocused);
 	
-	virtual void MouseButtonPress(int button, CInput::KeyEventType EventType, int mods);
-	virtual void KeyPress(int key, int scancode, CInput::KeyEventType EventType, int mods);
+	virtual void MouseButtonPress(int button, CWindowInput::KeyEventType EventType, int mods);
+	virtual void KeyPress(int key, int scancode, CWindowInput::KeyEventType EventType, int mods);
 	virtual void KeyTyped(int KeyCode);
 	virtual void CursorMoved(int X, int Y);
 	virtual void ScrollWheel(float X, float Y);
@@ -79,7 +78,7 @@ protected:
 	bool bFullscreen = false;
 	bool bCursorVisible = true;
 	bool bIsFocused = true;
-	CInput Input;
+	CWindowInput Input;
 	
 	CCanvasManager CanvasManager;
 	std::vector<IEventListener*> EventListeners;

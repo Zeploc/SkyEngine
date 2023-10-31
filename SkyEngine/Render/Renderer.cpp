@@ -4,16 +4,17 @@
 #include "Renderer.h"
 
 #include "Framebuffer.h"
+#include "SceneRenderer.h"
 #include "Entity/Entity.h"
 #include "Render/Materials/InternalMaterial.h"
 #include "Render/Shaders/Shader.h"
 #include "UI/Legacy/UIElement.h"
 
-IRenderer::IRenderer()
+CRenderer::CRenderer()
 {
 }
 
-void IRenderer::InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender)
+void CRenderer::InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender)
 {
 	TPointer<CMaterialInterface> Material = EntityToRender->EntityMesh->MeshMaterial;
 	if (!MeshesByMaterial.contains(Material))
@@ -24,7 +25,15 @@ void IRenderer::InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterfac
 	MeshesByMaterial[Material].push_back(EntityToRender->EntityMesh);
 }
 
-void IRenderer::Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements)
+void CRenderer::RenderScenes()
+{
+	for (TPointer<CSceneRenderer> SceneRenderer : SceneRenderers)
+	{
+		SceneRenderer->Render();
+	}
+}
+
+void CRenderer::Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements)
 {
 	// TODO: Later store in/update list as new meshes added
 	std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>> MeshesByMaterial;
@@ -74,4 +83,12 @@ void IRenderer::Render(std::vector<TPointer<Entity>> Entities, std::vector<TPoin
 	// 	RenderUIElement(UIElement);
 	// }
 	ActiveShader = nullptr;
+}
+
+TPointer<CSceneRenderer> CRenderer::AddSceneRenderer(TPointer<Scene> InTargetScene, SVector2i InSize)
+{
+	TPointer<CSceneRenderer> SceneRenderer = CreatePointer<CSceneRenderer>();
+	SceneRenderers.push_back(SceneRenderer);
+	SceneRenderer->Init(InTargetScene, InSize);
+	return SceneRenderer;
 }

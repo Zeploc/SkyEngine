@@ -10,7 +10,7 @@
 #include "Graphics/GL/imgui_impl_opengl3.h"
 #include "System/TimeManager.h"
 #include "ImGuizmo.h"
-#include "Graphics/Renderer.h"
+#include "Render/Renderer.h"
 #include "System/LogManager.h"
 
 CCanvasManager::CCanvasManager()
@@ -179,9 +179,9 @@ bool CCanvasManager::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
 	ImGuiIO& io = ImGui::GetIO();
 	for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++)
 	{
-		CInput::InputState MouseButtonState = (CInput::InputState)OwningWindow.lock()->GetInput().MouseState[i];
+		CWindowInput::InputState MouseButtonState = (CWindowInput::InputState)OwningWindow.lock()->GetInput().MouseState[i];
 		// If a mouse press event came, always pass it as "mouse held this frame", so we don't miss click-release events that are shorter than 1 frame.
-		io.MouseDown[i] = MouseButtonState == CInput::INPUT_FIRST_PRESS || MouseButtonState == CInput::INPUT_HOLD;
+		io.MouseDown[i] = MouseButtonState == CWindowInput::INPUT_FIRST_PRESS || MouseButtonState == CWindowInput::INPUT_HOLD;
 	}
 
 	// Won't be hovered properly since mouse pos only updated in imgui when window is focused
@@ -278,9 +278,9 @@ bool CCanvasManager::OnKeyPressedEvent(CKeyPressedEvent& Event)
 	ImGuiIO& io = ImGui::GetIO();
 	io.KeysDown[KeyCode] = true;
 	
-	// io.KeyCtrl = Event.GetMods() & CInput::ModiferType::Control;
-	// io.KeyShift = Event.GetMods() & CInput::ModiferType::Shift;
-	// io.KeyAlt = Event.GetMods() & CInput::ModiferType::Alt;
+	// io.KeyCtrl = Event.GetMods() & CWindowInput::ModiferType::Control;
+	// io.KeyShift = Event.GetMods() & CWindowInput::ModiferType::Shift;
+	// io.KeyAlt = Event.GetMods() & CWindowInput::ModiferType::Alt;
 	// TODO: Windows Key?
 	// io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
 	

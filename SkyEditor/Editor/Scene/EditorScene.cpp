@@ -29,7 +29,7 @@
 
 #include "EditorApp.h"
 #include "Core/Application.h"
-#include "Editor/EditorViewportLayer.h"
+#include "Editor/EditorViewportCanvas.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Render/Materials/Material.h"
 #include "Render/Shaders/PBRShader.h"

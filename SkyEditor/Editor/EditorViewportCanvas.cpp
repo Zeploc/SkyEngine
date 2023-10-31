@@ -1,32 +1,48 @@
-﻿#include "EditorViewportLayer.h"
+﻿#include "EditorViewportCanvas.h"
 
 #include <glm/gtc/type_ptr.inl>
 
 #include "EditorApp.h"
+#include "Core/WorldManager.h"
 #include "Dependencies/ImGui/imgui_internal.h"
 #include "Dependencies/ImGuizmo/ImGuizmo.h"
-#include "Graphics/Renderer.h"
+#include "Render/Renderer.h"
 #include "Platform/Window/EngineWindow.h"
+#include "Render/Framebuffer.h"
+#include "Render/SceneRenderer.h"
 #include "Scene/SceneManager.h"
 #include "UI/UIWidget.h"
 
-CEditorViewportLayer::CEditorViewportLayer(TWeakPointer<CEngineWindow> InOwningWindow)
-	: CViewportLayer(InOwningWindow)
+CEditorViewportCanvas::CEditorViewportCanvas(TWeakPointer<CEngineWindow> InOwningWindow)
+	: CViewportCanvas(InOwningWindow)
 {
 	CanvasName = "Render Viewport";
 }
 
-void CEditorViewportLayer::OnUpdate()
+void CEditorViewportCanvas::OnUpdate()
 {
 	for (TPointer<CUIWidget> Widget : Widgets)
 	{
 		Widget->Update();
+	}
+
+	if (EditorApp->DockSpaceID > 0)
+	{
+		ImGuiDockNode* ViewportNode = ImGui::DockBuilderGetCentralNode(EditorApp->DockSpaceID);
+		// TODO: Proper imgui event for resize?
+		// Check if viewport size has changed which invalidates buffer
+		const SVector2i NewSize = {int(ViewportNode->Size.x), int(ViewportNode->Size.y)};	
+		if (ViewportSize != NewSize)
+		{
+			ViewportSize = NewSize;
+			OnViewportResize();
+		}
 	}	
 	
-	CViewportLayer::OnUpdate();
+	CViewportCanvas::OnUpdate();
 }
 
-bool CEditorViewportLayer::PreRender()
+bool CEditorViewportCanvas::PreRender()
 {
 	ImGuiDockNode* ViewportNode = ImGui::DockBuilderGetCentralNode(EditorApp->DockSpaceID);
 	
@@ -49,8 +65,10 @@ bool CEditorViewportLayer::PreRender()
 	return true;
 }
 
-void CEditorViewportLayer::OnRender()
+void CEditorViewportCanvas::OnRender()
 {
+	CViewportCanvas::OnRender();
+
 	ImGuiDockNode* ViewportNode = ImGui::DockBuilderGetCentralNode(EditorApp->DockSpaceID);
 	// TODO: Remove widgets on viewport layer
 	SCanvas ViewportCanvas;
@@ -61,29 +79,8 @@ void CEditorViewportLayer::OnRender()
 	{
 		Widget->DrawUI(ViewportCanvas);
 	}
-	
-	GetRenderer()->SetRenderViewport(SVector2i(ViewportCanvas.Position), SVector2i(ViewportCanvas.Size));
-	// OwningWindow.lock()->GetGraphicsInstance()->SetRenderViewport(SVector2i(0,0), SVector2i(1920, 1080));
 
-	TPointer<IFramebuffer> Framebuffer = GetRenderer()->GetFramebuffer();
-	CameraManager* Camera = CameraManager::GetInstance();
-	// TODO: Update to only setup projection when this node/viewport changes size
-	Camera->SwitchProjection(EProjectionMode::Perspective);
-
-	// TODO: 
-	// Check if viewport size has changed which invalidates buffer
-	const SVector2 NewSize = {ViewportNode->Size.x, ViewportNode->Size.y};	
-	if (LastSize != NewSize)
-	{
-		Framebuffer->Invalidate();
-	}
-	LastSize = NewSize;
-	
-	Framebuffer->Bind();
-	CViewportLayer::OnRender();
-	Framebuffer->Unbind();	
-
-	uint32_t TextureID = Framebuffer->GetColorAttachmentRendererID();//ViewportTexture->GetTextureRenderID();//
+	uint32_t TextureID = SceneRenderer->GetFramebuffer()->GetColorAttachmentRendererID();//ViewportTexture->GetTextureRenderID();//
 	ImGui::Image((void*)TextureID, ImVec2(ViewportCanvas.Size.X, ViewportCanvas.Size.Y), ImVec2(0, 1), ImVec2(1,0) );	
 	
 	// Draw a red rectangle in the central node just for demonstration purposes
@@ -97,51 +94,58 @@ void CEditorViewportLayer::OnRender()
 		2.f
 	);
 
-	GizmoTransformSpace = ImGuizmo::MODE::LOCAL;
+	GizmoTransformSpace = ImGuizmo::MODE::WORLD;
 	if (SelectedEntity && GizmoMode != -1)
 	{
+		CameraManager* Camera = CameraManager::GetInstance();
+		
 		ImGuizmo::SetOrthographic(false);
 		ImGuizmo::SetDrawlist();
 		ImGuizmo::SetRect(ViewportNode->Pos.x, ViewportNode->Pos.y, ViewportNode->Size.x, ViewportNode->Size.y);
 		glm::mat4 EntityModel = SelectedEntity->Transform.GetModelMatrix();
+
+		STransform OriginalTransform = SelectedEntity->Transform;
+		STransform Transform = OriginalTransform;
+		Transform.FromMatrix(EntityModel);
+		
 		ImGuizmo::Manipulate(glm::value_ptr(Camera->View.ToGLM()), glm::value_ptr(Camera->Projection.ToGLM()),
 		                     ImGuizmo::OPERATION(GizmoMode), ImGuizmo::MODE(GizmoTransformSpace), value_ptr(EntityModel));
 		const SRotator OriginalRotation = SelectedEntity->Transform.Rotation;
 		SelectedEntity->Transform.FromMatrix(EntityModel);
 		// Used to stop gimbol lock
 		const SRotator DeltaRotation = SelectedEntity->Transform.Rotation - OriginalRotation;
-		// SelectedEntity->Transform.Rotation = OriginalRotation + DeltaRotation;
+		SelectedEntity->Transform.Rotation = OriginalRotation + DeltaRotation;
 	}
 
 }
 
-void CEditorViewportLayer::AddViewportWidget(TPointer<CUIWidget> InWidget)
+void CEditorViewportCanvas::AddViewportWidget(TPointer<CUIWidget> InWidget)
 {	
 	Widgets.push_back(InWidget);	
 	InWidget->SetOwningLayer(this);
 }
 
-SVector2i CEditorViewportLayer::GetViewportSize()
+SVector2i CEditorViewportCanvas::GetViewportSize()
 {
 	if (EditorApp->DockSpaceID == 0)
 	{
-		return CViewportLayer::GetViewportSize();
+		return CViewportCanvas::GetViewportSize();
 	}
 	const ImGuiDockNode* CentralViewportNode = ImGui::DockBuilderGetCentralNode(EditorApp->DockSpaceID);
 	return {(int)CentralViewportNode->Size.x, (int)CentralViewportNode->Size.y};
 }
 
-SVector2i CEditorViewportLayer::GetViewportPosition()
+SVector2i CEditorViewportCanvas::GetViewportPosition()
 {
 	if (EditorApp->DockSpaceID == 0)
 	{
-		return CViewportLayer::GetViewportPosition();
+		return CViewportCanvas::GetViewportPosition();
 	}
 	const ImGuiDockNode* CentralViewportNode = ImGui::DockBuilderGetCentralNode(EditorApp->DockSpaceID);
 	return {(int)CentralViewportNode->Pos.x, (int)CentralViewportNode->Pos.y};
 }
 
-bool CEditorViewportLayer::OnMouseButtonPressed(int MouseButton, int Mods)
+bool CEditorViewportCanvas::OnMouseButtonPressed(int MouseButton, int Mods)
 {
 	CameraManager* CameraInstance = CameraManager::GetInstance();
 	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
@@ -168,7 +172,7 @@ bool CEditorViewportLayer::OnMouseButtonPressed(int MouseButton, int Mods)
 		}
 	}
 
-	if (Mods & CInput::ModiferType::Alt)
+	if (Mods & CWindowInput::ModiferType::Alt)
 	{
 		if (MouseButton == GLFW_MOUSE_BUTTON_LEFT)
 		{
@@ -185,7 +189,7 @@ bool CEditorViewportLayer::OnMouseButtonPressed(int MouseButton, int Mods)
 			ApplicationWindow->SetCursorPosition(ScreenCenter);
 		}
 	}
-	if (Mods & CInput::ModiferType::Shift)
+	if (Mods & CWindowInput::ModiferType::Shift)
 	{
 		if (MouseButton == GLFW_MOUSE_BUTTON_LEFT)
 		{
@@ -207,7 +211,7 @@ bool CEditorViewportLayer::OnMouseButtonPressed(int MouseButton, int Mods)
 	return false;
 }
 
-bool CEditorViewportLayer::OnMouseButtonReleased(int MouseButton, int Mods)
+bool CEditorViewportCanvas::OnMouseButtonReleased(int MouseButton, int Mods)
 {	
 	CameraManager* CameraInstance = CameraManager::GetInstance();
 	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
@@ -235,7 +239,7 @@ bool CEditorViewportLayer::OnMouseButtonReleased(int MouseButton, int Mods)
 	return false;
 }
 
-bool CEditorViewportLayer::OnMouseMoved(SVector2i MousePos)
+bool CEditorViewportCanvas::OnMouseMoved(SVector2i MousePos)
 {
 	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 	const SVector2i ScreenCenter = EditorApp->EditorViewportLayer->GetViewportPosition() + EditorApp->EditorViewportLayer->GetViewportSize() / 2;
@@ -274,13 +278,22 @@ bool CEditorViewportLayer::OnMouseMoved(SVector2i MousePos)
 	return false;
 }
 
-bool CEditorViewportLayer::OnMouseScrolled(float XOffset, float YOffset)
+bool CEditorViewportCanvas::OnMouseScrolled(float XOffset, float YOffset)
 {
 	return false;
 }
 
-bool CEditorViewportLayer::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
+bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 {
+	CameraManager* CameraInstance = CameraManager::GetInstance();
+	if (CameraInstance->UsingSpectatorControls())
+	{
+		return false;
+	}
+	if (bPanning || bLookingAround || bRotatingAroundPoint)
+	{
+		return false;
+	}
 	if (KeyCode == GLFW_KEY_ESCAPE) // Escape
 	{
 		if (SelectedEntity)
@@ -295,7 +308,6 @@ bool CEditorViewportLayer::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 	{
 		if (SelectedEntity)
 		{
-			CameraManager* CameraInstance = CameraManager::GetInstance();
 			CameraInstance->SetCameraPos(SelectedEntity->Transform.Position + (-CameraInstance->GetCameraForwardVector() * CurrentFocusDistance));
 			return true;
 		}
@@ -330,22 +342,22 @@ bool CEditorViewportLayer::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 	return false;
 }
 
-bool CEditorViewportLayer::OnKeyTyped(int KeyCode, int Mods)
+bool CEditorViewportCanvas::OnKeyTyped(int KeyCode, int Mods)
 {
 	return false;
 }
 
-bool CEditorViewportLayer::OnKeyReleased(int KeyCode, int Mods)
+bool CEditorViewportCanvas::OnKeyReleased(int KeyCode, int Mods)
 {
 	return false;
 }
 
-bool CEditorViewportLayer::OnWindowResize(unsigned int Width, unsigned int Height)
+bool CEditorViewportCanvas::OnWindowResize(unsigned int Width, unsigned int Height)
 {
 	return false;
 }
 
-void CEditorViewportLayer::SelectEntity(TPointer<Entity> HitEntity)
+void CEditorViewportCanvas::SelectEntity(TPointer<Entity> HitEntity)
 {
 	if (HitEntity == SelectedEntity)
 	{
@@ -367,7 +379,7 @@ void CEditorViewportLayer::SelectEntity(TPointer<Entity> HitEntity)
 	}
 }
 
-void CEditorViewportLayer::UpdateSelectedEntity()
+void CEditorViewportCanvas::UpdateSelectedEntity()
 {
 	// TODO: Remove once redundant
 	if (!EditorScene)

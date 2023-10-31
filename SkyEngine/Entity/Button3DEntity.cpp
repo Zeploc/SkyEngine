@@ -65,7 +65,7 @@ void Button3DEntity::Update()
 			// EntityMesh->MeshMaterial->bStencil = true;
 		}
 		// TODO:
-		// if (CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == CInput::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
+		// if (CWindowInput::GetInstance()->MouseState[CWindowInput::MOUSE_LEFT] == CWindowInput::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
 		// {
 		// 	bPressed = true;
 		// 	// TODO: Switch to order/depth system
@@ -100,7 +100,7 @@ bool Button3DEntity::CheckHit(glm::vec3 BottomLeftOffset, glm::vec3 TopRightOffs
 		this->shared_from_this(), 
 		HitPos);
 	
-	// glm::vec3 rayDirection = CameraManager::GetInstance()->ScreenToWorldDirection(CInput::GetInstance()->MousePos);
+	// glm::vec3 rayDirection = CameraManager::GetInstance()->ScreenToWorldDirection(CWindowInput::GetInstance()->MousePos);
 	//
 	// glm::vec3 AnchoredPosition = Utils::GetAncoredPosition(Transform.Position, glm::vec3(EntityMesh->m_fWidth, EntityMesh->m_fHeight, EntityMesh->m_fDepth), EntityAnchor);
 	// glm::vec3 lb = BottomLeftOffset + AnchoredPosition;

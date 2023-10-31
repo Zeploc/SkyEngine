@@ -153,11 +153,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Camera\CameraManager.h" />
+    <ClInclude Include="Canvas\Canvas.h" />
+    <ClInclude Include="Canvas\CanvasManager.h" />
+    <ClInclude Include="Canvas\UICanvas.h" />
+    <ClInclude Include="Canvas\ViewportCanvas.h" />
     <ClInclude Include="Core\Application.h" />
     <ClInclude Include="Core\Core.h" />
     <ClInclude Include="Core\Delegates.h" />
     <ClInclude Include="Core\EntryPoint.h" />
     <ClInclude Include="Core\EventListener.h" />
+    <ClInclude Include="Core\WorldManager.h" />
     <ClInclude Include="Dependencies\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="Entity\2DParticleSystem.h" />
     <ClInclude Include="Entity\Button3DEntity.h" />
@@ -168,20 +173,14 @@
     <ClInclude Include="Events\Event.h" />
     <ClInclude Include="Events\KeyEvent.h" />
     <ClInclude Include="Events\MouseEvent.h" />
-    <ClInclude Include="Graphics\Framebuffer.h" />
     <ClInclude Include="Graphics\GL\GLAPI.h" />
     <ClInclude Include="Graphics\GL\GLFramebuffer.h" />
     <ClInclude Include="Graphics\GL\GLIncludes.h" />
     <ClInclude Include="Graphics\GL\GLRenderer.h" />
     <ClInclude Include="Graphics\GL\imgui_impl_opengl3.h" />
     <ClInclude Include="Graphics\GraphicsAPI.h" />
-    <ClInclude Include="Graphics\Renderer.h" />
     <ClInclude Include="Input\CXBOXController.h" />
     <ClInclude Include="Input\Input.h" />
-    <ClInclude Include="Canvas\Canvas.h" />
-    <ClInclude Include="Canvas\CanvasManager.h" />
-    <ClInclude Include="Canvas\UICanvas.h" />
-    <ClInclude Include="Canvas\ViewportLayer.h" />
     <ClInclude Include="Math\Internal\Rotator.decl.h" />
     <ClInclude Include="Math\Internal\Rotator.impl.hpp" />
     <ClInclude Include="Math\Internal\Vector2.decl.h" />
@@ -204,6 +203,7 @@
     <ClInclude Include="Platform\Window\GLFW\GLFWWindow.h" />
     <ClInclude Include="Platform\Window\GLFW\imgui_impl_glfw.h" />
     <ClInclude Include="Platform\Windows\WindowsPlatform.h" />
+    <ClInclude Include="Render\Framebuffer.h" />
     <ClInclude Include="Render\Lighting.h" />
     <ClInclude Include="Render\Materials\InternalMaterial.h" />
     <ClInclude Include="Render\Materials\Material.h" />
@@ -226,6 +226,8 @@
     <ClInclude Include="Render\Particle\Particle.h" />
     <ClInclude Include="Render\Particle\ParticleSystem.h" />
     <ClInclude Include="Render\Particle\ParticleSystemGPU.h" />
+    <ClInclude Include="Render\Renderer.h" />
+    <ClInclude Include="Render\SceneRenderer.h" />
     <ClInclude Include="Render\Shaders\PBRShader.h" />
     <ClInclude Include="Render\Shaders\Shader.h" />
     <ClInclude Include="Render\Shaders\ShaderManager.h" />
@@ -255,9 +257,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera\CameraManager.cpp" />
+    <ClCompile Include="Canvas\Canvas.cpp" />
+    <ClCompile Include="Canvas\CanvasManager.cpp" />
+    <ClCompile Include="Canvas\UICanvas.cpp" />
+    <ClCompile Include="Canvas\ViewportCanvas.cpp" />
     <ClCompile Include="Core\Application.cpp" />
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Core\EventListener.cpp" />
+    <ClCompile Include="Core\WorldManager.cpp" />
     <ClCompile Include="Dependencies\ImGuizmo\ImGuizmo.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -266,19 +273,13 @@
     <ClCompile Include="Entity\CollisionBounds.cpp" />
     <ClCompile Include="Entity\Component.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
-    <ClCompile Include="Graphics\Framebuffer.cpp" />
     <ClCompile Include="Graphics\GL\GLAPI.cpp" />
     <ClCompile Include="Graphics\GL\GLFramebuffer.cpp" />
     <ClCompile Include="Graphics\GL\GLRenderer.cpp" />
     <ClCompile Include="Graphics\GL\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Graphics\GraphicsAPI.cpp" />
-    <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Input\CXBOXController.cpp" />
     <ClCompile Include="Input\Input.cpp" />
-    <ClCompile Include="Canvas\Canvas.cpp" />
-    <ClCompile Include="Canvas\CanvasManager.cpp" />
-    <ClCompile Include="Canvas\UICanvas.cpp" />
-    <ClCompile Include="Canvas\ViewportLayer.cpp" />
     <ClCompile Include="Math\MathLibrary.cpp" />
     <ClCompile Include="Math\Matrix.cpp" />
     <ClCompile Include="Math\Quaternion.cpp" />
@@ -288,6 +289,78 @@
     <ClCompile Include="Platform\Window\GLFW\GLFWWindow.cpp" />
     <ClCompile Include="Platform\Window\GLFW\imgui_impl_glfw.cpp" />
     <ClCompile Include="Platform\Windows\WindowsPlatform.cpp" />
+    <ClCompile Include="Render\Framebuffer.cpp">
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>..\Intermediate\Debug-x86_64\SkyEngine\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>..\Intermediate\Debug-x86_64\SkyEngine\</BrowseInformationFile>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>Default</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>..\Intermediate\Debug-x86_64\SkyEngine\</ModuleDependenciesFile>
+      <ModuleOutputFile>..\Intermediate\Debug-x86_64\SkyEngine\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ObjectFileName>..\Intermediate\Debug-x86_64\SkyEngine\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>..\Intermediate\Debug-x86_64\SkyEngine\vc142.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>SEPCH.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>..\Intermediate\Debug-x86_64\SkyEngine\SkyEngine.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>..\Intermediate\Debug-x86_64\SkyEngine\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TrackerLogDirectory>..\Intermediate\Debug-x86_64\SkyEngine\SkyEngine.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <XMLDocumentationFileName>..\Intermediate\Debug-x86_64\SkyEngine\</XMLDocumentationFileName>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <PreprocessorDefinitions>GLEW_STATIC;SE_PLATFORM_WINDOWS;SE_BUILD_DLL;SKYENGINE_DEBUG;_WINDLL;_UNICODE;UNICODE;</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;Dependencies\include;Dependencies\include\freetype;Dependencies\ImGui;Dependencies\ImGuizmo;Dependencies\glm;</AdditionalIncludeDirectories>
+      <LinkCompiled>true</LinkCompiled>
+    </ClCompile>
     <ClCompile Include="Render\Lighting.cpp" />
     <ClCompile Include="Render\Materials\InternalMaterial.cpp" />
     <ClCompile Include="Render\Materials\Material.cpp" />
@@ -309,6 +382,79 @@
     <ClCompile Include="Render\Particle\Particle.cpp" />
     <ClCompile Include="Render\Particle\ParticleSystem.cpp" />
     <ClCompile Include="Render\Particle\ParticleSystemGPU.cpp" />
+    <ClCompile Include="Render\Renderer.cpp">
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>..\Intermediate\Debug-x86_64\SkyEngine\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>..\Intermediate\Debug-x86_64\SkyEngine\</BrowseInformationFile>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>Default</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>..\Intermediate\Debug-x86_64\SkyEngine\</ModuleDependenciesFile>
+      <ModuleOutputFile>..\Intermediate\Debug-x86_64\SkyEngine\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ObjectFileName>..\Intermediate\Debug-x86_64\SkyEngine\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>..\Intermediate\Debug-x86_64\SkyEngine\vc142.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>SEPCH.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>..\Intermediate\Debug-x86_64\SkyEngine\SkyEngine.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>..\Intermediate\Debug-x86_64\SkyEngine\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TrackerLogDirectory>..\Intermediate\Debug-x86_64\SkyEngine\SkyEngine.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <XMLDocumentationFileName>..\Intermediate\Debug-x86_64\SkyEngine\</XMLDocumentationFileName>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <PreprocessorDefinitions>GLEW_STATIC;SE_PLATFORM_WINDOWS;SE_BUILD_DLL;SKYENGINE_DEBUG;_WINDLL;_UNICODE;UNICODE;</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;Dependencies\include;Dependencies\include\freetype;Dependencies\ImGui;Dependencies\ImGuizmo;Dependencies\glm;</AdditionalIncludeDirectories>
+      <LinkCompiled>true</LinkCompiled>
+    </ClCompile>
+    <ClCompile Include="Render\SceneRenderer.cpp" />
     <ClCompile Include="Render\Shaders\PBRShader.cpp" />
     <ClCompile Include="Render\Shaders\Shader.cpp" />
     <ClCompile Include="Render\Shaders\ShaderManager.cpp" />

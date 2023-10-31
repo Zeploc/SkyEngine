@@ -18,7 +18,7 @@
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"
 #include "Entity/Button3DEntity.h"
-#include "Graphics/Renderer.h"
+#include "Render/Renderer.h"
 #include "Input/Input.h"
 
 /************************************************************
@@ -263,7 +263,7 @@ bool Scene::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 	// TODO: If not build check (editor only)
 	if (KeyCode == GLFW_KEY_ESCAPE) 
 	{
-		if (KeyCode & CInput::ModiferType::Shift)
+		if (KeyCode & CWindowInput::ModiferType::Shift)
 		{
 			GetApplication()->Quit();
 			return true;

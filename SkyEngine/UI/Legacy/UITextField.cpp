@@ -85,24 +85,24 @@ void UITextField::Update()
 	glm::vec2 TopLeft = glm::vec2(position.x - BackImage.GetWidth() / 2, position.y - BackImage.GetHeight() / 2);
 	glm::vec2 BottomRight = glm::vec2(position.x + BackImage.GetWidth() / 2, position.y + BackImage.GetHeight() / 2);
 	// TODO: Link or remove
-	// if (CInput::GetInstance()->MousePos.X > TopLeft.x && CInput::GetInstance()->MousePos.X < BottomRight.x && CInput::GetInstance()->MousePos.Y < BottomRight.y && CInput::GetInstance()->MousePos.Y > TopLeft.y)
+	// if (CWindowInput::GetInstance()->MousePos.X > TopLeft.x && CWindowInput::GetInstance()->MousePos.X < BottomRight.x && CWindowInput::GetInstance()->MousePos.Y < BottomRight.y && CWindowInput::GetInstance()->MousePos.Y > TopLeft.y)
 	// {
-	// 	if (CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == (CInput::InputState::INPUT_HOLD | CInput::InputState::INPUT_FIRST_PRESS))
+	// 	if (CWindowInput::GetInstance()->MouseState[CWindowInput::MOUSE_LEFT] == (CWindowInput::InputState::INPUT_HOLD | CWindowInput::InputState::INPUT_FIRST_PRESS))
 	// 	{
 	// 		SetFocussed(true);
 	// 		BackImage.Colour = {Colour.r / 2, Colour.g / 2, Colour.b / 2, Colour.a};
 	// 	}
 	// }
-	// else if (CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == (CInput::InputState::INPUT_HOLD | CInput::InputState::INPUT_FIRST_PRESS))
+	// else if (CWindowInput::GetInstance()->MouseState[CWindowInput::MOUSE_LEFT] == (CWindowInput::InputState::INPUT_HOLD | CWindowInput::InputState::INPUT_FIRST_PRESS))
 	// {
 	// 	SetFocussed(false);
 	// 	BackImage.Colour = {Colour.r, Colour.g, Colour.b, Colour.a};
 	// }
-	// if (bIsFocussed && (CInput::GetInstance()->bKBHit || CInput::GetInstance()->KeyState[CInput::GetInstance()->cLastKey] == CInput::INPUT_HOLD))
+	// if (bIsFocussed && (CWindowInput::GetInstance()->bKBHit || CWindowInput::GetInstance()->KeyState[CWindowInput::GetInstance()->cLastKey] == CWindowInput::INPUT_HOLD))
 	// {
 	// 	//FieldText.Colour.a = 1.0f;
 	// 	std::string NewText = FieldText.sText;
-	// 	char cNext = CInput::GetInstance()->cLastKey;
+	// 	char cNext = CWindowInput::GetInstance()->cLastKey;
 	// 	if (cNext == '\b' && dSpamDelay > fSpamTime)
 	// 	{
 	// 		dSpamDelay = 0;
@@ -113,7 +113,7 @@ void UITextField::Update()
 	// 	{
 	// 		//return true;
 	// 	}
-	// 	else if (CInput::GetInstance()->KeyState[CInput::GetInstance()->cLastKey] != CInput::INPUT_HOLD)
+	// 	else if (CWindowInput::GetInstance()->KeyState[CWindowInput::GetInstance()->cLastKey] != CWindowInput::INPUT_HOLD)
 	// 	{
 	// 		if (bHintTextActive)
 	// 		{

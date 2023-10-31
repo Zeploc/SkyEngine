@@ -32,38 +32,11 @@ GLRenderer::GLRenderer()
 		
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
-	// TODO: Move creation/sizing
-	SFramebufferSpecification FramebufferSpecification;
-	InstanceSize = {1280,720};
-	FramebufferSpecification.Size = InstanceSize;
-	Framebuffer = IFramebuffer::Create(FramebufferSpecification);
-	// TODO: Resize function updates/invalidates frame buffer
 }
-
-void GLRenderer::PreRender()
-{
-	// glClearColor(ClearColour.R, ClearColour.G, ClearColour.B, 1.0f);
-	// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	// const SVector2i WindowSize = GraphicsWindow->GetSize();
-	// // TODO: Option to expoose/override viewport position
-	// // Fill whole window with viewport by default
-	// glViewport(0, 0, WindowSize.X, WindowSize.Y);
-}
-
 
 void GLRenderer::SetWireframeMode(bool bInWireframeEnabled)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, bInWireframeEnabled ? GL_LINE : GL_FILL);
-}
-
-void GLRenderer::SetRenderViewport(const SVector2i InViewportPosition, const SVector2i InViewportSize)
-{
-	// TODO: Place holder
-	SVector2i WindowSize = GetApplication()->GetApplicationWindow()->GetSize();
-	// TODO: Safety checks
-	// Y flipped since gl uses y=0 as bottom of screen instead of top
-	// glViewport(InViewportPosition.X, (WindowSize.Y - InViewportSize.Y) - InViewportPosition.Y, InViewportSize.X, InViewportSize.Y);
 }
 
 void GLRenderer::RenderImGui()
@@ -237,8 +210,4 @@ void GLRenderer::CleanupMesh(TPointer<CMeshComponent> Mesh)
 	}
 	glDeleteVertexArrays(1, &Mesh->vao);
 	// TODO: Look into further cleanup
-}
-
-void GLRenderer::PostRender()
-{	
 }

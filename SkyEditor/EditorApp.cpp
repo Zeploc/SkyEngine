@@ -11,7 +11,7 @@
 #include "Dependencies/ImGui/imgui.h"
 #include "Dependencies/ImGui/imgui_internal.h"
 #include "Editor/EditorLogManager.h"
-#include "Editor/EditorViewportLayer.h"
+#include "Editor/EditorViewportCanvas.h"
 #include "Editor/Scene/EditorScene.h"
 #include "Editor/UI/ConsoleLog.h"
 #include "Editor/UI/EntityPropertiesPanel.h"
@@ -20,8 +20,9 @@
 #include "Editor/Windows/EditorWindowManager.h"
 #include "Canvas/Canvas.h"
 #include "Canvas/UICanvas.h"
-#include "Canvas/ViewportLayer.h"
+#include "Canvas/ViewportCanvas.h"
 #include "Platform/Window/EngineWindow.h"
+#include "Render/SceneRenderer.h"
 
 
 EditorApplication::EditorApplication() : Application()
@@ -37,6 +38,7 @@ bool EditorApplication::ApplicationSetup()
 	{			
 		TPointer<EditorScene> NewScene = TPointer<EditorScene>(new EditorScene("Editor"));			
 		SceneManager::GetInstance()->AddScene(NewScene);
+		ViewportLayer->GetSceneRenderer()->SetSceneTarget(NewScene);
 	}
 	TPointer<CLayerInfoWidget> LayerInfoWidget = std::make_shared<CLayerInfoWidget>();
 	EditorViewportLayer->AddViewportWidget(LayerInfoWidget);
@@ -64,7 +66,7 @@ void EditorApplication::SetupLogManager()
 
 void EditorApplication::SetupViewportLayer()
 {
-	EditorViewportLayer = new CEditorViewportLayer(ApplicationWindow);
+	EditorViewportLayer = new CEditorViewportCanvas(ApplicationWindow);
 	ViewportLayer = EditorViewportLayer;
 }
 

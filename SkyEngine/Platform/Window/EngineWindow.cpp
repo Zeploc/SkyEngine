@@ -7,10 +7,9 @@
 #include "Events/ApplicationEvent.h"
 #include "Events/KeyEvent.h"
 #include "Events/MouseEvent.h"
-#include "Graphics/GraphicsAPI.h"
 #include "Input/Input.h"
 #include "Canvas/Canvas.h"
-#include "Graphics/Renderer.h"
+#include "Render/Renderer.h"
 #include "Platform/PlatformInterface.h"
 #include "System/TimeManager.h"
 
@@ -55,17 +54,16 @@ TPointer<CEngineWindow> CEngineWindow::CreateEngineWindow(const std::string& InW
 
 void CEngineWindow::PreRender()
 {
-	GetRenderer()->PreRender();
 }
 
 void CEngineWindow::PostRender()
 {
-	GetRenderer()->PostRender();
 }
 
 void CEngineWindow::Render()
 {
 	PreRender();
+	GetRenderer()->RenderScenes();
 	CanvasManager.Render();
 	PostRender();
 }
@@ -84,11 +82,11 @@ void CEngineWindow::SetCursorVisible(bool bSetVisible)
 	bCursorVisible = bSetVisible;
 }
 
-void CEngineWindow::MouseButtonPress(int button, CInput::KeyEventType EventType, int mods)
+void CEngineWindow::MouseButtonPress(int button, CWindowInput::KeyEventType EventType, int mods)
 {
 	Input.MouseButton(button, EventType, mods);
 	CMouseButtonEvent* MouseEvent;
-	if (EventType == CInput::Pressed)
+	if (EventType == CWindowInput::Pressed)
 	{
 		CMouseButtonPressedEvent ButtonPressedEvent = CMouseButtonPressedEvent(button, mods);
 		MouseEvent = &ButtonPressedEvent;
@@ -103,17 +101,17 @@ void CEngineWindow::MouseButtonPress(int button, CInput::KeyEventType EventType,
 }
 
 // TODO: Mod type
-void CEngineWindow::KeyPress(int key, int scancode, CInput::KeyEventType EventType, int mods)
+void CEngineWindow::KeyPress(int key, int scancode, CWindowInput::KeyEventType EventType, int mods)
 {
 	Input.ProcessKeys(key, scancode, EventType, mods);
 
 	CKeyEvent* KeyEvent;
-	if (EventType == CInput::Pressed)
+	if (EventType == CWindowInput::Pressed)
 	{
 		CKeyPressedEvent KeyPressedEvent = CKeyPressedEvent(key, mods, 0);
 		KeyEvent = &KeyPressedEvent;
 	}
-	else if (EventType == CInput::Repeat)
+	else if (EventType == CWindowInput::Repeat)
 	{
 		CKeyPressedEvent KeyPressedEvent = CKeyPressedEvent(key, mods, 1);
 		KeyEvent = &KeyPressedEvent;

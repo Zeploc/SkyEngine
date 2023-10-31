@@ -25,7 +25,7 @@ enum class EProjectionMode
 	Perspective
 };
 
-class CViewportLayer;
+class CViewportCanvas;
 struct STransform;
 
 // TODO: Warnings with exporting class containing STDL
@@ -37,7 +37,7 @@ public:
 	Matrix4 View;
 	Matrix4 Projection;
 
-	void Init(CViewportLayer* InViewportLayer, SVector CamPos, SVector ForwardVec, SVector UpVec);
+	void Init(CViewportCanvas* InViewportLayer, SVector CamPos, SVector ForwardVec, SVector UpVec);
 
 	void UpdateViewMatrix();
 
@@ -79,11 +79,13 @@ public:
 		bUseSpectatorControls = !bUseSpectatorControls;
 	}
 
+	bool UsingSpectatorControls() const { return bUseSpectatorControls; }
+
 	bool bSpectatorMovement = true;
 	float MouseSensitivity = 0.15f;
 
 protected:
-	CViewportLayer* Viewport;
+	CViewportCanvas* Viewport;
 	
 private:
 	// FPS CONTROLS

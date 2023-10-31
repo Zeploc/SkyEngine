@@ -15,7 +15,7 @@
 #include "Core/Application.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Input/Input.h"
-#include "Canvas/ViewportLayer.h"
+#include "Canvas/ViewportCanvas.h"
 #include "Math/Transform.h"
 #include "Math/Matrix.h"
 #include "Math/Vector.h"
@@ -33,7 +33,7 @@ CameraManager* CameraManager::m_pCamera;
 #--Parameters--#: 	Takes in screen size and camera vectors
 #--Return--#: 		NA
 ************************************************************/
-void CameraManager::Init(CViewportLayer* InViewportLayer, SVector CamPos, SVector ForwardVec, SVector UpVec)
+void CameraManager::Init(CViewportCanvas* InViewportLayer, SVector CamPos, SVector ForwardVec, SVector UpVec)
 {
 	Viewport = InViewportLayer;
 	CameraPosition = CamPos;
@@ -134,31 +134,31 @@ void CameraManager::SpectatorUpdate()
 	{
 		const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 		const SVector ForwardMovement = CameraForward * CameraSpeed * CTimeManager::GetDeltaTime();
-		if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_W] == CInput::INPUT_HOLD)
+		if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_W] == CWindowInput::INPUT_HOLD)
 		{
 			CameraPosition += ForwardMovement;
 		}
-		else if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_S] == CInput::INPUT_HOLD)
+		else if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_S] == CWindowInput::INPUT_HOLD)
 		{
 			CameraPosition -= ForwardMovement;
 		}
 		
 		const SVector RightMovement = GetCameraRightVector() * CameraSpeed * CTimeManager::GetDeltaTime();
-		if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_A] == CInput::INPUT_HOLD)
+		if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_A] == CWindowInput::INPUT_HOLD)
 		{
 			CameraPosition -= RightMovement;
 		}
-		else if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_D] == CInput::INPUT_HOLD)
+		else if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_D] == CWindowInput::INPUT_HOLD)
 		{
 			CameraPosition += RightMovement;
 		}
 		
 		const SVector UpMovement = CameraUp * CameraSpeed * CTimeManager::GetDeltaTime();
-		if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_E] == CInput::INPUT_HOLD)
+		if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_E] == CWindowInput::INPUT_HOLD)
 		{
 			CameraPosition += UpMovement;
 		}
-		else if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_Q] == CInput::INPUT_HOLD)
+		else if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_Q] == CWindowInput::INPUT_HOLD)
 		{
 			CameraPosition -= UpMovement;
 		}

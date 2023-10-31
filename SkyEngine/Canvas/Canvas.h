@@ -9,8 +9,6 @@
 #include "Events/MouseEvent.h"
 #include "Math/Internal/Vector2.decl.h"
 
-#pragma once
-
 // TODO: Warnings with exporting class containing STDL
 #pragma warning (disable : 4251)
 

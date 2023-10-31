@@ -4,6 +4,9 @@
 #include "GLIncludes.h"
 
 #include "Graphics/GraphicsAPI.h"
+#include "Render/Framebuffer.h"
+
+class CRenderer;
 
 class IGLAPI : public IGraphicsAPI
 {
@@ -16,7 +19,7 @@ public:
 	unsigned int CreateVertexBuffer(const MeshData& MeshData) override;
 	TPointer<CTexture> GetTexture(const std::string& TextureSource, bool bAA) override;
 	void BindVertexArray(const std::vector<float>& Vertices, const std::vector<uint32_t>& Indices, unsigned& Vao) override;
-	TPointer<IRenderer> CreateNewRenderer() override;
+	TPointer<CRenderer> CreateNewRenderer() override;
 	bool CreateShaderProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* GeometryShaderFilename) override;
 	bool CreateTessProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename) override;
 	bool CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename) override;
@@ -30,6 +33,9 @@ public:
 	void PassAttributeToShader(int32_t ShaderID, SVector4 Attribute) override;
 	void PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute) override;
 	void PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture> Attribute) override;
+
+	void Clear(SVector ClearColour) override;
+	void SetRenderViewportSize(const SVector2i InViewportSize) override;
 	
 private:
 	std::string ReadShader(const char* filename);

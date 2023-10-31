@@ -4,7 +4,7 @@
 #include "InternalMaterial.h"
 
 #include "Core/Application.h"
-#include "Graphics/Renderer.h"
+#include "Render/Renderer.h"
 #include "Render/Shaders/Shader.h"
 
 CMaterialInterface::CMaterialInterface(const std::string& InMaterialName, const std::string& InMaterialPath)

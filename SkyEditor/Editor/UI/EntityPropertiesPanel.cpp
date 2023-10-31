@@ -4,7 +4,7 @@
 
 #include "EditorApp.h"
 #include "Dependencies/ImGui/imgui.h"
-#include "Editor/EditorViewportLayer.h"
+#include "Editor/EditorViewportCanvas.h"
 #include "Editor/Scene/EditorScene.h"
 #include "Editor/Scene/TransformationWidget.h"
 #include "Scene/SceneManager.h"

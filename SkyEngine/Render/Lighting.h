@@ -4,16 +4,11 @@
 
 #include "Core/Core.h"
 
-// OpenGL Library //
-#include <glew/glew.h>
-
 //#include <freeglut.h>
 
 // Local Libraries //
 #include "Math/Vector4.h"
 #include "Math/Vector.h"
-
-class IRenderer;
 
 // TODO: STDL warnings with exporting class with vector
 #pragma warning (disable : 4251)

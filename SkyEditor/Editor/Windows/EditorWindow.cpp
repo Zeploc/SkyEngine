@@ -12,7 +12,7 @@
 #include <UI/Legacy/UIButton.h>
 
 #include "Core/Application.h"
-#include "Graphics/Renderer.h"
+#include "Render/Renderer.h"
 #include "Platform/Window/EngineWindow.h"
 
 void EditorWindow::CreateExternalWindow()
@@ -71,7 +71,7 @@ void EditorWindow::RenderWindow()
 {	
 	if (LinkedWindow != EditorWindowManager::GetMainWindow()) // Separate window
 	{
-		GetRenderer()->ClearColour = BackColour;
+		//GetRenderer()->ClearColour = BackColour;
 		// LinkedWindow->PreRender();
 		LinkedWindow->Render();
 	}
@@ -79,7 +79,7 @@ void EditorWindow::RenderWindow()
 	{
 		// Position viewport within existing main window
 		const SVector2i MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
-		GetRenderer()->SetRenderViewport({Position.X, MainWindowSize.Y - Position.Y - Size.Y}, {Size.X, Size.Y});
+		//GetRenderer()->SetRenderViewport({Position.X, MainWindowSize.Y - Position.Y - Size.Y}, {Size.X, Size.Y});
 	}
 
 	// LinkedWindow->Render({}, UIElements);
@@ -157,7 +157,7 @@ void EditorWindow::PopIn()
 
 void EditorWindow::StartDrag()
 {
-	// DragOffset = CInput::GetInstance()->MousePos - Position;
+	// DragOffset = CWindowInput::GetInstance()->MousePos - Position;
 	DraggingWindow = true;
 }
 
@@ -165,7 +165,7 @@ void EditorWindow::StopDrag()
 {
 	if (DraggingWindow)
 	{
-		// SVector2i NewPosition = CInput::GetInstance()->MousePos - DragOffset;
+		// SVector2i NewPosition = CWindowInput::GetInstance()->MousePos - DragOffset;
 		// SetWindowPosition(NewPosition);
 
 		DraggingWindow = false;
@@ -223,32 +223,32 @@ void EditorWindow::UpdateWindow()
 
 	if (DraggingWindow)
 	{
-		// SVector2i NewPosition = CInput::GetInstance()->MousePos - DragOffset;
+		// SVector2i NewPosition = CWindowInput::GetInstance()->MousePos - DragOffset;
 		// SetWindowPosition(NewPosition);
 	}
 
-	//glm::vec2 MousePosViewport = CInput::GetInstance()->MousePos;
+	//glm::vec2 MousePosViewport = CWindowInput::GetInstance()->MousePos;
 	////MousePosViewport += ViewportOffset;
 	//glm::vec2 TopLeft = Position;
 	//glm::vec2 BottomRight = Position + Size;
 	//bool InWindow = (MousePosViewport.x > TopLeft.x && MousePosViewport.x < BottomRight.x && MousePosViewport.y < BottomRight.y && MousePosViewport.y > TopLeft.y);
 	//
-	//if (CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == CInput::InputState::INPUT_FIRST_PRESS && InWindow)
+	//if (CWindowInput::GetInstance()->MouseState[CWindowInput::MOUSE_LEFT] == CWindowInput::InputState::INPUT_FIRST_PRESS && InWindow)
 	//{
-	//	DragOffset = CInput::GetInstance()->MousePos - Position;
+	//	DragOffset = CWindowInput::GetInstance()->MousePos - Position;
 	//	DraggingWindow = true;
 	//	//PopOut();
 	//}
-	//else if (CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == CInput::InputState::INPUT_HOLD && DraggingWindow)
+	//else if (CWindowInput::GetInstance()->MouseState[CWindowInput::MOUSE_LEFT] == CWindowInput::InputState::INPUT_HOLD && DraggingWindow)
 	//{
-	//	glm::vec2 NewPosition = CInput::GetInstance()->MousePos - DragOffset;
+	//	glm::vec2 NewPosition = CWindowInput::GetInstance()->MousePos - DragOffset;
 	//	SetWindowPosition(NewPosition);
 	//}
-	//else if(CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == CInput::InputState::INPUT_FIRST_RELEASE)
+	//else if(CWindowInput::GetInstance()->MouseState[CWindowInput::MOUSE_LEFT] == CWindowInput::InputState::INPUT_FIRST_RELEASE)
 	//{
 	//	if (DraggingWindow)
 	//	{
-	//		glm::vec2 NewPosition = CInput::GetInstance()->MousePos - DragOffset;
+	//		glm::vec2 NewPosition = CWindowInput::GetInstance()->MousePos - DragOffset;
 	//		SetWindowPosition(NewPosition);
 
 	//		DraggingWindow = false;
@@ -261,7 +261,7 @@ void EditorWindow::UpdateWindow()
 		UIElement->BaseUpdate();
 	}
 
-	//CInput::GetInstance()->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
+	//CWindowInput::GetInstance()->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 }
 
 SVector2i EditorWindow::GetPosition()

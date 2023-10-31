@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Framebuffer.h"
+#include "Render/Framebuffer.h"
 #include "Core/Core.h"
 
 #include "Math/Vector2.h"
@@ -13,7 +13,7 @@ class CEngineWindow;
 struct STransform;
 class CMeshComponent;
 class CMaterialInterface;
-class IRenderer;
+class CRenderer;
 class UIElement;
 class Entity;
 class IGraphicsWindow;
@@ -36,7 +36,7 @@ public:
 	virtual std::string GetGraphicsDisplayName() = 0;
 
 	static TPointer<IGraphicsAPI> CreateGraphicsAPI(EGraphicsAPI APIType);
-	virtual TPointer<IRenderer> CreateNewRenderer() = 0;
+	virtual TPointer<CRenderer> CreateNewRenderer() = 0;
 	
 	virtual unsigned int CreateVertexBuffer(const MeshData& MeshData) = 0;
 	virtual TPointer<CTexture> GetTexture(const std::string& TextureSource, bool bAA = true) = 0;
@@ -53,6 +53,11 @@ public:
 	virtual TPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) = 0;	
 
 	virtual void BindShader(uint32_t ShaderProgramID) = 0;
+	virtual void Clear(SVector ClearColour) = 0;
+	/* Where Y=0 is the top of the screen */
+	virtual void SetRenderViewportSize(const SVector2i InViewportSize) = 0;
+	// /* Where Y=0 is the top of the screen */
+	// virtual void SetRenderViewport(const SVector2i InViewportPosition, const SVector2i InViewportSize) = 0;
 	
 	// template <typename T>
 	// void PassAttributeToShader(int32_t ShaderLocation, T Attribute);

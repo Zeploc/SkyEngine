@@ -3,10 +3,7 @@
 #include "SEPCH.h"
 #include "GraphicsAPI.h"
 
-#include "Entity/Entity.h"
 #include "GL/GLAPI.h"
-#include "Render/Materials/InternalMaterial.h"
-#include "Render/Shaders/Shader.h"
 #include "System/LogManager.h"
 
 TPointer<IGraphicsAPI> IGraphicsAPI::CreateGraphicsAPI(EGraphicsAPI APIType)

@@ -5,7 +5,6 @@
 #include "Core/Core.h"
 
 class CShader;
-class IRenderer;
 
 // TODO: STDL warnings with exporting class with vector
 #pragma warning (disable : 4251)

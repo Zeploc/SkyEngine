@@ -85,9 +85,9 @@ void CTransformationWidget::Update()
 	YHovered = false;
 	ZHovered = false;
 
-	CInput& Input = GetApplication()->GetApplicationWindow()->GetInput();
+	CWindowInput& Input = GetApplication()->GetApplicationWindow()->GetInput();
 	// TODO:
-	const bool bMouseBegin = Input.MouseState[CInput::MOUSE_LEFT] == CInput::INPUT_FIRST_PRESS;
+	const bool bMouseBegin = Input.MouseState[CWindowInput::MOUSE_LEFT] == CWindowInput::INPUT_FIRST_PRESS;
 	
 	// Check for hit
 	const SVector RayStart = CameraManager::GetInstance()->GetCameraPosition();
@@ -142,14 +142,14 @@ void CTransformationWidget::Update()
 			GrabOffset = Transform.Position.Z - HitPoint.Z;
 		}
 	}
-	else if (Input.MouseState[CInput::MOUSE_LEFT] == CInput::INPUT_FIRST_RELEASE)
+	else if (Input.MouseState[CWindowInput::MOUSE_LEFT] == CWindowInput::INPUT_FIRST_RELEASE)
 	{
 		XHeld = false;
 		YHeld = false;
 		ZHeld = false;
 	}
 	
-	if (Input.MouseState[CInput::MOUSE_LEFT] == CInput::INPUT_HOLD && SelectedEntity)
+	if (Input.MouseState[CWindowInput::MOUSE_LEFT] == CWindowInput::INPUT_HOLD && SelectedEntity)
 	{
 		if (XHeld)
 		{

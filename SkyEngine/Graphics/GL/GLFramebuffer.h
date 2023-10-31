@@ -4,7 +4,7 @@
 
 #include <glew/glew.h>
 
-#include "Graphics/Framebuffer.h"
+#include "Render/Framebuffer.h"
 
 class GLFramebuffer : public IFramebuffer
 {
@@ -17,6 +17,7 @@ public:
 	void Unbind() override;
 	uint32_t GetColorAttachmentRendererID() const override { return ColorAttachment; }
 	void Invalidate() override;
+	void UpdateSize(SVector2ui NewSize) override;
 
 
 private:

@@ -4,7 +4,7 @@
 #include <glew/glew.h>
 
 #include "Core/Application.h"
-#include "Graphics/Renderer.h"
+#include "Render/Renderer.h"
 #include "Platform/Window/EngineWindow.h"
 
 GLFramebuffer::GLFramebuffer(const SFramebufferSpecification& Specification)
@@ -53,25 +53,18 @@ void GLFramebuffer::Invalidate()
 	
 }
 
+void GLFramebuffer::UpdateSize(SVector2ui NewSize)
+{
+	Specification.Size = NewSize;
+	Invalidate();
+}
+
 void GLFramebuffer::Bind()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, RendererID);
-
-	// TODO: Shouldn't be here
-	SVector ClearColour = GetRenderer()->ClearColour;
-	glClearColor(ClearColour.R, ClearColour.G, ClearColour.B, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	const SVector2i WindowSize = GetApplication()->GetApplicationWindow()->GetSize();
-	// TODO: Option to expoose/override viewport position
-	// Fill whole window with viewport by default
-	glViewport(0, 0, WindowSize.X, WindowSize.Y);
 }
 
 void GLFramebuffer::Unbind()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	
-	// TODO: Shouldn't be here
-	glClearColor(0.9f, 0.4f, 0.4f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
 }

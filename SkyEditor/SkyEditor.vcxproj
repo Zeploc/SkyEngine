@@ -133,7 +133,7 @@
   <ItemGroup>
     <ClInclude Include="..\SkyEngine\Dependencies\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="Editor\EditorLogManager.h" />
-    <ClInclude Include="Editor\EditorViewportLayer.h" />
+    <ClInclude Include="Editor\EditorViewportCanvas.h" />
     <ClInclude Include="Editor\Scene\EditorScene.h" />
     <ClInclude Include="Editor\Scene\TransformationWidget.h" />
     <ClInclude Include="Editor\UI\ConsoleLog.h" />
@@ -148,7 +148,7 @@
   <ItemGroup>
     <ClCompile Include="..\SkyEngine\Dependencies\ImGuizmo\ImGuizmo.cpp" />
     <ClCompile Include="Editor\EditorLogManager.cpp" />
-    <ClCompile Include="Editor\EditorViewportLayer.cpp" />
+    <ClCompile Include="Editor\EditorViewportCanvas.cpp" />
     <ClCompile Include="Editor\Scene\EditorScene.cpp" />
     <ClCompile Include="Editor\Scene\TransformationWidget.cpp" />
     <ClCompile Include="Editor\UI\ConsoleLog.cpp" />

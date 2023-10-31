@@ -11,9 +11,6 @@
 #include "Events/MouseEvent.h"
 #include "System/Utils.h"
 
-// OpenGL Library Includes //
-
-class IRenderer;
 class UIText;
 class UIElement;
 class Entity;

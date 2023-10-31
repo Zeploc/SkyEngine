@@ -8,7 +8,7 @@
 // Local Includes //
 #include "Camera/CameraManager.h"
 #include "Core/Application.h"
-#include "Graphics/Renderer.h"
+#include "Render/Renderer.h"
 #include "Shaders/Shader.h"
 
 // Static variables //

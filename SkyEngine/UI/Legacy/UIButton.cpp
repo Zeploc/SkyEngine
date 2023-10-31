@@ -147,7 +147,7 @@ void UIButton::Update()
 	//MousePosViewport += ViewportOffset;
 	glm::vec2 TopLeft = glm::vec2(position.x - ImageComponent.GetWidth() / 2, position.y - ImageComponent.GetHeight() / 2) + ViewportOffset;
 	glm::vec2 BottomRight = glm::vec2(position.x + ImageComponent.GetWidth() / 2, position.y + ImageComponent.GetHeight() / 2) + ViewportOffset;
-	// if (CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == CInput::InputState::INPUT_FIRST_RELEASE)
+	// if (CWindowInput::GetInstance()->MouseState[CWindowInput::MOUSE_LEFT] == CWindowInput::InputState::INPUT_FIRST_RELEASE)
 	// {
 	// 	ReleaseDelegate.Broadcast();
 	//
@@ -156,11 +156,11 @@ void UIButton::Update()
 	// if (MousePosViewport.x > TopLeft.x && MousePosViewport.x < BottomRight.x && MousePosViewport.y < BottomRight.y && MousePosViewport.y > TopLeft.y)
 	// {
 	// 	Hovered();
-	// 	if (CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == CInput::InputState::INPUT_HOLD)
+	// 	if (CWindowInput::GetInstance()->MouseState[CWindowInput::MOUSE_LEFT] == CWindowInput::InputState::INPUT_HOLD)
 	// 	{
 	// 		HoldDelegate.Broadcast();
 	// 	}
-	// 	else if (CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == CInput::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
+	// 	else if (CWindowInput::GetInstance()->MouseState[CWindowInput::MOUSE_LEFT] == CWindowInput::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
 	// 	{
 	// 		Pressed();
 	// 	}

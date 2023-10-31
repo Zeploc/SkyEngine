@@ -12,7 +12,7 @@ XBOXController::XBOXController(int playerNumber)
 {
 	// Set the Controller Number
 	_controllerNum = playerNumber - 1;
-	std::fill(ControllerButtons, ControllerButtons + 14, CInput::INPUT_RELEASED);
+	std::fill(ControllerButtons, ControllerButtons + 14, CWindowInput::INPUT_RELEASED);
 }
 
 XINPUT_STATE XBOXController::GetState()
@@ -64,25 +64,25 @@ void XBOXController::Update()
 	{
 		if (GetState().Gamepad.wButtons & i)
 		{
-			if (ControllerButtons[iCurrentButton] == CInput::INPUT_FIRST_PRESS)
+			if (ControllerButtons[iCurrentButton] == CWindowInput::INPUT_FIRST_PRESS)
 			{
-				ControllerButtons[iCurrentButton] = CInput::INPUT_HOLD;
+				ControllerButtons[iCurrentButton] = CWindowInput::INPUT_HOLD;
 			}
-			else if (ControllerButtons[iCurrentButton] != CInput::INPUT_HOLD)
+			else if (ControllerButtons[iCurrentButton] != CWindowInput::INPUT_HOLD)
 			{
-				ControllerButtons[iCurrentButton] = CInput::INPUT_FIRST_PRESS;
+				ControllerButtons[iCurrentButton] = CWindowInput::INPUT_FIRST_PRESS;
 				std::cout << iCurrentButton << " Pressed\n";
 			}
 		}
 		else
 		{
-			if (ControllerButtons[iCurrentButton] == CInput::INPUT_HOLD)
+			if (ControllerButtons[iCurrentButton] == CWindowInput::INPUT_HOLD)
 			{
-				ControllerButtons[iCurrentButton] = CInput::INPUT_FIRST_RELEASE;
+				ControllerButtons[iCurrentButton] = CWindowInput::INPUT_FIRST_RELEASE;
 			}
 			else
 			{
-				ControllerButtons[iCurrentButton] = CInput::INPUT_RELEASED;
+				ControllerButtons[iCurrentButton] = CWindowInput::INPUT_RELEASED;
 			}
 		}
 		iCurrentButton++;
@@ -91,25 +91,25 @@ void XBOXController::Update()
 	{
 		if (GetState().Gamepad.wButtons & i)
 		{
-			if (ControllerButtons[iCurrentButton] == CInput::INPUT_FIRST_PRESS)
+			if (ControllerButtons[iCurrentButton] == CWindowInput::INPUT_FIRST_PRESS)
 			{
-				ControllerButtons[iCurrentButton] = CInput::INPUT_HOLD;
+				ControllerButtons[iCurrentButton] = CWindowInput::INPUT_HOLD;
 			}
-			else if (ControllerButtons[iCurrentButton] != CInput::INPUT_HOLD)
+			else if (ControllerButtons[iCurrentButton] != CWindowInput::INPUT_HOLD)
 			{
-				ControllerButtons[iCurrentButton] = CInput::INPUT_FIRST_PRESS;
+				ControllerButtons[iCurrentButton] = CWindowInput::INPUT_FIRST_PRESS;
 				std::cout << iCurrentButton << " Pressed\n";
 			}
 		}
 		else
 		{
-			if (ControllerButtons[iCurrentButton] == CInput::INPUT_HOLD)
+			if (ControllerButtons[iCurrentButton] == CWindowInput::INPUT_HOLD)
 			{
-				ControllerButtons[iCurrentButton] = CInput::INPUT_FIRST_RELEASE;
+				ControllerButtons[iCurrentButton] = CWindowInput::INPUT_FIRST_RELEASE;
 			}
 			else
 			{
-				ControllerButtons[iCurrentButton] = CInput::INPUT_RELEASED;
+				ControllerButtons[iCurrentButton] = CWindowInput::INPUT_RELEASED;
 			}
 		}
 		iCurrentButton++;

@@ -1,15 +1,15 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
-#include "Canvas/ViewportLayer.h"
+#include "Canvas/ViewportCanvas.h"
 #include "Scene/EditorScene.h"
 
 class CUIWidget;
 
-class CEditorViewportLayer : public CViewportLayer
+class CEditorViewportCanvas : public CViewportCanvas
 {
 public:
-	CEditorViewportLayer(TWeakPointer<CEngineWindow> InOwningWindow);
+	CEditorViewportCanvas(TWeakPointer<CEngineWindow> InOwningWindow);
 	void OnUpdate() override;
 	void OnRender() override;
 
@@ -49,5 +49,4 @@ protected:
 	bool bWireframe = false;
 	
 	SVector2i PreviousMousePosition;
-	SVector2 LastSize;
 };

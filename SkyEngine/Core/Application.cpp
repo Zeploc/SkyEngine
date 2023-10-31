@@ -13,7 +13,7 @@
 #include "System/LogManager.h"
 #include "Canvas/Canvas.h"
 #include "Canvas/UICanvas.h"
-#include "Canvas/ViewportLayer.h"
+#include "Canvas/ViewportCanvas.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Platform/Windows/WindowsPlatform.h"
 #include "Render/Shaders/ShaderManager.h"
@@ -77,7 +77,7 @@ namespace SkyEngine
 	}
 	void Application::SetupViewportLayer()
 	{
-		ViewportLayer = new CViewportLayer(ApplicationWindow);
+		ViewportLayer = new CViewportCanvas(ApplicationWindow);
 	}
 
 	int Application::Run()
@@ -115,7 +115,7 @@ namespace SkyEngine
 	}
 
 	void Application::Render()
-	{		
+	{
 		ApplicationWindow->Render();
 	}
 
@@ -154,7 +154,7 @@ TPointer<IGraphicsAPI> GetGraphicsAPI()
 	return SkyEngine::Application::Get()->GraphicsApi;
 }
 
-TPointer<IRenderer> GetRenderer()
+TPointer<CRenderer> GetRenderer()
 {
 	return SkyEngine::Application::Get()->Renderer;
 }

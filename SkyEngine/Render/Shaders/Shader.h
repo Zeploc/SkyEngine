@@ -7,7 +7,6 @@
 // #include "Render/Materials/Material.h"
 
 class CMaterialInterface;
-class IRenderer;
 
 // TODO: STDL warnings with exporting class with vector
 #pragma warning (disable : 4251)

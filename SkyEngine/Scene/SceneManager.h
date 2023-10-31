@@ -4,7 +4,6 @@
 
 #include "Core/Core.h"
 
-class IRenderer;
 class Scene;
 
 // TODO: STDL warnings with exporting class with vector

@@ -24,7 +24,8 @@ public:
 	virtual uint32_t GetColorAttachmentRendererID() const = 0;
 
 	/* Implies needs updating */
-	virtual void Invalidate()  = 0;
+	virtual void Invalidate() = 0;
+	virtual void UpdateSize(SVector2ui NewSize) = 0;
 	
 	/* Remove later to renderer */
 	virtual void Bind() = 0;

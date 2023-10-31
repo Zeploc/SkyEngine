@@ -9,6 +9,7 @@
 
 #include "GLFramebuffer.h"
 #include "GLRenderer.h"
+#include "Math/Matrix.h"
 #include "Render/Shaders/ShaderManager.h"
 #include "System/LogManager.h"
 
@@ -29,6 +30,7 @@ void IGLAPI::Init()
 	if (InitResult != GLEW_OK)
 	{
 		CLogManager::GetInstance()->DisplayLogError("Failed to init glew");
+		return;
 	}
 
 	glEnable(GL_DEBUG_OUTPUT);
@@ -164,10 +166,10 @@ void IGLAPI::BindVertexArray(const std::vector<float>& Vertices, const std::vect
 	glBindVertexArray(0);
 }
 
-TPointer<IRenderer> IGLAPI::CreateNewRenderer()
+TPointer<CRenderer> IGLAPI::CreateNewRenderer()
 {
 	// Create instance for basic setup before window
-	return std::make_shared<GLRenderer>();
+	return CreatePointer<GLRenderer>();
 }
 
 std::string IGLAPI::ReadShader(const char* filename)
@@ -406,6 +408,20 @@ void IGLAPI::PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture> At
 	// TODO: Handle multiple
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, Attribute->TextureID);	
+}
+
+void IGLAPI::Clear(SVector ClearColour)
+{
+	glClearColor(ClearColour.R, ClearColour.G, ClearColour.B, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void IGLAPI::SetRenderViewportSize(const SVector2i InViewportSize)
+{
+	// TODO: Option to expoose/override viewport position
+	// Fill whole window with viewport by default
+	// Y flipped since gl uses y=0 as bottom of screen instead of top
+	glViewport(0, 0, InViewportSize.X, InViewportSize.Y);	
 }
 
 // GLenum glCheckError_(const char *file, int line)

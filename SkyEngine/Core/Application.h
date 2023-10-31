@@ -8,7 +8,7 @@
 #include "Graphics/GraphicsAPI.h"
 #include "Math/Vector2.h"
 
-class CViewportLayer;
+class CViewportCanvas;
 class CLogManager;
 class CUICanvas;
 class CCanvas;
@@ -45,7 +45,7 @@ namespace SkyEngine
 
 		TPointer<IGraphicsAPI> GraphicsApi;
 		TPointer<IPlatformInterface> PlatformInterface;		
-		TPointer<IRenderer> Renderer;
+		TPointer<CRenderer> Renderer;
 		EGraphicsAPI GraphicsApiType;
 		TPointer<CLogManager> LogManager;
 
@@ -56,7 +56,7 @@ namespace SkyEngine
 	protected:
 		// TODO: Remove since viewport layer should make game UI canvas
 		CUICanvas* UILayer;
-		CViewportLayer* ViewportLayer;
+		CViewportCanvas* ViewportLayer;
 		
 		TPointer<CEngineWindow> ApplicationWindow;
 	private:
@@ -70,5 +70,5 @@ namespace SkyEngine
 
 ENGINE_API SkyEngine::Application* GetApplication();
 ENGINE_API TPointer<IGraphicsAPI> GetGraphicsAPI();
-ENGINE_API TPointer<IRenderer> GetRenderer();
+ENGINE_API TPointer<CRenderer> GetRenderer();
 

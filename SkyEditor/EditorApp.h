@@ -4,7 +4,7 @@
 #include "Core/Application.h"
 #include "Core/Core.h"
 
-class CEditorViewportLayer;
+class CEditorViewportCanvas;
 class CConsoleLog;
 class EditorApplication;
 
@@ -33,5 +33,5 @@ public:
 
 	unsigned int DockSpaceID = 0;
 	
-	CEditorViewportLayer* EditorViewportLayer;
+	CEditorViewportCanvas* EditorViewportLayer;
 };
