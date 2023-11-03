@@ -25,9 +25,6 @@
     <Filter Include="Graphics\GL">
       <UniqueIdentifier>{B8549E76-240A-176C-ADFE-104319B30D70}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics\Vulkan">
-      <UniqueIdentifier>{D64BCAB8-42D7-377D-4BE8-BA71B7F2937D}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{953A660D-014F-8EBE-CAD0-311E36A48AEF}</UniqueIdentifier>
     </Filter>
@@ -167,12 +164,6 @@
     </ClInclude>
     <ClInclude Include="Graphics\GraphicsAPI.h">
       <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Vulkan\VulkanAPI.h">
-      <Filter>Graphics\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Vulkan\imgui_impl_vulkan.h">
-      <Filter>Graphics\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Input\CXBOXController.h">
       <Filter>Input</Filter>
@@ -365,31 +356,7 @@
     <ClInclude Include="System\Utils.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="UI\Legacy\Cursor.h">
-      <Filter>UI\Legacy</Filter>
-    </ClInclude>
     <ClInclude Include="UI\Legacy\Text.h">
-      <Filter>UI\Legacy</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Legacy\UIButton.h">
-      <Filter>UI\Legacy</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Legacy\UIElement.h">
-      <Filter>UI\Legacy</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Legacy\UIImage.h">
-      <Filter>UI\Legacy</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Legacy\UISlider.h">
-      <Filter>UI\Legacy</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Legacy\UIText.h">
-      <Filter>UI\Legacy</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Legacy\UITextField.h">
-      <Filter>UI\Legacy</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Legacy\Widget.h">
       <Filter>UI\Legacy</Filter>
     </ClInclude>
     <ClInclude Include="UI\UIWidget.h">
@@ -453,12 +420,6 @@
     </ClCompile>
     <ClCompile Include="Graphics\GraphicsAPI.cpp">
       <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Vulkan\VulkanAPI.cpp">
-      <Filter>Graphics\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Vulkan\imgui_impl_vulkan.cpp">
-      <Filter>Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Input\CXBOXController.cpp">
       <Filter>Input</Filter>
@@ -599,31 +560,7 @@
     <ClCompile Include="System\Utils.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="UI\Legacy\Cursor.cpp">
-      <Filter>UI\Legacy</Filter>
-    </ClCompile>
     <ClCompile Include="UI\Legacy\Text.cpp">
-      <Filter>UI\Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Legacy\UIButton.cpp">
-      <Filter>UI\Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Legacy\UIElement.cpp">
-      <Filter>UI\Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Legacy\UIImage.cpp">
-      <Filter>UI\Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Legacy\UISlider.cpp">
-      <Filter>UI\Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Legacy\UIText.cpp">
-      <Filter>UI\Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Legacy\UITextField.cpp">
-      <Filter>UI\Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Legacy\Widget.cpp">
       <Filter>UI\Legacy</Filter>
     </ClCompile>
     <ClCompile Include="UI\UIWidget.cpp">

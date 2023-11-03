@@ -9,9 +9,12 @@
 #include "Particle.h"
 
 // OpenGL Library Includes //
+#include "glew/glew.h"
 
 // Local Includes //
 #include "Entity/Entity.h"
+
+class CTexture;
 
 class ENGINE_API ParticleSystem : public Entity
 {

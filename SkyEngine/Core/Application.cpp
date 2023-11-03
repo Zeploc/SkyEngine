@@ -61,10 +61,7 @@ namespace SkyEngine
 		ApplicationWindow->SubscribeEventListener(this);
 		
 		GraphicsApi = IGraphicsAPI::CreateGraphicsAPI(GraphicsApiType);
-
-		// TODO: Can we move this back to the canvas manager so it's not just floating here?
-		GetGraphicsAPI()->ImGuiInit();
-		
+		ApplicationWindow->SetupWindow();
 		ShaderManager::LoadAllDefaultShadersInCurrentContext();
 		Renderer = CreatePointer<CRenderer>();
 

@@ -12,7 +12,6 @@
 #include "System/Utils.h"
 
 class UIText;
-class UIElement;
 class Entity;
 
 class ENGINE_API Scene : public std::enable_shared_from_this<Scene>
@@ -29,14 +28,6 @@ public:
 	void AddEntity(TPointer<Entity> _Entity, bool IsInitial = false);
 
 	void DestroyEntity(TPointer<Entity> _Entity);
-
-	void AddUIElement(TPointer<UIElement> Element);
-
-	void AddUITextElement(TPointer<UIText> Element);
-
-	void AddUITextElement(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string font, int iPSize, EANCHOR _Anchor);
-
-	void DestroyUIElement(TPointer<UIElement> _Element);
 
 	virtual void Update();
 	virtual bool OnMouseButtonPressed(int Button, int Mods);
@@ -57,12 +48,10 @@ public:
 
 	std::string SceneName;
 	std::vector<TPointer<Entity>> Entities;
-	std::vector<TPointer<UIElement>> UIElements;
 	
 protected:
 	
 	std::vector<TPointer<Entity>> DestroyedEntities;
-	std::vector<TPointer<UIElement>> UIElementsToBeDestroyed;
 	bool bIsPersistant = false;
 
 private:

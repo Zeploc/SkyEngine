@@ -9,8 +9,8 @@
 // Engine Includes //
 #include "Shader.h"
 #include "Render/Texture.h"
-// #include "Entity/2DParticleSystem.h"
 #include "UI/Legacy/Text.h"
+// #include "Entity/2DParticleSystem.h"
 
 // class CShader;
 class ModelObject;
@@ -41,10 +41,6 @@ public:
 
 	static std::map<std::string, TPointer<ModelObject>> Models;
 	static std::map<std::string, TPointer<CTexture>> Textures;
-
-	static unsigned int BindArray(float fWidth, float fHeight, glm::vec4 Colour);
-
-	static unsigned int BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour, const char* TextureSource, CTexture& Texture, int _DrawMode);
 
 	static Text::cFont AddFont(std::string fontPath, int iPSize);
 	

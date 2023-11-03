@@ -248,15 +248,7 @@
     <ClInclude Include="System\Math_3d.h" />
     <ClInclude Include="System\TimeManager.h" />
     <ClInclude Include="System\Utils.h" />
-    <ClInclude Include="UI\Legacy\Cursor.h" />
     <ClInclude Include="UI\Legacy\Text.h" />
-    <ClInclude Include="UI\Legacy\UIButton.h" />
-    <ClInclude Include="UI\Legacy\UIElement.h" />
-    <ClInclude Include="UI\Legacy\UIImage.h" />
-    <ClInclude Include="UI\Legacy\UISlider.h" />
-    <ClInclude Include="UI\Legacy\UIText.h" />
-    <ClInclude Include="UI\Legacy\UITextField.h" />
-    <ClInclude Include="UI\Legacy\Widget.h" />
     <ClInclude Include="UI\UIWidget.h" />
   </ItemGroup>
   <ItemGroup>
@@ -332,15 +324,7 @@
     <ClCompile Include="System\LogManager.cpp" />
     <ClCompile Include="System\TimeManager.cpp" />
     <ClCompile Include="System\Utils.cpp" />
-    <ClCompile Include="UI\Legacy\Cursor.cpp" />
     <ClCompile Include="UI\Legacy\Text.cpp" />
-    <ClCompile Include="UI\Legacy\UIButton.cpp" />
-    <ClCompile Include="UI\Legacy\UIElement.cpp" />
-    <ClCompile Include="UI\Legacy\UIImage.cpp" />
-    <ClCompile Include="UI\Legacy\UISlider.cpp" />
-    <ClCompile Include="UI\Legacy\UIText.cpp" />
-    <ClCompile Include="UI\Legacy\UITextField.cpp" />
-    <ClCompile Include="UI\Legacy\Widget.cpp" />
     <ClCompile Include="UI\UIWidget.cpp" />
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>

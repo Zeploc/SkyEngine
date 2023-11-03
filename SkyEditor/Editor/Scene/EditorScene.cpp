@@ -9,9 +9,6 @@
 // Engine Includes //
 #include <fstream>
 
-#include <UI/Legacy/UIText.h>
-#include <UI/Legacy/UIButton.h>
-
 #include "Editor/Windows/EditorWindow.h"
 #include "Editor/Windows/EditorWindowManager.h"
 #include <Render/Meshes/Basic/Cube.h>
@@ -37,33 +34,13 @@ EditorScene::EditorScene(const std::string& InSceneName) : Scene(InSceneName)
 {
 	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 	const SVector2i WindowSize = ApplicationWindow->GetSize();
-
-	TPointer<UIButton> QuitBtn(new UIButton(glm::vec2(WindowSize.X - 20, WindowSize.Y - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
-	QuitBtn->AddText("Quit", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
-	// TODO: Let delegate allow derived class type when passing in "this"? - Auto cast check inside? Template type for derived types allowed?
-	QuitBtn->BindPress(GetApplication(), &SkyEngine::Application::Quit);
-	AddUIElement(QuitBtn);
 	
-	TPointer<UIButton> SaveBtn(new UIButton(glm::vec2(WindowSize.X - 150, WindowSize.Y - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
-	SaveBtn->AddText("Save", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
-	SaveBtn->BindPress(this, &EditorScene::SaveCurrentLevel);
-	AddUIElement(SaveBtn);
-	
-	TPointer<UIButton> SaveAsNewBtn(new UIButton(glm::vec2(WindowSize.X - 280, WindowSize.Y - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
-	SaveAsNewBtn->AddText("Save As", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
-	SaveAsNewBtn->BindPress(this, &EditorScene::SaveAsNew);
-	AddUIElement(SaveAsNewBtn);
-
-	TPointer<UIButton> OpenBtn(new UIButton(glm::vec2(WindowSize.X - 410, WindowSize.Y - 10.0f), EANCHOR::BOTTOM_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 120, 25));
-	OpenBtn->AddText("Open", "Resources/Fonts/Roboto-Thin.ttf", 16, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
-	OpenBtn->BindPress(this, &EditorScene::OpenFile);
-	AddUIElement(OpenBtn);
 
 	// LevelNameText = std::make_shared<UIText>(glm::vec2(WindowSize.X - 540, WindowSize.Y - 15.0f), 0.0f, glm::vec4(0.3, 0.3, 0.3, 1.0f), "Level Name", "Resources/Fonts/Roboto-Regular.ttf", 20, EANCHOR::BOTTOM_RIGHT);
 	// AddUIElement(LevelNameText);
 
-	TPointer<UIText> TipText(new UIText({WindowSize.X - 20, 15.0f}, 0, {0.3, 0.3, 0.3, 1.0f}, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 22, EANCHOR::TOP_RIGHT));
-	AddUIElement(TipText);
+	// TPointer<UIText> TipText(new UIText({WindowSize.X - 20, 15.0f}, 0, {0.3, 0.3, 0.3, 1.0f}, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 22, EANCHOR::TOP_RIGHT));
+	// AddUIElement(TipText);
 
 	Lighting::SetLightPosition({5, 5, 5});
 	Lighting::SetSunDirection({3, -1, 5});

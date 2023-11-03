@@ -27,9 +27,8 @@ public:
 	
 	void InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender);
 	void RenderScenes();
-	void Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements);
+	void Render(std::vector<TPointer<Entity>> Entities);
 	void RenderMesh(TPointer<CMeshComponent> Mesh, STransform Transform);
-	void RenderUIElement(TPointer<UIElement> UserInterfaceItem);
 	void RenderImGui();
 
 	TPointer<CSceneRenderer> AddSceneRenderer(TPointer<Scene> InTargetScene, SVector2i InSize);

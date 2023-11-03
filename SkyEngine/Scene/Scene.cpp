@@ -8,8 +8,6 @@
 
 // Engine Includes //
 #include "Entity/Entity.h"
-#include "UI/Legacy/UIElement.h"
-#include "UI/Legacy/UIText.h"
 
 // Local Includes //
 
@@ -54,10 +52,6 @@ void Scene::DeleteScene()
 	{
 		it = nullptr;
 	}
-	for (auto it : UIElements)
-	{
-		it = nullptr;
-	}
 }
 
 /************************************************************
@@ -68,7 +62,7 @@ void Scene::DeleteScene()
 ************************************************************/
 void Scene::RenderScene()
 {
-	GetRenderer()->Render(Entities, UIElements);
+	GetRenderer()->Render(Entities);
 }
 
 /************************************************************
@@ -113,52 +107,6 @@ void Scene::DestroyEntity(TPointer<Entity> _Entity)
 }
 
 /************************************************************
-#--Description--#:	Adds UI element
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	UI Element to add
-#--Return--#: 		NA
-************************************************************/
-void Scene::AddUIElement(TPointer<UIElement> Element)
-{
-	// UIElements.push_back(Element);
-}
-
-/************************************************************
-#--Description--#:	Adds UI Text element
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	UI Text Element to add
-#--Return--#: 		NA
-************************************************************/
-void Scene::AddUITextElement(TPointer<UIText> Element)
-{
-	// UIElements.push_back(Element);
-}
-
-/************************************************************
-#--Description--#:	Adds UI Text element
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	UI Text Element paramters to add
-#--Return--#: 		NA
-************************************************************/
-void Scene::AddUITextElement(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string font, int iPSize, EANCHOR _Anchor)
-{
-	// TPointer<UIText> NewElement(new UIText(_Position, _fRotation, _Colour, _sText, font, iPSize, _Anchor));
-	// UIElements.push_back(NewElement);
-}
-
-/************************************************************
-#--Description--#:	Destroys UI Text element
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	UI Text Element paramters to destroy
-#--Return--#: 		NA
-************************************************************/
-void Scene::DestroyUIElement(TPointer<UIElement> _Element)
-{
-	UIElementsToBeDestroyed.push_back(_Element);
-	_Element->SetActive(false);
-}
-
-/************************************************************
 #--Description--#: 	Updated every frame
 #--Author--#: 		Alex Coultas
 #--Parameters--#: 	NA
@@ -172,31 +120,6 @@ void Scene::Update()
 		{
 			Entities[i]->BaseUpdate();
 		}
-	}
-
-	for (int i = 0; i < UIElements.size(); i++)
-	{
-		if (UIElements[i])
-		{
-			UIElements[i]->BaseUpdate();
-		}
-	}
-
-	for (auto& UIDestroy : UIElementsToBeDestroyed)
-	{
-		for (auto it = UIElements.begin(); it != UIElements.end(); ++it)
-		{
-			if (*it == UIDestroy)
-			{
-				UIElements.erase(it);
-				break;
-			}
-		}
-		UIDestroy.reset();
-	}
-	if (!UIElementsToBeDestroyed.empty())
-	{
-		UIElementsToBeDestroyed.clear();
 	}
 
 	Button3DEntity::bButtonPressedThisFrame = false;	

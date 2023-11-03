@@ -17,6 +17,7 @@
 #include "Core/Application.h"
 #include "System/LogManager.h"
 #include "UndefinedShader.h"
+#include "UI/Legacy/Text.h"
 
 // Local Includes //
 
@@ -128,77 +129,6 @@ TPointer<CUndefinedShader> ShaderManager::GetUndefinedShader(std::string ShaderN
 		return nullptr;
 	}
 	return std::static_pointer_cast<CUndefinedShader>(Shaders[ShaderName]);
-}
-
-///************************************************************
-//#--Description--#: 	Binds plane
-//#--Author--#: 		Alex Coultas
-//#--Parameters--#: 	Takes in size and colour
-//#--Return--#: 		New vao gluint
-//************************************************************/
-GLuint ShaderManager::BindArray(float fWidth, float fHeight, glm::vec4 Colour)
-{
-	// TODO: Remove need (should use material)
-	// float fHalfWidth = fWidth / 2;
-	// float fHalfHeight = fHeight / 2;
-	//
-	// const std::vector<float> vertices = {
-	// 	// Positions						// Colors			
-	// 	-fHalfWidth, fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
-	// 	fHalfWidth, fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
-	// 	fHalfWidth, -fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
-	// 	-fHalfWidth, -fHalfHeight, 0.0f, Colour.r, Colour.g, Colour.b, Colour.a,
-	// };
-	//
-	// const std::vector<uint32_t> indices = {
-	// 	0, 1, 2, // First Triangle
-	// 	0, 2, 3 // Second Triangle
-	// };
-	unsigned int Vao = 0;
-	// GetGraphicsAPI()->BindVertexArray(vertices, indices, Vao, true);
-	return Vao;
-}
-
-/************************************************************
-#--Description--#: 	Binds UI Image with texture tiling style
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	Takes in size, colour, texture source, ref texture gluint and draw mode
-#--Return--#: 		New vao gluint
-************************************************************/
-unsigned ShaderManager::BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour, const char* TextureSource, CTexture& Texture, int _DrawMode)
-{
-	// TODO: Link with material
-	// unsigned int vao = GetGraphicsAPI()->CreateVertexBuffer(Texture, false, false);
-
-	// glm::vec4 UVCoords = glm::vec4(0, 1, 0, 1);
-	// if (_DrawMode == 1)
-	// {
-	// 	float yValue = (Texture.Height / Texture.Width) * (static_cast<float>(Texture.Width) / static_cast<float>(Texture.Height));
-	// 	UVCoords = glm::vec4(0, 1, 0, yValue);
-	// }
-	// else if (_DrawMode == 2)
-	// {
-	// 	float xValue = (Texture.Width / Texture.Height) * (static_cast<float>(Texture.Height) / static_cast<float>(Texture.Width));
-	// 	UVCoords = glm::vec4(0, xValue, 0, 1);
-	// }
-	// float fHalfWidth = fWidth / 2;
-	// float fHalfHeight = fHeight / 2;
-	//
-	// std::vector<float> vertices = {
-	// 	// Positions				// Tex Coords
-	// 	-fHalfWidth, fHalfHeight, UVCoords.x, UVCoords.z, // Top Left
-	// 	fHalfWidth, fHalfHeight, UVCoords.y, UVCoords.z, // Top Right
-	// 	fHalfWidth, -fHalfHeight, UVCoords.y, UVCoords.w, // Bottom Right
-	// 	-fHalfWidth, -fHalfHeight, UVCoords.x, UVCoords.w, // Bottom Left
-	// };
-	// std::vector<uint32_t> indices = {
-	// 	0, 1, 2, // First Triangle
-	// 	0, 2, 3 // Second Triangle
-	// };
-	//
-	// GetGraphicsAPI()->BindVertexArray(vertices, indices, vao);
-
-	return 0;//vao;
 }
 
 /************************************************************
