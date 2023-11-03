@@ -183,6 +183,8 @@
     <ClInclude Include="Graphics\GL\imgui_impl_opengl3.h" />
     <ClInclude Include="Graphics\GraphicsAPI.h" />
     <ClInclude Include="Graphics\GraphicsInstance.h" />
+    <ClInclude Include="Graphics\Vulkan\imgui_impl_vulkan.h" />
+    <ClInclude Include="Graphics\Vulkan\VulkanAPI.h" />
     <ClInclude Include="Input\CXBOXController.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Math\Internal\Rotator.decl.h" />
@@ -280,6 +282,8 @@
     <ClCompile Include="Graphics\GL\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Graphics\GraphicsAPI.cpp" />
     <ClCompile Include="Graphics\GraphicsInstance.cpp" />
+    <ClCompile Include="Graphics\Vulkan\imgui_impl_vulkan.cpp" />
+    <ClCompile Include="Graphics\Vulkan\VulkanAPI.cpp" />
     <ClCompile Include="Input\CXBOXController.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Math\MathLibrary.cpp" />

@@ -8,6 +8,7 @@
 
 #include "GLFramebuffer.h"
 #include "GLInstance.h"
+#include "imgui_impl_opengl3.h"
 #include "Render/Shaders/ShaderManager.h"
 #include "System/LogManager.h"
 
@@ -331,4 +332,9 @@ bool IGLAPI::CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShader
 TPointer<IFramebuffer> IGLAPI::CreateFramebuffer(const SFramebufferSpecification& Specification)
 {
 	return CreatePointer<GLFramebuffer>(Specification);
+}
+
+void IGLAPI::ImGuiInit()
+{
+	ImGui_ImplOpenGL3_Init("#version 410 core");
 }

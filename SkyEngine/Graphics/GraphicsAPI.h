@@ -33,6 +33,8 @@ public:
 
 	virtual TPointer<IGraphicsInstance> CreateNewInstance() = 0;
 	
+	virtual void ImGuiInit() = 0;
+	
 	virtual unsigned int CreateBuffer(const MeshData& MeshData) = 0;
 	virtual TPointer<CTexture> GetTexture(const std::string& TextureSource, bool bAA = true) = 0;
 	/* Create a new VAO if -1, otherwise will use it  */

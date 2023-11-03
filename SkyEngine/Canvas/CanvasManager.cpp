@@ -4,6 +4,7 @@
 #include "CanvasManager.h"
 
 #include "Canvas.h"
+#include "Core/Application.h"
 #include "Dependencies/ImGui/imgui.h"
 #include "Platform/Window/GLFW/GLFWWindow.h"
 #include "Graphics/GL/imgui_impl_opengl3.h"
@@ -59,7 +60,8 @@ void CCanvasManager::SetupCanvasManager()
 	Io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
 	Io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
 	//
-	ImGui_ImplOpenGL3_Init("#version 410 core");
+
+	GetGraphicsAPI()->ImGuiInit();
 }
 
 void CCanvasManager::PushLayer(CCanvas* InLayer)
