@@ -39,7 +39,7 @@ TVector3<T>& TVector3<T>::Normalize()
 template <typename T>
 T TVector3<T>::Size() const
 {
-	return glm::length(*this);
+	return glm::length<T, glm::precision::highp>(*this);
 }
 
 template <typename T>
@@ -126,10 +126,10 @@ template <typename T>
 SRotator TVector3<T>::ToRotator() const
 {
 	// Get Angle on the lateral plane (will be in radians)
-	const float YawAngle = atan2(X,Z);
-	// TODO: Do pitch correctly
+	const double YawAngle = atan2(double(Z),double(X));
+	
 	// Get pitch based on Y (Up)
-	const float PitchAngle = Size() * sin(Y);
+	const double PitchAngle = atan2(double(Y),sqrt(X*X + Z*Z));
 
 	SRotator NewRotator;
 	NewRotator.Yaw = ToDegree(YawAngle);//Magnitude * cos(Angle));

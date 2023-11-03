@@ -4,7 +4,11 @@
 
 #include <assimp/types.h>
 
-#include "Camera/CameraManager.h"
+#include "Graphics/GL/GLIncludes.h"
+#include "glm/vec3.hpp"
+#include "glm/vec2.hpp"
+#include "Math/Transform.h"
+
 
 using namespace std;
 // GL Includes

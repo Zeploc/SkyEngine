@@ -2,8 +2,10 @@
 
 #include "Dependencies/ImGui/imgui.h"
 
-CConsoleLog::CConsoleLog()
+CConsoleLog::CConsoleLog(TWeakPointer<CEngineWindow> InOwningWindow)
+: CUICanvas(InOwningWindow, "Console Log")
 {
+	StartingSize = {500, 400};
 	// TODO: Get existing log items and add to initial
 }
 
@@ -30,15 +32,9 @@ void CConsoleLog::AddLog(const char* fmt, ...) IM_FMTARGS(2)
 	ScrollToBottom = true;
 }
 
-void CConsoleLog::DrawUI(const SCanvas& DrawCanvas)
+void CConsoleLog::OnRender()
 {
-	static bool bOpen = true;
-	ImGui::SetNextWindowSize(ImVec2(500,400), ImGuiCond_FirstUseEver);
-	if (!ImGui::Begin("Console Log", &bOpen))
-	{
-		ImGui::End();
-		return;
-	}
+	// TODO: Convert to widget and use base render
 	if (ImGui::Button("Clear"))
 		Clear();
 	ImGui::SameLine();
@@ -71,5 +67,4 @@ void CConsoleLog::DrawUI(const SCanvas& DrawCanvas)
 		ImGui::SetScrollHereY(1.0f);
 	ScrollToBottom = false;
 	ImGui::EndChild();
-	ImGui::End();
 }

@@ -7,5 +7,7 @@
 
 TPointer<IFramebuffer> IFramebuffer::Create(const SFramebufferSpecification& Specification)
 {
-	return GetGraphicsAPI()->CreateFramebuffer(Specification);
+	TPointer<IFramebuffer> Framebuffer = GetGraphicsAPI()->CreateFramebuffer(Specification);	
+	Framebuffer->Invalidate();
+	return Framebuffer;
 }

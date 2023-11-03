@@ -9,12 +9,9 @@
 // Engine Includes //
 #include <fstream>
 
-#include <Camera/CameraManager.h>
-#include <Input/Input.h>
 #include <UI/Legacy/UIText.h>
 #include <UI/Legacy/UIButton.h>
 
-#include "TransformationWidget.h"
 #include "Editor/Windows/EditorWindow.h"
 #include "Editor/Windows/EditorWindowManager.h"
 #include <Render/Meshes/Basic/Cube.h>
@@ -29,7 +26,7 @@
 
 #include "EditorApp.h"
 #include "Core/Application.h"
-#include "Editor/EditorViewportLayer.h"
+#include "Editor/EditorViewportCanvas.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Render/Materials/Material.h"
 #include "Render/Shaders/PBRShader.h"
@@ -71,9 +68,6 @@ EditorScene::EditorScene(const std::string& InSceneName) : Scene(InSceneName)
 	Lighting::SetLightPosition({5, 5, 5});
 	Lighting::SetSunDirection({3, -1, 5});
 	
-	CameraManager::GetInstance()->SetCameraPos({-10, 10, 0});
-	CameraManager::GetInstance()->SetCameraForwardVector({0, -0.5, 1.0f});
-
 	EditorWindow* NewWindow = new EditorWindow("Outliner", ApplicationWindow, glm::vec2(300, 400), glm::vec2(0, 0));
 	NewWindow->SetBackColour(glm::vec3(0.2, 0.6, 0.8));
 		
@@ -84,15 +78,6 @@ EditorScene::EditorScene(const std::string& InSceneName) : Scene(InSceneName)
 	//ExternalWindow->SetBackColour(glm::vec3(0.6, 0.3, 0.4));
 
 	AddSampleEntities();
-
-
-	// Last added to appear on top
-	// TODO: Depth test order to always be infront of loaded level objects
-	TransformationWidget = std::make_shared<CTransformationWidget>(STransform{{0.0f, 0.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, this);
-	TransformationWidget->CreateWidgets();	
-	AddEntity(TransformationWidget, true);
-	TransformationWidget->SetVisible(false);
-	TransformationWidget->bRayCast = false;
 }
 
 void EditorScene::AddSampleEntities()
@@ -189,24 +174,15 @@ void EditorScene::Update()
 	Scene::Update();
 	// TODO:
 	// LevelNameText->sText = SceneName;
-	CameraManager* CameraInstance = CameraManager::GetInstance();
 	TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
-
-	SVector2i ScreenCenter = CameraInstance->GetScreenCenter();
-	SVector2i MousePos = ApplicationWindow->GetInput().MousePos;
-	// TODO:
-	const SVector2i ScreenOffset = MousePos - ScreenCenter;
-	const SVector2 Offset = SVector2(ScreenOffset) * CameraInstance->MouseSensitivity;
-	
-	
 	
 	// TODO: Change later?
 	EditorWindowManager::UpdateWindows();
 }
 
-void EditorScene::RenderScene(TPointer<IGraphicsInstance> InGraphicsInstance)
+void EditorScene::RenderScene()
 {
-	Scene::RenderScene(InGraphicsInstance);
+	Scene::RenderScene();
 }
 
 void EditorScene::OpenFile()
@@ -253,19 +229,6 @@ void EditorScene::OpenFile()
 	LoadLevel(OpenedFile);	
 	
 	OpenedFile.close();
-	
-	DestroyEntity(TransformationWidget);
-	DestroyEntity(TransformationWidget->XMoveTransform);
-	DestroyEntity(TransformationWidget->YMoveTransform);
-	DestroyEntity(TransformationWidget->ZMoveTransform);
-	AddEntity(TransformationWidget);
-	AddEntity(TransformationWidget->XMoveTransform);
-	AddEntity(TransformationWidget->YMoveTransform);
-	AddEntity(TransformationWidget->ZMoveTransform);
-	TransformationWidget->SetActive(true);
-	TransformationWidget->XMoveTransform->SetActive(true);
-	TransformationWidget->YMoveTransform->SetActive(true);
-	TransformationWidget->ZMoveTransform->SetActive(true);
 }
 
 void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
@@ -276,13 +239,6 @@ void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
 	std::vector< TPointer<Entity>> EntitiesCopy = Entities;
 	for (TPointer<Entity> CurrentEnt : EntitiesCopy)
 	{
-		if (CurrentEnt == TransformationWidget
-			|| CurrentEnt == TransformationWidget->XMoveTransform
-			|| CurrentEnt == TransformationWidget->YMoveTransform
-			|| CurrentEnt == TransformationWidget->ZMoveTransform)
-		{
-			continue;
-		}
 		
 		DestroyEntity(CurrentEnt);
 	}
@@ -329,19 +285,6 @@ void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
 	// 		AddEntity(CubeEnty, true);
 	// 	}
 	// }
-	
-	DestroyEntity(TransformationWidget);
-	DestroyEntity(TransformationWidget->XMoveTransform);
-	DestroyEntity(TransformationWidget->YMoveTransform);
-	DestroyEntity(TransformationWidget->ZMoveTransform);
-	AddEntity(TransformationWidget);
-	AddEntity(TransformationWidget->XMoveTransform);
-	AddEntity(TransformationWidget->YMoveTransform);
-	AddEntity(TransformationWidget->ZMoveTransform);
-	TransformationWidget->SetActive(true);
-	TransformationWidget->XMoveTransform->SetActive(true);
-	TransformationWidget->YMoveTransform->SetActive(true);
-	TransformationWidget->ZMoveTransform->SetActive(true);
 }
 
 void EditorScene::SaveAsNew()
@@ -382,15 +325,7 @@ void EditorScene::SaveCurrentLevel()
      }
 	 LevelFile << "[" + SceneName + "]\n";
 	 for (TPointer<Entity> Entity : Entities)
-	 {
-	 	if (Entity == TransformationWidget
-	 		|| Entity == TransformationWidget->XMoveTransform
-	 		|| Entity == TransformationWidget->YMoveTransform
-	 		|| Entity == TransformationWidget->ZMoveTransform)
-	 	{
-	 		continue;
-	 	}
-	 	
+	 {	 	
 	 	LevelFile << Entity << "\n";
 	 }
 

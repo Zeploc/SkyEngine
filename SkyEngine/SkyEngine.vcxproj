@@ -155,19 +155,20 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Camera\CameraManager.h" />
     <ClInclude Include="Canvas\Canvas.h" />
     <ClInclude Include="Canvas\CanvasManager.h" />
     <ClInclude Include="Canvas\UICanvas.h" />
-    <ClInclude Include="Canvas\ViewportLayer.h" />
+    <ClInclude Include="Canvas\ViewportCanvas.h" />
     <ClInclude Include="Core\Application.h" />
     <ClInclude Include="Core\Core.h" />
     <ClInclude Include="Core\Delegates.h" />
     <ClInclude Include="Core\EntryPoint.h" />
     <ClInclude Include="Core\EventListener.h" />
+    <ClInclude Include="Core\WorldManager.h" />
     <ClInclude Include="Dependencies\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="Entity\2DParticleSystem.h" />
     <ClInclude Include="Entity\Button3DEntity.h" />
+    <ClInclude Include="Entity\Camera.h" />
     <ClInclude Include="Entity\CollisionBounds.h" />
     <ClInclude Include="Entity\Component.h" />
     <ClInclude Include="Entity\Entity.h" />
@@ -175,16 +176,13 @@
     <ClInclude Include="Events\Event.h" />
     <ClInclude Include="Events\KeyEvent.h" />
     <ClInclude Include="Events\MouseEvent.h" />
-    <ClInclude Include="Graphics\Framebuffer.h" />
     <ClInclude Include="Graphics\GL\GLAPI.h" />
     <ClInclude Include="Graphics\GL\GLFramebuffer.h" />
     <ClInclude Include="Graphics\GL\GLIncludes.h" />
-    <ClInclude Include="Graphics\GL\GLInstance.h" />
     <ClInclude Include="Graphics\GL\imgui_impl_opengl3.h" />
     <ClInclude Include="Graphics\GraphicsAPI.h" />
-    <ClInclude Include="Graphics\GraphicsInstance.h" />
-    <ClInclude Include="Graphics\Vulkan\imgui_impl_vulkan.h" />
     <ClInclude Include="Graphics\Vulkan\VulkanAPI.h" />
+    <ClInclude Include="Graphics\Vulkan\imgui_impl_vulkan.h" />
     <ClInclude Include="Input\CXBOXController.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Math\Internal\Rotator.decl.h" />
@@ -209,6 +207,7 @@
     <ClInclude Include="Platform\Window\GLFW\GLFWWindow.h" />
     <ClInclude Include="Platform\Window\GLFW\imgui_impl_glfw.h" />
     <ClInclude Include="Platform\Windows\WindowsPlatform.h" />
+    <ClInclude Include="Render\Framebuffer.h" />
     <ClInclude Include="Render\Lighting.h" />
     <ClInclude Include="Render\Materials\InternalMaterial.h" />
     <ClInclude Include="Render\Materials\Material.h" />
@@ -231,6 +230,8 @@
     <ClInclude Include="Render\Particle\Particle.h" />
     <ClInclude Include="Render\Particle\ParticleSystem.h" />
     <ClInclude Include="Render\Particle\ParticleSystemGPU.h" />
+    <ClInclude Include="Render\Renderer.h" />
+    <ClInclude Include="Render\SceneRenderer.h" />
     <ClInclude Include="Render\Shaders\PBRShader.h" />
     <ClInclude Include="Render\Shaders\Shader.h" />
     <ClInclude Include="Render\Shaders\ShaderManager.h" />
@@ -259,31 +260,29 @@
     <ClInclude Include="UI\UIWidget.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Camera\CameraManager.cpp" />
     <ClCompile Include="Canvas\Canvas.cpp" />
     <ClCompile Include="Canvas\CanvasManager.cpp" />
     <ClCompile Include="Canvas\UICanvas.cpp" />
-    <ClCompile Include="Canvas\ViewportLayer.cpp" />
+    <ClCompile Include="Canvas\ViewportCanvas.cpp" />
     <ClCompile Include="Core\Application.cpp" />
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Core\EventListener.cpp" />
+    <ClCompile Include="Core\WorldManager.cpp" />
     <ClCompile Include="Dependencies\ImGuizmo\ImGuizmo.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Entity\2DParticleSystem.cpp" />
     <ClCompile Include="Entity\Button3DEntity.cpp" />
+    <ClCompile Include="Entity\Camera.cpp" />
     <ClCompile Include="Entity\CollisionBounds.cpp" />
     <ClCompile Include="Entity\Component.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
-    <ClCompile Include="Graphics\Framebuffer.cpp" />
     <ClCompile Include="Graphics\GL\GLAPI.cpp" />
     <ClCompile Include="Graphics\GL\GLFramebuffer.cpp" />
-    <ClCompile Include="Graphics\GL\GLInstance.cpp" />
     <ClCompile Include="Graphics\GL\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Graphics\GraphicsAPI.cpp" />
-    <ClCompile Include="Graphics\GraphicsInstance.cpp" />
-    <ClCompile Include="Graphics\Vulkan\imgui_impl_vulkan.cpp" />
     <ClCompile Include="Graphics\Vulkan\VulkanAPI.cpp" />
+    <ClCompile Include="Graphics\Vulkan\imgui_impl_vulkan.cpp" />
     <ClCompile Include="Input\CXBOXController.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Math\MathLibrary.cpp" />
@@ -295,6 +294,7 @@
     <ClCompile Include="Platform\Window\GLFW\GLFWWindow.cpp" />
     <ClCompile Include="Platform\Window\GLFW\imgui_impl_glfw.cpp" />
     <ClCompile Include="Platform\Windows\WindowsPlatform.cpp" />
+    <ClCompile Include="Render\Framebuffer.cpp" />
     <ClCompile Include="Render\Lighting.cpp" />
     <ClCompile Include="Render\Materials\InternalMaterial.cpp" />
     <ClCompile Include="Render\Materials\Material.cpp" />
@@ -316,6 +316,8 @@
     <ClCompile Include="Render\Particle\Particle.cpp" />
     <ClCompile Include="Render\Particle\ParticleSystem.cpp" />
     <ClCompile Include="Render\Particle\ParticleSystemGPU.cpp" />
+    <ClCompile Include="Render\Renderer.cpp" />
+    <ClCompile Include="Render\SceneRenderer.cpp" />
     <ClCompile Include="Render\Shaders\PBRShader.cpp" />
     <ClCompile Include="Render\Shaders\Shader.cpp" />
     <ClCompile Include="Render\Shaders\ShaderManager.cpp" />

@@ -155,7 +155,7 @@ GLuint ShaderManager::BindArray(float fWidth, float fHeight, glm::vec4 Colour)
 	// 	0, 2, 3 // Second Triangle
 	// };
 	unsigned int Vao = 0;
-	// GetGraphicsAPI()->BindArray(vertices, indices, Vao, true);
+	// GetGraphicsAPI()->BindVertexArray(vertices, indices, Vao, true);
 	return Vao;
 }
 
@@ -168,7 +168,7 @@ GLuint ShaderManager::BindArray(float fWidth, float fHeight, glm::vec4 Colour)
 unsigned ShaderManager::BindUITextureArray(float fWidth, float fHeight, glm::vec4 Colour, const char* TextureSource, CTexture& Texture, int _DrawMode)
 {
 	// TODO: Link with material
-	// unsigned int vao = GetGraphicsAPI()->CreateBuffer(Texture, false, false);
+	// unsigned int vao = GetGraphicsAPI()->CreateVertexBuffer(Texture, false, false);
 
 	// glm::vec4 UVCoords = glm::vec4(0, 1, 0, 1);
 	// if (_DrawMode == 1)
@@ -196,7 +196,7 @@ unsigned ShaderManager::BindUITextureArray(float fWidth, float fHeight, glm::vec
 	// 	0, 2, 3 // Second Triangle
 	// };
 	//
-	// GetGraphicsAPI()->BindArray(vertices, indices, vao);
+	// GetGraphicsAPI()->BindVertexArray(vertices, indices, vao);
 
 	return 0;//vao;
 }

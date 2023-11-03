@@ -11,9 +11,6 @@
 #include "Events/MouseEvent.h"
 #include "System/Utils.h"
 
-// OpenGL Library Includes //
-
-class IGraphicsInstance;
 class UIText;
 class UIElement;
 class Entity;
@@ -27,7 +24,7 @@ public:
 
 	void DeleteScene();
 
-	virtual void RenderScene(TPointer<IGraphicsInstance> InGraphicsInstance);
+	virtual void RenderScene();
 
 	void AddEntity(TPointer<Entity> _Entity, bool IsInitial = false);
 

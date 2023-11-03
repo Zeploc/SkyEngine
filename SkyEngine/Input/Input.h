@@ -6,13 +6,15 @@
 
 // Library Includes //
 
-#include "Camera/CameraManager.h"
 #include "Math/Vector.h"
+#include "Math/Vector2.h"
+
+// TODO: Rename file to WindowInput
 
 // TODO: Warnings with exporting class containing STDL
 #pragma warning (disable : 4251)
 
-class ENGINE_API CInput
+class ENGINE_API CWindowInput
 {
 public:
 	enum InputState
@@ -62,7 +64,7 @@ public:
 	std::vector<class XBOXController*> Players;
 
 protected:
-	CInput();
+	CWindowInput();
 	
 	void Init(TWeakPointer<CEngineWindow> Window);
 
@@ -87,5 +89,5 @@ protected:
 	unsigned char cLastKey;
 
 private:
-	~CInput();
+	~CWindowInput();
 };

@@ -6,14 +6,15 @@
 // Engine Includes //
 #include "Particle.h"
 #include "Render/Shaders/ShaderManager.h"
-#include "Camera/CameraManager.h"
 
 // Library Includes //
 #include <random>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
+#include "Canvas/ViewportCanvas.h"
 #include "Core/Application.h"
+#include "Render/SceneRenderer.h"
 #include "Render/Shaders/Shader.h"
 
 /************************************************************
@@ -240,6 +241,8 @@ void ParticleSystemGPU::Update()
 ************************************************************/
 void ParticleSystemGPU::DrawEntity()
 {
+	CViewportCanvas* ViewportCanvas = GetApplication()->GetViewportCanvas();
+	
 	glUseProgram(ShaderManager::GetShader("ComputeProgram")->GetShaderProgram());
 
 	glDispatchCompute(NUM_PARTICLES / 128, 1, 1);
@@ -264,7 +267,7 @@ void ParticleSystemGPU::DrawEntity()
 	//glUniform3f(glGetUniformLocation(program, "vQuad2"), vQuad2.x, vQuad2.y,
 	//	vQuad2.z);*/
 
-	glUniformMatrix4fv(glGetUniformLocation(program, "vp"), 1, GL_FALSE, glm::value_ptr(CameraManager::GetInstance()->Projection.ToGLM() * CameraManager::GetInstance()->View.ToGLM()));
+	glUniformMatrix4fv(glGetUniformLocation(program, "vp"), 1, GL_FALSE, glm::value_ptr(ViewportCanvas->GetSceneRenderer()->GetProjection().ToGLM() * ViewportCanvas->GetSceneRenderer()->GetView().ToGLM()));
 	////glUniform4f(glGetUniformLocation(program, "Colour"), Colour.r, Colour.g, Colour.b, Colour.a);
 	////glUniform1f(glGetUniformLocation(program, "Size"), ParticleSize);
 

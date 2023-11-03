@@ -26,7 +26,7 @@ class ENGINE_API Entity : public std::enable_shared_from_this<Entity>
 public:
 	Entity(std::string _FromString);
 
-	Entity(STransform _Transform, EANCHOR _Anchor);
+	Entity(STransform InTransform, EANCHOR InAnchor);
 
 	//Entity() {};
 	/*Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, Utils::ESHAPE _eShape);
@@ -42,6 +42,12 @@ public:
 	virtual bool CanRender();
 	virtual std::vector<TPointer<Entity>> GetAdditionalEntitiesToRender() { return {}; }
 	virtual STransform GetAnchoredTransform();
+	
+	SVector GetForwardVector() const;
+	SVector GetUpVector() const;
+	SVector GetRightVector() const;
+
+	void SetForwardVector(SVector Forward);
 
 	void BaseUpdate();
 

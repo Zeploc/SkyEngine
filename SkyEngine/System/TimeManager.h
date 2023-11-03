@@ -2,7 +2,9 @@
 
 #pragma once
 
-class CTimeManager
+#include "Core/Core.h"
+
+class ENGINE_API CTimeManager
 {
 public:
 	static void Start();

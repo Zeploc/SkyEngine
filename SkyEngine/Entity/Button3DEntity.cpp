@@ -4,7 +4,8 @@
 #include "Button3DEntity.h"
 
 // Engine Includes //
-#include "Camera/CameraManager.h"
+#include "Camera.h"
+#include "Canvas/ViewportCanvas.h"
 #include "Core/Application.h"
 #include "Input/Input.h"
 #include "Platform/Window/EngineWindow.h"
@@ -65,7 +66,7 @@ void Button3DEntity::Update()
 			// EntityMesh->MeshMaterial->bStencil = true;
 		}
 		// TODO:
-		// if (CInput::GetInstance()->MouseState[CInput::MOUSE_LEFT] == CInput::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
+		// if (CWindowInput::GetInstance()->MouseState[CWindowInput::MOUSE_LEFT] == CWindowInput::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
 		// {
 		// 	bPressed = true;
 		// 	// TODO: Switch to order/depth system
@@ -91,16 +92,17 @@ void Button3DEntity::Update()
 
 bool Button3DEntity::CheckHit(glm::vec3 BottomLeftOffset, glm::vec3 TopRightOffset)
 {
+	CViewportCanvas* Viewport = GetApplication()->GetViewportCanvas();
 	SVector HitPos;
 	return Utils::CheckFaceHit(BottomLeftOffset,
 		TopRightOffset,
-		CameraManager::GetInstance()->GetCameraPosition(),
-		CameraManager::GetInstance()->ScreenToWorldDirection(GetApplication()->GetApplicationWindow()->GetInput().MousePos),
+		Viewport->GetViewportCamera()->Transform.Position,
+		Viewport->ScreenToWorldDirection(GetApplication()->GetApplicationWindow()->GetInput().MousePos),
 
 		this->shared_from_this(), 
 		HitPos);
 	
-	// glm::vec3 rayDirection = CameraManager::GetInstance()->ScreenToWorldDirection(CInput::GetInstance()->MousePos);
+	// glm::vec3 rayDirection = CameraManager::GetInstance()->ScreenToWorldDirection(CWindowInput::GetInstance()->MousePos);
 	//
 	// glm::vec3 AnchoredPosition = Utils::GetAncoredPosition(Transform.Position, glm::vec3(EntityMesh->m_fWidth, EntityMesh->m_fHeight, EntityMesh->m_fDepth), EntityAnchor);
 	// glm::vec3 lb = BottomLeftOffset + AnchoredPosition;

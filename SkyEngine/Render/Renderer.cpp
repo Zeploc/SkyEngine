@@ -1,19 +1,21 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #include "SEPCH.h"
-#include "GraphicsInstance.h"
+#include "Renderer.h"
 
 #include "Framebuffer.h"
+#include "SceneRenderer.h"
+#include "Core/Application.h"
 #include "Entity/Entity.h"
 #include "Render/Materials/InternalMaterial.h"
 #include "Render/Shaders/Shader.h"
 #include "UI/Legacy/UIElement.h"
 
-IGraphicsInstance::IGraphicsInstance()
+CRenderer::CRenderer()
 {
 }
 
-void IGraphicsInstance::InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender)
+void CRenderer::InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender)
 {
 	TPointer<CMaterialInterface> Material = EntityToRender->EntityMesh->MeshMaterial;
 	if (!MeshesByMaterial.contains(Material))
@@ -24,7 +26,18 @@ void IGraphicsInstance::InsertEntityMeshToRenderList(std::map<TPointer<CMaterial
 	MeshesByMaterial[Material].push_back(EntityToRender->EntityMesh);
 }
 
-void IGraphicsInstance::Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements)
+
+void CRenderer::RenderScenes()
+{
+	for (TPointer<CSceneRenderer> SceneRenderer : SceneRenderers)
+	{
+		CurrentView = SceneRenderer->GetView();
+		CurrentProjection = SceneRenderer->GetProjection();
+		SceneRenderer->Render();
+	}
+}
+
+void CRenderer::Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements)
 {
 	// TODO: Later store in/update list as new meshes added
 	std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>> MeshesByMaterial;
@@ -55,11 +68,11 @@ void IGraphicsInstance::Render(std::vector<TPointer<Entity>> Entities, std::vect
 		if (ActiveShader != Shader)
 		{
 			ActiveShader = Shader;
-			Shader->BindShader(shared_from_this());
+			Shader->BindShader();
 		}
 		
 		// Bind material
-		Material->BindMaterial(shared_from_this());
+		Material->BindMaterial();
 
 		// Draw meshes
 		for (TPointer<CMeshComponent> MeshComponent : MaterialMeshSet.second)
@@ -74,4 +87,28 @@ void IGraphicsInstance::Render(std::vector<TPointer<Entity>> Entities, std::vect
 	// 	RenderUIElement(UIElement);
 	// }
 	ActiveShader = nullptr;
+}
+
+void CRenderer::RenderMesh(TPointer<CMeshComponent> Mesh, STransform Transform)
+{
+	GetGraphicsAPI()->ApplyMVP(ActiveShader->GetShaderProgram(), CurrentView, CurrentProjection, Transform);
+	GetGraphicsAPI()->RenderMesh(Mesh);
+}
+
+void CRenderer::RenderUIElement(TPointer<UIElement> UserInterfaceItem)
+{
+	UserInterfaceItem->DrawUIElement();
+}
+
+void CRenderer::RenderImGui()
+{
+	GetGraphicsAPI()->RenderImGui();
+}
+
+TPointer<CSceneRenderer> CRenderer::AddSceneRenderer(TPointer<Scene> InTargetScene, SVector2i InSize)
+{
+	TPointer<CSceneRenderer> SceneRenderer = CreatePointer<CSceneRenderer>();
+	SceneRenderers.push_back(SceneRenderer);
+	SceneRenderer->Init(InTargetScene, InSize);
+	return SceneRenderer;
 }

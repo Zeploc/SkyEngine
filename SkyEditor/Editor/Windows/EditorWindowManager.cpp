@@ -4,11 +4,6 @@
 
 #include "EditorWindow.h"
 
-#include <glew/glew.h>
-#include <GLFW/glfw3.h>
-//#include <freeglut.h>
-#include <iostream>
-
 #include "Core/Application.h"
 
 std::vector<EditorWindow*> EditorWindowManager::EditorWindows;

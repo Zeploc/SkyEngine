@@ -21,8 +21,8 @@ public:
 	};
 	
 	ShaderParameters Params;
-	void BindShader(const TPointer<IGraphicsInstance>& InGraphicsInterface) override;
-	void UploadMaterialParameters(const TPointer<IGraphicsInstance>& InGraphicsInstance, const ShaderParameters& InParams);
+	void BindShader() override;
+	void UploadMaterialParameters(const ShaderParameters& InParams);
 
 	bool HasTexture(const ShaderParameters& InParams);
 };

@@ -11,7 +11,6 @@
 
 class IGraphicsWindow;
 class IEventListener;
-class IGraphicsInstance;
 class UIElement;
 class Entity;
 
@@ -25,7 +24,6 @@ public:
 	bool SetupWindow();
 	virtual ~CEngineWindow();
 	static TPointer<CEngineWindow> CreateEngineWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bInFullScreen = false);
-	virtual void CreateGraphicsInstance();
 	std::string GetWindowName() { return WindowName; }
 
 	virtual void SetWindowFullScreen(bool bFullScreen) = 0;
@@ -43,9 +41,7 @@ public:
 
 	SVector2i GetScreenHalfSize();
 
-	virtual void PreRender();
 	void Render();
-	virtual void PostRender();
 	
 	// void Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements);
 	virtual void Update();
@@ -57,36 +53,33 @@ public:
 	// TODO: Pass in window in delegate
 	FMulticastDelegate OnFocusChangedDelete;	
 
-	TPointer<IGraphicsInstance> GetGraphicsInstance() { return GraphicsInstance; }
-	CInput& GetInput() { return Input; }
-	CCanvas* GetCapturedLayer() const { return CapturedLayer; }
+	CWindowInput& GetInput() { return Input; }
 	CCanvasManager& GetCanvasManager() { return CanvasManager; }
 
 protected:
+	virtual void PreRender();
+	virtual void PostRender();
 	virtual void OnWindowResized(int NewWidth, int NewHeight);
 	virtual void OnFrameBufferResized(int NewWidth, int NewHeight) = 0;
 	virtual void OnFocusChanged(bool bInIsFocused);
 	
-	virtual void MouseButtonPress(int button, CInput::KeyEventType EventType, int mods);
-	virtual void KeyPress(int key, int scancode, CInput::KeyEventType EventType, int mods);
+	virtual void MouseButtonPress(int button, CWindowInput::KeyEventType EventType, int mods);
+	virtual void KeyPress(int key, int scancode, CWindowInput::KeyEventType EventType, int mods);
 	virtual void KeyTyped(int KeyCode);
 	virtual void CursorMoved(int X, int Y);
 	virtual void ScrollWheel(float X, float Y);
 
 	/* Returns the handled layer, if there was one */
-	virtual CCanvas* SendEvent(CEvent& Event);
+	virtual void SendEvent(CEvent& Event);
 	
-	TPointer<IGraphicsInstance> GraphicsInstance;
 	std::string WindowName;
 	SVector2i WindowSize;
 	SVector2i WindowPosition;
 	bool bFullscreen = false;
 	bool bCursorVisible = true;
 	bool bIsFocused = true;
-	CInput Input;
+	CWindowInput Input;
 	
 	CCanvasManager CanvasManager;
-	// TODO: Move captured "layer" (canvas) to canvas manager
-	CCanvas* CapturedLayer = nullptr;
 	std::vector<IEventListener*> EventListeners;
 };

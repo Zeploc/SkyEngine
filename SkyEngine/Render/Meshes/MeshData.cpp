@@ -22,7 +22,7 @@ void MeshData::BindData(unsigned vao) const
 	std::vector<float> OutVertices;
 	std::vector<uint32_t> OutIndices;
 	GetFinalData(OutVertices, OutIndices);
-	GetGraphicsAPI()->BindArray(OutVertices, OutIndices, vao);	
+	GetGraphicsAPI()->BindVertexArray(OutVertices, OutIndices, vao);	
 }
 
 void MeshData::GetFinalData(std::vector<float>& OutVertices, std::vector<uint32_t>& OutIndices) const

@@ -4,7 +4,6 @@
 #include "Shader.h"
 
 #include "Core/Application.h"
-#include "Graphics/GraphicsInstance.h"
 #include "Render/Materials/Material.h"
 
 CShader::CShader(const std::string& InShaderName, const std::string& InVertexShaderPath, const std::string& InFragmentShaderPath)
@@ -46,14 +45,14 @@ bool CShader::CompileShader()
 	return GetGraphicsAPI()->CreateShaderProgram(ShaderProgram, VertexShaderPath.c_str(), FragmentShaderPath.c_str(),GeometryShaderPath.c_str());
 }
 
-void CShader::BindMaterial(const TPointer<IGraphicsInstance>& InGraphicsInstance, TPointer<CMaterialInterface> InMaterial)
+void CShader::BindMaterial(TPointer<CMaterialInterface> InMaterial)
 {
 	ensure(InMaterial != nullptr, "Missing material to set shader attributes!");
 
-	InGraphicsInstance->ApplyMaterialFlags(InMaterial);
+	GetRenderer()->ApplyMaterialFlags(InMaterial);
 }
 
-void CShader::BindShader(const TPointer<IGraphicsInstance>& InGraphicsInstance)
+void CShader::BindShader()
 {
-	InGraphicsInstance->BindShader(ShaderProgram);
+	GetGraphicsAPI()->BindShader(ShaderProgram);
 }

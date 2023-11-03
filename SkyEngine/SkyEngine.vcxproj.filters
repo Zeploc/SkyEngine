@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Camera">
-      <UniqueIdentifier>{CE7141AB-BA13-6C81-A3CE-7FD58F0FF3D1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Canvas">
       <UniqueIdentifier>{614442AB-4DE6-6C81-36A1-80D522E2F3D1}</UniqueIdentifier>
     </Filter>
@@ -27,6 +24,9 @@
     </Filter>
     <Filter Include="Graphics\GL">
       <UniqueIdentifier>{B8549E76-240A-176C-ADFE-104319B30D70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Vulkan">
+      <UniqueIdentifier>{D64BCAB8-42D7-377D-4BE8-BA71B7F2937D}</UniqueIdentifier>
     </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{953A660D-014F-8EBE-CAD0-311E36A48AEF}</UniqueIdentifier>
@@ -90,9 +90,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera\CameraManager.h">
-      <Filter>Camera</Filter>
-    </ClInclude>
     <ClInclude Include="Canvas\Canvas.h">
       <Filter>Canvas</Filter>
     </ClInclude>
@@ -102,7 +99,7 @@
     <ClInclude Include="Canvas\UICanvas.h">
       <Filter>Canvas</Filter>
     </ClInclude>
-    <ClInclude Include="Canvas\ViewportLayer.h">
+    <ClInclude Include="Canvas\ViewportCanvas.h">
       <Filter>Canvas</Filter>
     </ClInclude>
     <ClInclude Include="Core\Application.h">
@@ -120,6 +117,9 @@
     <ClInclude Include="Core\EventListener.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Core\WorldManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
     <ClInclude Include="Dependencies\ImGuizmo\ImGuizmo.h">
       <Filter>Dependencies\ImGuizmo</Filter>
     </ClInclude>
@@ -127,6 +127,9 @@
       <Filter>Entity</Filter>
     </ClInclude>
     <ClInclude Include="Entity\Button3DEntity.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\Camera.h">
       <Filter>Entity</Filter>
     </ClInclude>
     <ClInclude Include="Entity\CollisionBounds.h">
@@ -150,9 +153,6 @@
     <ClInclude Include="Events\MouseEvent.h">
       <Filter>Events</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Framebuffer.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\GL\GLAPI.h">
       <Filter>Graphics\GL</Filter>
     </ClInclude>
@@ -162,17 +162,17 @@
     <ClInclude Include="Graphics\GL\GLIncludes.h">
       <Filter>Graphics\GL</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\GL\GLInstance.h">
-      <Filter>Graphics\GL</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\GL\imgui_impl_opengl3.h">
       <Filter>Graphics\GL</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\GraphicsAPI.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\GraphicsInstance.h">
-      <Filter>Graphics</Filter>
+    <ClInclude Include="Graphics\Vulkan\VulkanAPI.h">
+      <Filter>Graphics\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Vulkan\imgui_impl_vulkan.h">
+      <Filter>Graphics\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Input\CXBOXController.h">
       <Filter>Input</Filter>
@@ -246,6 +246,9 @@
     <ClInclude Include="Platform\Windows\WindowsPlatform.h">
       <Filter>Platform\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="Render\Framebuffer.h">
+      <Filter>Render</Filter>
+    </ClInclude>
     <ClInclude Include="Render\Lighting.h">
       <Filter>Render</Filter>
     </ClInclude>
@@ -311,6 +314,12 @@
     </ClInclude>
     <ClInclude Include="Render\Particle\ParticleSystemGPU.h">
       <Filter>Render\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Renderer.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SceneRenderer.h">
+      <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="Render\Shaders\PBRShader.h">
       <Filter>Render\Shaders</Filter>
@@ -388,9 +397,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Camera\CameraManager.cpp">
-      <Filter>Camera</Filter>
-    </ClCompile>
     <ClCompile Include="Canvas\Canvas.cpp">
       <Filter>Canvas</Filter>
     </ClCompile>
@@ -400,7 +406,7 @@
     <ClCompile Include="Canvas\UICanvas.cpp">
       <Filter>Canvas</Filter>
     </ClCompile>
-    <ClCompile Include="Canvas\ViewportLayer.cpp">
+    <ClCompile Include="Canvas\ViewportCanvas.cpp">
       <Filter>Canvas</Filter>
     </ClCompile>
     <ClCompile Include="Core\Application.cpp">
@@ -412,6 +418,9 @@
     <ClCompile Include="Core\EventListener.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Core\WorldManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
     <ClCompile Include="Dependencies\ImGuizmo\ImGuizmo.cpp">
       <Filter>Dependencies\ImGuizmo</Filter>
     </ClCompile>
@@ -419,6 +428,9 @@
       <Filter>Entity</Filter>
     </ClCompile>
     <ClCompile Include="Entity\Button3DEntity.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\Camera.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
     <ClCompile Include="Entity\CollisionBounds.cpp">
@@ -430,16 +442,10 @@
     <ClCompile Include="Entity\Entity.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Framebuffer.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\GL\GLAPI.cpp">
       <Filter>Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\GL\GLFramebuffer.cpp">
-      <Filter>Graphics\GL</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\GL\GLInstance.cpp">
       <Filter>Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\GL\imgui_impl_opengl3.cpp">
@@ -448,8 +454,11 @@
     <ClCompile Include="Graphics\GraphicsAPI.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\GraphicsInstance.cpp">
-      <Filter>Graphics</Filter>
+    <ClCompile Include="Graphics\Vulkan\VulkanAPI.cpp">
+      <Filter>Graphics\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Vulkan\imgui_impl_vulkan.cpp">
+      <Filter>Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Input\CXBOXController.cpp">
       <Filter>Input</Filter>
@@ -483,6 +492,9 @@
     </ClCompile>
     <ClCompile Include="Platform\Windows\WindowsPlatform.cpp">
       <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Framebuffer.cpp">
+      <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="Render\Lighting.cpp">
       <Filter>Render</Filter>
@@ -546,6 +558,12 @@
     </ClCompile>
     <ClCompile Include="Render\Particle\ParticleSystemGPU.cpp">
       <Filter>Render\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Renderer.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SceneRenderer.cpp">
+      <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="Render\Shaders\PBRShader.cpp">
       <Filter>Render\Shaders</Filter>

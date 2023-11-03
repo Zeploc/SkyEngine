@@ -7,7 +7,8 @@
 
 // Local Includes //
 #include "Camera/CameraManager.h"
-#include "Graphics/GraphicsInstance.h"
+#include "Core/Application.h"
+#include "Render/Renderer.h"
 #include "Shaders/Shader.h"
 
 // Static variables //
@@ -39,17 +40,17 @@ Lighting::~Lighting()
 {
 }
 
-void Lighting::PassLightingToShader(const TPointer<IGraphicsInstance>& GraphicsInstance)
+void Lighting::PassLightingToShader()
 {
 	// TODO: Store uniform locations at beginning for shader
-	const uint32_t ShaderProgram = GraphicsInstance->ActiveShader->GetShaderProgram();
-	GraphicsInstance->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "LightPosition"), LightPosition);
-	GraphicsInstance->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "LightColour"), LightColour);
-	GraphicsInstance->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "LightDirection"), SunDirection);
-	GraphicsInstance->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "FogColor"), FogColour);
-	GraphicsInstance->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "StartFog"), StartFogDistance);
-	GraphicsInstance->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "EndFog"), EndFogDistance);
-	GraphicsInstance->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "AmbientStrength"), AmbientStrength);
+	const uint32_t ShaderProgram = GetRenderer()->ActiveShader->GetShaderProgram();
+	GetGraphicsAPI()->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "LightPosition"), LightPosition);
+	GetGraphicsAPI()->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "LightColour"), LightColour);
+	GetGraphicsAPI()->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "LightDirection"), SunDirection);
+	GetGraphicsAPI()->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "FogColor"), FogColour);
+	GetGraphicsAPI()->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "StartFog"), StartFogDistance);
+	GetGraphicsAPI()->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "EndFog"), EndFogDistance);
+	GetGraphicsAPI()->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "AmbientStrength"), AmbientStrength);
 }
 
 SVector Lighting::GetLightPosition()

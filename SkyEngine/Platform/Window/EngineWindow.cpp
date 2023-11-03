@@ -7,10 +7,9 @@
 #include "Events/ApplicationEvent.h"
 #include "Events/KeyEvent.h"
 #include "Events/MouseEvent.h"
-#include "Graphics/GraphicsAPI.h"
-#include "Graphics/GraphicsInstance.h"
 #include "Input/Input.h"
 #include "Canvas/Canvas.h"
+#include "Render/Renderer.h"
 #include "Platform/PlatformInterface.h"
 #include "System/TimeManager.h"
 
@@ -23,22 +22,16 @@ CEngineWindow::CEngineWindow(const std::string& InWindowName, SVector2i InWindow
 
 bool CEngineWindow::SetupWindow()
 {
-	CreateGraphicsInstance();	
-	if (!GetGraphicsInstance())
-	{
-		return false;
-	}
 	// The input function registration
 	Input.Init(shared_from_this());
 	
-	CanvasManager.SetupCanvasManager();
+	CanvasManager.SetupCanvasManager(shared_from_this());
 
 	return true;
 }
 
 CEngineWindow::~CEngineWindow()
 {
-	GraphicsInstance.reset();
 	EventListeners.clear();	
 		
 	for (CCanvas* Layer : CanvasManager)
@@ -58,28 +51,20 @@ TPointer<CEngineWindow> CEngineWindow::CreateEngineWindow(const std::string& InW
 	return NewWindow;
 }
 
-void CEngineWindow::CreateGraphicsInstance()
-{
-	GraphicsInstance = GetGraphicsAPI()->CreateNewInstance();
-}
 
 void CEngineWindow::PreRender()
 {
-	GraphicsInstance->PreRender(shared_from_this());
 }
 
 void CEngineWindow::PostRender()
 {
-	GraphicsInstance->PostRender(shared_from_this());
 }
 
 void CEngineWindow::Render()
 {
 	PreRender();
-	for (CCanvas* Layer : CanvasManager)
-	{
-		Layer->OnRender();
-	}
+	GetRenderer()->RenderScenes();
+	CanvasManager.Render();
 	PostRender();
 }
 
@@ -87,11 +72,7 @@ void CEngineWindow::Update()
 {
 	if (CTimeManager::CanTickThisFrame())
 	{
-		// TODO: Once linking events system, would work backwards in layer based on highest first
-		for (CCanvas* Layer : CanvasManager)
-		{
-			Layer->OnUpdate();
-		}
+		CanvasManager.Update();
 	}
 	Input.Update();
 }
@@ -101,11 +82,11 @@ void CEngineWindow::SetCursorVisible(bool bSetVisible)
 	bCursorVisible = bSetVisible;
 }
 
-void CEngineWindow::MouseButtonPress(int button, CInput::KeyEventType EventType, int mods)
+void CEngineWindow::MouseButtonPress(int button, CWindowInput::KeyEventType EventType, int mods)
 {
 	Input.MouseButton(button, EventType, mods);
 	CMouseButtonEvent* MouseEvent;
-	if (EventType == CInput::Pressed)
+	if (EventType == CWindowInput::Pressed)
 	{
 		CMouseButtonPressedEvent ButtonPressedEvent = CMouseButtonPressedEvent(button, mods);
 		MouseEvent = &ButtonPressedEvent;
@@ -116,32 +97,21 @@ void CEngineWindow::MouseButtonPress(int button, CInput::KeyEventType EventType,
 		MouseEvent = &ButtonReleasedEvent;
 	}
 
-	CCanvas* NewCapturedLayer = SendEvent(*MouseEvent);
-	if (NewCapturedLayer)
-	{
-		if (EventType == CInput::Pressed)
-		{
-			CapturedLayer = NewCapturedLayer;
-		}
-		else if (NewCapturedLayer == CapturedLayer && MouseEvent->WasHandled())
-		{
-			CapturedLayer = nullptr;
-		}
-	}
+	SendEvent(*MouseEvent);
 }
 
 // TODO: Mod type
-void CEngineWindow::KeyPress(int key, int scancode, CInput::KeyEventType EventType, int mods)
+void CEngineWindow::KeyPress(int key, int scancode, CWindowInput::KeyEventType EventType, int mods)
 {
 	Input.ProcessKeys(key, scancode, EventType, mods);
 
 	CKeyEvent* KeyEvent;
-	if (EventType == CInput::Pressed)
+	if (EventType == CWindowInput::Pressed)
 	{
 		CKeyPressedEvent KeyPressedEvent = CKeyPressedEvent(key, mods, 0);
 		KeyEvent = &KeyPressedEvent;
 	}
-	else if (EventType == CInput::Repeat)
+	else if (EventType == CWindowInput::Repeat)
 	{
 		CKeyPressedEvent KeyPressedEvent = CKeyPressedEvent(key, mods, 1);
 		KeyEvent = &KeyPressedEvent;
@@ -182,30 +152,14 @@ void CEngineWindow::OnWindowResized(int NewWidth, int NewHeight)
 	SendEvent(ResizeEvent);
 }
 
-CCanvas* CEngineWindow::SendEvent(CEvent& Event)
+void CEngineWindow::SendEvent(CEvent& Event)
 {
 	for (IEventListener* EventListener : EventListeners)
 	{
 		EventListener->OnEvent(Event);
 	}
-	if (CapturedLayer)
-	{
-		CapturedLayer->OnEvent(Event);
-		return CapturedLayer;
-	}
 	
-	CCanvas* HandledLayer = nullptr;
-	for (auto it = CanvasManager.end(); it != CanvasManager.begin();)
-	{
-		(*--it)->OnEvent(Event);
-		const bool bHandledEvent = Event.WasHandled();
-		if (bHandledEvent)
-		{
-			HandledLayer = *it;
-			break;
-		}
-	}
-	return HandledLayer;
+	CanvasManager.OnEvent(Event);
 }
 
 void CEngineWindow::SetWindowPosition(SVector2i InPosition)

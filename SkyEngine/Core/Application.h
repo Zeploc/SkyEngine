@@ -8,7 +8,7 @@
 #include "Graphics/GraphicsAPI.h"
 #include "Math/Vector2.h"
 
-class CViewportLayer;
+class CViewportCanvas;
 class CLogManager;
 class CUICanvas;
 class CCanvas;
@@ -44,18 +44,20 @@ namespace SkyEngine
 		SVector2i MainWindowSize;
 
 		TPointer<IGraphicsAPI> GraphicsApi;
-		TPointer<IPlatformInterface> PlatformInterface;
+		TPointer<IPlatformInterface> PlatformInterface;		
+		TPointer<CRenderer> Renderer;
 		EGraphicsAPI GraphicsApiType;
 		TPointer<CLogManager> LogManager;
 
 		// TODO: Weak pointer to not hold ref
 		TPointer<CEngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
+		CViewportCanvas* GetViewportCanvas() const { return ViewportCanvas; }
 		
 		inline static Application* Get();
 	protected:
 		// TODO: Remove since viewport layer should make game UI canvas
 		CUICanvas* UILayer;
-		CViewportLayer* ViewportLayer;
+		CViewportCanvas* ViewportCanvas;
 		
 		TPointer<CEngineWindow> ApplicationWindow;
 	private:
@@ -69,4 +71,5 @@ namespace SkyEngine
 
 ENGINE_API SkyEngine::Application* GetApplication();
 ENGINE_API TPointer<IGraphicsAPI> GetGraphicsAPI();
+ENGINE_API TPointer<CRenderer> GetRenderer();
 

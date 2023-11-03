@@ -3,14 +3,16 @@
 #include "SEPCH.h"
 #include "Canvas.h"
 
+#include "imgui_internal.h"
 #include "Dependencies/ImGui/imgui.h"
 #include "Input/Input.h"
 #include "Platform/Window/EngineWindow.h"
 #include "System/LogManager.h"
 
-CCanvas::CCanvas(TWeakPointer<CEngineWindow> InOwningWindow, const std::string& InDebugName)
-: OwningWindow(InOwningWindow), DebugName(InDebugName)
+CCanvas::CCanvas(TWeakPointer<CEngineWindow> InOwningWindow, const std::string& InCanvasName)
+: OwningWindow(InOwningWindow), CanvasName(InCanvasName)
 {
+	StartingSize = {400, 600};
 }
 
 CCanvas::~CCanvas()
@@ -34,136 +36,96 @@ void CCanvas::OnEvent(CEvent& Event)
 	// return ImGui::IsAnyWindowFocused();
 }
 
-bool CCanvas::OnMouseButtonPressed(int Button, int Mods)
+void CCanvas::Render()
 {
-	//if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
-	if (!ImGui::GetIO().WantCaptureMouse)
+	if (!PreRender())
 	{
-		ImGui::SetWindowFocus();
+		ImGui::End();
+		// TODO: Error message
+		return;
+	}
+	OnRender();
+	PostRender();
+}
+
+bool CCanvas::PreRender()
+{
+	static bool bOpen = true;
+	ImGui::SetNextWindowSize(ImVec2(StartingSize.X,StartingSize.Y), ImGuiCond_FirstUseEver);
+	if (!ImGui::Begin(CanvasName.c_str(), &bOpen))
+	{
 		return false;
 	}
-	// Update buttons
-	ImGuiIO& io = ImGui::GetIO();
-	for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++)
-	{
-		CInput::InputState MouseButtonState = (CInput::InputState)OwningWindow.lock()->GetInput().MouseState[i];
-		// If a mouse press event came, always pass it as "mouse held this frame", so we don't miss click-release events that are shorter than 1 frame.
-		io.MouseDown[i] = MouseButtonState == CInput::INPUT_FIRST_PRESS || MouseButtonState == CInput::INPUT_HOLD;
-	}
 
-	// Won't be hovered properly since mouse pos only updated in imgui when window is focused
-	CLogManager::GetInstance()->DisplayLogMessage(std::format("wants capture: {}", ImGui::GetIO().WantCaptureMouse));
-
-	// if (!ImGui::GetIO().WantCaptureMouse)
-	// {
-	// 	ImGui::SetWindowFocus();
-	// 	return false;
-	// }
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2,2));
 	return true;
 }
 
-bool CCanvas::OnMouseButtonReleased(int Button, int Mods)
+void CCanvas::PostRender()
 {
-	bool bHadCapture = ImGui::GetIO().WantCaptureMouse;
-	
-	// Update buttons
-	ImGuiIO& io = ImGui::GetIO();
-	io.MouseDown[Button] = false;
+	ImGui::PopStyleVar();
+	ImGui::End();
+}
 
-	// If hovering window on release or mouse is not released (captured by button), then the release is handled
-	return ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) || !ImGui::IsMouseReleased(Button);
+bool CCanvas::OnMouseButtonPressed(int MouseButton, int Mods)
+{	
+	return true;
+}
+
+bool CCanvas::OnMouseButtonReleased(int MouseButton, int Mods)
+{
+	return true;
 }
 
 bool CCanvas::OnMouseMoved(SVector2i MousePos)
 {
-	ImGuiIO& io = ImGui::GetIO();
-	const ImVec2 mouse_pos_backup = io.MousePos;
-	io.MousePos = ImVec2(-FLT_MAX, -FLT_MAX);
-	const bool bFocused = OwningWindow.lock()->IsFocused();
-	if (bFocused)
-	{
-		if (io.WantSetMousePos)
-		{
-			OwningWindow.lock()->SetCursorPosition({(int)mouse_pos_backup.x, (int)mouse_pos_backup.y});
-		}
-		else
-		{
-			SVector2i MousePos = OwningWindow.lock()->GetInput().MousePos;
-			io.MousePos = ImVec2((float)MousePos.X, (float)MousePos.Y);
-		}
-		return true;
-	}
 	return false;
 }
 
 bool CCanvas::OnMouseScrolled(float XOffset, float YOffset)
 {
-	//if (ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
-	if (ImGui::GetIO().WantCaptureMouse)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.MouseWheelH += XOffset;
-		io.MouseWheel += YOffset;
-		return true;
-	}
 	return false;
 }
 
 bool CCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 {
-	ImGuiIO& io = ImGui::GetIO();
-	io.KeysDown[KeyCode] = true;
-	
-	// io.KeyCtrl = Event.GetMods() & CInput::ModiferType::Control;
-	// io.KeyShift = Event.GetMods() & CInput::ModiferType::Shift;
-	// io.KeyAlt = Event.GetMods() & CInput::ModiferType::Alt;
-	// TODO: Windows Key?
-	// io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
-	
-	// Modifiers are not reliable across systems
-	io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
-	io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
-	io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
-	io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
-
-	CLogManager::GetInstance()->DisplayLogMessage(std::format("wants keyboard capture: {}", ImGui::GetIO().WantCaptureKeyboard));
-	// If window is focused (not viewport), have keyboard input go there instead
-	return ImGui::GetIO().WantCaptureKeyboard || ImGui::IsWindowFocused(ImGuiHoveredFlags_AnyWindow);
+	return false;
 }
 
 bool CCanvas::OnKeyTyped(int KeyCode, int Mods)
 {
-	ImGuiIO& io = ImGui::GetIO();
-	if (KeyCode > 0 && KeyCode < 0x10000)
-	{
-		io.AddInputCharacter((unsigned short)KeyCode);
-	}
-	return ImGui::GetIO().WantCaptureKeyboard || ImGui::IsWindowFocused(ImGuiHoveredFlags_AnyWindow);
+	return false;
 }
 
 bool CCanvas::OnKeyReleased(int KeyCode, int Mods)
 {
-	ImGuiIO& io = ImGui::GetIO();
-	io.KeysDown[KeyCode] = false;
-	
-	// Modifiers are not reliable across systems
-	io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
-	io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
-	io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
-	io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
-	
-	return ImGui::GetIO().WantCaptureKeyboard || ImGui::IsWindowFocused(ImGuiHoveredFlags_AnyWindow);
+	return false;
 }
 
 bool CCanvas::OnWindowResize(unsigned Width, unsigned Height)
-{
-	// TODO: Switch window resize event to update Imgui here?
-	
+{	
 	return false;
 }
 
 bool CCanvas::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
 {
+	ImGuiWindow* CanvasWindow = ImGui::FindWindowByName(CanvasName.c_str());	
+	if (!CanvasWindow)
+	{
+		return false;
+	}
+	if (!CanvasWindow->Active)
+	{
+		return false;
+	}
+	// if (!CanvasWindow->DockTabIsVisible)
+	// {
+	// 	return false;
+	// }
+	if (!ImGui::IsMouseHoveringRect(CanvasWindow->Rect().Min, CanvasWindow->Rect().Max, false))
+	{
+		return false;
+	}
 	return OnMouseButtonPressed(Event.GetMouseButton(), Event.GetMods());
 }
 

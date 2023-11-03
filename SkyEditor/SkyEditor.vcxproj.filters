@@ -51,13 +51,10 @@
     <ClInclude Include="Editor\EditorLogManager.h">
       <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\EditorViewportLayer.h">
+    <ClInclude Include="Editor\EditorViewportCanvas.h">
       <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="Editor\Scene\EditorScene.h">
-      <Filter>Editor\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Editor\Scene\TransformationWidget.h">
       <Filter>Editor\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Editor\UI\ConsoleLog.h">
@@ -88,13 +85,10 @@
     <ClCompile Include="Editor\EditorLogManager.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Editor\EditorViewportLayer.cpp">
+    <ClCompile Include="Editor\EditorViewportCanvas.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
     <ClCompile Include="Editor\Scene\EditorScene.cpp">
-      <Filter>Editor\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\Scene\TransformationWidget.cpp">
       <Filter>Editor\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Editor\UI\ConsoleLog.cpp">

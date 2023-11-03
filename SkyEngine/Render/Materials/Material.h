@@ -3,13 +3,13 @@
 #pragma once
 
 #include "InternalMaterial.h"
-#include "Graphics/GraphicsInstance.h"
+#include "Core/Application.h"
+#include "Render/Renderer.h"
 #include "Render/Lighting.h"
 #include "Render/Shaders/ShaderManager.h"
 
 class CTexture;
 class CShader;
-class IGraphicsInstance;
 
 enum class EAttributeType
 {
@@ -40,7 +40,7 @@ public:
 	typename S::ShaderParameters Params;
 	
 	TPointer<CShader> GetBaseShader() override;
-	void BindMaterial(TPointer<IGraphicsInstance> InGraphicsInterface) override;
+	void BindMaterial() override;
 	bool HasTexture() override;
 
 	TPointer<S> Shader;
@@ -65,11 +65,11 @@ TPointer<CShader> TMaterial<S>::GetBaseShader()
 }
 
 template <class S>
-void TMaterial<S>::BindMaterial(TPointer<IGraphicsInstance> InGraphicsInterface)
+void TMaterial<S>::BindMaterial()
 {
-	CMaterialInterface::BindMaterial(InGraphicsInterface);
-	TPointer<S> TypedShader = std::static_pointer_cast<S>(InGraphicsInterface->ActiveShader);
-	TypedShader->UploadMaterialParameters(InGraphicsInterface, Params);
+	CMaterialInterface::BindMaterial();
+	TPointer<S> TypedShader = std::static_pointer_cast<S>(GetRenderer()->ActiveShader);
+	TypedShader->UploadMaterialParameters(Params);
 }
 
 template <class S>

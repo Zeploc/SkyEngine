@@ -7,7 +7,6 @@
 
 // Engine Includes //
 #include "Render/Shaders/ShaderManager.h"
-#include "Camera/CameraManager.h"
 #include "Core/Application.h"
 #include "Render/Materials/Material.h"
 #include "Render/Materials/MaterialType.h"
@@ -56,7 +55,7 @@ void GeometryObject::BindGeometryObject()
 	// };
 	//
 	// // If no texture, texture source is equal to ""
-	// vao = GetGraphicsAPI()->CreateBuffer(MeshMaterial.Texture, true);
+	// vao = GetGraphicsAPI()->CreateVertexBuffer(MeshMaterial.Texture, true);
 	// glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 }
 

@@ -12,12 +12,14 @@
 // Engine Includes //
 #include "Particle.h"
 #include "Render/Shaders/ShaderManager.h"
-#include "Camera/CameraManager.h"
 
 // This Includes //
 #include "ParticleSystem.h"
 
+#include "Canvas/ViewportCanvas.h"
 #include "Core/Application.h"
+#include "Entity/Camera.h"
+#include "Render/SceneRenderer.h"
 #include "Render/Shaders/Shader.h"
 
 /************************************************************
@@ -230,9 +232,11 @@ void ParticleSystem::DrawEntity()
 	}
 
 	glm::vec3 vQuad1, vQuad2;
-	glm::vec3 vView = CameraManager::GetInstance()->GetCameraForwardVector();
+	CViewportCanvas* ViewportCanvas = GetApplication()->GetViewportCanvas();
+	TPointer<Camera> ViewportCamera = ViewportCanvas->GetViewportCamera();
+	glm::vec3 vView = ViewportCamera->GetForwardVector();
 	vView = normalize(vView);
-	vQuad1 = cross(vView, CameraManager::GetInstance()->GetCameraUpVector());
+	vQuad1 = cross(vView, ViewportCamera->GetUpVector());
 	vQuad1 = normalize(vQuad1);
 	vQuad2 = cross(vView, vQuad1);
 	vQuad2 = normalize(vQuad2);
@@ -242,7 +246,7 @@ void ParticleSystem::DrawEntity()
 	            vQuad1.z);
 	glUniform3f(glGetUniformLocation(program, "vQuad2"), vQuad2.x, vQuad2.y,
 	            vQuad2.z);
-	glUniformMatrix4fv(glGetUniformLocation(program, "vp"), 1, GL_FALSE, glm::value_ptr(CameraManager::GetInstance()->Projection.ToGLM() * CameraManager::GetInstance()->View.ToGLM()));
+	glUniformMatrix4fv(glGetUniformLocation(program, "vp"), 1, GL_FALSE, glm::value_ptr(ViewportCanvas->GetSceneRenderer()->GetProjection().ToGLM() * ViewportCanvas->GetSceneRenderer()->GetView().ToGLM()));
 	glUniform4f(glGetUniformLocation(program, "Colour"), Colour.r, Colour.g, Colour.b, Colour.a);
 	glUniform1f(glGetUniformLocation(program, "Size"), ParticleSize);
 

@@ -15,13 +15,11 @@
 
 // This Includes //
 
-#include "Camera/CameraManager.h"
 #include "Core/Application.h"
-#include "Platform/Window/EngineWindow.h"
 #include "Entity/Button3DEntity.h"
-#include "Events/KeyEvent.h"
-#include "Graphics/GraphicsInstance.h"
+#include "Render/Renderer.h"
 #include "Input/Input.h"
+#include "Platform/Window/GLFW/GLFWIncludes.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -68,9 +66,9 @@ void Scene::DeleteScene()
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void Scene::RenderScene(TPointer<IGraphicsInstance> InGraphicsInstance)
+void Scene::RenderScene()
 {
-	InGraphicsInstance->Render(Entities, UIElements);
+	GetRenderer()->Render(Entities, UIElements);
 }
 
 /************************************************************
@@ -167,11 +165,7 @@ void Scene::DestroyUIElement(TPointer<UIElement> _Element)
 #--Return--#: 		NA
 ************************************************************/
 void Scene::Update()
-{
-	// TODO: Move to better location?
-	CameraManager* CameraInstance = CameraManager::GetInstance();
-	CameraInstance->SpectatorUpdate();
-	
+{	
 	for (int i = 0; i < Entities.size(); i++)
 	{
 		if (Entities[i])
@@ -265,7 +259,7 @@ bool Scene::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 	// TODO: If not build check (editor only)
 	if (KeyCode == GLFW_KEY_ESCAPE) 
 	{
-		if (KeyCode & CInput::ModiferType::Shift)
+		if (KeyCode & CWindowInput::ModiferType::Shift)
 		{
 			GetApplication()->Quit();
 			return true;

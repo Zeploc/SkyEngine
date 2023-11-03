@@ -16,7 +16,7 @@ public:
 	void AddSampleEntities();
 
 	void Update() override;
-	void RenderScene(TPointer<IGraphicsInstance> InGraphicsInstance) override;
+	void RenderScene() override;
 	
 	void OpenFile();
 
@@ -29,6 +29,4 @@ protected:
 public:
 	
 	TPointer<UIText> LevelNameText;
-
-	TPointer<CTransformationWidget> TransformationWidget;
 };

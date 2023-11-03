@@ -11,7 +11,7 @@ class CUIWidget;
 class ENGINE_API CUICanvas : public CCanvas
 {
 public:
-	CUICanvas(TWeakPointer<CEngineWindow> InOwningWindow);
+	CUICanvas(TWeakPointer<CEngineWindow> InOwningWindow, const std::string& InCanvasName);
 	virtual ~CUICanvas();
 
 	void OnAttach() override;

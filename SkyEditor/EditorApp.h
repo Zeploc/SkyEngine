@@ -4,7 +4,7 @@
 #include "Core/Application.h"
 #include "Core/Core.h"
 
-class CEditorViewportLayer;
+class CEditorViewportCanvas;
 class CConsoleLog;
 class EditorApplication;
 
@@ -12,8 +12,9 @@ inline EditorApplication* EditorApp = nullptr;
 
 class EditorApplication : public SkyEngine::Application
 {
-public:	
-	TPointer<CConsoleLog> ConsoleLog;
+public:
+	// TODO: Swap to shared pointer
+	CConsoleLog* ConsoleLog = nullptr;
 	
 	EditorApplication();
 	~EditorApplication() {}
@@ -32,5 +33,5 @@ public:
 
 	unsigned int DockSpaceID = 0;
 	
-	CEditorViewportLayer* EditorViewportLayer;
+	CEditorViewportCanvas* EditorViewportLayer;
 };

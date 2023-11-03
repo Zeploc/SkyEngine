@@ -2,15 +2,15 @@
 
 #pragma once
 
-#include "UI/UIWidget.h"
+#include "Canvas/UICanvas.h"
 
 class EditorScene;
 
-class CSceneOutliner : public CUIWidget
+class CSceneOutliner : public CUICanvas
 {
 public:
-	CSceneOutliner();
-	void DrawUI(const SCanvas& DrawCanvas) override;
+	CSceneOutliner(TWeakPointer<CEngineWindow> InOwningWindow);
+	virtual void OnRender() override;
 	
 	TPointer<EditorScene> EditorScene;
 };

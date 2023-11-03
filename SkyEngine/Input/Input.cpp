@@ -11,24 +11,23 @@
 #include "CXBOXController.h"
 #include "UI/Legacy/UIButton.h"
 
-#include "Camera/CameraManager.h"
 #include "Core/Application.h"
 #include "Platform/Window/EngineWindow.h"
 
-CInput::CInput()
+CWindowInput::CWindowInput()
 {
 	std::fill(KeyState, KeyState + 255, INPUT_RELEASED);
 	std::fill(MouseState, MouseState + 3, INPUT_RELEASED);
 }
 
-CInput::~CInput()
+CWindowInput::~CWindowInput()
 {
 }
 
-void CInput::Init(TWeakPointer<CEngineWindow> Window)
+void CWindowInput::Init(TWeakPointer<CEngineWindow> Window)
 {
 	/*
-	glutSpecialFunc(CInput::LprocessSpecialKeys);*/
+	glutSpecialFunc(CWindowInput::LprocessSpecialKeys);*/
 	//glutJoystickFunc(LJoystick, (float)GLUT_JOYSTICK_POLL_RATE / 100.0f);
 
 	if (Players.size() <= 0)
@@ -46,7 +45,7 @@ void CInput::Init(TWeakPointer<CEngineWindow> Window)
 #--Parameters--#: 	Takes in the the key and the mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void CInput::processNormalKeysDown(unsigned char key, int x, int y)
+void CWindowInput::processNormalKeysDown(unsigned char key, int x, int y)
 {
 	bKBHit = true;
 	cLastKey = key;
@@ -62,7 +61,7 @@ void CInput::processNormalKeysDown(unsigned char key, int x, int y)
 #--Parameters--#: 	Takes in the the key and the mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void CInput::processNormalKeysUp(unsigned char key, int x, int y)
+void CWindowInput::processNormalKeysUp(unsigned char key, int x, int y)
 {
 	if (KeyState[key] == (INPUT_HOLD | INPUT_FIRST_PRESS))
 	{
@@ -76,7 +75,7 @@ void CInput::processNormalKeysUp(unsigned char key, int x, int y)
 #--Parameters--#: 	Takes in the the key and the mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void CInput::processSpecialKeys(int key, int x, int y)
+void CWindowInput::processSpecialKeys(int key, int x, int y)
 {
 }
 
@@ -86,7 +85,7 @@ void CInput::processSpecialKeys(int key, int x, int y)
 #--Parameters--#: 	Takes in the the mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void CInput::MouseInput(int x, int y)
+void CWindowInput::MouseInput(int x, int y)
 {
 	MousePos = glm::tvec2<int>(x, y);
 }
@@ -97,7 +96,7 @@ void CInput::MouseInput(int x, int y)
 #--Parameters--#: 	Takes in the the button and the state and mouse pos
 #--Return--#: 		NA
 ************************************************************/
-void CInput::MouseButton(int button, KeyEventType EventType, int mods)
+void CWindowInput::MouseButton(int button, KeyEventType EventType, int mods)
 {
 	//MousePos = glm::vec2(x, y);
 	if (button < 3)
@@ -188,7 +187,7 @@ void CInput::MouseButton(int button, KeyEventType EventType, int mods)
 	}
 }
 
-void CInput::ProcessKeys(int key, int scancode, KeyEventType EventType, int mods)
+void CWindowInput::ProcessKeys(int key, int scancode, KeyEventType EventType, int mods)
 {
 	bKBHit = true;
 	cLastKey = key;
@@ -223,7 +222,7 @@ void CInput::ProcessKeys(int key, int scancode, KeyEventType EventType, int mods
 #--Parameters--#: 	NA
 #--Return--#: 		NA
 ************************************************************/
-void CInput::Update()
+void CWindowInput::Update()
 {
 	for (int i = 0; i < 350; i++)
 	{
@@ -262,7 +261,7 @@ void CInput::Update()
 #--Parameters--#: 	Takes in enum value
 #--Return--#: 		Returns enum name as string
 ************************************************************/
-std::string CInput::InputStateString(unsigned int State)
+std::string CWindowInput::InputStateString(unsigned int State)
 {
 	switch (State)
 	{

@@ -5,7 +5,6 @@
 #include "Core/Core.h"
 
 class CShader;
-class IGraphicsInstance;
 
 // TODO: STDL warnings with exporting class with vector
 #pragma warning (disable : 4251)
@@ -16,7 +15,7 @@ public:
 	virtual ~CMaterialInterface() = default;
 	// TODO: Load asset from path
 	CMaterialInterface(const std::string& InMaterialName, const std::string& InMaterialPath = std::string());
-	virtual void BindMaterial(TPointer<IGraphicsInstance> InGraphicsInterface);
+	virtual void BindMaterial();
 
 	// TODO: place holder, replace
 	virtual bool HasTexture() = 0;

@@ -7,6 +7,7 @@
 #include <glew/glew.h>
 #include <Render/Shaders/ShaderManager.h>
 
+#include "Render/Framebuffer.h"
 #include "Input/CXBOXController.h"
 #include "Input/Input.h"
 #include "System/LogManager.h"
@@ -83,17 +84,17 @@ CGLFWWindow::CGLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool 
 	glfwSetKeyCallback(GlWindow, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
 		CGLFWWindow* OwningGlfwWindow = reinterpret_cast<CGLFWWindow*>(glfwGetWindowUserPointer(window));
-		CInput::KeyEventType EventType = CInput::KeyEventType::Pressed;
+		CWindowInput::KeyEventType EventType = CWindowInput::KeyEventType::Pressed;
 		switch (action)
 		{
 		case GLFW_PRESS:
-			EventType  = CInput::KeyEventType::Pressed;
+			EventType  = CWindowInput::KeyEventType::Pressed;
 			break;
 		case GLFW_REPEAT:
-			EventType  = CInput::KeyEventType::Repeat;
+			EventType  = CWindowInput::KeyEventType::Repeat;
 			break;
 		case GLFW_RELEASE:
-			EventType  = CInput::KeyEventType::Released;			
+			EventType  = CWindowInput::KeyEventType::Released;			
 			break;
 		}
 		// TODO: Convert to custom keycode
@@ -113,17 +114,17 @@ CGLFWWindow::CGLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool 
 	glfwSetMouseButtonCallback(GlWindow, [](GLFWwindow* window, int button, int action, int mods)
 	{
 		CGLFWWindow* OwningGlfwWindow = reinterpret_cast<CGLFWWindow*>(glfwGetWindowUserPointer(window));
-		CInput::KeyEventType EventType = CInput::KeyEventType::Pressed;
+		CWindowInput::KeyEventType EventType = CWindowInput::KeyEventType::Pressed;
 		switch (action)
 		{
 		case GLFW_PRESS:
-			EventType  = CInput::KeyEventType::Pressed;
+			EventType  = CWindowInput::KeyEventType::Pressed;
 			break;
 		case GLFW_REPEAT:
-			EventType  = CInput::KeyEventType::Repeat;
+			EventType  = CWindowInput::KeyEventType::Repeat;
 			break;
 		case GLFW_RELEASE:
-			EventType  = CInput::KeyEventType::Released;			
+			EventType  = CWindowInput::KeyEventType::Released;			
 			break;
 		}
 		OwningGlfwWindow->MouseButtonPress(button, EventType, ConvertModiferToCustomInputMod(mods));
@@ -134,12 +135,6 @@ CGLFWWindow::CGLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool 
 		CGLFWWindow* OwningGlfwWindow = reinterpret_cast<CGLFWWindow*>(glfwGetWindowUserPointer(window));
 		OwningGlfwWindow->ScrollWheel((float)xoffset, (float)yoffset);
 	});
-}
-
-void CGLFWWindow::CreateGraphicsInstance()
-{
-	glfwMakeContextCurrent(GlWindow);
-	CEngineWindow::CreateGraphicsInstance();
 }
 
 void CGLFWWindow::SetWindowFullScreen(bool bInFullscreen)
@@ -222,15 +217,15 @@ int CGLFWWindow::ConvertModiferToCustomInputMod(int GlfwMods)
 	int NewMod = 0;
 	if (GlfwMods & GLFW_MOD_SHIFT)
 	{
-		NewMod |= CInput::ModiferType::Shift;
+		NewMod |= CWindowInput::ModiferType::Shift;
 	}
 	if (GlfwMods & GLFW_MOD_ALT)
 	{
-		NewMod |= CInput::ModiferType::Alt;
+		NewMod |= CWindowInput::ModiferType::Alt;
 	}
 	if (GlfwMods & GLFW_MOD_CONTROL)
 	{
-		NewMod |= CInput::ModiferType::Control;
+		NewMod |= CWindowInput::ModiferType::Control;
 	}
 	return NewMod;
 }
@@ -246,9 +241,4 @@ void glfw_onError(int error, const char* description)
 	// print message in Windows popup dialog box
 	CLogManager::GetInstance()->DisplayLogError(description);
 	MessageBoxA(NULL, description, "GLFW error", MB_OK);
-}
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
 }
