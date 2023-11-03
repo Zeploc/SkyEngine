@@ -49,10 +49,15 @@ void CShader::BindMaterial(TPointer<CMaterialInterface> InMaterial)
 {
 	ensure(InMaterial != nullptr, "Missing material to set shader attributes!");
 
-	GetRenderer()->ApplyMaterialFlags(InMaterial);
+	GetGraphicsAPI()->ApplyMaterialFlags(InMaterial);
 }
 
 void CShader::BindShader()
 {
 	GetGraphicsAPI()->BindShader(ShaderProgram);
+}
+
+int CShader::GetAttributeLocation(std::string AttributeName) const
+{
+	return GetGraphicsAPI()->GetAttributeLocation(ShaderProgram, AttributeName);
 }

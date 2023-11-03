@@ -48,6 +48,7 @@ protected:
 	// void DefineAttribute(const std::string& AttributeName, SVector4 Vector4);
 	// void DefineAttribute(const std::string& AttributeName, TPointer<CTexture> Texture);
 	// void DefineAttribute(const std::string& AttributeName, MaterialAttribute Attribute);
+	int GetAttributeLocation(std::string AttributeName) const;
 	
 	std::string VertexShaderPath;
 	std::string FragmentShaderPath;
