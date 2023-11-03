@@ -61,6 +61,7 @@ namespace SkyEngine
 		ApplicationWindow->SubscribeEventListener(this);
 		
 		GraphicsApi = IGraphicsAPI::CreateGraphicsAPI(GraphicsApiType);
+		ApplicationWindow->SetupWindow();
 		ShaderManager::LoadAllDefaultShadersInCurrentContext();
 		Renderer = CreatePointer<CRenderer>();
 

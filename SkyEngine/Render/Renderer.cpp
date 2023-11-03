@@ -9,7 +9,6 @@
 #include "Entity/Entity.h"
 #include "Render/Materials/InternalMaterial.h"
 #include "Render/Shaders/Shader.h"
-#include "UI/Legacy/UIElement.h"
 
 CRenderer::CRenderer()
 {
@@ -37,7 +36,7 @@ void CRenderer::RenderScenes()
 	}
 }
 
-void CRenderer::Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements)
+void CRenderer::Render(std::vector<TPointer<Entity>> Entities)
 {
 	// TODO: Later store in/update list as new meshes added
 	std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>> MeshesByMaterial;
@@ -93,11 +92,6 @@ void CRenderer::RenderMesh(TPointer<CMeshComponent> Mesh, STransform Transform)
 {
 	GetGraphicsAPI()->ApplyMVP(ActiveShader->GetShaderProgram(), CurrentView, CurrentProjection, Transform);
 	GetGraphicsAPI()->RenderMesh(Mesh);
-}
-
-void CRenderer::RenderUIElement(TPointer<UIElement> UserInterfaceItem)
-{
-	UserInterfaceItem->DrawUIElement();
 }
 
 void CRenderer::RenderImGui()

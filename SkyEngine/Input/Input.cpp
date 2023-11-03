@@ -9,7 +9,6 @@
 
 // Engine Includes //
 #include "CXBOXController.h"
-#include "UI/Legacy/UIButton.h"
 
 #include "Core/Application.h"
 #include "Platform/Window/EngineWindow.h"
@@ -252,7 +251,6 @@ void CWindowInput::Update()
 	}
 
 	bKBHit = false;
-	UIButton::bButtonPressedThisFrame = false;
 }
 
 /************************************************************

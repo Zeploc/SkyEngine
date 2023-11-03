@@ -57,9 +57,6 @@
     <ClInclude Include="Editor\Scene\EditorScene.h">
       <Filter>Editor\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\Scene\TransformationWidget.h">
-      <Filter>Editor\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Editor\UI\ConsoleLog.h">
       <Filter>Editor\UI</Filter>
     </ClInclude>
@@ -92,9 +89,6 @@
       <Filter>Editor</Filter>
     </ClCompile>
     <ClCompile Include="Editor\Scene\EditorScene.cpp">
-      <Filter>Editor\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\Scene\TransformationWidget.cpp">
       <Filter>Editor\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Editor\UI\ConsoleLog.cpp">

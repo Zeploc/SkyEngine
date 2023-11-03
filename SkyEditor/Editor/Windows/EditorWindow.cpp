@@ -8,7 +8,6 @@
 
 #include <Input/Input.h>
 #include <System/Utils.h>
-#include <UI/Legacy/UIButton.h>
 
 #include "Core/Application.h"
 #include "Render/Renderer.h"
@@ -42,23 +41,23 @@ void EditorWindow::SetupUI()
 {
 	if (LinkedWindow == EditorWindowManager::GetMainWindow())
 	{
-		BackImage = std::make_shared<UIImage>(UIImage(glm::vec2(Size.X / 2.0f, Size.Y / 2.0f), EANCHOR::CENTER, 0.0f, glm::vec4(0.5f, 0.5f, 0.5f, 1.0f), Size.X, Size.Y));
-		//TestBtn->AddText("Test", "Resources/Fonts/Roboto-Thin.ttf", 30, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
-		UIElements.push_back(BackImage);
-
-		//20, Size.y - 20.0f
-		TPointer<UIButton> TestBtn(new UIButton(glm::vec2(0.0f, 0.0f), EANCHOR::TOP_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), Size.X - 35, 30, nullptr));
-
-		TestBtn->BindPress(this, &EditorWindow::StartDrag);
-		TestBtn->BindRelease(this, &EditorWindow::StopDrag);
-
-		TestBtn->AddText(WindowName, "Resources/Fonts/Roboto-Thin.ttf", 20, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
-		UIElements.push_back(TestBtn);
-
-		TPointer<UIButton> PopoutButton(new UIButton(glm::vec2(Size.X, 0.0f), EANCHOR::TOP_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 30, 30, nullptr));
-
-		PopoutButton->BindPress(this, &EditorWindow::PopOut);
-		UIElements.push_back(PopoutButton);
+		// BackImage = std::make_shared<UIImage>(UIImage(glm::vec2(Size.X / 2.0f, Size.Y / 2.0f), EANCHOR::CENTER, 0.0f, glm::vec4(0.5f, 0.5f, 0.5f, 1.0f), Size.X, Size.Y));
+		// //TestBtn->AddText("Test", "Resources/Fonts/Roboto-Thin.ttf", 30, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
+		// UIElements.push_back(BackImage);
+		//
+		// //20, Size.y - 20.0f
+		// TPointer<UIButton> TestBtn(new UIButton(glm::vec2(0.0f, 0.0f), EANCHOR::TOP_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), Size.X - 35, 30, nullptr));
+		//
+		// TestBtn->BindPress(this, &EditorWindow::StartDrag);
+		// TestBtn->BindRelease(this, &EditorWindow::StopDrag);
+		//
+		// TestBtn->AddText(WindowName, "Resources/Fonts/Roboto-Thin.ttf", 20, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
+		// UIElements.push_back(TestBtn);
+		//
+		// TPointer<UIButton> PopoutButton(new UIButton(glm::vec2(Size.X, 0.0f), EANCHOR::TOP_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 30, 30, nullptr));
+		//
+		// PopoutButton->BindPress(this, &EditorWindow::PopOut);
+		// UIElements.push_back(PopoutButton);
 	}
 }
 
@@ -190,10 +189,10 @@ bool EditorWindow::IsPointInWindow(SVector2i _point)
 void EditorWindow::SetBackColour(glm::vec3 _Colour)
 {
 	BackColour = _Colour;
-	if (BackImage)
-	{
-		BackImage->Colour = glm::vec4(BackColour, 1.0f);
-	}
+	// if (BackImage)
+	// {
+	// 	BackImage->Colour = glm::vec4(BackColour, 1.0f);
+	// }
 }
 
 void EditorWindow::UpdateWindow()
@@ -255,10 +254,10 @@ void EditorWindow::UpdateWindow()
 	//	
 	//}
 
-	for (TPointer<UIElement> UIElement : UIElements)
-	{
-		UIElement->BaseUpdate();
-	}
+	// for (TPointer<UIElement> UIElement : UIElements)
+	// {
+	// 	UIElement->BaseUpdate();
+	// }
 
 	//CWindowInput::GetInstance()->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 }

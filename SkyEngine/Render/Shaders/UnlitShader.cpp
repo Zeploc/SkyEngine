@@ -3,8 +3,6 @@
 #include "SEPCH.h"
 #include "UnlitShader.h"
 
-#include <glew/glew.h>
-
 #include "Core/Application.h"
 
 

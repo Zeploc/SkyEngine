@@ -63,7 +63,7 @@ bool CMath::DecomposeTransform(const glm::mat4& OutMatrix, SVector& Translation,
 #endif
 
 	Rotation.Yaw = degrees(asin(-Row[0][2]));
-	if (degrees(cos(Rotation.Yaw)) != 0.0f)
+	if (cos(radians(Rotation.Yaw)) != 0.0f)
 	{
 		Rotation.Pitch = degrees(atan2(Row[1][2], Row[2][2]));
 		Rotation.Roll = degrees(atan2(Row[0][1], Row[0][0]));

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Camera">
-      <UniqueIdentifier>{CE7141AB-BA13-6C81-A3CE-7FD58F0FF3D1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Canvas">
       <UniqueIdentifier>{614442AB-4DE6-6C81-36A1-80D522E2F3D1}</UniqueIdentifier>
     </Filter>
@@ -90,9 +87,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera\CameraManager.h">
-      <Filter>Camera</Filter>
-    </ClInclude>
     <ClInclude Include="Canvas\Canvas.h">
       <Filter>Canvas</Filter>
     </ClInclude>
@@ -132,6 +126,9 @@
     <ClInclude Include="Entity\Button3DEntity.h">
       <Filter>Entity</Filter>
     </ClInclude>
+    <ClInclude Include="Entity\Camera.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
     <ClInclude Include="Entity\CollisionBounds.h">
       <Filter>Entity</Filter>
     </ClInclude>
@@ -153,9 +150,6 @@
     <ClInclude Include="Events\MouseEvent.h">
       <Filter>Events</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Framebuffer.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\GL\GLAPI.h">
       <Filter>Graphics\GL</Filter>
     </ClInclude>
@@ -165,16 +159,10 @@
     <ClInclude Include="Graphics\GL\GLIncludes.h">
       <Filter>Graphics\GL</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\GL\GLRenderer.h">
-      <Filter>Graphics\GL</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\GL\imgui_impl_opengl3.h">
       <Filter>Graphics\GL</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\GraphicsAPI.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Renderer.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Input\CXBOXController.h">
@@ -249,6 +237,9 @@
     <ClInclude Include="Platform\Windows\WindowsPlatform.h">
       <Filter>Platform\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="Render\Framebuffer.h">
+      <Filter>Render</Filter>
+    </ClInclude>
     <ClInclude Include="Render\Lighting.h">
       <Filter>Render</Filter>
     </ClInclude>
@@ -315,6 +306,12 @@
     <ClInclude Include="Render\Particle\ParticleSystemGPU.h">
       <Filter>Render\Particle</Filter>
     </ClInclude>
+    <ClInclude Include="Render\Renderer.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SceneRenderer.h">
+      <Filter>Render</Filter>
+    </ClInclude>
     <ClInclude Include="Render\Shaders\PBRShader.h">
       <Filter>Render\Shaders</Filter>
     </ClInclude>
@@ -359,31 +356,7 @@
     <ClInclude Include="System\Utils.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="UI\Legacy\Cursor.h">
-      <Filter>UI\Legacy</Filter>
-    </ClInclude>
     <ClInclude Include="UI\Legacy\Text.h">
-      <Filter>UI\Legacy</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Legacy\UIButton.h">
-      <Filter>UI\Legacy</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Legacy\UIElement.h">
-      <Filter>UI\Legacy</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Legacy\UIImage.h">
-      <Filter>UI\Legacy</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Legacy\UISlider.h">
-      <Filter>UI\Legacy</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Legacy\UIText.h">
-      <Filter>UI\Legacy</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Legacy\UITextField.h">
-      <Filter>UI\Legacy</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Legacy\Widget.h">
       <Filter>UI\Legacy</Filter>
     </ClInclude>
     <ClInclude Include="UI\UIWidget.h">
@@ -391,9 +364,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Camera\CameraManager.cpp">
-      <Filter>Camera</Filter>
-    </ClCompile>
     <ClCompile Include="Canvas\Canvas.cpp">
       <Filter>Canvas</Filter>
     </ClCompile>
@@ -427,6 +397,9 @@
     <ClCompile Include="Entity\Button3DEntity.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
+    <ClCompile Include="Entity\Camera.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
     <ClCompile Include="Entity\CollisionBounds.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
@@ -436,25 +409,16 @@
     <ClCompile Include="Entity\Entity.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Framebuffer.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\GL\GLAPI.cpp">
       <Filter>Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\GL\GLFramebuffer.cpp">
       <Filter>Graphics\GL</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\GL\GLRenderer.cpp">
-      <Filter>Graphics\GL</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\GL\imgui_impl_opengl3.cpp">
       <Filter>Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\GraphicsAPI.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Renderer.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Input\CXBOXController.cpp">
@@ -489,6 +453,9 @@
     </ClCompile>
     <ClCompile Include="Platform\Windows\WindowsPlatform.cpp">
       <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Framebuffer.cpp">
+      <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="Render\Lighting.cpp">
       <Filter>Render</Filter>
@@ -553,6 +520,12 @@
     <ClCompile Include="Render\Particle\ParticleSystemGPU.cpp">
       <Filter>Render\Particle</Filter>
     </ClCompile>
+    <ClCompile Include="Render\Renderer.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SceneRenderer.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
     <ClCompile Include="Render\Shaders\PBRShader.cpp">
       <Filter>Render\Shaders</Filter>
     </ClCompile>
@@ -587,31 +560,7 @@
     <ClCompile Include="System\Utils.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="UI\Legacy\Cursor.cpp">
-      <Filter>UI\Legacy</Filter>
-    </ClCompile>
     <ClCompile Include="UI\Legacy\Text.cpp">
-      <Filter>UI\Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Legacy\UIButton.cpp">
-      <Filter>UI\Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Legacy\UIElement.cpp">
-      <Filter>UI\Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Legacy\UIImage.cpp">
-      <Filter>UI\Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Legacy\UISlider.cpp">
-      <Filter>UI\Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Legacy\UIText.cpp">
-      <Filter>UI\Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Legacy\UITextField.cpp">
-      <Filter>UI\Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Legacy\Widget.cpp">
       <Filter>UI\Legacy</Filter>
     </ClCompile>
     <ClCompile Include="UI\UIWidget.cpp">

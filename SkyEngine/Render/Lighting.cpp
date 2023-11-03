@@ -6,8 +6,6 @@
 #include "Math/Vector.h"
 
 // Local Includes //
-#include <glew/glew.h>
-
 #include "Core/Application.h"
 #include "Render/Renderer.h"
 #include "Shaders/Shader.h"
