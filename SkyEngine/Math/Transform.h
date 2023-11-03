@@ -11,6 +11,16 @@
 
 struct ENGINE_API STransform
 {
+	STransform()
+	{}
+	
+	STransform(SVector InPosition, SRotator InRotation, SVector InScale)
+	: Position(InPosition), Rotation(InRotation), Scale(InScale)
+	{}
+	
+	STransform(SVector InPosition, SRotator InRotation)
+	: Position(InPosition), Rotation(InRotation)
+	{}
 	
 	SVector Position;
 	SRotator Rotation;

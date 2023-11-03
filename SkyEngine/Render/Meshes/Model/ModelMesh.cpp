@@ -47,7 +47,7 @@ void ModelMesh::Render(GLuint program, STransform ModelTransform)
 		glm::mat4 mvp = CameraManager::GetInstance()->projection *  CameraManager::GetInstance()->view * model;
 		GLint mvpLoc = glGetUniformLocation(program, "MVP");
 		glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvp));*/
-	CameraManager::GetInstance()->SetMVP(ModelTransform, program);
+	// CameraManager::GetInstance()->SetMVP(ModelTransform, program);
 
 	// Draw mesh
 	glBindVertexArray(this->VAO);

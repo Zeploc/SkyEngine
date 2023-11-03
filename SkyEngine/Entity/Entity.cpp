@@ -36,7 +36,7 @@ Entity::Entity(std::string _FromString)
 //#--Parameters--#:		Takes contructor values
 //#--Return--#: 		NA
 //************************************************************/
-Entity::Entity(STransform _Transform, EANCHOR _Anchor) : Transform(_Transform), EntityAnchor(_Anchor)
+Entity::Entity(STransform InTransform, EANCHOR InAnchor) : Transform(InTransform), EntityAnchor(InAnchor)
 {
 	iEntityID = Utils::AddEntityID();
 	CLogManager::GetInstance()->DisplayLogMessage("New Entity created with ID #" + std::to_string(iEntityID));
@@ -108,6 +108,27 @@ STransform Entity::GetAnchoredTransform()
 		AnchoredTransform.Position = Utils::GetAncoredPosition(Transform.Position, glm::vec3(EntityMesh->m_fWidth, EntityMesh->m_fHeight, EntityMesh->m_fDepth), EntityAnchor);
 	}
 	return AnchoredTransform;
+}
+
+SVector Entity::GetForwardVector() const
+{
+	return Transform.Rotation.ToVector();
+}
+
+SVector Entity::GetUpVector() const
+{
+	// TODO: Use rotation instead for camera roll
+	return {0.0f, 1.0f, 0.0f};
+}
+
+SVector Entity::GetRightVector() const
+{
+	return GetForwardVector().Cross(GetUpVector()).GetNormalized();
+}
+
+void Entity::SetForwardVector(SVector Forward)
+{
+	Transform.Rotation = Forward.ToRotator();
 }
 
 /************************************************************

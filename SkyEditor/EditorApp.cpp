@@ -7,6 +7,7 @@
 #include "SEPCH.h"
 #include <SkyEngine.h>
 #include <Scene/SceneManager.h>
+#include "Entity/Camera.h"
 
 #include "Dependencies/ImGui/imgui.h"
 #include "Dependencies/ImGui/imgui_internal.h"
@@ -19,7 +20,6 @@
 #include "Editor/UI/SceneOutliner.h"
 #include "Editor/Windows/EditorWindowManager.h"
 #include "Canvas/Canvas.h"
-#include "Canvas/UICanvas.h"
 #include "Canvas/ViewportCanvas.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Render/SceneRenderer.h"
@@ -38,7 +38,9 @@ bool EditorApplication::ApplicationSetup()
 	{			
 		TPointer<EditorScene> NewScene = TPointer<EditorScene>(new EditorScene("Editor"));			
 		SceneManager::GetInstance()->AddScene(NewScene);
-		ViewportLayer->GetSceneRenderer()->SetSceneTarget(NewScene);
+		ViewportCanvas->GetSceneRenderer()->SetSceneTarget(NewScene);
+		ViewportCanvas->SetupCamera();
+		NewScene->AddEntity(ViewportCanvas->GetViewportCamera());
 	}
 	TPointer<CLayerInfoWidget> LayerInfoWidget = std::make_shared<CLayerInfoWidget>();
 	EditorViewportLayer->AddViewportWidget(LayerInfoWidget);
@@ -67,7 +69,7 @@ void EditorApplication::SetupLogManager()
 void EditorApplication::SetupViewportLayer()
 {
 	EditorViewportLayer = new CEditorViewportCanvas(ApplicationWindow);
-	ViewportLayer = EditorViewportLayer;
+	ViewportCanvas = EditorViewportLayer;
 }
 
 void EditorApplication::Update()

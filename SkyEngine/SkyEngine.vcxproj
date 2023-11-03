@@ -152,7 +152,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Camera\CameraManager.h" />
     <ClInclude Include="Canvas\Canvas.h" />
     <ClInclude Include="Canvas\CanvasManager.h" />
     <ClInclude Include="Canvas\UICanvas.h" />
@@ -166,6 +165,7 @@
     <ClInclude Include="Dependencies\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="Entity\2DParticleSystem.h" />
     <ClInclude Include="Entity\Button3DEntity.h" />
+    <ClInclude Include="Entity\Camera.h" />
     <ClInclude Include="Entity\CollisionBounds.h" />
     <ClInclude Include="Entity\Component.h" />
     <ClInclude Include="Entity\Entity.h" />
@@ -176,7 +176,6 @@
     <ClInclude Include="Graphics\GL\GLAPI.h" />
     <ClInclude Include="Graphics\GL\GLFramebuffer.h" />
     <ClInclude Include="Graphics\GL\GLIncludes.h" />
-    <ClInclude Include="Graphics\GL\GLRenderer.h" />
     <ClInclude Include="Graphics\GL\imgui_impl_opengl3.h" />
     <ClInclude Include="Graphics\GraphicsAPI.h" />
     <ClInclude Include="Input\CXBOXController.h" />
@@ -256,7 +255,6 @@
     <ClInclude Include="UI\UIWidget.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Camera\CameraManager.cpp" />
     <ClCompile Include="Canvas\Canvas.cpp" />
     <ClCompile Include="Canvas\CanvasManager.cpp" />
     <ClCompile Include="Canvas\UICanvas.cpp" />
@@ -270,12 +268,12 @@
     </ClCompile>
     <ClCompile Include="Entity\2DParticleSystem.cpp" />
     <ClCompile Include="Entity\Button3DEntity.cpp" />
+    <ClCompile Include="Entity\Camera.cpp" />
     <ClCompile Include="Entity\CollisionBounds.cpp" />
     <ClCompile Include="Entity\Component.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
     <ClCompile Include="Graphics\GL\GLAPI.cpp" />
     <ClCompile Include="Graphics\GL\GLFramebuffer.cpp" />
-    <ClCompile Include="Graphics\GL\GLRenderer.cpp" />
     <ClCompile Include="Graphics\GL\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Graphics\GraphicsAPI.cpp" />
     <ClCompile Include="Input\CXBOXController.cpp" />

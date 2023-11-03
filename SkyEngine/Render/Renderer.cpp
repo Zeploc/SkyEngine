@@ -5,6 +5,7 @@
 
 #include "Framebuffer.h"
 #include "SceneRenderer.h"
+#include "Core/Application.h"
 #include "Entity/Entity.h"
 #include "Render/Materials/InternalMaterial.h"
 #include "Render/Shaders/Shader.h"
@@ -25,10 +26,13 @@ void CRenderer::InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterfac
 	MeshesByMaterial[Material].push_back(EntityToRender->EntityMesh);
 }
 
+
 void CRenderer::RenderScenes()
 {
 	for (TPointer<CSceneRenderer> SceneRenderer : SceneRenderers)
 	{
+		CurrentView = SceneRenderer->GetView();
+		CurrentProjection = SceneRenderer->GetProjection();
 		SceneRenderer->Render();
 	}
 }
@@ -83,6 +87,22 @@ void CRenderer::Render(std::vector<TPointer<Entity>> Entities, std::vector<TPoin
 	// 	RenderUIElement(UIElement);
 	// }
 	ActiveShader = nullptr;
+}
+
+void CRenderer::RenderMesh(TPointer<CMeshComponent> Mesh, STransform Transform)
+{
+	GetGraphicsAPI()->ApplyMVP(ActiveShader->GetShaderProgram(), CurrentView, CurrentProjection, Transform);
+	GetGraphicsAPI()->RenderMesh(Mesh);
+}
+
+void CRenderer::RenderUIElement(TPointer<UIElement> UserInterfaceItem)
+{
+	UserInterfaceItem->DrawUIElement();
+}
+
+void CRenderer::RenderImGui()
+{
+	GetGraphicsAPI()->RenderImGui();
 }
 
 TPointer<CSceneRenderer> CRenderer::AddSceneRenderer(TPointer<Scene> InTargetScene, SVector2i InSize)

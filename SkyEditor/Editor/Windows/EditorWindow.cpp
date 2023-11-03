@@ -6,7 +6,6 @@
 #include "EditorWindowManager.h"
 #include <iostream>
 
-#include <Camera/CameraManager.h>
 #include <Input/Input.h>
 #include <System/Utils.h>
 #include <UI/Legacy/UIButton.h>

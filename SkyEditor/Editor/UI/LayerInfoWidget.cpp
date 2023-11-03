@@ -14,18 +14,18 @@ void CLayerInfoWidget::DrawUI(const SCanvas& DrawCanvas)
 	if (corner != -1)
 		ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
 	ImGui::SetNextWindowBgAlpha(0.3f); // Transparent background
-	if (ImGui::Begin("Example: Simple Overlay", &bOpen, (corner != -1 ? ImGuiWindowFlags_NoMove : 0) | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav))
+	if (ImGui::Begin("Layer Info Widget", &bOpen, (corner != -1 ? ImGuiWindowFlags_NoMove : 0) | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav))
 	{
 		CCanvas* CapturedLayer = OwningCanvas->GetOwningWindow().lock()->GetCanvasManager().GetCapturedLayer();
 		if (CapturedLayer)
 		{			
-			ImGui::Text("CAPTURED LAYER:");
+			ImGui::Text("CAPTURED CANVAS:");
 			ImGui::Separator();
 			ImGui::Text(CapturedLayer->GetName().c_str());
 		}
 		else
 		{
-			ImGui::Text("No Captured layer");
+			ImGui::Text("No Captured Canvas");
 		}
 	}
 	ImGui::End();

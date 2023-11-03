@@ -51,12 +51,13 @@ namespace SkyEngine
 
 		// TODO: Weak pointer to not hold ref
 		TPointer<CEngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
+		CViewportCanvas* GetViewportCanvas() const { return ViewportCanvas; }
 		
 		inline static Application* Get();
 	protected:
 		// TODO: Remove since viewport layer should make game UI canvas
 		CUICanvas* UILayer;
-		CViewportCanvas* ViewportLayer;
+		CViewportCanvas* ViewportCanvas;
 		
 		TPointer<CEngineWindow> ApplicationWindow;
 	private:

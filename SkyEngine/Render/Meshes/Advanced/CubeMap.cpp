@@ -11,7 +11,6 @@
 // OpenGL Includes //
 #include <soil/SOIL2.h>
 
-#include "Camera/CameraManager.h"
 #include "Render/Materials/Material.h"
 #include "Render/Materials/MaterialType.h"
 #include "Render/Shaders/UndefinedShader.h"

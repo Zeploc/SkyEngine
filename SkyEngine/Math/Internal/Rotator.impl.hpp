@@ -18,10 +18,9 @@ inline SRotator::SRotator(const TVector3<float>& V)
 
 inline SVector SRotator::ToVector() const
 {
-	// TODO: Confirm correct
-	const SVector ForwardVector(-cos(glm::radians(Pitch)) * sin(glm::radians(Yaw)),
+	const SVector ForwardVector(cos(glm::radians(Pitch)) * cos(glm::radians(Yaw)),
 	                            sin(glm::radians(Pitch)),
-	                            -cos(glm::radians(Pitch)) * cos(glm::radians(Yaw)));
+	                            cos(glm::radians(Pitch)) * sin(glm::radians(Yaw)));
 	return ForwardVector;
 }
 

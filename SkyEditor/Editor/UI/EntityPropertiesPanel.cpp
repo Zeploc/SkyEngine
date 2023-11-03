@@ -6,7 +6,7 @@
 #include "Dependencies/ImGui/imgui.h"
 #include "Editor/EditorViewportCanvas.h"
 #include "Editor/Scene/EditorScene.h"
-#include "Editor/Scene/TransformationWidget.h"
+#include "Entity/Entity.h"
 #include "Scene/SceneManager.h"
 
 CEntityPropertiesPanel::CEntityPropertiesPanel(TWeakPointer<CEngineWindow> InOwningWindow)

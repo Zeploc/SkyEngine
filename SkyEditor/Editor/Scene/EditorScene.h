@@ -29,6 +29,4 @@ protected:
 public:
 	
 	TPointer<UIText> LevelNameText;
-
-	TPointer<CTransformationWidget> TransformationWidget;
 };

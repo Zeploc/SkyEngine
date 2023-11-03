@@ -8,8 +8,10 @@
 #include <soil/SOIL2.h>
 
 #include "GLFramebuffer.h"
-#include "GLRenderer.h"
+#include "imgui_impl_opengl3.h"
 #include "Math/Matrix.h"
+#include "Render/Materials/InternalMaterial.h"
+#include "Render/Meshes/Mesh.h"
 #include "Render/Shaders/ShaderManager.h"
 #include "System/LogManager.h"
 
@@ -37,6 +39,13 @@ void IGLAPI::Init()
 	// TODO: Debug messages
 	//glDebugMessageCallback(MessageCallback, NULL);
 	// glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
+			
+	glCullFace(GL_BACK); // Cull the Back faces
+	glFrontFace(GL_CW); // Front face is Clockwise order
+	glEnable(GL_CULL_FACE); // Turn on the back face culling
+		
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 std::string IGLAPI::GetGraphicsDisplayName()
@@ -164,12 +173,6 @@ void IGLAPI::BindVertexArray(const std::vector<float>& Vertices, const std::vect
 	glBufferData(GL_ARRAY_BUFFER, Vertices.size() * sizeof(float), Vertices.data(), GL_STATIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(uint32_t), Indices.data(), GL_STATIC_DRAW);
 	glBindVertexArray(0);
-}
-
-TPointer<CRenderer> IGLAPI::CreateNewRenderer()
-{
-	// Create instance for basic setup before window
-	return CreatePointer<GLRenderer>();
 }
 
 std::string IGLAPI::ReadShader(const char* filename)
@@ -353,6 +356,39 @@ TPointer<IFramebuffer> IGLAPI::CreateFramebuffer(const SFramebufferSpecification
 	return CreatePointer<GLFramebuffer>(Specification);
 }
 
+void IGLAPI::RenderMesh(TPointer<CMeshComponent> Mesh)
+{	
+	glBindVertexArray(Mesh->vao);
+	glDrawElements(GL_TRIANGLES, Mesh->IndicesCount, GL_UNSIGNED_INT, nullptr);
+	glBindVertexArray(0);
+}
+
+void IGLAPI::CleanupMesh(TPointer<CMeshComponent> Mesh)
+{
+	if (!Mesh)
+	{
+		return;
+	}
+	glDeleteVertexArrays(1, &Mesh->vao);
+	// TODO: Look into further cleanup
+}
+
+void IGLAPI::ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, STransform Transform)
+{
+	glm::mat4 ModelMatrix = Transform.GetModelMatrix();
+	glUniformMatrix4fv(glGetUniformLocation(Program, "model"), 1, GL_FALSE, value_ptr(ModelMatrix));
+	glUniformMatrix4fv(glGetUniformLocation(Program, "view"), 1, GL_FALSE, glm::value_ptr(View.ToGLM()));//view));//
+	glUniformMatrix4fv(glGetUniformLocation(Program, "proj"), 1, GL_FALSE, glm::value_ptr(Projection.ToGLM()));
+
+	glm::mat4 MVP = Projection.ToGLM() * View.ToGLM() * ModelMatrix;
+	glUniformMatrix4fv(glGetUniformLocation(Program, "MVP"), 1, GL_FALSE, value_ptr(MVP));
+}
+
+void IGLAPI::RenderImGui()
+{
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());	
+}
+
 void IGLAPI::BindShader(uint32_t ShaderProgramID)
 {
 	// TODO: Check if overhead and not change if current shader program is active
@@ -363,6 +399,11 @@ void IGLAPI::BindShader(uint32_t ShaderProgramID)
 	glDisable(GL_BLEND);
 	// Clear previous texture?
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+int32_t IGLAPI::GetAttributeLocation(const uint32_t ShaderProgram, std::string AttributeName)
+{	
+	return glGetUniformLocation(ShaderProgram, AttributeName.c_str());
 }
 
 void IGLAPI::PassAttributeToShader(int32_t ShaderID, float Attribute)
@@ -422,6 +463,31 @@ void IGLAPI::SetRenderViewportSize(const SVector2i InViewportSize)
 	// Fill whole window with viewport by default
 	// Y flipped since gl uses y=0 as bottom of screen instead of top
 	glViewport(0, 0, InViewportSize.X, InViewportSize.Y);	
+}
+
+void IGLAPI::SetWireframeMode(bool bInWireframeEnabled)
+{
+	glPolygonMode(GL_FRONT_AND_BACK, bInWireframeEnabled ? GL_LINE : GL_FILL);
+}
+
+void IGLAPI::ApplyMaterialFlags(TPointer<CMaterialInterface>InMaterial)
+{
+	if (!InMaterial->bTwoSided)
+	{
+		glEnable(GL_CULL_FACE);
+	}
+	else
+	{
+		glDisable(GL_CULL_FACE);
+	}
+	if (InMaterial->bDepthTest)
+	{
+		glEnable(GL_DEPTH_TEST);
+	}
+	else
+	{
+		glDisable(GL_DEPTH_TEST);
+	}
 }
 
 // GLenum glCheckError_(const char *file, int line)

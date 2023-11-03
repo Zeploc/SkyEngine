@@ -1,16 +1,20 @@
 ﻿#include "EditorViewportCanvas.h"
 
+#include <GLFW/glfw3.h>
 #include <glm/gtc/type_ptr.inl>
 
 #include "EditorApp.h"
 #include "Core/WorldManager.h"
 #include "Dependencies/ImGui/imgui_internal.h"
 #include "Dependencies/ImGuizmo/ImGuizmo.h"
+#include "Entity/Camera.h"
 #include "Render/Renderer.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Render/Framebuffer.h"
 #include "Render/SceneRenderer.h"
 #include "Scene/SceneManager.h"
+#include "System/LogManager.h"
+#include "System/TimeManager.h"
 #include "UI/UIWidget.h"
 
 CEditorViewportCanvas::CEditorViewportCanvas(TWeakPointer<CEngineWindow> InOwningWindow)
@@ -37,7 +41,9 @@ void CEditorViewportCanvas::OnUpdate()
 			ViewportSize = NewSize;
 			OnViewportResize();
 		}
-	}	
+	}
+	
+	SpectatorUpdate();
 	
 	CViewportCanvas::OnUpdate();
 }
@@ -61,6 +67,7 @@ bool CEditorViewportCanvas::PreRender()
 	{
 		return false;
 	}
+	// TODO: Work out why there is extra padding on the viewport with this set to 0
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {10,10});// { 0, 0 });
 	return true;
 }
@@ -94,11 +101,9 @@ void CEditorViewportCanvas::OnRender()
 		2.f
 	);
 
-	GizmoTransformSpace = ImGuizmo::MODE::WORLD;
+	GizmoTransformSpace = ImGuizmo::MODE::LOCAL;
 	if (SelectedEntity && GizmoMode != -1)
-	{
-		CameraManager* Camera = CameraManager::GetInstance();
-		
+	{		
 		ImGuizmo::SetOrthographic(false);
 		ImGuizmo::SetDrawlist();
 		ImGuizmo::SetRect(ViewportNode->Pos.x, ViewportNode->Pos.y, ViewportNode->Size.x, ViewportNode->Size.y);
@@ -108,13 +113,13 @@ void CEditorViewportCanvas::OnRender()
 		STransform Transform = OriginalTransform;
 		Transform.FromMatrix(EntityModel);
 		
-		ImGuizmo::Manipulate(glm::value_ptr(Camera->View.ToGLM()), glm::value_ptr(Camera->Projection.ToGLM()),
+		ImGuizmo::Manipulate(glm::value_ptr(SceneRenderer->GetView().ToGLM()), glm::value_ptr(SceneRenderer->GetProjection().ToGLM()),
 		                     ImGuizmo::OPERATION(GizmoMode), ImGuizmo::MODE(GizmoTransformSpace), value_ptr(EntityModel));
-		const SRotator OriginalRotation = SelectedEntity->Transform.Rotation;
-		SelectedEntity->Transform.FromMatrix(EntityModel);
-		// Used to stop gimbol lock
-		const SRotator DeltaRotation = SelectedEntity->Transform.Rotation - OriginalRotation;
-		SelectedEntity->Transform.Rotation = OriginalRotation + DeltaRotation;
+		// const SRotator OriginalRotation = SelectedEntity->Transform.Rotation;
+		// SelectedEntity->Transform.FromMatrix(EntityModel);
+		// // Used to stop gimbol lock
+		// const SRotator DeltaRotation = SelectedEntity->Transform.Rotation - OriginalRotation;
+		// SelectedEntity->Transform.Rotation = OriginalRotation + DeltaRotation;
 	}
 
 }
@@ -147,9 +152,8 @@ SVector2i CEditorViewportCanvas::GetViewportPosition()
 
 bool CEditorViewportCanvas::OnMouseButtonPressed(int MouseButton, int Mods)
 {
-	CameraManager* CameraInstance = CameraManager::GetInstance();
 	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
-	const SVector2i ScreenCenter = EditorApp->EditorViewportLayer->GetViewportPosition() + CameraInstance->GetScreenCenter();
+	const SVector2i ScreenCenter = GetViewportPosition() + GetViewportSize() / 2;
 	const SVector2i MousePos = ApplicationWindow->GetInput().MousePos;
 	
 	// TODO: Refine mouse visibility toggle/state
@@ -162,7 +166,8 @@ bool CEditorViewportCanvas::OnMouseButtonPressed(int MouseButton, int Mods)
 		{
 			PreviousMousePosition = MousePos;
 			ApplicationWindow->SetCursorVisible(false);
-			CameraInstance->EnableSpectatorControls(true);
+			bUseSpectatorControls = true;
+			ApplicationWindow->SetCursorPosition(ScreenCenter);
 			bHandled = true;
 		}
 		else if (MouseButton == GLFW_MOUSE_BUTTON_LEFT)
@@ -213,13 +218,12 @@ bool CEditorViewportCanvas::OnMouseButtonPressed(int MouseButton, int Mods)
 
 bool CEditorViewportCanvas::OnMouseButtonReleased(int MouseButton, int Mods)
 {	
-	CameraManager* CameraInstance = CameraManager::GetInstance();
 	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 	
 	if (MouseButton == GLFW_MOUSE_BUTTON_RIGHT)
 	{
 		ApplicationWindow->SetCursorVisible(true);
-		CameraInstance->EnableSpectatorControls(false);
+		bUseSpectatorControls = false;
 		ApplicationWindow->SetCursorPosition(PreviousMousePosition);
 		bLookingAround = false;
 		return true;
@@ -242,19 +246,18 @@ bool CEditorViewportCanvas::OnMouseButtonReleased(int MouseButton, int Mods)
 bool CEditorViewportCanvas::OnMouseMoved(SVector2i MousePos)
 {
 	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
-	const SVector2i ScreenCenter = EditorApp->EditorViewportLayer->GetViewportPosition() + EditorApp->EditorViewportLayer->GetViewportSize() / 2;
-	CameraManager* CameraInstance = CameraManager::GetInstance();
-	const SVector2i ScreenOffset = MousePos - ScreenCenter;
-	const SVector2 Offset = SVector2(ScreenOffset) * CameraInstance->MouseSensitivity;	
+	const SVector2i ScreenCenter = GetViewportPosition() + GetViewportSize() / 2;
+	const SVector2i ScreenOffset = (MousePos) - ScreenCenter;
+	const SVector2 Offset = SVector2(ScreenOffset) * MouseSensitivity;
 	
-	const SVector CameraPivotPoint = CameraInstance->GetCameraPosition() + CameraInstance->GetCameraForwardVector() * CurrentFocusDistance;
+	const SVector CameraPivotPoint = ViewportCamera->Transform.Position + ViewportCamera->GetForwardVector() * CurrentFocusDistance;
 	if (bRotatingAroundPoint)
 	{		
-		SVector NewCameraForwardVector = CameraInstance->GetCameraForwardVector();
+		SVector NewCameraForwardVector = ViewportCamera->GetForwardVector();
 		NewCameraForwardVector.Rotate(Offset.X, SVector(0,1,0));
-		NewCameraForwardVector.Rotate(Offset.Y, CameraInstance->GetCameraRightVector());
-		CameraInstance->SetCameraForwardVector(NewCameraForwardVector);
-		CameraInstance->SetCameraPos(CameraPivotPoint + (-CameraInstance->GetCameraForwardVector() * CurrentFocusDistance));
+		NewCameraForwardVector.Rotate(Offset.Y, ViewportCamera->GetRightVector());
+		ViewportCamera->SetForwardVector(NewCameraForwardVector);
+		ViewportCamera->Transform.Position = CameraPivotPoint + (-ViewportCamera->GetForwardVector() * CurrentFocusDistance);
 		ApplicationWindow->SetCursorPosition(ScreenCenter);
 		return true;
 	}
@@ -262,17 +265,25 @@ bool CEditorViewportCanvas::OnMouseMoved(SVector2i MousePos)
 	{	
 		CurrentFocusDistance += Offset.Y * .3f;
 		ApplicationWindow->SetCursorPosition(ScreenCenter);
-		CameraInstance->SetCameraPos(CameraPivotPoint + (-CameraInstance->GetCameraForwardVector() * CurrentFocusDistance));
+		ViewportCamera->Transform.Position = CameraPivotPoint + (-ViewportCamera->GetForwardVector() * CurrentFocusDistance);
 		return true;
 	}
 	if (bPanning)
 	{		
-		SVector NewCameraPosition = CameraInstance->GetCameraPosition();
-		NewCameraPosition += CameraInstance->GetCameraRightVector() * Offset.X * CameraInstance->MouseSensitivity;
-		NewCameraPosition += -CameraInstance->GetCameraUpVector() * Offset.Y * CameraInstance->MouseSensitivity;
-		CameraInstance->SetCameraPos(NewCameraPosition);
+		SVector NewCameraPosition = ViewportCamera->Transform.Position;
+		NewCameraPosition += ViewportCamera->GetRightVector() * Offset.X;
+		NewCameraPosition += -ViewportCamera->GetUpVector() * Offset.Y;
+		ViewportCamera->Transform.Position = NewCameraPosition;
 		ApplicationWindow->SetCursorPosition(ScreenCenter);
 		return true;
+	}
+	if (bUseSpectatorControls)
+	{
+		SVector NewCameraForwardVector = ViewportCamera->GetForwardVector();
+		NewCameraForwardVector.Rotate(Offset.X, SVector(0,1,0));
+		NewCameraForwardVector.Rotate(Offset.Y, ViewportCamera->GetRightVector());
+		ViewportCamera->SetForwardVector(NewCameraForwardVector);
+		ApplicationWindow->SetCursorPosition(ScreenCenter);
 	}
 	
 	return false;
@@ -285,11 +296,6 @@ bool CEditorViewportCanvas::OnMouseScrolled(float XOffset, float YOffset)
 
 bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 {
-	CameraManager* CameraInstance = CameraManager::GetInstance();
-	if (CameraInstance->UsingSpectatorControls())
-	{
-		return false;
-	}
 	if (bPanning || bLookingAround || bRotatingAroundPoint)
 	{
 		return false;
@@ -302,13 +308,12 @@ bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 			return true;
 		}
 		// ApplicationWindow->SetCursorVisible(true);
-		// CameraInstance->EnableSpectatorControls(false);
 	}
 	if (KeyCode == GLFW_KEY_F)
 	{
 		if (SelectedEntity)
 		{
-			CameraInstance->SetCameraPos(SelectedEntity->Transform.Position + (-CameraInstance->GetCameraForwardVector() * CurrentFocusDistance));
+			ViewportCamera->Transform.Position = SelectedEntity->Transform.Position + (-ViewportCamera->GetForwardVector() * CurrentFocusDistance);
 			return true;
 		}
 	}
@@ -316,17 +321,12 @@ bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 	{
 		bWireframe = !bWireframe;
 		const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
-		GetRenderer()->SetWireframeMode(bWireframe);
+		GetGraphicsAPI()->SetWireframeMode(bWireframe);
 		return true;
 	}
 	if (KeyCode == GLFW_KEY_Q)
 	{
 		GizmoMode = -1;
-		return true;
-	}
-	if (KeyCode == GLFW_KEY_W)
-	{
-		GizmoMode = ImGuizmo::OPERATION::TRANSLATE;
 		return true;
 	}
 	if (KeyCode == GLFW_KEY_E)
@@ -339,7 +339,55 @@ bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 		GizmoMode = ImGuizmo::OPERATION::SCALE;
 		return true;
 	}
+	if (KeyCode == GLFW_KEY_W)
+	{
+		if (!bUseSpectatorControls)
+		{
+			GizmoMode = ImGuizmo::OPERATION::TRANSLATE;
+		}
+		return true;
+	}
 	return false;
+}
+
+void CEditorViewportCanvas::SpectatorUpdate()
+{
+	if (!bUseSpectatorControls)
+	{
+		return;
+	}
+
+	const SVector ForwardMovement = ViewportCamera->GetForwardVector() * CameraSpeed * CTimeManager::GetDeltaTime();
+	
+	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
+	if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_W] == CWindowInput::INPUT_HOLD)
+	{
+		ViewportCamera->Transform.Position += ForwardMovement;
+	}
+	else if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_S] == CWindowInput::INPUT_HOLD)
+	{
+		ViewportCamera->Transform.Position -= ForwardMovement;
+	}
+	
+	const SVector RightMovement = ViewportCamera->GetRightVector() * CameraSpeed * CTimeManager::GetDeltaTime();
+	if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_A] == CWindowInput::INPUT_HOLD)
+	{
+		ViewportCamera->Transform.Position -= RightMovement;
+	}
+	else if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_D] == CWindowInput::INPUT_HOLD)
+	{
+		ViewportCamera->Transform.Position += RightMovement;
+	}
+	
+	const SVector UpMovement = ViewportCamera->GetUpVector() * CameraSpeed * CTimeManager::GetDeltaTime();
+	if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_E] == CWindowInput::INPUT_HOLD)
+	{
+		ViewportCamera->Transform.Position += UpMovement;
+	}
+	else if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_Q] == CWindowInput::INPUT_HOLD)
+	{
+		ViewportCamera->Transform.Position -= UpMovement;
+	}
 }
 
 bool CEditorViewportCanvas::OnKeyTyped(int KeyCode, int Mods)
@@ -389,8 +437,8 @@ void CEditorViewportCanvas::UpdateSelectedEntity()
 	
 	TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 	SVector2i MousePos = ApplicationWindow->GetInput().MousePos;
-	SVector rayStart = CameraManager::GetInstance()->GetCameraPosition();
-	SVector RayDirection = CameraManager::GetInstance()->ScreenToWorldDirection(MousePos);
+	SVector rayStart = ViewportCamera->Transform.Position;
+	SVector RayDirection = ScreenToWorldDirection(MousePos);
 	SVector HitPos;
 	std::vector<TPointer<Entity>> HitEntities;
 	std::vector<SVector> HitPosition;

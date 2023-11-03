@@ -19,6 +19,7 @@
 #include "Render/Shaders/ShaderManager.h"
 #include "Scene/SceneManager.h"
 #include "System/TimeManager.h"
+#include "Render/Renderer.h"
 
 // make sure the winsock lib is included...
 #pragma comment(lib,"ws2_32.lib")
@@ -60,13 +61,14 @@ namespace SkyEngine
 		ApplicationWindow->SubscribeEventListener(this);
 		
 		GraphicsApi = IGraphicsAPI::CreateGraphicsAPI(GraphicsApiType);
-		Renderer = GraphicsApi->CreateNewRenderer();
+		ShaderManager::LoadAllDefaultShadersInCurrentContext();
+		Renderer = CreatePointer<CRenderer>();
 
 		CTimeManager::Start();
 		SoundManager::GetInstance()->InitFMod();
 
 		SetupViewportLayer();
-		ApplicationWindow->PushLayer(ViewportLayer);
+		ApplicationWindow->PushLayer(ViewportCanvas);
 		
 		return true;
 	}
@@ -77,7 +79,7 @@ namespace SkyEngine
 	}
 	void Application::SetupViewportLayer()
 	{
-		ViewportLayer = new CViewportCanvas(ApplicationWindow);
+		ViewportCanvas = new CViewportCanvas(ApplicationWindow);
 	}
 
 	int Application::Run()
@@ -107,6 +109,7 @@ namespace SkyEngine
 	void Application::Update()
 	{
 		CTimeManager::Update();
+		SceneManager::GetInstance()->UpdateCurrentScene();
 		ApplicationWindow->Update();
 	}
 
@@ -131,7 +134,6 @@ namespace SkyEngine
 		ShaderManager::CleanUp();
 		// TODO: Placeholders until layer/windows properly get cleaned up
 		SceneManager::DestoryInstance();
-		CameraManager::DestoryInstance();
 		
 		SoundManager::DestoryInstance();
 		Text::Fonts.~vector();

@@ -3,7 +3,6 @@
 #include "SEPCH.h"
 #include "ssAnimatedModel.h"
 
-#include "Camera/CameraManager.h"
 #include "Render/Shaders/ShaderManager.h"
 
 #include <soil/SOIL2.h>
@@ -371,7 +370,7 @@ void ssAnimatedModel::setShaderEffectVariables(TPointer<Terrain> terrain)
 {
 	glUseProgram(this->program);
 
-	CameraManager::GetInstance()->SetMVP(Transform, program);
+	// CameraManager::GetInstance()->SetMVP(Transform, program);
 	
 	// glm::mat4 model;
 	//

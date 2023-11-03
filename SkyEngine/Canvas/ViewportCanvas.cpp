@@ -2,9 +2,9 @@
 #include "ViewportCanvas.h"
 
 #include "imgui.h"
-#include "Camera/CameraManager.h"
 #include "Core/Application.h"
 #include "Core/WorldManager.h"
+#include "Entity/Camera.h"
 #include "Render/Renderer.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Render/Lighting.h"
@@ -31,12 +31,10 @@ void CViewportCanvas::OnAttach()
 	ViewportSize = EngineWindow->GetSize();
 	
 	Lighting::SetFogColour(SVector4(SkyColour, 1.0f));
+	const TPointer<Scene> TargetScene = SceneManager::GetInstance()->GetCurrentScene();
 
-	SceneRenderer = GetRenderer()->AddSceneRenderer(SceneManager::GetInstance()->GetCurrentScene(), ViewportSize);
+	SceneRenderer = GetRenderer()->AddSceneRenderer(TargetScene, ViewportSize);
 	SceneRenderer->ClearColour = SkyColour;
-	
-	// TODO: Change from singleton to graphics instance
-	CameraManager::GetInstance()->Init(this, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
 }
 
 void CViewportCanvas::OnDetach()
@@ -45,8 +43,6 @@ void CViewportCanvas::OnDetach()
 
 void CViewportCanvas::OnUpdate()
 {
-	SceneManager::GetInstance()->UpdateCurrentScene();
-	CameraManager::GetInstance()->UpdateViewMatrix();
 }
 
 void CViewportCanvas::OnRender()
@@ -58,6 +54,12 @@ void CViewportCanvas::OnViewportResize()
 	SceneRenderer->SizeChanged(ViewportSize);
 }
 
+void CViewportCanvas::SetupCamera()
+{	
+	ViewportCamera = CreatePointer<Camera>(STransform(SVector(-10.0f, 10.0f, 10.0f), SRotator(-90.0f, 0.0f, 0.0f)));
+	SceneRenderer->LinkCamera(ViewportCamera);
+}
+
 SVector2i CViewportCanvas::GetViewportSize()
 {
 	return ViewportSize;
@@ -66,6 +68,34 @@ SVector2i CViewportCanvas::GetViewportSize()
 SVector2i CViewportCanvas::GetViewportPosition()
 {
 	return {0,0};
+}
+SVector CViewportCanvas::ScreenToWorldDirection(SVector2i InScreenPosition)
+{
+	SVector2i ViewportPosition = GetViewportPosition();
+	SVector2i ViewportSize = GetViewportSize();
+	float x = (2.0f * ((float)InScreenPosition.X - ViewportPosition.X)) / (float)ViewportSize.X - 1.0f;
+	float y = 1.0f - (2.0f * ((float)InScreenPosition.Y - ViewportPosition.Y)) / (float)ViewportSize.Y;
+	const SVector2 RayNds = {x, y};
+
+	const SVector4 RayClip = SVector4(RayNds.X, RayNds.Y, -1.0f, 1.0f);
+	
+	SVector4 RayEye = SceneRenderer->GetProjection().GetInverse() * RayClip;
+	RayEye = SVector4(RayEye.X, RayEye.Y, -1.0f, 0.0f);
+
+	SVector RayWorld = SVector(SceneRenderer->GetView().GetInverse().ToGLM() * RayEye);
+
+	RayWorld = RayWorld.Normalize();
+	return RayWorld;
+}
+
+SVector CViewportCanvas::ScreenToWorldPosition2D(SVector2i InScreenPosition)
+{
+	const SVector CameraPosition = ViewportCamera->Transform.Position;
+	const SVector PlaneNormal = -ViewportCamera->GetForwardVector();
+	const SVector MouseDirection = ScreenToWorldDirection(InScreenPosition);
+	float t = -(CameraPosition.Dot(PlaneNormal) / MouseDirection.Dot(PlaneNormal));
+	t /= abs(CameraPosition.Z);
+	return (MouseDirection * t) + CameraPosition;
 }
 
 bool CViewportCanvas::OnMouseButtonPressed(int MouseButton, int Mods)

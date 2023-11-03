@@ -36,7 +36,6 @@ public:
 	virtual std::string GetGraphicsDisplayName() = 0;
 
 	static TPointer<IGraphicsAPI> CreateGraphicsAPI(EGraphicsAPI APIType);
-	virtual TPointer<CRenderer> CreateNewRenderer() = 0;
 	
 	virtual unsigned int CreateVertexBuffer(const MeshData& MeshData) = 0;
 	virtual TPointer<CTexture> GetTexture(const std::string& TextureSource, bool bAA = true) = 0;
@@ -49,6 +48,11 @@ public:
 	                               const char* FragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename) = 0;
 
 	virtual bool CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename) = 0;
+	virtual void RenderMesh(TPointer<CMeshComponent> Mesh) = 0;	
+	virtual void CleanupMesh(TPointer<CMeshComponent> Mesh) = 0;
+	virtual void ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, STransform Transform) = 0;
+
+	virtual void RenderImGui() = 0;
 
 	virtual TPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) = 0;	
 
@@ -58,10 +62,13 @@ public:
 	virtual void SetRenderViewportSize(const SVector2i InViewportSize) = 0;
 	// /* Where Y=0 is the top of the screen */
 	// virtual void SetRenderViewport(const SVector2i InViewportPosition, const SVector2i InViewportSize) = 0;
+	virtual void SetWireframeMode(bool bInWireframeEnabled) = 0;
+	virtual void ApplyMaterialFlags(TPointer<CMaterialInterface> InMaterial) = 0;
 	
 	// template <typename T>
 	// void PassAttributeToShader(int32_t ShaderLocation, T Attribute);
 
+	virtual int32_t GetAttributeLocation(const uint32_t ShaderProgram, std::string AttributeName) = 0;
 	virtual void PassAttributeToShader(int32_t ShaderLocation, float Attribute) = 0;
 	virtual void PassAttributeToShader(int32_t ShaderLocation, int Attribute) = 0;
 	virtual void PassAttributeToShader(int32_t ShaderLocation, bool Attribute) = 0;

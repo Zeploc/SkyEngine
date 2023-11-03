@@ -13,6 +13,7 @@
 class CSceneRenderer;
 class CTexture;
 class CWorldManager;
+class Camera;
 
 class ENGINE_API CViewportCanvas : public CCanvas
 {
@@ -26,9 +27,15 @@ public:
 
 	virtual void OnViewportResize();
 
+	// TODO: Resolve to not be needed
+	void SetupCamera();
+
 	virtual SVector2i GetViewportSize();
 	virtual SVector2i GetViewportPosition();
+	TPointer<Camera> GetViewportCamera() const { return ViewportCamera; }
 	TPointer<CSceneRenderer> GetSceneRenderer() const { return SceneRenderer; }
+	SVector ScreenToWorldDirection(SVector2i InScreenPosition);
+	SVector ScreenToWorldPosition2D(SVector2i InScreenPosition);
 	
 protected:
 	bool OnMouseButtonPressed(int MouseButton, int Mods) override;
@@ -45,4 +52,5 @@ protected:
 	TPointer<CWorldManager> WorldManager; 
 	SVector2i ViewportSize;
 	TPointer<CSceneRenderer> SceneRenderer;
+	TPointer<Camera> ViewportCamera;
 };

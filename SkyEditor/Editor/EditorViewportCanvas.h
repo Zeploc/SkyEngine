@@ -34,15 +34,21 @@ protected:
 	void UpdateSelectedEntity();
 	bool PreRender() override;
 
+	bool UsingSpectatorControls() const { return bUseSpectatorControls; }	
+	void SpectatorUpdate();
+
 	std::vector<TPointer<CUIWidget>> Widgets;
 	TPointer<EditorScene> EditorScene;
 
 	TPointer<Entity> SelectedEntity;
 	int GizmoMode = 7;
 	int GizmoTransformSpace = 0;
+	float CameraSpeed = 12.0f;
+	float MouseSensitivity = 0.15f;
 	
 	float CurrentFocusDistance = 7.0f;
 	
+	bool bUseSpectatorControls = false;
 	bool bRotatingAroundPoint = false;
 	bool bLookingAround = false;
 	bool bPanning = false;

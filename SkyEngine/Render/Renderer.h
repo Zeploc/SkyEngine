@@ -27,14 +27,10 @@ public:
 	
 	void InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender);
 	void RenderScenes();
-	virtual void Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements);
-	virtual void RenderMesh(TPointer<CMeshComponent> Mesh, STransform Transform) = 0;
-	virtual void RenderUIElement(TPointer<UIElement> UserInterfaceItem) = 0;
-	virtual void CleanupMesh(TPointer<CMeshComponent> Mesh) = 0;
-	virtual void ApplyMaterialFlags(TPointer<CMaterialInterface> InMaterial) = 0;
-	
-	virtual void SetWireframeMode(bool bInWireframeEnabled) = 0;
-	virtual void RenderImGui() = 0;
+	void Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements);
+	void RenderMesh(TPointer<CMeshComponent> Mesh, STransform Transform);
+	void RenderUIElement(TPointer<UIElement> UserInterfaceItem);
+	void RenderImGui();
 
 	TPointer<CSceneRenderer> AddSceneRenderer(TPointer<Scene> InTargetScene, SVector2i InSize);
 	
@@ -42,6 +38,8 @@ public:
 	
 protected:
 	std::vector<TPointer<CSceneRenderer>> SceneRenderers;
+	Matrix4 CurrentView;
+	Matrix4 CurrentProjection;
 };
 
 // template <typename T>

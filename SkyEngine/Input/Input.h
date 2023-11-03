@@ -6,8 +6,8 @@
 
 // Library Includes //
 
-#include "Camera/CameraManager.h"
 #include "Math/Vector.h"
+#include "Math/Vector2.h"
 
 // TODO: Rename file to WindowInput
 
