@@ -66,8 +66,6 @@ void CCanvasManager::SetupCanvasManager(TPointer<CEngineWindow> InOwningWindow)
 	Io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
 	Io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
 	//
-
-	GetGraphicsAPI()->ImGuiInit();
 }
 
 void CCanvasManager::OnEvent(CEvent& Event)
