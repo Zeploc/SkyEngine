@@ -3,6 +3,8 @@
 #include "SEPCH.h"
 #include "PBRShader.h"
 
+#include "Graphics/GL/GLIncludes.h"
+
 #include "Core/Application.h"
 #include "Render/Lighting.h"
 
@@ -21,12 +23,11 @@ bool CPBRShader::CompileShader()
 	{
 		return false;
 	}
-	// TODO: Replace with graphics api 
-	Params.DiffuseTextureLocation = glGetUniformLocation(ShaderProgram, Params.DiffuseTextureName.c_str());
-	Params.HasDiffuseTextureLocation = glGetUniformLocation(ShaderProgram, (std::string("bHas") + Params.DiffuseTextureName).c_str());
-	Params.DiffuseColourLocation = glGetUniformLocation(ShaderProgram, Params.DiffuseColourName.c_str());
-	Params.SpecularStrengthLocation = glGetUniformLocation(ShaderProgram, Params.SpecularStrengthName.c_str());
-	Params.ShininessLocation = glGetUniformLocation(ShaderProgram, Params.ShininessName.c_str());
+	Params.DiffuseTextureLocation = GetAttributeLocation(Params.DiffuseTextureName);
+	Params.HasDiffuseTextureLocation = GetAttributeLocation((std::string("bHas") + Params.DiffuseTextureName));
+	Params.DiffuseColourLocation = GetAttributeLocation(Params.DiffuseColourName);
+	Params.SpecularStrengthLocation = GetAttributeLocation(Params.SpecularStrengthName);
+	Params.ShininessLocation = GetAttributeLocation(Params.ShininessName);
 
 	return true;
 }

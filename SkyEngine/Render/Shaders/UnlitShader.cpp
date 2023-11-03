@@ -20,10 +20,9 @@ bool CUnlitShader::CompileShader()
 	{
 		return false;
 	}
-	// TODO: Replace with graphics api
-	Params.DiffuseTextureLocation = glGetUniformLocation(ShaderProgram, Params.DiffuseTextureName.c_str());
-	Params.HasDiffuseTextureLocation = glGetUniformLocation(ShaderProgram, (std::string("bHas") + Params.DiffuseTextureName).c_str());
-	Params.DiffuseColourLocation = glGetUniformLocation(ShaderProgram, Params.DiffuseColourName.c_str());
+	Params.DiffuseTextureLocation = GetAttributeLocation(Params.DiffuseTextureName);
+	Params.HasDiffuseTextureLocation = GetAttributeLocation(std::string("bHas") + Params.DiffuseTextureName);
+	Params.DiffuseColourLocation = GetAttributeLocation(Params.DiffuseColourName);
 
 	return true;
 }

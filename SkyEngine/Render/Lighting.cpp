@@ -6,7 +6,8 @@
 #include "Math/Vector.h"
 
 // Local Includes //
-#include "Camera/CameraManager.h"
+#include <glew/glew.h>
+
 #include "Core/Application.h"
 #include "Render/Renderer.h"
 #include "Shaders/Shader.h"
@@ -42,15 +43,18 @@ Lighting::~Lighting()
 
 void Lighting::PassLightingToShader()
 {
+	TPointer<CShader> Shader = GetRenderer()->ActiveShader;
 	// TODO: Store uniform locations at beginning for shader
-	const uint32_t ShaderProgram = GetRenderer()->ActiveShader->GetShaderProgram();
-	GetGraphicsAPI()->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "LightPosition"), LightPosition);
-	GetGraphicsAPI()->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "LightColour"), LightColour);
-	GetGraphicsAPI()->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "LightDirection"), SunDirection);
-	GetGraphicsAPI()->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "FogColor"), FogColour);
-	GetGraphicsAPI()->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "StartFog"), StartFogDistance);
-	GetGraphicsAPI()->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "EndFog"), EndFogDistance);
-	GetGraphicsAPI()->PassAttributeToShader(glGetUniformLocation(ShaderProgram, "AmbientStrength"), AmbientStrength);
+	const uint32_t ShaderProgram = Shader->GetShaderProgram();
+	TPointer<IGraphicsAPI> Api = GetGraphicsAPI();
+	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "LightPosition"), LightPosition);
+	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "LightPosition"), LightPosition);
+	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "LightColour"), LightColour);
+	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "LightDirection"), SunDirection);
+	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "FogColor"), FogColour);
+	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "StartFog"), StartFogDistance);
+	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "EndFog"), EndFogDistance);
+	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "AmbientStrength"), AmbientStrength);
 }
 
 SVector Lighting::GetLightPosition()
