@@ -296,6 +296,10 @@ bool CEditorViewportCanvas::OnMouseScrolled(float XOffset, float YOffset)
 
 bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 {
+	if (bUseSpectatorControls)
+	{
+		return false;
+	}
 	if (bPanning || bLookingAround || bRotatingAroundPoint)
 	{
 		return false;
@@ -341,10 +345,7 @@ bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 	}
 	if (KeyCode == GLFW_KEY_W)
 	{
-		if (!bUseSpectatorControls)
-		{
-			GizmoMode = ImGuizmo::OPERATION::TRANSLATE;
-		}
+		GizmoMode = ImGuizmo::OPERATION::TRANSLATE;
 		return true;
 	}
 	return false;
@@ -444,7 +445,7 @@ void CEditorViewportCanvas::UpdateSelectedEntity()
 	std::vector<SVector> HitPosition;
 	for (auto& Ent : EditorScene->Entities)
 	{
-		if (!Ent->bRayCast || !Ent->EntityMesh || !Ent->IsVisible())
+		if (!Ent->bRayCast || !Ent->IsVisible())
 		{
 			continue; // Don't check for raycast
 		}

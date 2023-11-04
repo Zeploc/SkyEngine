@@ -1,7 +1,7 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #include "SEPCH.h"
-#include "Mesh.h"
+#include "MeshComponent.h"
 
 // Engine Includes //
 #include "Core/Application.h"
@@ -35,7 +35,38 @@ CMeshComponent::~CMeshComponent()
 	//if (MeshCollisionBounds) delete MeshCollisionBounds;
 	MeshCollisionBounds = nullptr;
 	// TODO: Give id (component system?) and link to parent
-	CLogManager::GetInstance()->DisplayLogMessage("Mesh was destroyed!");	
+	CLogManager::Get()->DisplayMessage("Mesh was destroyed!");	
+}
+
+void CMeshComponent::OnAttached()
+{
+	CComponent::OnAttached();
+	BindMeshData();
+}
+
+bool CMeshComponent::ShouldRender() const
+{
+	return IsVisible();
+}
+
+TPointer<CMaterialInterface> CMeshComponent::GetMaterial() const
+{
+	return MeshMaterial;
+}
+
+uint32_t CMeshComponent::GetVao() const
+{
+	return vao;
+}
+
+int CMeshComponent::GetIndicesCount() const
+{
+	return IndicesCount;
+}
+
+STransform CMeshComponent::GetRenderTransform() const
+{
+	return GetOwner()->Transform;
 }
 
 // TODO: Remove the need for entity passed through (use transforms/matrix)
@@ -43,7 +74,7 @@ bool CMeshComponent::CheckHit(SVector RayStart, SVector RayDirection, SVector& H
 {
 	// TODO: Check against basic box bounds before considering
 	
-	CLogManager::GetInstance()->DisplayLogMessage("No Check Hit for mesh ray hit check!");
+	CLogManager::Get()->DisplayMessage("No Check Hit for mesh ray hit check!");
 
 	return false;
 }
@@ -66,6 +97,11 @@ void CMeshComponent::BindMeshData()
 	vao = GetGraphicsAPI()->CreateVertexBuffer(MeshData);
 	MeshData.BindData(vao);
 	std::cout << "Created mesh with vao: " << vao << std::endl;
+}
+
+void CMeshComponent::SetVisible(bool bNewVisible)
+{
+	bVisible = bNewVisible;
 }
 
 void CMeshComponent::AddCollisionBounds(float fWidth, float fHeight, float fDepth, TPointer<Entity> _EntityRef)

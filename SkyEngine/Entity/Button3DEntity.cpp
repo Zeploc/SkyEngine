@@ -16,18 +16,18 @@
 // Static Variables //
 bool Button3DEntity::bButtonPressedThisFrame = false;
 
-Button3DEntity::Button3DEntity(STransform _Transform, EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, void (*func)()) : Entity(_Transform, _Anchor)
+Button3DEntity::Button3DEntity(STransform _Transform, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, void (*func)()) : Entity(_Transform)
 {
 	// TODO: Link UI pointer and set colour?
 	TPointer<CMaterial_Unlit> UIMaterial = std::make_shared<CMaterial_Unlit>("UIMaterial");
 	UIMaterial->Params.DiffuseColour = _Colour;
 	TPointer<CCube> ButtonCubeMesh = std::make_shared<CCube>(CCube(shared_from_this(), fWidth, fHeight, fDepth, UIMaterial));
-	EntityMesh = ButtonCubeMesh;
+	AddComponent(ButtonCubeMesh);
 	btnColour = _Colour;
 	btnHighlightColour = _HightlightColour;
 }
 
-Button3DEntity::Button3DEntity(STransform _Transform, EANCHOR _Anchor, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, const char* Texturepath, void (*func)()) : Entity(_Transform, _Anchor)
+Button3DEntity::Button3DEntity(STransform _Transform, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, const char* Texturepath, void (*func)()) : Entity(_Transform)
 {
 	// TODO: Link UI pointer and set colour?
 	TPointer<CTexture> ButtonTexture = GetGraphicsAPI()->GetTexture(Texturepath);
@@ -35,7 +35,7 @@ Button3DEntity::Button3DEntity(STransform _Transform, EANCHOR _Anchor, float fWi
 	UIMaterial->Params.DiffuseColour = _Colour;
 	UIMaterial->Params.DiffuseTexture = ButtonTexture;
 	TPointer<CCube> ButtonCubeMesh = std::make_shared<CCube>(CCube(shared_from_this(), fWidth, fHeight, fDepth, UIMaterial));
-	EntityMesh = ButtonCubeMesh;
+	AddComponent(ButtonCubeMesh);
 	btnColour = _Colour;
 	btnHighlightColour = _HightlightColour;
 }
@@ -50,44 +50,44 @@ void Button3DEntity::Update()
 	{
 		return;
 	}
-	glm::vec3 HalfDimensionvec = glm::vec3(EntityMesh->m_fWidth / 2.0f, EntityMesh->m_fHeight / 2.0f, EntityMesh->m_fDepth / 2.0f);
-	bool bHit = CheckHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z))
-		|| CheckHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, -HalfDimensionvec.z))
-		|| CheckHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z))
-		|| CheckHit(glm::vec3(-HalfDimensionvec.x, HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z))
-		|| CheckHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(-HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z))
-		|| CheckHit(glm::vec3(HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z));
-
-	if (bHit)
-	{
-		if (EntityMesh->MeshMaterial)
-		{
-			// TODO: Link stencil
-			// EntityMesh->MeshMaterial->bStencil = true;
-		}
-		// TODO:
-		// if (CWindowInput::GetInstance()->MouseState[CWindowInput::MOUSE_LEFT] == CWindowInput::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
-		// {
-		// 	bPressed = true;
-		// 	// TODO: Switch to order/depth system
-		// 	bButtonPressedThisFrame = true;
-		// 	PressDelegate.Broadcast();
-		// }
-		if (EntityMesh->MeshMaterial)
-		{
-			// TODO: Link runtime colour
-			// EntityMesh->MeshMaterial->Colour = btnHighlightColour;
-		}
-	}
-	else
-	{
-		if (EntityMesh->MeshMaterial)
-		{
-			// TODO: Link stencil and runtime colour
-			// EntityMesh->MeshMaterial->Colour = btnColour;
-			// EntityMesh->MeshMaterial->bStencil = false;
-		}
-	}
+	// glm::vec3 HalfDimensionvec = glm::vec3(EntityMesh->m_fWidth / 2.0f, EntityMesh->m_fHeight / 2.0f, EntityMesh->m_fDepth / 2.0f);
+	// bool bHit = CheckHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z))
+	// 	|| CheckHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, -HalfDimensionvec.z))
+	// 	|| CheckHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z))
+	// 	|| CheckHit(glm::vec3(-HalfDimensionvec.x, HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z))
+	// 	|| CheckHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(-HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z))
+	// 	|| CheckHit(glm::vec3(HalfDimensionvec.x, -HalfDimensionvec.y, -HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z));
+	//
+	// if (bHit)
+	// {
+	// 	if (EntityMesh->MeshMaterial)
+	// 	{
+	// 		// TODO: Link stencil
+	// 		// EntityMesh->MeshMaterial->bStencil = true;
+	// 	}
+	// 	// TODO:
+	// 	// if (CWindowInput::GetInstance()->MouseState[CWindowInput::MOUSE_LEFT] == CWindowInput::InputState::INPUT_FIRST_PRESS && !bButtonPressedThisFrame)
+	// 	// {
+	// 	// 	bPressed = true;
+	// 	// 	// TODO: Switch to order/depth system
+	// 	// 	bButtonPressedThisFrame = true;
+	// 	// 	PressDelegate.Broadcast();
+	// 	// }
+	// 	if (EntityMesh->MeshMaterial)
+	// 	{
+	// 		// TODO: Link runtime colour
+	// 		// EntityMesh->MeshMaterial->Colour = btnHighlightColour;
+	// 	}
+	// }
+	// else
+	// {
+	// 	if (EntityMesh->MeshMaterial)
+	// 	{
+	// 		// TODO: Link stencil and runtime colour
+	// 		// EntityMesh->MeshMaterial->Colour = btnColour;
+	// 		// EntityMesh->MeshMaterial->bStencil = false;
+	// 	}
+	// }
 }
 
 bool Button3DEntity::CheckHit(glm::vec3 BottomLeftOffset, glm::vec3 TopRightOffset)

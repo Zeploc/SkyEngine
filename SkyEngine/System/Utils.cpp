@@ -9,6 +9,7 @@
 
 // Engine Includes //
 #include "LogManager.h"
+#include "Entity/Body2DComponent.h"
 #include "Entity/Entity.h"
 #include "Math/Vector4.h"
 #include "Render/Meshes/Basic/Cube.h"
@@ -160,20 +161,33 @@ glm::vec3 Utils::GetTextAncoredPosition(glm::vec2 position, glm::vec2 Dimensions
 ************************************************************/
 bool Utils::isColliding2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2)
 {
-	TPointer<CPlane> Entity1Mesh = std::dynamic_pointer_cast<CPlane>(Entity1->EntityMesh);
-	TPointer<CPlane> Entity2Mesh = std::dynamic_pointer_cast<CPlane>(Entity2->EntityMesh);
-	float HalfWidth1 = (Entity1Mesh->CollisionBox.fWidth / 2) * abs(Entity1->Transform.Scale.X);
-	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->Transform.Scale.Y);
-	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->Transform.Scale.X);
-	float HalfHeight2 = (Entity2Mesh->CollisionBox.fHeight / 2) * abs(Entity2->Transform.Scale.Y);
+	TPointer<CCollider2DComponent> Collider1 = Entity1->FindComponent<CCollider2DComponent>();
+	TPointer<CCollider2DComponent> Collider2 = Entity2->FindComponent<CCollider2DComponent>();
+	if (!Collider1 || !Collider2)
+	{
+		CLogManager::Get()->DisplayMessage("Missing collider in entity for 2d collide test");
+		return false;
+	}
+	const SBodyShape& Body1 = Collider1->GetBodyShape();
+	const SBodyShape& Body2 = Collider2->GetBodyShape();
+	if (Body1.BodyType == EBodyType::Circle || Body2.BodyType == EBodyType::Circle)
+	{
+		CLogManager::Get()->DisplayMessage("Circle colliders not supported yet");
+		return false;
+	}
 
-	glm::vec3 Entity1Pos = GetAncoredPosition2D(Entity1->Transform.Position, glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * static_cast<glm::vec2>(Entity1->Transform.Scale), Entity1->EntityAnchor);
-	glm::vec3 Entity2Pos = GetAncoredPosition2D(Entity2->Transform.Position, glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * static_cast<glm::vec2>(Entity2->Transform.Scale), Entity2->EntityAnchor);
+	float HalfWidth1 = (Body1.Box.BoxExtents.X) * abs(Entity1->Transform.Scale.X);
+	float HalfHeight1 = (Body1.Box.BoxExtents.Y) * abs(Entity1->Transform.Scale.Y);
+	float HalfWidth2 = (Body2.Box.BoxExtents.X) * abs(Entity2->Transform.Scale.X);
+	float HalfHeight2 = (Body2.Box.BoxExtents.Y) * abs(Entity2->Transform.Scale.Y);
 
-	if (Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x + HalfWidth1 > Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x - HalfWidth2
-		&& Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x - HalfWidth1 < Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x + HalfWidth2
-		&& Entity1Pos.y + Entity1Mesh->CollisionBox.v2Offset.y + HalfHeight1 > Entity2Pos.y + Entity2Mesh->CollisionBox.v2Offset.y - HalfHeight2
-		&& Entity1Pos.y + Entity1Mesh->CollisionBox.v2Offset.y - HalfHeight1 < Entity2Pos.y + Entity2Mesh->CollisionBox.v2Offset.y + HalfHeight2)
+	glm::vec3 Entity1Pos = Entity1->Transform.Position;
+	glm::vec3 Entity2Pos = Entity2->Transform.Position;
+
+	if (Entity1Pos.x + HalfWidth1 > Entity2Pos.x - HalfWidth2
+		&& Entity1Pos.x - HalfWidth1 < Entity2Pos.x + HalfWidth2
+		&& Entity1Pos.y + HalfHeight1 > Entity2Pos.y - HalfHeight2
+		&& Entity1Pos.y - HalfHeight1 < Entity2Pos.y + HalfHeight2)
 	{
 		return true;
 	}
@@ -188,20 +202,33 @@ bool Utils::isColliding2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2)
 ************************************************************/
 bool Utils::CheckCollision2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2, glm::vec2 Movement)
 {
-	TPointer<CPlane> Entity1Mesh = std::dynamic_pointer_cast<CPlane>(Entity1->EntityMesh);
-	TPointer<CPlane> Entity2Mesh = std::dynamic_pointer_cast<CPlane>(Entity2->EntityMesh);
-	float HalfWidth1 = (Entity1Mesh->CollisionBox.fWidth / 2) * abs(Entity1->Transform.Scale.X);
-	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->Transform.Scale.Y);
-	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->Transform.Scale.X);
-	float HalfHeight2 = (Entity2Mesh->CollisionBox.fHeight / 2) * abs(Entity2->Transform.Scale.Y);
+	TPointer<CCollider2DComponent> Collider1 = Entity1->FindComponent<CCollider2DComponent>();
+	TPointer<CCollider2DComponent> Collider2 = Entity2->FindComponent<CCollider2DComponent>();
+	if (!Collider1 || !Collider2)
+	{
+		CLogManager::Get()->DisplayMessage("Missing collider in entity for 2d collide test");
+		return false;
+	}
+	const SBodyShape& Body1 = Collider1->GetBodyShape();
+	const SBodyShape& Body2 = Collider2->GetBodyShape();
+	if (Body1.BodyType == EBodyType::Circle || Body2.BodyType == EBodyType::Circle)
+	{
+		CLogManager::Get()->DisplayMessage("Circle colliders not supported yet");
+		return false;
+	}
 
-	glm::vec3 Entity1Pos = GetAncoredPosition2D(Entity1->Transform.Position, glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * static_cast<glm::vec2>(Entity1->Transform.Scale), Entity1->EntityAnchor);
-	glm::vec3 Entity2Pos = GetAncoredPosition2D(Entity2->Transform.Position + glm::vec3(Entity2Mesh->CollisionBox.v2Offset, 0), glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * static_cast<glm::vec2>(Entity2->Transform.Scale), Entity2->EntityAnchor);
+	float HalfWidth1 = (Body1.Box.BoxExtents.X) * abs(Entity1->Transform.Scale.X);
+	float HalfHeight1 = (Body1.Box.BoxExtents.Y) * abs(Entity1->Transform.Scale.Y);
+	float HalfWidth2 = (Body2.Box.BoxExtents.X) * abs(Entity2->Transform.Scale.X);
+	float HalfHeight2 = (Body2.Box.BoxExtents.Y) * abs(Entity2->Transform.Scale.Y);
 
-	if (Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x + HalfWidth1 + Movement.x > Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x - HalfWidth2
-		&& Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x - HalfWidth1 + Movement.x < Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x + HalfWidth2
-		&& Entity1Pos.y + Entity1Mesh->CollisionBox.v2Offset.y + HalfHeight1 + Movement.y > Entity2Pos.y + Entity2Mesh->CollisionBox.v2Offset.y - HalfHeight2
-		&& Entity1Pos.y + Entity1Mesh->CollisionBox.v2Offset.y - HalfHeight1 + Movement.y < Entity2Pos.y + Entity2Mesh->CollisionBox.v2Offset.y + HalfHeight2)
+	glm::vec3 Entity1Pos = Entity1->Transform.Position;
+	glm::vec3 Entity2Pos = Entity2->Transform.Position;
+	
+	if (Entity1Pos.x + HalfWidth1 + Movement.x > Entity2Pos.x - HalfWidth2
+		&& Entity1Pos.x - HalfWidth1 + Movement.x < Entity2Pos.x + HalfWidth2
+		&& Entity1Pos.y + HalfHeight1 + Movement.y > Entity2Pos.y - HalfHeight2
+		&& Entity1Pos.y - HalfHeight1 + Movement.y < Entity2Pos.y + HalfHeight2)
 	{
 		return true;
 	}
@@ -216,33 +243,46 @@ bool Utils::CheckCollision2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2,
 ************************************************************/
 glm::vec2 Utils::GetDistance2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2)
 {
-	TPointer<CPlane> Entity1Mesh = std::dynamic_pointer_cast<CPlane>(Entity1->EntityMesh);
-	TPointer<CPlane> Entity2Mesh = std::dynamic_pointer_cast<CPlane>(Entity2->EntityMesh);
 	glm::vec2 fDistance = glm::vec2(0, 0);
-	float HalfWidth1 = (Entity1Mesh->CollisionBox.fWidth / 2) * abs(Entity1->Transform.Scale.X);
-	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->Transform.Scale.Y);
-	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->Transform.Scale.X);
-	float HalfHeight2 = (Entity2Mesh->CollisionBox.fHeight / 2) * abs(Entity2->Transform.Scale.Y);
-
-	glm::vec3 Entity1Pos = GetAncoredPosition2D(Entity1->Transform.Position, glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * static_cast<glm::vec2>(Entity1->Transform.Scale), Entity1->EntityAnchor);
-	glm::vec3 Entity2Pos = GetAncoredPosition2D(Entity2->Transform.Position, glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * static_cast<glm::vec2>(Entity2->Transform.Scale), Entity2->EntityAnchor);
-
-	if (Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x + HalfWidth1 <= Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x - HalfWidth2)
+	TPointer<CCollider2DComponent> Collider1 = Entity1->FindComponent<CCollider2DComponent>();
+	TPointer<CCollider2DComponent> Collider2 = Entity2->FindComponent<CCollider2DComponent>();
+	if (!Collider1 || !Collider2)
 	{
-		fDistance.x = abs((Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x + HalfWidth1) - (Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x - HalfWidth2));
+		CLogManager::Get()->DisplayMessage("Missing collider in entity for 2d collide test");
+		return fDistance;
 	}
-	else if (Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x - HalfWidth1 >= Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x + HalfWidth2)
+	const SBodyShape& Body1 = Collider1->GetBodyShape();
+	const SBodyShape& Body2 = Collider2->GetBodyShape();
+	if (Body1.BodyType == EBodyType::Circle || Body2.BodyType == EBodyType::Circle)
 	{
-		fDistance.x = abs((Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x - HalfWidth1) - (Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x + HalfWidth2));
+		CLogManager::Get()->DisplayMessage("Circle colliders not supported yet");
+		return fDistance;
 	}
 
-	if (Entity1Pos.y + Entity1Mesh->CollisionBox.v2Offset.y + HalfHeight1 <= Entity2Pos.y + Entity2Mesh->CollisionBox.v2Offset.y - HalfHeight2)
+	float HalfWidth1 = (Body1.Box.BoxExtents.X) * abs(Entity1->Transform.Scale.X);
+	float HalfHeight1 = (Body1.Box.BoxExtents.Y) * abs(Entity1->Transform.Scale.Y);
+	float HalfWidth2 = (Body2.Box.BoxExtents.X) * abs(Entity2->Transform.Scale.X);
+	float HalfHeight2 = (Body2.Box.BoxExtents.Y) * abs(Entity2->Transform.Scale.Y);
+
+	glm::vec3 Entity1Pos = Entity1->Transform.Position;
+	glm::vec3 Entity2Pos = Entity2->Transform.Position;
+
+	if (Entity1Pos.x + HalfWidth1 <= Entity2Pos.x - HalfWidth2)
 	{
-		fDistance.y = abs((Entity1Pos.y + Entity1Mesh->CollisionBox.v2Offset.y + HalfHeight1) - (Entity2Pos.y + Entity2Mesh->CollisionBox.v2Offset.y - HalfHeight2));
+		fDistance.x = abs((Entity1Pos.x + HalfWidth1) - (Entity2Pos.x - HalfWidth2));
 	}
-	else if (Entity1Pos.y + Entity1Mesh->CollisionBox.v2Offset.y - HalfHeight1 >= Entity2Pos.y + Entity2Mesh->CollisionBox.v2Offset.y + HalfHeight2)
+	else if (Entity1Pos.x - HalfWidth1 >= Entity2Pos.x + HalfWidth2)
 	{
-		fDistance.y = abs((Entity1Pos.y + Entity1Mesh->CollisionBox.v2Offset.y - HalfHeight1) - (Entity2Pos.y + Entity2Mesh->CollisionBox.v2Offset.y + HalfHeight2));
+		fDistance.x = abs((Entity1Pos.x - HalfWidth1) - (Entity2Pos.x + HalfWidth2));
+	}
+
+	if (Entity1Pos.y + HalfHeight1 <= Entity2Pos.y - HalfHeight2)
+	{
+		fDistance.y = abs((Entity1Pos.y + HalfHeight1) - (Entity2Pos.y - HalfHeight2));
+	}
+	else if (Entity1Pos.y - HalfHeight1 >= Entity2Pos.y + HalfHeight2)
+	{
+		fDistance.y = abs((Entity1Pos.y - HalfHeight1) - (Entity2Pos.y + HalfHeight2));
 	}
 	return fDistance;
 }
@@ -255,33 +295,46 @@ glm::vec2 Utils::GetDistance2D(TPointer<Entity> Entity1, TPointer<Entity> Entity
 ************************************************************/
 glm::vec2 Utils::GetDifference2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2)
 {
-	TPointer<CPlane> Entity1Mesh = std::dynamic_pointer_cast<CPlane>(Entity1->EntityMesh);
-	TPointer<CPlane> Entity2Mesh = std::dynamic_pointer_cast<CPlane>(Entity2->EntityMesh);
 	glm::vec2 fDistance = glm::vec2(0, 0);
-	float HalfWidth1 = (Entity1Mesh->CollisionBox.fWidth / 2) * abs(Entity1->Transform.Scale.X);
-	float HalfHeight1 = (Entity1Mesh->CollisionBox.fHeight / 2) * abs(Entity1->Transform.Scale.Y);
-	float HalfWidth2 = (Entity2Mesh->CollisionBox.fWidth / 2) * abs(Entity2->Transform.Scale.X);
-	float HalfHeight2 = (Entity2Mesh->CollisionBox.fHeight / 2) * abs(Entity2->Transform.Scale.Y);
-
-	glm::vec3 Entity1Pos = GetAncoredPosition2D(Entity1->Transform.Position, glm::vec2(Entity1Mesh->m_fWidth, Entity1Mesh->m_fHeight) * static_cast<glm::vec2>(Entity1->Transform.Scale), Entity1->EntityAnchor);
-	glm::vec3 Entity2Pos = GetAncoredPosition2D(Entity2->Transform.Position, glm::vec2(Entity2Mesh->m_fWidth, Entity2Mesh->m_fHeight) * static_cast<glm::vec2>(Entity2->Transform.Scale), Entity2->EntityAnchor);
-
-	if (Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x + HalfWidth1 < Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x - HalfWidth2)
+	TPointer<CCollider2DComponent> Collider1 = Entity1->FindComponent<CCollider2DComponent>();
+	TPointer<CCollider2DComponent> Collider2 = Entity2->FindComponent<CCollider2DComponent>();
+	if (!Collider1 || !Collider2)
 	{
-		fDistance.x = (Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x + HalfWidth1) - (Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x - HalfWidth2);
+		CLogManager::Get()->DisplayMessage("Missing collider in entity for 2d collide test");
+		return fDistance;
 	}
-	else if (Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x - HalfWidth1 > Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x + HalfWidth2)
+	const SBodyShape& Body1 = Collider1->GetBodyShape();
+	const SBodyShape& Body2 = Collider2->GetBodyShape();
+	if (Body1.BodyType == EBodyType::Circle || Body2.BodyType == EBodyType::Circle)
 	{
-		fDistance.x = (Entity1Pos.x + Entity1Mesh->CollisionBox.v2Offset.x - HalfWidth1) - (Entity2Pos.x + Entity2Mesh->CollisionBox.v2Offset.x + HalfWidth2);
+		CLogManager::Get()->DisplayMessage("Circle colliders not supported yet");
+		return fDistance;
 	}
 
-	if (Entity1Pos.y + Entity1Mesh->CollisionBox.v2Offset.y + HalfHeight1 < Entity2Pos.y + Entity2Mesh->CollisionBox.v2Offset.y - HalfHeight2)
+	float HalfWidth1 = (Body1.Box.BoxExtents.X) * abs(Entity1->Transform.Scale.X);
+	float HalfHeight1 = (Body1.Box.BoxExtents.Y) * abs(Entity1->Transform.Scale.Y);
+	float HalfWidth2 = (Body2.Box.BoxExtents.X) * abs(Entity2->Transform.Scale.X);
+	float HalfHeight2 = (Body2.Box.BoxExtents.Y) * abs(Entity2->Transform.Scale.Y);
+
+	glm::vec3 Entity1Pos = Entity1->Transform.Position;
+	glm::vec3 Entity2Pos = Entity2->Transform.Position;
+
+	if (Entity1Pos.x  + HalfWidth1 < Entity2Pos.x - HalfWidth2)
 	{
-		fDistance.y = (Entity1Pos.y + Entity1Mesh->CollisionBox.v2Offset.y + HalfHeight1) - (Entity2Pos.y + Entity2Mesh->CollisionBox.v2Offset.y - HalfHeight2);
+		fDistance.x = (Entity1Pos.x  + HalfWidth1) - (Entity2Pos.x - HalfWidth2);
 	}
-	else if (Entity1Pos.y + Entity1Mesh->CollisionBox.v2Offset.y - HalfHeight1 > Entity2Pos.y + Entity2Mesh->CollisionBox.v2Offset.y + HalfHeight2)
+	else if (Entity1Pos.x  - HalfWidth1 > Entity2Pos.x + HalfWidth2)
 	{
-		fDistance.y = (Entity1Pos.y + Entity1Mesh->CollisionBox.v2Offset.y - HalfHeight1) - (Entity2Pos.y + Entity2Mesh->CollisionBox.v2Offset.y + HalfHeight2);
+		fDistance.x = (Entity1Pos.x  - HalfWidth1) - (Entity2Pos.x + HalfWidth2);
+	}
+
+	if (Entity1Pos.y  + HalfHeight1 < Entity2Pos.y  - HalfHeight2)
+	{
+		fDistance.y = (Entity1Pos.y  + HalfHeight1) - (Entity2Pos.y +  - HalfHeight2);
+	}
+	else if (Entity1Pos.y  - HalfHeight1 > Entity2Pos.y + HalfHeight2)
+	{
+		fDistance.y = (Entity1Pos.y  - HalfHeight1) - (Entity2Pos.y + HalfHeight2);
 	}
 	return fDistance;
 }
@@ -422,11 +475,12 @@ bool Utils::CheckCubeHit(SVector RayStart, SVector RayDirection, SVector CubeDim
 
 bool Utils::CheckPlaneEntityHit(SVector RayStart, SVector RayDirection, TPointer<Entity> EntityCheck, SVector& HitPos)
 {
-	glm::vec3 HalfDimensionvec = glm::vec3(EntityCheck->EntityMesh->m_fWidth / 2.0f, EntityCheck->EntityMesh->m_fHeight / 2.0f, EntityCheck->EntityMesh->m_fDepth / 2.0f);
-	if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
-	{
-		return true;
-	}
+	// Should be component based
+	// glm::vec3 HalfDimensionvec = glm::vec3(EntityCheck->EntityMesh->m_fWidth / 2.0f, EntityCheck->EntityMesh->m_fHeight / 2.0f, EntityCheck->EntityMesh->m_fDepth / 2.0f);
+	// if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
+	// {
+	// 	return true;
+	// }
 	return false;
 }
 
@@ -442,7 +496,7 @@ SVector Utils::LinePlaneIntersect(SVector RayStart, SVector RayDirection, SVecto
 // TODO: Remove need for entity (use transform/matrix)
 bool Utils::CheckFaceHit(SVector BottomLeftOffset, SVector TopRightOffset, SVector RayStart, SVector RayDirection, TPointer<Entity> EntityCheck, SVector& HitPos)
 {
-	SVector AnchoredPosition = GetAncoredPosition(EntityCheck->Transform.Position, glm::vec3(EntityCheck->EntityMesh->m_fWidth, EntityCheck->EntityMesh->m_fHeight, EntityCheck->EntityMesh->m_fDepth), EntityCheck->EntityAnchor);
+	SVector AnchoredPosition = EntityCheck->Transform.Position;
 	SVector lb = BottomLeftOffset + AnchoredPosition;
 	SVector rt = TopRightOffset + AnchoredPosition;
 	// TODO: Confirm matrix to vector order for new system and create/convert

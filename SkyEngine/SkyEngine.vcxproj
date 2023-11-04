@@ -26,19 +26,19 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -85,7 +85,6 @@
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -112,7 +111,6 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -140,7 +138,6 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -167,8 +164,10 @@
     <ClInclude Include="Core\WorldManager.h" />
     <ClInclude Include="Dependencies\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="Entity\2DParticleSystem.h" />
+    <ClInclude Include="Entity\Body2DComponent.h" />
     <ClInclude Include="Entity\Button3DEntity.h" />
     <ClInclude Include="Entity\Camera.h" />
+    <ClInclude Include="Entity\CollisionBodyComponent.h" />
     <ClInclude Include="Entity\CollisionBounds.h" />
     <ClInclude Include="Entity\Component.h" />
     <ClInclude Include="Entity\Entity.h" />
@@ -208,6 +207,7 @@
     <ClInclude Include="Platform\Window\GLFW\imgui_impl_glfw.h" />
     <ClInclude Include="Platform\Windows\WindowsPlatform.h" />
     <ClInclude Include="Render\Framebuffer.h" />
+    <ClInclude Include="Render\SceneVisual.h" />
     <ClInclude Include="Render\Lighting.h" />
     <ClInclude Include="Render\Materials\InternalMaterial.h" />
     <ClInclude Include="Render\Materials\Material.h" />
@@ -220,7 +220,7 @@
     <ClInclude Include="Render\Meshes\Basic\Pyramid.h" />
     <ClInclude Include="Render\Meshes\Basic\Sphere.h" />
     <ClInclude Include="Render\Meshes\Basic\Triangle.h" />
-    <ClInclude Include="Render\Meshes\Mesh.h" />
+    <ClInclude Include="Render\Meshes\MeshComponent.h" />
     <ClInclude Include="Render\Meshes\MeshData.h" />
     <ClInclude Include="Render\Meshes\Model\AnimatedModel.h" />
     <ClInclude Include="Render\Meshes\Model\Model.h" />
@@ -264,8 +264,10 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Entity\2DParticleSystem.cpp" />
+    <ClCompile Include="Entity\Body2DComponent.cpp" />
     <ClCompile Include="Entity\Button3DEntity.cpp" />
     <ClCompile Include="Entity\Camera.cpp" />
+    <ClCompile Include="Entity\CollisionBodyComponent.cpp" />
     <ClCompile Include="Entity\CollisionBounds.cpp" />
     <ClCompile Include="Entity\Component.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
@@ -287,6 +289,7 @@
     <ClCompile Include="Platform\Window\GLFW\imgui_impl_glfw.cpp" />
     <ClCompile Include="Platform\Windows\WindowsPlatform.cpp" />
     <ClCompile Include="Render\Framebuffer.cpp" />
+    <ClCompile Include="Render\SceneVisual.cpp" />
     <ClCompile Include="Render\Lighting.cpp" />
     <ClCompile Include="Render\Materials\InternalMaterial.cpp" />
     <ClCompile Include="Render\Materials\Material.cpp" />
@@ -298,7 +301,7 @@
     <ClCompile Include="Render\Meshes\Basic\Pyramid.cpp" />
     <ClCompile Include="Render\Meshes\Basic\Sphere.cpp" />
     <ClCompile Include="Render\Meshes\Basic\Triangle.cpp" />
-    <ClCompile Include="Render\Meshes\Mesh.cpp" />
+    <ClCompile Include="Render\Meshes\MeshComponent.cpp" />
     <ClCompile Include="Render\Meshes\MeshData.cpp" />
     <ClCompile Include="Render\Meshes\Model\AnimatedModel.cpp" />
     <ClCompile Include="Render\Meshes\Model\Model.cpp" />

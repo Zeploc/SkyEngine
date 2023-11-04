@@ -3,6 +3,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 // #define NDEBUG
 
@@ -26,6 +27,22 @@ constexpr TPointer<T> CreatePointer(Args&& ... args)
 {
 	return std::make_shared<T>(std::forward<Args>(args)...);
 }
+
+template<typename T, typename U>
+TPointer<T> Cast(TPointer<U> Base)
+{
+	return std::dynamic_pointer_cast<T>(Base);
+}
+
+template<typename T, typename U>
+T* GetInterface(TPointer<U> Base)
+{
+	// TODO: Is dynamic correct?
+	return dynamic_cast<T*>(Base.get());
+}
+
+template<typename T>
+using TArray = std::vector<T>;
 
 template<typename T>
 using TScope = std::unique_ptr<T>;

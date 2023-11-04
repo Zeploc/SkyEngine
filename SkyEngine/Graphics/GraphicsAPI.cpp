@@ -25,7 +25,7 @@ TPointer<IGraphicsAPI> IGraphicsAPI::CreateGraphicsAPI(EGraphicsAPI APIType)
 	}
 	else
 	{
-		CLogManager::GetInstance()->DisplayLogMessage("No valid Graphics API Set!");		
+		CLogManager::Get()->DisplayMessage("No valid Graphics API Set!");		
 	}
 	return NewGraphicsApi;
 }

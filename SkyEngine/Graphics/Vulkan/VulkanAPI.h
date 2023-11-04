@@ -19,8 +19,8 @@ public:
 	unsigned CreateVertexBuffer(const MeshData& MeshData) override;
 	void BindVertexArray(const std::vector<float>& vertices, const std::vector<uint32_t>& indices,
 		unsigned& vao) override;
-	void RenderMesh(TPointer<CMeshComponent> Mesh) override;
-	void CleanupMesh(TPointer<CMeshComponent> Mesh) override;
+	void RenderMesh(ISceneVisual* SceneVisual) override;
+	void CleanupMesh(ISceneVisual* SceneVisual) override;
 	void ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, STransform Transform) override;
 	void RenderImGui() override;
 	void BindShader(uint32_t ShaderProgramID) override;

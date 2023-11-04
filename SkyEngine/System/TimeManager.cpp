@@ -57,7 +57,7 @@ void CTimeManager::Update()
 		}
 	}
 	
-	// CLogManager::GetInstance()->DisplayLogMessage("delta time " + std::to_string(DeltaTime));
+	// CLogManager::GetInstance()->DisplayMessage("delta time " + std::to_string(DeltaTime));
 }
 
 double CTimeManager::GetElapsedEngineTime()

@@ -23,7 +23,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-ParticleSystemGPU::ParticleSystemGPU(STransform _Transform) : Entity(_Transform, EANCHOR::CENTER)
+ParticleSystemGPU::ParticleSystemGPU(STransform _Transform) : Entity(_Transform)
 {
 	Colour = glm::vec4(123.0f / 255.0f, 173.0f / 255.0f, 203.0f / 255.0f, 2.0f);
 }

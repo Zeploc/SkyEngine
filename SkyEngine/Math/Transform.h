@@ -25,6 +25,31 @@ struct ENGINE_API STransform
 	SVector Position;
 	SRotator Rotation;
 	SVector Scale;
+	
+	bool operator==(const STransform& other) const
+	{
+		return (Position == other.Position &&
+			Rotation == other.Rotation &&
+			Scale == other.Scale);
+	}
+	bool operator!=(const STransform& other) const
+	{
+		return (Position != other.Position ||
+			Rotation != other.Rotation ||
+			Scale != other.Scale);
+	}
+	bool operator==(STransform& other) const
+	{
+		return (Position == other.Position &&
+			Rotation == other.Rotation &&
+			Scale == other.Scale);
+	}
+	bool operator!=(STransform& other) const
+	{
+		return (Position != other.Position ||
+			Rotation != other.Rotation ||
+			Scale != other.Scale);
+	}
 
 	std::string ToString() const;
 	bool FromMatrix(glm::mat4 Matrix);

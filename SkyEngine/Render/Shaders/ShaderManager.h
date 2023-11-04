@@ -25,7 +25,7 @@ public:
 
 	static void CleanUp();
 
-	static void LoadAllDefaultShadersInCurrentContext();
+	static void LoadAllDefaultShaders();
 
 	static void AddShaderProgram(std::string ShaderName, std::string VertexShaderPath, std::string FragmentShaderPath, std::string GeometryShaderPath = "");
 

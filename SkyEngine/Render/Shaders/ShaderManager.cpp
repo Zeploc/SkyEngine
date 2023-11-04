@@ -56,7 +56,7 @@ void ShaderManager::CleanUp()
 	Textures.clear();
 }
 
-void ShaderManager::LoadAllDefaultShadersInCurrentContext()
+void ShaderManager::LoadAllDefaultShaders()
 {
 	AddShaderProgram("BaseProgram", "Resources/Shaders/TextureVertexShader.vs", "Resources/Shaders/TextureFragmentShader.fs");
 	AddComputeProgram("ComputeProgram", "Resources/Shaders/ComputeShader.comps");
@@ -110,7 +110,7 @@ void ShaderManager::ShaderCreated(const TPointer<CShader>NewShader)
 		return;
 	}
 	Shaders.insert(std::pair(ShaderName, NewShader));
-	CLogManager::GetInstance()->DisplayLogMessage("Loading Shader \"" + ShaderName + "\"");
+	CLogManager::Get()->DisplayMessage("Loading Shader \"" + ShaderName + "\"");
 }
 
 TPointer<CShader> ShaderManager::GetShader(std::string ShaderName)

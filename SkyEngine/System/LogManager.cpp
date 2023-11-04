@@ -28,7 +28,7 @@ CLogManager::~CLogManager()
 
 void CLogManager::Init()
 {
-	DisplayLogMessage("Loading Game");
+	DisplayMessage("Loading Game");
 }
 
 void CLogManager::Render()
@@ -36,7 +36,7 @@ void CLogManager::Render()
 	// LoadingMessage->DrawUIElement();
 }
 
-void CLogManager::DisplayLogMessage(const std::string& InMessage)
+void CLogManager::DisplayMessage(const std::string& InMessage)
 {
 	std::cout << InMessage << std::endl;
 	// TODO: Log
@@ -46,17 +46,17 @@ void CLogManager::DisplayLogMessage(const std::string& InMessage)
 	// }
 }
 
-void CLogManager::DisplayLogWarning(const std::string& InMessage)
+void CLogManager::DisplayWarning(const std::string& InMessage)
 {
 	std::cerr << InMessage << std::endl;
 }
 
-void CLogManager::DisplayLogError(const std::string& InMessage)
+void CLogManager::DisplayError(const std::string& InMessage)
 {
 	std::cerr << InMessage << std::endl;
 }
 
-TPointer<CLogManager> CLogManager::GetInstance()
+TPointer<CLogManager> CLogManager::Get()
 {
 	return GetApplication()->LogManager;
 }

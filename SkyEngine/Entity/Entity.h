@@ -15,18 +15,20 @@
 #include "Math/Transform.h"
 #include "Math/Matrix.h"
 #include "Math/Rotator.h"
-#include "Render/Meshes/Mesh.h"
 #include "System/EnumTypes.h"
 
 // TODO: Warnings with exporting class containing STDL
 #pragma warning (disable : 4251)
+
+class Scene;
+class CComponent;
 
 class ENGINE_API Entity : public std::enable_shared_from_this<Entity>
 {
 public:
 	Entity(std::string _FromString);
 
-	Entity(STransform InTransform, EANCHOR InAnchor);
+	Entity(STransform InTransform);
 
 	//Entity() {};
 	/*Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, Utils::ESHAPE _eShape);
@@ -35,13 +37,14 @@ public:
 	Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, glm::vec2 v2FrameCounts, int _iFPS);*/
 	virtual ~Entity();
 
-	void AddMesh(TPointer<CMeshComponent> _NewMesh);
+	void AddComponent(TPointer<CComponent> NewComponent);
+	void AddToScene(TPointer<Scene> InScene);
+	virtual void BeginPlay();
 
 	//void AddMesh(Utils::ESHAPE _NewShape);
 
 	virtual bool CanRender();
 	virtual std::vector<TPointer<Entity>> GetAdditionalEntitiesToRender() { return {}; }
-	virtual STransform GetAnchoredTransform();
 	
 	SVector GetForwardVector() const;
 	SVector GetUpVector() const;
@@ -49,6 +52,7 @@ public:
 
 	void SetForwardVector(SVector Forward);
 
+	/* Base Update called every frame to check before called derived Update */
 	void BaseUpdate();
 
 	virtual void Update();
@@ -56,8 +60,6 @@ public:
 	virtual bool CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos);
 
 	virtual void OnDestroy();
-
-	virtual void Reset();
 
 	virtual void SetActive(bool _bIsActive);
 
@@ -72,41 +74,49 @@ public:
 	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const TPointer<Entity>& InEntity);
 	ENGINE_API friend std::istream& operator>>(std::istream& is, TPointer<Entity>& InEntity);
 
+	/* Moves the position by adding on the movement*/
 	void Translate(SVector _Movement);
 
+	/* Rotates the entity by a certain amount */
 	void Rotate(SRotator Rotate);
 
+	/* Sets the entity scale */
 	void SetScale(SVector _NewScale);
 
 	Matrix4 GetModel();
 
 	STransform Transform;
-	EANCHOR EntityAnchor;
-	TPointer<CMeshComponent> EntityMesh;
 
 	int GetEntityValue() const { return iEntityID; }
 	std::string GetEntityName() const { return Name; }
+	TPointer<Scene> GetOwningScene() const { return OwningScene; }
+	TArray<TPointer<CComponent>> GetComponents() const { return Components; }
 
-	// TODO: Remove?
-	void SetInitialEntity(bool IsInitial) { bIsInitialEntity = IsInitial; }
-	bool IsInitialEntity() const { return bIsInitialEntity; }
-
-	// Box2D Physics
-	b2Body* body = nullptr;
-
-	void SetupB2BoxBody(b2World& Box2DWorld, b2BodyType BodyType, bool bCanRotate = true, bool bHasFixture = true, float Density = 1.0f, float Friction = 0.3f, bool IsBullet = false);
-
-	void SetupB2CircleBody(b2World& Box2DWorld, b2BodyType BodyType, bool bCanRotate = true, bool bHasFixture = true, float Density = 1.0f, float Friction = 0.3f);
-
-	void SetBox2DTransform(SVector _Position, float _Rotation);
+	template<typename T>
+	TPointer<T> FindComponent();
 
 	bool bRayCast = true;
 
 protected:
 	bool bActive = true;
 	bool bVisible = true;
-	bool bIsInitialEntity = false;
 	std::string Name;
+
+	TArray<TPointer<CComponent>> Components;
+	TPointer<Scene> OwningScene;
 
 	int iEntityID;
 };
+
+template <typename T>
+TPointer<T> Entity::FindComponent()
+{
+	for (TPointer<CComponent> Component : Components)
+	{
+		if (TPointer<T> TestComponent = Cast<T>(Component))
+		{
+			return TestComponent;
+		}
+	}
+	return nullptr;
+}

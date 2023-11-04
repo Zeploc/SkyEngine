@@ -62,7 +62,7 @@ namespace SkyEngine
 		
 		GraphicsApi = IGraphicsAPI::CreateGraphicsAPI(GraphicsApiType);
 		ApplicationWindow->SetupWindow();
-		ShaderManager::LoadAllDefaultShadersInCurrentContext();
+		ShaderManager::LoadAllDefaultShaders();
 		Renderer = CreatePointer<CRenderer>();
 
 		CTimeManager::Start();
@@ -95,7 +95,7 @@ namespace SkyEngine
 		}
 		else
 		{
-			CLogManager::GetInstance()->DisplayLogError("Application failed to setup, could not start run loop!");
+			CLogManager::Get()->DisplayError("Application failed to setup, could not start run loop!");
 		}
 		
 		OnExit();

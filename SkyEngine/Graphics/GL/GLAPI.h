@@ -23,8 +23,8 @@ public:
 	bool CreateTessProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename) override;
 	bool CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename) override;
 	TPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) override;
-	void RenderMesh(TPointer<CMeshComponent> Mesh) override;
-	void CleanupMesh(TPointer<CMeshComponent> Mesh) override;
+	void RenderMesh(ISceneVisual* SceneVisual) override;
+	void CleanupMesh(ISceneVisual* SceneVisual) override;
 	void ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, STransform Transform) override;
 	void RenderImGui() override;
 	void ImGuiInit() override;

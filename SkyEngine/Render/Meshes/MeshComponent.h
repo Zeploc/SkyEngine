@@ -13,6 +13,7 @@
 // Library Include //
 
 #include "MeshData.h"
+#include "Render/SceneVisual.h"
 
 // TODO: Warnings with exporting class containing STDL
 #pragma warning (disable : 4251)
@@ -22,19 +23,27 @@ class CShader;
 class CCollisionBounds;
 class CMaterialInterface;
 
-class ENGINE_API CMeshComponent : public CComponent
+class ENGINE_API CMeshComponent : public CComponent, public ISceneVisual
 {
 public:
 	// TODO: Remove empty constructor once made redundant 
 	CMeshComponent(const TPointer<Entity>& InOwner);
 	// TODO: Replace width with mesh data
 	CMeshComponent(const TPointer<Entity>& InOwner, float InWidth, float InHeight, float InDepth, const TPointer<CMaterialInterface>& = nullptr);
-
 	virtual ~CMeshComponent();
+
+	void OnAttached() override;	
+
+	virtual bool IsVisible() const override { return bVisible; }
+	virtual void SetVisible(bool bNewVisible) override;
+	
+	bool ShouldRender() const override;
+	virtual STransform GetRenderTransform() const override;
+	TPointer<CMaterialInterface> GetMaterial() const override;
+	uint32_t GetVao() const override;
+	int GetIndicesCount() const override;
 	
 	virtual bool CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos, TPointer<Entity> EntityCheck);
-
-	virtual void Update() {}
 
 	virtual void OnDestroy() {}
 
@@ -61,7 +70,9 @@ public:
 	
 protected:
 	virtual MeshData GetMeshData()= 0;
-	
+protected:
 	TPointer<CCollisionBounds> MeshCollisionBounds;
+
+	bool bVisible = true;
 };
 

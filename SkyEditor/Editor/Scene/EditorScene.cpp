@@ -54,6 +54,11 @@ EditorScene::EditorScene(const std::string& InSceneName) : Scene(InSceneName)
 	//EditorWindow* ExternalWindow = new EditorWindow("External Test", nullptr, glm::vec2(500, 300), glm::vec2(100, 100));
 	//ExternalWindow->SetBackColour(glm::vec3(0.6, 0.3, 0.4));
 
+}
+
+void EditorScene::OnLoadScene()
+{
+	Scene::OnLoadScene();
 	AddSampleEntities();
 }
 
@@ -85,16 +90,16 @@ void EditorScene::AddSampleEntities()
 	PlaneMaterial->bTwoSided = true;
 
 	// TODO: Switch all below to make shared
-	TPointer<Entity> SphereRaycastTest(new Entity(STransform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	TPointer<Entity> SphereRaycastTest(new Entity(STransform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}));
 	TPointer<CSphere> SphereRaycastMesh = std::make_shared<CSphere>(SphereRaycastTest, 2.0f, 2.0f, 2.0f, CliffMaterial);
-	SphereRaycastTest->AddMesh(SphereRaycastMesh);
-	AddEntity(SphereRaycastTest, true);
+	SphereRaycastTest->AddComponent(SphereRaycastMesh);
+	AddEntity(SphereRaycastTest);
 			
-	TPointer<Entity> FloorEntity(new Entity({{0, 0, 0}, {0, -90, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	TPointer<Entity> FloorEntity(new Entity({{0, 0, 0}, {0, -90, 0}, {1, 1, 1}}));
 	//glm::vec3 Points[4] = { {-10, 10, 1}, {10, 10, -1 }, { 10, -10, 0 }, { -10, -10, -3 } };
 	const TPointer<CPlane> FloorPlanMesh = std::make_shared<CPlane>(FloorEntity, 50.0f, 50.0f, PlaneMaterial);
-	FloorEntity->AddMesh(FloorPlanMesh);
-	AddEntity(FloorEntity, true);
+	FloorEntity->AddComponent(FloorPlanMesh);
+	AddEntity(FloorEntity);
 	
 	// TPointer<ParticleSystem> ParticleBoy(new ParticleSystem({{20, 8, 10}, {0, 0, 0}, {1, 1, 1}}));
 	// ParticleBoy->SetPositionRange({-5, 5}, {0, 0}, {-5, 5});
@@ -123,27 +128,27 @@ void EditorScene::AddSampleEntities()
 	// ModelEntityMesh->SetReflection(true);
 	// AddEntity(ModelEntity, true);
 	
-	TPointer<Entity> CubeEnty(new Entity(STransform{{10.0f, 4.0f, 4.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	TPointer<Entity> CubeEnty(new Entity(STransform{{10.0f, 4.0f, 4.0f}, {0, 0, 0}, {1, 1, 1}}));
 	TPointer<CCube> CubyMesh(new CCube(CubeEnty, 3.0f, 3.0f, 3.0f, ColouredBrickMaterial));
-	CubeEnty->AddMesh(CubyMesh);
-	AddEntity(CubeEnty, true);
+	CubeEnty->AddComponent(CubyMesh);
+	AddEntity(CubeEnty);
 	
-	TPointer<Entity> PyramidEntity(new Entity(STransform{{10.0f, 4.0f, 8.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	TPointer<Entity> PyramidEntity(new Entity(STransform{{10.0f, 4.0f, 8.0f}, {0, 0, 0}, {1, 1, 1}}));
 	TPointer<CPyramid> PyramidMesh(new CPyramid(PyramidEntity, 3.0f, 3.0f, 3.0f, ColouredBrickMaterial));
-	PyramidEntity->AddMesh(PyramidMesh);
+	PyramidEntity->AddComponent(PyramidMesh);
 	// PyramidMesh->SetLit(false, true);
 	// TODO: Identify and fix pyramid lighting
-	AddEntity(PyramidEntity, true);
+	AddEntity(PyramidEntity);
 	
-	TPointer<Entity> SphereEntity(new Entity(STransform{{10.0f, 4.0f, 12.0f}, {0, 0, 0}, {1, 1, 1}}, EANCHOR::CENTER));
+	TPointer<Entity> SphereEntity(new Entity(STransform{{10.0f, 4.0f, 12.0f}, {0, 0, 0}, {1, 1, 1}}));
 	TPointer<CSphere> SphereMesh(new CSphere(SphereEntity, 2.0f, 2.0f, 2.0f, ColouredBrickMaterial));
-	SphereEntity->AddMesh(SphereMesh);
-	AddEntity(SphereEntity, true);
+	SphereEntity->AddComponent(SphereMesh);
+	AddEntity(SphereEntity);
 	
-	TPointer<Entity> PlaneEntity = std::make_shared<Entity>(STransform{{10.0f, 4.0f, 16.0f}, {0, -90, 0}, {1, 1, 1}}, EANCHOR::CENTER);
+	TPointer<Entity> PlaneEntity = std::make_shared<Entity>(STransform{{10.0f, 4.0f, 16.0f}, {0, -90, 0}, {1, 1, 1}});
 	TPointer<CPlane> PlaneMesh = std::make_shared<CPlane>(PlaneEntity, 2.0f, 2.0f, ColouredBrickPlaneMaterial);
-	PlaneEntity->AddMesh(PlaneMesh);
-	AddEntity(PlaneEntity, true);
+	PlaneEntity->AddComponent(PlaneMesh);
+	AddEntity(PlaneEntity);
 }
 
 void EditorScene::Update()
@@ -227,7 +232,7 @@ void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
 	
 	while(OpenedLevelFile.peek() != EOF )
 	{
-		TPointer<Entity> NewEntity(new Entity(STransform(), EANCHOR::CENTER));
+		TPointer<Entity> NewEntity(new Entity(STransform()));
 		OpenedLevelFile >> NewEntity;
 		std::getline(OpenedLevelFile, Empty, '\n');
 		
@@ -235,9 +240,8 @@ void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
 		TestMaterial->Params.DiffuseColour = {0.7f, 0.4f, 0.3f, 1.0f};
 		
 		TPointer<CCube> CubeMesh = std::make_shared<CCube>(NewEntity, 3.0f, 3.0f, 3.0f, TestMaterial);
-		NewEntity->AddMesh(CubeMesh);
-		NewEntity->SetInitialEntity(true);
-		AddEntity(NewEntity, true);
+		NewEntity->AddComponent(CubeMesh);
+		AddEntity(NewEntity);
 	}
 	
 	// for (std::string Line : OpenedLevelFile)

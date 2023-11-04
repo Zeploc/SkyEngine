@@ -3,27 +3,27 @@
 #include "EditorApp.h"
 #include "UI/ConsoleLog.h"
 
-void CEditorLogManager::DisplayLogMessage(const std::string& InMessage)
+void CEditorLogManager::DisplayMessage(const std::string& InMessage)
 {
-	CLogManager::DisplayLogMessage(InMessage);
+	CLogManager::DisplayMessage(InMessage);
 	if (EditorApp->ConsoleLog)
 	{
 		EditorApp->ConsoleLog->AddLog(std::format("{}\n", InMessage).c_str());
 	}
 }
 
-void CEditorLogManager::DisplayLogWarning(const std::string& InMessage)
+void CEditorLogManager::DisplayWarning(const std::string& InMessage)
 {
-	CLogManager::DisplayLogWarning(InMessage);
+	CLogManager::DisplayWarning(InMessage);
 	if (EditorApp->ConsoleLog)
 	{
 		EditorApp->ConsoleLog->AddLog(std::format("{}\n", InMessage).c_str());
 	}
 }
 
-void CEditorLogManager::DisplayLogError(const std::string& InMessage)
+void CEditorLogManager::DisplayError(const std::string& InMessage)
 {
-	CLogManager::DisplayLogError(InMessage);
+	CLogManager::DisplayError(InMessage);
 	if (EditorApp->ConsoleLog)
 	{
 		EditorApp->ConsoleLog->AddLog(std::format("{}\n", InMessage).c_str());

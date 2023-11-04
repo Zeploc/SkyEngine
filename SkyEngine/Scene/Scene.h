@@ -6,6 +6,8 @@
 
 // Library Includes //
 
+#include <Box2D/b2_world.h>
+
 #include "Events/Event.h"
 #include "Events/KeyEvent.h"
 #include "Events/MouseEvent.h"
@@ -18,14 +20,13 @@ class ENGINE_API Scene : public std::enable_shared_from_this<Scene>
 {
 public:
 	Scene(const std::string& InSceneName);
-
 	virtual ~Scene();
 
 	void DeleteScene();
 
 	virtual void RenderScene();
 
-	void AddEntity(TPointer<Entity> _Entity, bool IsInitial = false);
+	void AddEntity(TPointer<Entity> _Entity);
 
 	void DestroyEntity(TPointer<Entity> _Entity);
 
@@ -38,6 +39,9 @@ public:
 	virtual bool OnKeyReleased(int KeyCode, int Mods);
 
 	virtual void OnLoadScene();
+	virtual void BeginPlay();
+
+	b2World& GetWorld2D() { return World2D; }
 
 	void SetPersistantOnLoad(bool _bIsPersistant)
 	{
@@ -53,7 +57,7 @@ protected:
 	
 	std::vector<TPointer<Entity>> DestroyedEntities;
 	bool bIsPersistant = false;
+	b2World World2D;
 
 private:
-	void DestroyAllNonInitialEntities();
 };

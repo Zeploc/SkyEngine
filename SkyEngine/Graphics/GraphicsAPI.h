@@ -19,6 +19,7 @@ class Entity;
 class IGraphicsWindow;
 class CShader;
 class CTexture;
+class ISceneVisual;
 
 enum class EGraphicsAPI
 {
@@ -50,8 +51,8 @@ public:
 	                               const char* FragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename) = 0;
 
 	virtual bool CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename) = 0;
-	virtual void RenderMesh(TPointer<CMeshComponent> Mesh) = 0;	
-	virtual void CleanupMesh(TPointer<CMeshComponent> Mesh) = 0;
+	virtual void RenderMesh(ISceneVisual* SceneVisual) = 0;	
+	virtual void CleanupMesh(ISceneVisual* SceneVisual) = 0;
 	virtual void ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, STransform Transform) = 0;
 
 	virtual void RenderImGui() = 0;
