@@ -54,6 +54,11 @@ TPointer<CMaterialInterface> CMeshComponent::GetMaterial() const
 	return MeshMaterial;
 }
 
+void CMeshComponent::SetMaterial(TPointer<CMaterialInterface> NewMaterial)
+{
+	MeshMaterial = NewMaterial;
+}
+
 uint32_t CMeshComponent::GetVao() const
 {
 	return vao;

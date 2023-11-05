@@ -57,7 +57,7 @@ bool CEditorViewportCanvas::PreRender()
 	centralAlways.DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoDockingOverMe | ImGuiDockNodeFlags_PassthruCentralNode;
 	ImGuiWindowFlags window_flags = 0;
 	window_flags |= ImGuiWindowFlags_NoBackground;
-	window_flags |= ImGuiWindowFlags_NoMouseInputs;
+	// window_flags |= ImGuiWindowFlags_NoMouseInputs;
 	window_flags |= ImGuiWindowFlags_NoNavFocus;
 	window_flags |= ImGuiWindowFlags_NoMove;
 	ImGui::SetNextWindowClass(&centralAlways);
@@ -108,18 +108,18 @@ void CEditorViewportCanvas::OnRender()
 		ImGuizmo::SetDrawlist();
 		ImGuizmo::SetRect(ViewportNode->Pos.x, ViewportNode->Pos.y, ViewportNode->Size.x, ViewportNode->Size.y);
 		glm::mat4 EntityModel = SelectedEntity->Transform.GetModelMatrix();
-
+	
 		STransform OriginalTransform = SelectedEntity->Transform;
 		STransform Transform = OriginalTransform;
 		Transform.FromMatrix(EntityModel);
 		
 		ImGuizmo::Manipulate(glm::value_ptr(SceneRenderer->GetView().ToGLM()), glm::value_ptr(SceneRenderer->GetProjection().ToGLM()),
 		                     ImGuizmo::OPERATION(GizmoMode), ImGuizmo::MODE(GizmoTransformSpace), value_ptr(EntityModel));
-		// const SRotator OriginalRotation = SelectedEntity->Transform.Rotation;
-		// SelectedEntity->Transform.FromMatrix(EntityModel);
-		// // Used to stop gimbol lock
-		// const SRotator DeltaRotation = SelectedEntity->Transform.Rotation - OriginalRotation;
-		// SelectedEntity->Transform.Rotation = OriginalRotation + DeltaRotation;
+		const SRotator OriginalRotation = SelectedEntity->Transform.Rotation;
+		SelectedEntity->Transform.FromMatrix(EntityModel);
+		// Used to stop gimbol lock
+		const SRotator DeltaRotation = SelectedEntity->Transform.Rotation - OriginalRotation;
+		SelectedEntity->Transform.Rotation = OriginalRotation;// + DeltaRotation;
 	}
 
 }
@@ -157,10 +157,21 @@ bool CEditorViewportCanvas::OnMouseButtonPressed(int MouseButton, int Mods)
 	const SVector2i MousePos = ApplicationWindow->GetInput().MousePos;
 	
 	// TODO: Refine mouse visibility toggle/state
+	
+	// When ove the gizmo, don't go into normal viewport controls
+	if (ImGuizmo::IsOver())
+	{
+		if (Mods & CWindowInput::ModiferType::Alt)
+		{
+			// TODO: Duplicate entity
+		}
+		return true;
+	}
 
 	bool bHandled = false;
 	if (Mods == 0)
 	{
+		
 		// Right click with no mods
 		if (MouseButton == GLFW_MOUSE_BUTTON_RIGHT)
 		{

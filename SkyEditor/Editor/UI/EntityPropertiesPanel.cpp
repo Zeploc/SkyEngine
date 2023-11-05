@@ -3,11 +3,14 @@
 #include <string>
 
 #include "EditorApp.h"
+#include "Core/String.h"
 #include "Dependencies/ImGui/imgui.h"
 #include "Editor/EditorViewportCanvas.h"
 #include "Editor/Scene/EditorScene.h"
 #include "Entity/Entity.h"
+#include "Render/Materials/InternalMaterial.h"
 #include "Scene/SceneManager.h"
+#include "System/LogManager.h"
 
 CEntityPropertiesPanel::CEntityPropertiesPanel(TWeakPointer<CEngineWindow> InOwningWindow)
     : CUICanvas(InOwningWindow, "Entity: Property editor")
@@ -53,5 +56,77 @@ void CEntityPropertiesPanel::OnRender()
 		ImGui::Spacing();
         
 		ImGui::Separator();
+
+		for (const TPointer<CComponent>& Component : SelectedEntity->GetComponents())
+		{
+			if (TPointer<CMeshComponent> MeshComponent = Cast<CMeshComponent>(Component))
+			{
+				DrawMeshComponent(MeshComponent);
+			}
+		}
 	}
+}
+
+int CEntityPropertiesPanel::MaterialTextChanged(ImGuiInputTextCallbackData* data)
+{
+	CMeshComponent* MeshComponent = static_cast<CMeshComponent*>(data->UserData);
+	const std::string InputtedName = data->Buf;
+	if (const TPointer<CMaterialInterface> FoundMaterial = FindMaterial(InputtedName))
+	{
+		MeshComponent->SetMaterial(FoundMaterial);
+	}
+	return 0;
+}
+
+void CEntityPropertiesPanel::DrawMeshComponent(const std::shared_ptr<CMeshComponent>& MeshComponent)
+{
+	ImGui::Text("Mesh Component");
+	ImGui::Separator();
+	ImGui::Spacing();
+        
+	ImGui::Text("Vao: %i", MeshComponent->GetVao());
+	ImGui::Spacing();
+	
+	static TPointer<CMaterialInterface> LastMaterial = nullptr;
+	static std::string MaterialName = "No Material";
+	MaterialName.reserve(50);
+	TPointer<CMaterialInterface> CurrentMaterial = MeshComponent->GetMaterial();
+	if (CurrentMaterial)
+	{
+		MaterialName = CurrentMaterial->GetMaterialName();
+	}
+	
+	ImGui::Text("Material:");
+	ImGui::SameLine();
+	if (ImGui::InputText("##MeshMaterial", (char*)MaterialName.c_str(), MaterialName.capacity() + 1, ImGuiInputTextFlags_CallbackEdit, MaterialTextChanged, MeshComponent.get()))
+	{
+		
+	}
+	ImGui::Spacing();	
+        
+	ImGui::Separator();
+}
+
+
+TPointer<CMaterialInterface> CEntityPropertiesPanel::FindMaterial(std::string MaterialName)
+{
+	for (TPointer<Entity> Entity : SceneManager::GetInstance()->GetCurrentScene()->Entities)
+	{
+		const TPointer<CMeshComponent> MeshComponent = Entity->FindComponent<CMeshComponent>();
+		if (!MeshComponent)
+		{
+			continue;
+		}
+		TPointer<CMaterialInterface> MeshMaterial = MeshComponent->GetMaterial();
+		if (!MeshMaterial)
+		{
+			continue;
+		}
+		std::string MeshMaterialName = MeshMaterial->GetMaterialName();
+		if (MeshMaterialName == MaterialName)
+		{
+			return MeshMaterial;
+		}
+	}
+	return nullptr;
 }

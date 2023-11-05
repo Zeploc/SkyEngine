@@ -12,7 +12,9 @@
 struct ENGINE_API STransform
 {
 	STransform()
-	{}
+	{
+		Scale = SVector(1.0f);
+	}
 	
 	STransform(SVector InPosition, SRotator InRotation, SVector InScale)
 	: Position(InPosition), Rotation(InRotation), Scale(InScale)

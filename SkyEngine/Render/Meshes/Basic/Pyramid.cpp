@@ -54,7 +54,7 @@ MeshData CPyramid::GetMeshData()
 	};	
 	
 	MeshData PyramidMeshData(VertexPositions, Indices, Normals);
-	if (MeshMaterial->HasTexture())
+	if (MeshMaterial && MeshMaterial->HasTexture())
 	{
 		PyramidMeshData.SetUVs(UVCoords);
 	}

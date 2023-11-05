@@ -136,7 +136,7 @@ MeshData CCube::GetMeshData()
 	};
 
 	MeshData CubeMeshData(VertexPositions, Indices, Normals);
-	if (MeshMaterial->HasTexture())
+	if (MeshMaterial && MeshMaterial->HasTexture())
 	{
 		CubeMeshData.SetUVs(UVCoords);
 	}

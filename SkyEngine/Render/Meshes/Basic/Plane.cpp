@@ -194,7 +194,7 @@ MeshData CPlane::GetMeshData()
 	};
 
 	MeshData PlaneMeshData(VertexPositions, Indices, Normals);
-	if (MeshMaterial->HasTexture())
+	if (MeshMaterial && MeshMaterial->HasTexture())
 	{
 		PlaneMeshData.SetUVs(UVCoords);
 	}

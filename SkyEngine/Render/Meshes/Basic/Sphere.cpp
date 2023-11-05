@@ -82,7 +82,7 @@ MeshData CSphere::GetMeshData()
 	}
 
 	MeshData SphereMeshData(VertexPositions, Indices, Normals);
-	if (MeshMaterial->HasTexture())
+	if (MeshMaterial && MeshMaterial->HasTexture())
 	{
 		SphereMeshData.SetUVs(UVCoords);
 	}

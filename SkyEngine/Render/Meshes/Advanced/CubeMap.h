@@ -3,7 +3,7 @@
 #pragma once
 
 // Local Includes
-#include "Render/Meshes/Mesh.h"
+#include "Render/Meshes/MeshComponent.h"
 
 class CubeMap : public CMeshComponent
 {

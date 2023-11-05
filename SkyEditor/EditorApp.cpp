@@ -6,11 +6,14 @@
 
 #include "SEPCH.h"
 #include <SkyEngine.h>
+#include <glm/gtc/type_ptr.hpp>
 #include <Scene/SceneManager.h>
+
 #include "Entity/Camera.h"
 
 #include "Dependencies/ImGui/imgui.h"
 #include "Dependencies/ImGui/imgui_internal.h"
+#include "ImGuizmo.h"
 #include "Editor/EditorLogManager.h"
 #include "Editor/EditorViewportCanvas.h"
 #include "Editor/Scene/EditorScene.h"
@@ -23,6 +26,10 @@
 #include "Canvas/ViewportCanvas.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Render/SceneRenderer.h"
+#include "Render/Meshes/Basic/Cube.h"
+#include "Render/Meshes/Basic/Plane.h"
+#include "Render/Meshes/Basic/Pyramid.h"
+#include "Render/Meshes/Basic/Sphere.h"
 
 
 EditorApplication::EditorApplication() : Application()
@@ -77,9 +84,76 @@ void EditorApplication::Update()
 	Application::Update();
 }
 
+void EditorApplication::MainMenuBar()
+{
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Open Scene", "CTRL+O")) {}
+			if (ImGui::MenuItem("Save Scene", "CTRL+S")) {}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Edit"))
+		{
+			if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
+			if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
+			ImGui::Separator();
+			if (ImGui::MenuItem("Cut", "CTRL+X")) {}
+			if (ImGui::MenuItem("Copy", "CTRL+C")) {}
+			if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Entity"))
+		{
+			if (ImGui::MenuItem("Add New Entity"))
+			{
+				const TPointer<Entity> NewEntity(new Entity(STransform()));
+				SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
+			}
+			if (ImGui::MenuItem("Delete Entity", "DEL")) {}
+			ImGui::Separator();
+			TPointer<Entity> SelectedEntity = EditorViewportLayer->GetSelectedEntity();
+			if (ImGui::BeginMenu("Add New Component", SelectedEntity != nullptr))
+			{
+				TPointer<CMeshComponent> NewMeshComponent = nullptr;
+				// if (ImGui::MenuItem("Mesh Component"))
+				// {
+				// 	NewMeshComponent = std::make_shared<CMeshComponent>(SelectedEntity, 50.0f, 50.0f, 50.0f, nullptr);
+				// }
+				if (ImGui::MenuItem("Cube Component"))
+				{
+					NewMeshComponent = std::make_shared<CCube>(SelectedEntity, 50.0f, 50.0f, 50.0f, nullptr);
+				}
+				if (ImGui::MenuItem("Plane Component"))
+				{
+					NewMeshComponent = std::make_shared<CPlane>(SelectedEntity, 50.0f, 50.0f, nullptr);
+				}
+				if (ImGui::MenuItem("Pyramid Component"))
+				{
+					NewMeshComponent = std::make_shared<CPyramid>(SelectedEntity, 50.0f, 50.0f, 50.0f, nullptr);
+				}
+				if (ImGui::MenuItem("Sphere Component"))
+				{
+					NewMeshComponent = std::make_shared<CSphere>(SelectedEntity, 50.0f, 50.0f, 50.0f, nullptr);
+				}
+				if (NewMeshComponent)
+				{
+					SelectedEntity->AddComponent(NewMeshComponent);
+				}
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
+}
+
 void EditorApplication::Render()
 {
 	DockSpaceID = ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode | ImGuiDockNodeFlags_NoDockingInCentralNode);
+
+	MainMenuBar();
 	
 	Application::Render();	
 

@@ -46,6 +46,12 @@ struct TVector3 : glm::tvec3<T, glm::precision::highp>
 		: glm::tvec3<T>(Other)
 	{
 	}
+	TVector3(T Scalar)
+	{
+		X = Scalar;
+		Y = Scalar;
+		Z = Scalar;
+	}
 	
 	TVector3(T InX, T InY, T InZ)
 	{

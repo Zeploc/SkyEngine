@@ -40,6 +40,7 @@ public:
 	bool ShouldRender() const override;
 	virtual STransform GetRenderTransform() const override;
 	TPointer<CMaterialInterface> GetMaterial() const override;
+	virtual void SetMaterial(TPointer<CMaterialInterface> NewMaterial);
 	uint32_t GetVao() const override;
 	int GetIndicesCount() const override;
 	

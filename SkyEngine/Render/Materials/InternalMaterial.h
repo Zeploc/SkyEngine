@@ -21,6 +21,7 @@ public:
 	virtual bool HasTexture() = 0;
 
 	virtual TPointer<CShader> GetBaseShader() = 0;
+	virtual std::string GetMaterialName() const { return MaterialName; }
 	
 	// Flags
 	bool bTwoSided = false;

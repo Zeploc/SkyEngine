@@ -161,6 +161,7 @@
     <ClInclude Include="Core\Delegates.h" />
     <ClInclude Include="Core\EntryPoint.h" />
     <ClInclude Include="Core\EventListener.h" />
+    <ClInclude Include="Core\String.h" />
     <ClInclude Include="Core\WorldManager.h" />
     <ClInclude Include="Dependencies\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="Entity\2DParticleSystem.h" />
