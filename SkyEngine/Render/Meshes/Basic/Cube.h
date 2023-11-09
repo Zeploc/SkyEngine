@@ -8,10 +8,6 @@
 class ENGINE_API CCube : public CMeshComponent
 {
 public:
-	using CMeshComponent::CMeshComponent;
+	CCube(const TPointer<Entity>& InOwner, const TPointer<CMaterialInterface>& InMaterial = nullptr);
 	~CCube();
-	
-	bool CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos, TPointer<Entity> EntityCheck) override;
-protected:
-	MeshData GetMeshData() override;
 };

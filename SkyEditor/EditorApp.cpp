@@ -26,10 +26,6 @@
 #include "Canvas/ViewportCanvas.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Render/SceneRenderer.h"
-#include "Render/Meshes/Basic/Cube.h"
-#include "Render/Meshes/Basic/Plane.h"
-#include "Render/Meshes/Basic/Pyramid.h"
-#include "Render/Meshes/Basic/Sphere.h"
 
 
 EditorApplication::EditorApplication() : Application()
@@ -110,6 +106,7 @@ void EditorApplication::MainMenuBar()
 			{
 				const TPointer<Entity> NewEntity(new Entity(STransform()));
 				SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
+				EditorViewportLayer->SelectEntity(NewEntity, true);
 			}
 			if (ImGui::MenuItem("Delete Entity", "DEL")) {}
 			ImGui::Separator();
@@ -123,19 +120,19 @@ void EditorApplication::MainMenuBar()
 				// }
 				if (ImGui::MenuItem("Cube Component"))
 				{
-					NewMeshComponent = std::make_shared<CCube>(SelectedEntity, 50.0f, 50.0f, 50.0f, nullptr);
+					NewMeshComponent = std::make_shared<CMeshComponent>(SelectedEntity, MESH_CUBE, nullptr);
 				}
 				if (ImGui::MenuItem("Plane Component"))
 				{
-					NewMeshComponent = std::make_shared<CPlane>(SelectedEntity, 50.0f, 50.0f, nullptr);
+					NewMeshComponent = std::make_shared<CMeshComponent>(SelectedEntity, MESH_PLANE, nullptr);
 				}
 				if (ImGui::MenuItem("Pyramid Component"))
 				{
-					NewMeshComponent = std::make_shared<CPyramid>(SelectedEntity, 50.0f, 50.0f, 50.0f, nullptr);
+					NewMeshComponent = std::make_shared<CMeshComponent>(SelectedEntity, MESH_PYRAMID, nullptr);
 				}
 				if (ImGui::MenuItem("Sphere Component"))
 				{
-					NewMeshComponent = std::make_shared<CSphere>(SelectedEntity, 50.0f, 50.0f, 50.0f, nullptr);
+					NewMeshComponent = std::make_shared<CMeshComponent>(SelectedEntity, MESH_SPHERE, nullptr);
 				}
 				if (NewMeshComponent)
 				{

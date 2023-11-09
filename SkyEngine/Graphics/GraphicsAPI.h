@@ -40,7 +40,7 @@ public:
 	
 	virtual void ImGuiInit() = 0;
 	
-	virtual unsigned int CreateVertexBuffer(const MeshData& MeshData) = 0;
+	virtual unsigned int CreateVertexBuffer(const CMeshData& MeshData) = 0;
 	virtual TPointer<CTexture> GetTexture(const std::string& TextureSource, bool bAA = true) = 0;
 	/* Create a new VAO if -1, otherwise will use it  */
 	virtual void BindVertexArray(const std::vector<float>& vertices, const std::vector<uint32_t>& indices, unsigned& vao) = 0;
@@ -52,6 +52,7 @@ public:
 
 	virtual bool CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename) = 0;
 	virtual void RenderMesh(ISceneVisual* SceneVisual) = 0;	
+	virtual void RenderLines(ISceneVisual* SceneVisual, float Thickness) = 0;	
 	virtual void CleanupMesh(ISceneVisual* SceneVisual) = 0;
 	virtual void ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, STransform Transform) = 0;
 

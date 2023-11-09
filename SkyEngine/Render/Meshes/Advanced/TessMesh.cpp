@@ -17,8 +17,8 @@
 TessMesh::TessMesh(const TPointer<Entity>& InOwner,float fWidth, float fHeight, glm::vec4 _Colour)
 	: CMeshComponent(InOwner)
 {
-	m_fWidth = fWidth;
-	m_fHeight = fHeight;
+	LEGACY_Width = fWidth;
+	LEGACY_Height = fHeight;
 	IndicesCount = 4;
 	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>("TessMesh", ShaderManager::GetUndefinedShader("TessProgram"));
 	// MeshMaterial->Colour = _Colour;
@@ -119,8 +119,8 @@ void TessMesh::Rebind()
 
 void TessMesh::BindTess()
 {
-	float fHalfWidth = m_fWidth / 2;
-	float fHalfHeight = m_fHeight / 2;
+	float fHalfWidth = LEGACY_Width / 2;
+	float fHalfHeight = LEGACY_Height / 2;
 
 	GLfloat points[] = {
 		-fHalfWidth, -fHalfHeight, 0.0f,

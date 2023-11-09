@@ -22,6 +22,8 @@ template<typename T>
 using TPointer = std::shared_ptr<T>;
 template<typename T>
 using TWeakPointer = std::weak_ptr<T>;
+
+// TODO: Fix errors not showing until compile when invalid args are given
 template<typename T, typename ... Args>
 constexpr TPointer<T> CreatePointer(Args&& ... args)
 {

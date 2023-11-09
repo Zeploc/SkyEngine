@@ -208,6 +208,9 @@
     <ClInclude Include="Platform\Window\GLFW\imgui_impl_glfw.h" />
     <ClInclude Include="Platform\Windows\WindowsPlatform.h" />
     <ClInclude Include="Render\Framebuffer.h" />
+    <ClInclude Include="Render\Meshes\Basic\DefaultMeshes.h" />
+    <ClInclude Include="Render\Meshes\BoxComponent.h" />
+    <ClInclude Include="Render\Meshes\MeshManager.h" />
     <ClInclude Include="Render\SceneVisual.h" />
     <ClInclude Include="Render\Lighting.h" />
     <ClInclude Include="Render\Materials\InternalMaterial.h" />
@@ -218,7 +221,6 @@
     <ClInclude Include="Render\Meshes\Advanced\TessMesh.h" />
     <ClInclude Include="Render\Meshes\Basic\Cube.h" />
     <ClInclude Include="Render\Meshes\Basic\Plane.h" />
-    <ClInclude Include="Render\Meshes\Basic\Pyramid.h" />
     <ClInclude Include="Render\Meshes\Basic\Sphere.h" />
     <ClInclude Include="Render\Meshes\Basic\Triangle.h" />
     <ClInclude Include="Render\Meshes\MeshComponent.h" />
@@ -290,6 +292,9 @@
     <ClCompile Include="Platform\Window\GLFW\imgui_impl_glfw.cpp" />
     <ClCompile Include="Platform\Windows\WindowsPlatform.cpp" />
     <ClCompile Include="Render\Framebuffer.cpp" />
+    <ClCompile Include="Render\Meshes\Basic\DefaultMeshes.cpp" />
+    <ClCompile Include="Render\Meshes\BoxComponent.cpp" />
+    <ClCompile Include="Render\Meshes\MeshManager.cpp" />
     <ClCompile Include="Render\SceneVisual.cpp" />
     <ClCompile Include="Render\Lighting.cpp" />
     <ClCompile Include="Render\Materials\InternalMaterial.cpp" />
@@ -299,7 +304,6 @@
     <ClCompile Include="Render\Meshes\Advanced\TessMesh.cpp" />
     <ClCompile Include="Render\Meshes\Basic\Cube.cpp" />
     <ClCompile Include="Render\Meshes\Basic\Plane.cpp" />
-    <ClCompile Include="Render\Meshes\Basic\Pyramid.cpp" />
     <ClCompile Include="Render\Meshes\Basic\Sphere.cpp" />
     <ClCompile Include="Render\Meshes\Basic\Triangle.cpp" />
     <ClCompile Include="Render\Meshes\MeshComponent.cpp" />

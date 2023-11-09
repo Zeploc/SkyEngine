@@ -11,6 +11,7 @@ class Entity;
 class ENGINE_API CComponent : public std::enable_shared_from_this<CComponent>
 {
 public:
+	virtual ~CComponent() = default;
 	CComponent(const TPointer<Entity>& InOwner);
 	virtual void OnAttached();
 	virtual void BeginPlay();

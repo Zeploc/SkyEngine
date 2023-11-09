@@ -17,6 +17,7 @@ public:
 protected:
 	void DrawMeshComponent(const std::shared_ptr<CMeshComponent>& MeshComponent);
 	static int MaterialTextChanged(ImGuiInputTextCallbackData* data);
+	static int MeshTextChanged(ImGuiInputTextCallbackData* data);
 
 	static TPointer<CMaterialInterface> FindMaterial(std::string MaterialName);
 };

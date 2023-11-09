@@ -78,6 +78,17 @@ int CEntityPropertiesPanel::MaterialTextChanged(ImGuiInputTextCallbackData* data
 	return 0;
 }
 
+int CEntityPropertiesPanel::MeshTextChanged(ImGuiInputTextCallbackData* data)
+{
+	CMeshComponent* MeshComponent = static_cast<CMeshComponent*>(data->UserData);
+	const std::string InputtedName = data->Buf;
+	if (!InputtedName.empty())
+	{
+		MeshComponent->SetMeshAsset(InputtedName);
+	}
+	return 0;
+}
+
 void CEntityPropertiesPanel::DrawMeshComponent(const std::shared_ptr<CMeshComponent>& MeshComponent)
 {
 	ImGui::Text("Mesh Component");
@@ -87,7 +98,18 @@ void CEntityPropertiesPanel::DrawMeshComponent(const std::shared_ptr<CMeshCompon
 	ImGui::Text("Vao: %i", MeshComponent->GetVao());
 	ImGui::Spacing();
 	
-	static TPointer<CMaterialInterface> LastMaterial = nullptr;
+	static std::string MeshName = "No Mesh";
+	MeshName.reserve(50);
+	std::string CurrentMeshAsset = MeshComponent->GetMeshAsset();
+	if (!CurrentMeshAsset.empty())
+	{
+		MeshName = CurrentMeshAsset;
+	}
+	ImGui::Text("Mesh:");
+	ImGui::SameLine();
+	ImGui::InputText("##MeshName", (char*)MeshName.c_str(), MeshName.capacity() + 1, ImGuiInputTextFlags_CallbackEdit, MeshTextChanged, MeshComponent.get());
+	ImGui::Spacing();	
+
 	static std::string MaterialName = "No Material";
 	MaterialName.reserve(50);
 	TPointer<CMaterialInterface> CurrentMaterial = MeshComponent->GetMaterial();
@@ -95,13 +117,14 @@ void CEntityPropertiesPanel::DrawMeshComponent(const std::shared_ptr<CMeshCompon
 	{
 		MaterialName = CurrentMaterial->GetMaterialName();
 	}
+	else
+	{
+		MaterialName = "No Material";
+	}
 	
 	ImGui::Text("Material:");
 	ImGui::SameLine();
-	if (ImGui::InputText("##MeshMaterial", (char*)MaterialName.c_str(), MaterialName.capacity() + 1, ImGuiInputTextFlags_CallbackEdit, MaterialTextChanged, MeshComponent.get()))
-	{
-		
-	}
+	ImGui::InputText("##MeshMaterial", (char*)MaterialName.c_str(), MaterialName.capacity() + 1, ImGuiInputTextFlags_CallbackEdit, MaterialTextChanged, MeshComponent.get());
 	ImGui::Spacing();	
         
 	ImGui::Separator();

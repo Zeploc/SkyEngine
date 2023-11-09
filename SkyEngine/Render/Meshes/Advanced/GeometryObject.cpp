@@ -21,8 +21,8 @@
 GeometryObject::GeometryObject(const TPointer<Entity>& InOwner, glm::vec4 _Colour)
 	: CMeshComponent(InOwner)
 {
-	m_fWidth = 1;
-	m_fHeight = 1;
+	LEGACY_Width = 1;
+	LEGACY_Height = 1;
 	IndicesCount = 1;
 	
 	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>("GeometryObjectMaterial", ShaderManager::GetUndefinedShader("GeometryShader"));
@@ -99,11 +99,11 @@ void GeometryObject::Render(STransform Newtransform)
 	// glBindVertexArray(0);
 }
 
-MeshData GeometryObject::GetMeshData()
+CMeshData GeometryObject::GetMeshData()
 {
 	const std::vector<float> VertexPositions;
 	const std::vector<float> Normals;
 	const std::vector<uint32_t> Indices;
 	// TODO:
-	return MeshData(VertexPositions, Indices, Normals);
+	return CMeshData(VertexPositions, Indices, Normals);
 }

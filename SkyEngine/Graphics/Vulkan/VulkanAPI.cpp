@@ -19,7 +19,7 @@
 // 	ImGui_ImplGlfw_InitForVulkan(Window, true);
 // }
 //
-// unsigned VulkanAPI::CreateBuffer(const MeshData& MeshData)
+// unsigned VulkanAPI::CreateBuffer(const CMeshData& CMeshData)
 // {
 // }
 //

@@ -23,9 +23,9 @@
 Model::Model(const TPointer<Entity>& InOwner, glm::vec4 _Colour, const char* ModelSource)
 	: CMeshComponent(InOwner)
 {
-	m_fWidth = 0; // fWidth;
-	m_fHeight = 0; // fHeight;
-	m_fDepth = 0; // fDepth;
+	LEGACY_Width = 0; // fWidth;
+	LEGACY_Height = 0; // fHeight;
+	LEGACY_Depth = 0; // fDepth;
 	ModelPath = ModelSource;
 
 	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>("ModelMaterial");

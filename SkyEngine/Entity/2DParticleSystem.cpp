@@ -192,7 +192,8 @@ void ParticleSystem2D::Update()
 		ParticleMaterial->Params.DiffuseTexture = ParticleTexture;
 		
 		TPointer<Entity> NewParticleEntity = std::make_shared<Entity>(Transform);
-		TPointer<CPlane> NewParticlePlaneMesh = std::make_shared<CPlane>(NewParticleEntity, fNewSize, fNewSize, ParticleMaterial);
+		NewParticleEntity->Transform.Scale = fNewSize;
+		TPointer<CPlane> NewParticlePlaneMesh = std::make_shared<CPlane>(NewParticleEntity, ParticleMaterial);
 		NewParticleEntity->AddComponent(NewParticlePlaneMesh);
 
 		Particle2D NewParticle = {NewParticleEntity, fNewSpeed, v2NewDirection, fNewFalloffDistance, fNewFalloffTime, 0.0f};

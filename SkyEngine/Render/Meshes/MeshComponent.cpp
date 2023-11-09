@@ -4,32 +4,25 @@
 #include "MeshComponent.h"
 
 // Engine Includes //
+#include "MeshManager.h"
 #include "Core/Application.h"
 #include "Entity/CollisionBounds.h"
 #include "Entity/Entity.h"
 #include "Render/Shaders/Shader.h"
 #include "System/LogManager.h"
+#include "System/Utils.h"
 
 CMeshComponent::CMeshComponent(const TPointer<Entity>& InOwner)
 	: CComponent(InOwner)
 {
 }
 
-CMeshComponent::CMeshComponent(const TPointer<Entity>& InOwner, float InWidth, float InHeight, float InDepth, const TPointer<CMaterialInterface>& InMaterial)
-: CComponent(InOwner)
+CMeshComponent::CMeshComponent(const TPointer<Entity>& InOwner, std::string InMeshAsset, const TPointer<CMaterialInterface>& InMaterial)
+: CComponent(InOwner), MeshAsset(InMeshAsset)
 {
-	m_fWidth = InWidth;
-	m_fHeight = InHeight;
-	m_fDepth = InDepth;
 	MeshMaterial = InMaterial;
 }
 
-/************************************************************
-#--Description--#:  Constructor function with texture
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	Takes contructor values
-#--Return--#: 		NA
-************************************************************/
 CMeshComponent::~CMeshComponent()
 {
 	//if (MeshCollisionBounds) delete MeshCollisionBounds;
@@ -59,6 +52,19 @@ void CMeshComponent::SetMaterial(TPointer<CMaterialInterface> NewMaterial)
 	MeshMaterial = NewMaterial;
 }
 
+bool CMeshComponent::SetMeshAsset(std::string NewMeshAssetName)
+{
+	if (!GetMeshManager()->HasMesh(NewMeshAssetName))
+	{
+		return false;
+	}
+	MeshAsset = NewMeshAssetName;
+	Rebind();
+	// GetGraphicsAPI()->CleanupMesh(this);
+	// BindMeshData();
+	return true;
+}
+
 uint32_t CMeshComponent::GetVao() const
 {
 	return vao;
@@ -74,34 +80,32 @@ STransform CMeshComponent::GetRenderTransform() const
 	return GetOwner()->Transform;
 }
 
-// TODO: Remove the need for entity passed through (use transforms/matrix)
-bool CMeshComponent::CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos, TPointer<Entity> EntityCheck)
+bool CMeshComponent::CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos)
 {
 	// TODO: Check against basic box bounds before considering
 	
-	CLogManager::Get()->DisplayMessage("No Check Hit for mesh ray hit check!");
+	// CLogManager::Get()->DisplayMessage("No Check Hit for mesh ray hit check!");
 
-	return false;
-}
-
-void CMeshComponent::Reset()
-{
-	// Reset all mesh variables
-	Rebind();
-	// Reset Mesh Collision Bounds
-	if (MeshCollisionBounds)
-	{
-		MeshCollisionBounds->Reset();
-	}
+	// TODO: Not working with plane?
+	return Utils::CheckMeshHit(GetOwner()->Transform, GetMeshData(), RayStart, RayDirection, HitPos);
 }
 
 void CMeshComponent::BindMeshData()
 {
-	MeshData MeshData = GetMeshData();
+	vao = GetGraphicsAPI()->CreateVertexBuffer(GetMeshData());
+	CLogManager::Get()->DisplayMessage(std::format("Created Mesh {} with vao {}", MeshAsset, vao));
+	
+	// TODO: Should be created and bound elsewhere and just pointed to by this component
+	CMeshData MeshData = GetMeshData();
 	IndicesCount = MeshData.GetIndicesCount();
-	vao = GetGraphicsAPI()->CreateVertexBuffer(MeshData);
 	MeshData.BindData(vao);
-	std::cout << "Created mesh with vao: " << vao << std::endl;
+	CLogManager::Get()->DisplayMessage(std::format("Bound Mesh {} with vao {}", MeshAsset, vao));
+}
+
+void CMeshComponent::Rebind()
+{
+	GetGraphicsAPI()->CleanupMesh(this);
+	BindMeshData();
 }
 
 void CMeshComponent::SetVisible(bool bNewVisible)
@@ -117,4 +121,9 @@ void CMeshComponent::AddCollisionBounds(float fWidth, float fHeight, float fDept
 void CMeshComponent::AddCollisionBounds(TPointer<CCollisionBounds> NewCollision)
 {
 	MeshCollisionBounds = NewCollision;
+}
+
+CMeshData CMeshComponent::GetMeshData()
+{
+	return GetMeshManager()->GetMesh(MeshAsset);
 }

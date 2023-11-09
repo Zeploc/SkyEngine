@@ -30,9 +30,9 @@ CubeMap::CubeMap(const TPointer<Entity>& InOwner, float fWidth, float fHeight, f
 	TextureSources[3] = _TextureSources[3];
 	TextureSources[4] = _TextureSources[4];
 	TextureSources[5] = _TextureSources[5];
-	m_fWidth = fWidth;
-	m_fHeight = fHeight;
-	m_fDepth = fDepth;
+	LEGACY_Width = fWidth;
+	LEGACY_Height = fHeight;
+	LEGACY_Depth = fDepth;
 	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>("CubeMapMaterial", ShaderManager::GetUndefinedShader("CubeMapProgram"));
 	BindCubeMap();
 }
@@ -55,9 +55,9 @@ CubeMap::~CubeMap()
 ************************************************************/
 void CubeMap::BindCubeMap()
 {
-	float fHalfWidth = m_fWidth / 2;
-	float fHalfHeight = m_fHeight / 2;
-	float fHalfDepth = m_fDepth / 2;
+	float fHalfWidth = LEGACY_Width / 2;
+	float fHalfHeight = LEGACY_Height / 2;
+	float fHalfDepth = LEGACY_Depth / 2;
 
 	GLfloat vertices[] = {
 		// Positions								// Colors			

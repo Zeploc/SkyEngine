@@ -43,6 +43,12 @@ glm::mat4 STransform::GetModelMatrix() const
 	return translate * rotation * scale;
 }
 
+SVector STransform::TransformPosition(const SVector& Vector) const
+{
+	glm::mat4 translate = glm::translate(GetModelMatrix(), Vector);
+	return {translate[3][0],translate[3][1],translate[3][2] };
+}
+
 std::ostream& operator<<(std::ostream& os, const STransform& InTransform)
 {
 	os << "(" << InTransform.Position << " " << InTransform.Rotation << " " << InTransform.Scale << ")";

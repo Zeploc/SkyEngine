@@ -53,7 +53,7 @@ std::string IGLAPI::GetGraphicsDisplayName()
 	return "OpenGL";
 }
 
-unsigned IGLAPI::CreateVertexBuffer(const MeshData& MeshData)
+unsigned IGLAPI::CreateVertexBuffer(const CMeshData& MeshData)
 {
 	// TODO: Move buffer/stride determination to shader
 	
@@ -365,6 +365,15 @@ void IGLAPI::RenderMesh(ISceneVisual* SceneVisual)
 {	
 	glBindVertexArray(SceneVisual->GetVao());
 	glDrawElements(GL_TRIANGLES, SceneVisual->GetIndicesCount(), GL_UNSIGNED_INT, nullptr);
+	glBindVertexArray(0);
+
+}
+
+void IGLAPI::RenderLines(ISceneVisual* SceneVisual, float Thickness)
+{
+	glBindVertexArray(SceneVisual->GetVao());
+	glLineWidth(Thickness);
+	glDrawElements(GL_LINES, SceneVisual->GetIndicesCount(), GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 }
 

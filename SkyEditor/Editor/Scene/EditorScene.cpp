@@ -11,13 +11,10 @@
 
 #include "Editor/Windows/EditorWindow.h"
 #include "Editor/Windows/EditorWindowManager.h"
-#include <Render/Meshes/Basic/Cube.h>
 #include <Render/Meshes/Advanced/GeometryObject.h>
 #include <Render/Meshes/Model/Model.h>
 #include <Render/Particle/ParticleSystem.h>
 #include <Render/Meshes/Basic/Plane.h>
-#include <Render/Meshes/Basic/Pyramid.h>
-#include <Render/Meshes/Basic/Sphere.h>
 
 #include <Windows.h>
 
@@ -26,9 +23,12 @@
 #include "Editor/EditorViewportCanvas.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Render/Materials/Material.h"
+#include "Render/Meshes/BoxComponent.h"
+#include "Render/Meshes/MeshManager.h"
 #include "Render/Shaders/PBRShader.h"
 #include "Render/Shaders/UndefinedShader.h"
 #include "Render/Shaders/ShaderManager.h"
+#include "Render/Shaders/UnlitShader.h"
 
 EditorScene::EditorScene(const std::string& InSceneName) : Scene(InSceneName)
 {
@@ -82,22 +82,21 @@ void EditorScene::AddSampleEntities()
 	TPointer<CTexture> CliffTexture = GetGraphicsAPI()->GetTexture("Resources/Images/SmoothCliff_1024.jpg");
 	TPointer<CMaterial_PBR> CliffMaterial = std::make_shared<CMaterial_PBR>("CliffMaterial");
 	CliffMaterial->Params.DiffuseTexture = BrickTexture;
-	CliffMaterial->Params.DiffuseColour = {0.1f, 0.8f, 0.3f, 1.0f};
-	
+	CliffMaterial->Params.DiffuseColour = {0.1f, 0.8f, 0.3f, 1.0f};	
 
 	TPointer<CMaterial_PBR> PlaneMaterial = std::make_shared<CMaterial_PBR>("PlaneMaterial");
 	PlaneMaterial->Params.DiffuseColour = {0.5f, 0.5f, 0.5f, 1.0f};
 	PlaneMaterial->bTwoSided = true;
 
 	// TODO: Switch all below to make shared
-	TPointer<Entity> SphereRaycastTest(new Entity(STransform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {1, 1, 1}}));
-	TPointer<CSphere> SphereRaycastMesh = std::make_shared<CSphere>(SphereRaycastTest, 2.0f, 2.0f, 2.0f, CliffMaterial);
+	TPointer<Entity> SphereRaycastTest(new Entity(STransform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {2, 2, 2}}));
+	TPointer<CMeshComponent> SphereRaycastMesh = std::make_shared<CMeshComponent>(SphereRaycastTest, MESH_SPHERE, CliffMaterial);
 	SphereRaycastTest->AddComponent(SphereRaycastMesh);
 	AddEntity(SphereRaycastTest);
 			
-	TPointer<Entity> FloorEntity(new Entity({{0, 0, 0}, {0, -90, 0}, {1, 1, 1}}));
+	TPointer<Entity> FloorEntity(new Entity({{0, 0, 0}, {0, -90, 0}, {50}}));
 	//glm::vec3 Points[4] = { {-10, 10, 1}, {10, 10, -1 }, { 10, -10, 0 }, { -10, -10, -3 } };
-	const TPointer<CPlane> FloorPlanMesh = std::make_shared<CPlane>(FloorEntity, 50.0f, 50.0f, PlaneMaterial);
+	const TPointer<CMeshComponent> FloorPlanMesh = std::make_shared<CMeshComponent>(FloorEntity, MESH_PLANE, PlaneMaterial);
 	FloorEntity->AddComponent(FloorPlanMesh);
 	AddEntity(FloorEntity);
 	
@@ -128,27 +127,36 @@ void EditorScene::AddSampleEntities()
 	// ModelEntityMesh->SetReflection(true);
 	// AddEntity(ModelEntity, true);
 	
-	TPointer<Entity> CubeEnty(new Entity(STransform{{10.0f, 4.0f, 4.0f}, {0, 0, 0}, {1, 1, 1}}));
-	TPointer<CCube> CubyMesh(new CCube(CubeEnty, 3.0f, 3.0f, 3.0f, ColouredBrickMaterial));
+	TPointer<Entity> CubeEnty(new Entity(STransform{{10.0f, 4.0f, 4.0f}, {0, 0, 0}, {3, 3, 3}}));
+	TPointer<CMeshComponent> CubyMesh(new CMeshComponent(CubeEnty, MESH_CUBE, ColouredBrickMaterial));
 	CubeEnty->AddComponent(CubyMesh);
 	AddEntity(CubeEnty);
 	
-	TPointer<Entity> PyramidEntity(new Entity(STransform{{10.0f, 4.0f, 8.0f}, {0, 0, 0}, {1, 1, 1}}));
-	TPointer<CPyramid> PyramidMesh(new CPyramid(PyramidEntity, 3.0f, 3.0f, 3.0f, ColouredBrickMaterial));
+	TPointer<Entity> PyramidEntity(new Entity(STransform{{10.0f, 4.0f, 8.0f}, {0, 0, 0}, {3, 3, 3}}));
+	TPointer<CMeshComponent> PyramidMesh(new CMeshComponent(PyramidEntity, MESH_PYRAMID, ColouredBrickMaterial));
 	PyramidEntity->AddComponent(PyramidMesh);
 	// PyramidMesh->SetLit(false, true);
 	// TODO: Identify and fix pyramid lighting
 	AddEntity(PyramidEntity);
 	
-	TPointer<Entity> SphereEntity(new Entity(STransform{{10.0f, 4.0f, 12.0f}, {0, 0, 0}, {1, 1, 1}}));
-	TPointer<CSphere> SphereMesh(new CSphere(SphereEntity, 2.0f, 2.0f, 2.0f, ColouredBrickMaterial));
+	TPointer<Entity> SphereEntity(new Entity(STransform{{10.0f, 4.0f, 12.0f}, {0, 0, 0}, {2, 2, 2}}));
+	TPointer<CMeshComponent> SphereMesh(new CMeshComponent(SphereEntity, MESH_SPHERE, ColouredBrickMaterial));
 	SphereEntity->AddComponent(SphereMesh);
 	AddEntity(SphereEntity);
 	
-	TPointer<Entity> PlaneEntity = std::make_shared<Entity>(STransform{{10.0f, 4.0f, 16.0f}, {0, -90, 0}, {1, 1, 1}});
-	TPointer<CPlane> PlaneMesh = std::make_shared<CPlane>(PlaneEntity, 2.0f, 2.0f, ColouredBrickPlaneMaterial);
+	TPointer<Entity> PlaneEntity = std::make_shared<Entity>(STransform{{10.0f, 4.0f, 16.0f}, {0, -90, 0}, {2, 2, 2}});
+	TPointer<CPlane> PlaneMesh = CreatePointer<CPlane>(PlaneEntity, ColouredBrickPlaneMaterial);
 	PlaneEntity->AddComponent(PlaneMesh);
 	AddEntity(PlaneEntity);
+	
+	TPointer<CMaterial_Unlit> BoxMaterial = std::make_shared<CMaterial_Unlit>("BoxMaterial");
+	BoxMaterial->Params.DiffuseColour = SVector4(1.0f, 0.1f, 0.1f, 1.0f);
+	
+	TPointer<Entity> BoxEntity = std::make_shared<Entity>(STransform{{5.0f, 5.0f, 10.0f}, {0, 0, 0}, {2, 2, 2}});
+	TPointer<CBoxComponent> BoxComponent = CreatePointer<CBoxComponent>(BoxEntity, BoxMaterial);
+	BoxEntity->AddComponent(BoxComponent);
+	// GetRenderer()->AddBox(GetInterface<ISceneVisual>(BoxComponent));
+	AddEntity(BoxEntity);
 }
 
 void EditorScene::Update()
@@ -233,13 +241,14 @@ void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
 	while(OpenedLevelFile.peek() != EOF )
 	{
 		TPointer<Entity> NewEntity(new Entity(STransform()));
+		NewEntity->Transform.Scale = SVector(3.0f);
 		OpenedLevelFile >> NewEntity;
 		std::getline(OpenedLevelFile, Empty, '\n');
 		
 		TPointer<CMaterial_PBR> TestMaterial = std::make_shared<CMaterial_PBR>("TestMaterial");
 		TestMaterial->Params.DiffuseColour = {0.7f, 0.4f, 0.3f, 1.0f};
 		
-		TPointer<CCube> CubeMesh = std::make_shared<CCube>(NewEntity, 3.0f, 3.0f, 3.0f, TestMaterial);
+		TPointer<CMeshComponent> CubeMesh = std::make_shared<CMeshComponent>(NewEntity, MESH_CUBE, TestMaterial);
 		NewEntity->AddComponent(CubeMesh);
 		AddEntity(NewEntity);
 	}

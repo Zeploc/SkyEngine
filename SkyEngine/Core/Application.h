@@ -7,6 +7,7 @@
 #include "Core/Core.h"
 #include "Graphics/GraphicsAPI.h"
 #include "Math/Vector2.h"
+#include "Render/Meshes/MeshManager.h"
 
 class CViewportCanvas;
 class CLogManager;
@@ -48,11 +49,13 @@ namespace SkyEngine
 		TPointer<CRenderer> Renderer;
 		EGraphicsAPI GraphicsApiType;
 		TPointer<CLogManager> LogManager;
+		CMeshManager MeshManager;
 
 		// TODO: Weak pointer to not hold ref
 		TPointer<CEngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
 		CViewportCanvas* GetViewportCanvas() const { return ViewportCanvas; }
-		
+
+		/* Only called internally in the engine */
 		inline static Application* Get();
 	protected:
 		// TODO: Remove since viewport layer should make game UI canvas
@@ -72,4 +75,5 @@ namespace SkyEngine
 ENGINE_API SkyEngine::Application* GetApplication();
 ENGINE_API TPointer<IGraphicsAPI> GetGraphicsAPI();
 ENGINE_API TPointer<CRenderer> GetRenderer();
+ENGINE_API CMeshManager* GetMeshManager();
 

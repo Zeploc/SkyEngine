@@ -59,6 +59,8 @@ struct ENGINE_API STransform
 	
 	glm::mat4 GetModelMatrix() const;
 	
+	SVector TransformPosition(const SVector& Vector) const;
+	
 	friend std::ostream& operator<<(std::ostream& os, const STransform& InTransform);
 	friend std::istream& operator>>(std::istream& is, STransform& OutTransform);
 };

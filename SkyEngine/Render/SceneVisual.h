@@ -14,6 +14,7 @@ public:
 
 	virtual bool IsVisible() const = 0;
 	virtual void SetVisible(bool bNewVisible) = 0;
+	virtual bool ShouldRenderFaces() const = 0;
 
 	// TODO: Should this be in the shader
 	virtual TPointer<CMaterialInterface> GetMaterial() const = 0;

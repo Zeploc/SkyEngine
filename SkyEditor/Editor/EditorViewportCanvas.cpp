@@ -150,6 +150,12 @@ SVector2i CEditorViewportCanvas::GetViewportPosition()
 	return {(int)CentralViewportNode->Pos.x, (int)CentralViewportNode->Pos.y};
 }
 
+void CEditorViewportCanvas::StartGizmoViewDrag()
+{
+	bGizmoViewDrag = true;
+	InitialViewLockOffset = ViewportCamera->Transform.Position - SelectedEntity->Transform.Position;
+}
+
 bool CEditorViewportCanvas::OnMouseButtonPressed(int MouseButton, int Mods)
 {
 	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
@@ -164,6 +170,10 @@ bool CEditorViewportCanvas::OnMouseButtonPressed(int MouseButton, int Mods)
 		if (Mods & CWindowInput::ModiferType::Alt)
 		{
 			// TODO: Duplicate entity
+		}
+		else if (Mods & CWindowInput::ModiferType::Shift)
+		{
+			StartGizmoViewDrag();
 		}
 		return true;
 	}
@@ -249,6 +259,7 @@ bool CEditorViewportCanvas::OnMouseButtonReleased(int MouseButton, int Mods)
 	}
 	if (MouseButton == GLFW_MOUSE_BUTTON_LEFT)
 	{
+		bGizmoViewDrag = false;
 		return true;
 	}
 	return false;
@@ -260,6 +271,13 @@ bool CEditorViewportCanvas::OnMouseMoved(SVector2i MousePos)
 	const SVector2i ScreenCenter = GetViewportPosition() + GetViewportSize() / 2;
 	const SVector2i ScreenOffset = (MousePos) - ScreenCenter;
 	const SVector2 Offset = SVector2(ScreenOffset) * MouseSensitivity;
+	
+	if (bGizmoViewDrag)
+	{
+		// TODO: Needs improvement, has accelerate feel as its not simple the mouse movement on the gizmo
+		ViewportCamera->Transform.Position = SelectedEntity->Transform.Position + InitialViewLockOffset;
+		return true;
+	}
 	
 	const SVector CameraPivotPoint = ViewportCamera->Transform.Position + ViewportCamera->GetForwardVector() * CurrentFocusDistance;
 	if (bRotatingAroundPoint)
@@ -305,11 +323,20 @@ bool CEditorViewportCanvas::OnMouseScrolled(float XOffset, float YOffset)
 	return false;
 }
 
+void CEditorViewportCanvas::FocusEntity()
+{
+	ViewportCamera->Transform.Position = SelectedEntity->Transform.Position + (-ViewportCamera->GetForwardVector() * CurrentFocusDistance);
+}
+
 bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 {
 	if (bUseSpectatorControls)
 	{
 		return false;
+	}
+	if (ImGuizmo::IsUsing() && KeyCode == GLFW_KEY_LEFT_SHIFT)
+	{			
+		StartGizmoViewDrag();
 	}
 	if (bPanning || bLookingAround || bRotatingAroundPoint)
 	{
@@ -328,7 +355,7 @@ bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 	{
 		if (SelectedEntity)
 		{
-			ViewportCamera->Transform.Position = SelectedEntity->Transform.Position + (-ViewportCamera->GetForwardVector() * CurrentFocusDistance);
+			FocusEntity();
 			return true;
 		}
 	}
@@ -409,6 +436,10 @@ bool CEditorViewportCanvas::OnKeyTyped(int KeyCode, int Mods)
 
 bool CEditorViewportCanvas::OnKeyReleased(int KeyCode, int Mods)
 {
+	if (KeyCode == GLFW_KEY_LEFT_SHIFT)
+	{		
+		bGizmoViewDrag = false;
+	}
 	return false;
 }
 
@@ -417,7 +448,7 @@ bool CEditorViewportCanvas::OnWindowResize(unsigned int Width, unsigned int Heig
 	return false;
 }
 
-void CEditorViewportCanvas::SelectEntity(TPointer<Entity> HitEntity)
+void CEditorViewportCanvas::SelectEntity(TPointer<Entity> HitEntity, bool bFocusCamera)
 {
 	if (HitEntity == SelectedEntity)
 	{
@@ -435,6 +466,10 @@ void CEditorViewportCanvas::SelectEntity(TPointer<Entity> HitEntity)
 		if (bNewVisibleState)
 		{
 			CurrentFocusDistance = 7.0f;
+			if (bFocusCamera)
+			{
+				FocusEntity();
+			}
 		}
 	}
 }
@@ -460,14 +495,14 @@ void CEditorViewportCanvas::UpdateSelectedEntity()
 		{
 			continue; // Don't check for raycast
 		}
-		// TODO: Fix check hit for plane and pryamid
 		if (Ent->CheckHit(rayStart, RayDirection, HitPos))
 		{
 			HitEntities.push_back(Ent);
 			HitPosition.push_back(HitPos);
 		}
 	}
-	if (HitEntities.size() > 0)
+	// Poor mans depth testing
+	if (!HitEntities.empty())
 	{
 		int ClosestHitID = 0;
 		for (int i = 0; i < HitEntities.size(); i++)
@@ -482,5 +517,9 @@ void CEditorViewportCanvas::UpdateSelectedEntity()
 		HitPos = HitPosition[ClosestHitID];
 
 		SelectEntity(HitEntity);
+	}
+	else
+	{		
+		SelectEntity(nullptr);
 	}
 }

@@ -141,7 +141,7 @@ bool Entity::CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos)
 	for (TPointer<CComponent> Element : Components)
 	{
 		const TPointer<CMeshComponent> MeshComponent = Cast<CMeshComponent>(Element);
-		if (MeshComponent->CheckHit(RayStart, RayDirection, HitPos, shared_from_this()))
+		if (MeshComponent && MeshComponent->CheckHit(RayStart, RayDirection, HitPos))
 		{
 			return true;
 		}

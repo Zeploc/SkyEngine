@@ -19,5 +19,5 @@ public:
 	// TODO: Update to graphics instance
 	void Render(STransform Newtransform);
 protected:
-	MeshData GetMeshData() override;
+	CMeshData GetMeshData() override;
 };

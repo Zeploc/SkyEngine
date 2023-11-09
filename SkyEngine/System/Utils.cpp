@@ -373,13 +373,27 @@ SRotator Utils::StringToRotator(std::string _string)
 	return SRotator(x, y, z);
 }
 
+bool Utils::CheckMeshHit(STransform MeshTransform, const CMeshData& MeshData, SVector RayStart, SVector RayDirection, SVector& HitPos)
+{
+	TArray<STriangle> Triangles = MeshData.GetTriangles();
+	for (STriangle Triangle : Triangles)
+	{
+		Triangle.TransformTriangle(MeshTransform);
+		if (Triangle.TestHit(RayStart, RayDirection, HitPos))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 // TODO: Change sphere center to sphere transform (account for rotation and scale)
 bool Utils::CheckSphereHit(SVector RayStart, SVector RayDirection, SVector SphereCenter, float SphereRadius, SVector& HitPos)
 {
 	const SVector Offset = SphereCenter - RayStart;
 	// float a = RayDirection.Dot(RayDirection);
 	// float b = 2.0f * V.Dot(RayDirection);
-	// float c = V.Dot(V) - EntityCheck->EntityMesh->m_fWidth * EntityCheck->EntityMesh->m_fWidth;
+	// float c = V.Dot(V) - EntityCheck->EntityMesh->LEGACY_Width * EntityCheck->EntityMesh->LEGACY_Width;
 	float a = RayDirection.Dot(RayDirection);// glm::dot(RayDirection, RayDirection); // TODO: This isn't accepted? Doesn't work out type?
 	float b = 2.0f * Offset.Dot(RayDirection);
 	float c = Offset.Dot(Offset) - SphereRadius * SphereRadius;
@@ -476,7 +490,7 @@ bool Utils::CheckCubeHit(SVector RayStart, SVector RayDirection, SVector CubeDim
 bool Utils::CheckPlaneEntityHit(SVector RayStart, SVector RayDirection, TPointer<Entity> EntityCheck, SVector& HitPos)
 {
 	// Should be component based
-	// glm::vec3 HalfDimensionvec = glm::vec3(EntityCheck->EntityMesh->m_fWidth / 2.0f, EntityCheck->EntityMesh->m_fHeight / 2.0f, EntityCheck->EntityMesh->m_fDepth / 2.0f);
+	// glm::vec3 HalfDimensionvec = glm::vec3(EntityCheck->EntityMesh->LEGACY_Width / 2.0f, EntityCheck->EntityMesh->LEGACY_Height / 2.0f, EntityCheck->EntityMesh->LEGACY_Depth / 2.0f);
 	// if (CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos))
 	// {
 	// 	return true;

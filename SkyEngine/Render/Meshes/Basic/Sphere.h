@@ -8,12 +8,7 @@
 class ENGINE_API CSphere : public CMeshComponent
 {
 public:
-	using CMeshComponent::CMeshComponent;
-	
+	CSphere(const TPointer<Entity>& InOwner, const TPointer<CMaterialInterface>& InMaterial = nullptr);	
 	~CSphere();
 	
-	bool CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos, TPointer<Entity> EntityCheck) override;
-
-protected:
-	MeshData GetMeshData() override;
 };

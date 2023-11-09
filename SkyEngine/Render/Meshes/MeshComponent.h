@@ -29,7 +29,7 @@ public:
 	// TODO: Remove empty constructor once made redundant 
 	CMeshComponent(const TPointer<Entity>& InOwner);
 	// TODO: Replace width with mesh data
-	CMeshComponent(const TPointer<Entity>& InOwner, float InWidth, float InHeight, float InDepth, const TPointer<CMaterialInterface>& = nullptr);
+	CMeshComponent(const TPointer<Entity>& InOwner, std::string InMeshAsset, const TPointer<CMaterialInterface>& InMaterial = nullptr);
 	virtual ~CMeshComponent();
 
 	void OnAttached() override;	
@@ -39,19 +39,23 @@ public:
 	
 	bool ShouldRender() const override;
 	virtual STransform GetRenderTransform() const override;
+	
+	std::string GetMeshAsset() const { return MeshAsset; }
+	virtual bool SetMeshAsset(std::string NewMeshAssetName);
+	
 	TPointer<CMaterialInterface> GetMaterial() const override;
 	virtual void SetMaterial(TPointer<CMaterialInterface> NewMaterial);
+	
 	uint32_t GetVao() const override;
 	int GetIndicesCount() const override;
+	bool ShouldRenderFaces() const override { return true; }	
 	
-	virtual bool CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos, TPointer<Entity> EntityCheck);
+	virtual bool CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos);
 
 	virtual void OnDestroy() {}
 
-	virtual void Reset();
-
 	void BindMeshData();
-	virtual void Rebind() {}
+	virtual void Rebind();
 
 	void AddCollisionBounds(float fHeight, float fWidth, float fDepth, TPointer<Entity> _EntityRef);
 
@@ -63,16 +67,17 @@ public:
 	}
 
 	TPointer<CMaterialInterface> MeshMaterial;
-	float m_fWidth;
-	float m_fHeight;
-	float m_fDepth = 0;
-	uint32_t vao;
+	float LEGACY_Width;
+	float LEGACY_Height;
+	float LEGACY_Depth = 0;
+	uint32_t vao = 0;
 	int IndicesCount;
 	
 protected:
-	virtual MeshData GetMeshData()= 0;
+	virtual CMeshData GetMeshData();
 protected:
 	TPointer<CCollisionBounds> MeshCollisionBounds;
+	std::string MeshAsset;
 
 	bool bVisible = true;
 };
