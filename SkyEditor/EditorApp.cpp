@@ -102,11 +102,31 @@ void EditorApplication::MainMenuBar()
 		}
 		if (ImGui::BeginMenu("Entity"))
 		{
-			if (ImGui::MenuItem("Add New Entity"))
+			if (ImGui::BeginMenu("Add New Entity"))
 			{
-				const TPointer<Entity> NewEntity(new Entity(STransform()));
-				SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
-				EditorViewportLayer->SelectEntity(NewEntity, true);
+				if (ImGui::MenuItem("Empty"))
+				{
+					const TPointer<Entity> NewEntity(new Entity(STransform()));
+					SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
+					EditorViewportLayer->SelectEntity(NewEntity, true);
+				}
+				else if (ImGui::MenuItem("Cube"))
+				{
+					const TPointer<Entity> NewEntity(new Entity(STransform()));
+					SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
+					EditorViewportLayer->SelectEntity(NewEntity, true);
+					TPointer<CMeshComponent> NewMeshComponent = std::make_shared<CMeshComponent>(NewEntity, MESH_CUBE, nullptr);
+					NewEntity->AddComponent(NewMeshComponent);
+				}
+				else if (ImGui::MenuItem("Sphere"))
+				{
+					const TPointer<Entity> NewEntity(new Entity(STransform()));
+					SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
+					EditorViewportLayer->SelectEntity(NewEntity, true);
+					TPointer<CMeshComponent> NewMeshComponent = std::make_shared<CMeshComponent>(NewEntity, MESH_SPHERE, nullptr);
+					NewEntity->AddComponent(NewMeshComponent);
+				}
+				ImGui::EndMenu();
 			}
 			if (ImGui::MenuItem("Delete Entity", "DEL")) {}
 			ImGui::Separator();

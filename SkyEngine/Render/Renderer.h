@@ -39,6 +39,8 @@ public:
 	TPointer<CSceneRenderer> AddSceneRenderer(TPointer<Scene> InTargetScene, SVector2i InSize);
 	
 	TPointer<CShader> ActiveShader;
+
+	TPointer<CMaterialInterface> DefaultMaterial;
 	
 protected:
 	std::vector<TPointer<CSceneRenderer>> SceneRenderers;

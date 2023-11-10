@@ -8,6 +8,8 @@
 #include "Core/Application.h"
 #include "Entity/CollisionBounds.h"
 #include "Entity/Entity.h"
+#include "Render/Renderer.h"
+#include "Render/Shaders/PBRShader.h"
 #include "Render/Shaders/Shader.h"
 #include "System/LogManager.h"
 #include "System/Utils.h"
@@ -15,12 +17,20 @@
 CMeshComponent::CMeshComponent(const TPointer<Entity>& InOwner)
 	: CComponent(InOwner)
 {
+	MeshMaterial = GetRenderer()->DefaultMaterial;
 }
 
 CMeshComponent::CMeshComponent(const TPointer<Entity>& InOwner, std::string InMeshAsset, const TPointer<CMaterialInterface>& InMaterial)
 : CComponent(InOwner), MeshAsset(InMeshAsset)
 {
-	MeshMaterial = InMaterial;
+	if (InMaterial)
+	{
+		MeshMaterial = InMaterial;
+	}
+	else
+	{
+		MeshMaterial = GetRenderer()->DefaultMaterial;
+	}
 }
 
 CMeshComponent::~CMeshComponent()

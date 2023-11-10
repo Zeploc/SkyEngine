@@ -22,14 +22,14 @@ bool STriangle::TestHit(SVector RayStart, SVector RayDirection, SVector& HitPos)
 	SVector E1 = Position2-Position1;
 	SVector E2 = Position3-Position1;
 	SVector N = cross(E1,E2);
-	float det = -RayDirection.Dot(N);
-	float invdet = 1.0/det;
+	float Det = -RayDirection.Dot(N);
+	float Invdet = 1.0f/Det;
 	SVector AO  = RayStart - Position1;
 	SVector DAO = cross(AO, RayDirection);
-	float u =  E2.Dot(DAO) * invdet;
-	float v = -E1.Dot(DAO) * invdet;
-	float t =  AO.Dot(N)  * invdet; 
-	return (det >= 1e-6 && t >= 0.0 && u >= 0.0 && v >= 0.0 && (u+v) <= 1.0);
+	float u =  E2.Dot(DAO) * Invdet;
+	float v = -E1.Dot(DAO) * Invdet;
+	float t =  AO.Dot(N)  * Invdet; 
+	return (Det >= 1e-6 && t >= 0.0 && u >= 0.0 && v >= 0.0 && (u+v) <= 1.0);
 }
 
 CMeshData::CMeshData()

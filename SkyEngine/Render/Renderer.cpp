@@ -9,13 +9,17 @@
 #include "Core/Application.h"
 #include "Entity/Component.h"
 #include "Entity/Entity.h"
+#include "Materials/Material.h"
 #include "Render/Materials/InternalMaterial.h"
 #include "Render/Shaders/Shader.h"
-#include "Shaders/ShaderManager.h"
-#include "Shaders/UnlitShader.h"
+#include "Shaders/PBRShader.h"
 
 CRenderer::CRenderer()
-{
+{	
+	const TPointer<CMaterial_PBR> DefaultPbrMaterial = std::make_shared<CMaterial_PBR>("DefaultMaterial");
+	DefaultPbrMaterial->Params.DiffuseColour = {0.5f, 0.5f, 0.5f, 1.0f};
+	DefaultPbrMaterial->bTwoSided = true;
+	DefaultMaterial = DefaultPbrMaterial;
 }
 
 void CRenderer::InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, TArray<ISceneVisual*>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender)
