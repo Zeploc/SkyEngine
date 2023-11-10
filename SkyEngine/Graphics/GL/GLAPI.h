@@ -13,7 +13,10 @@ class CGLAPI : public IGraphicsAPI
 public:
 	CGLAPI();
 	~CGLAPI() override;
-	virtual void Init() override;
+
+	void Init() override;
+	void ImGuiInit() override;
+	
 	std::string GetGraphicsDisplayName() override;
 	
 	unsigned int CreateVertexBuffer(const CMeshData& MeshData) override;
@@ -27,8 +30,10 @@ public:
 	void RenderLines(ISceneVisual* SceneVisual, float Thickness) override;
 	void CleanupMesh(ISceneVisual* SceneVisual) override;
 	void ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, STransform Transform) override;
+	
 	void RenderImGui() override;
-	void ImGuiInit() override;
+	void ImGuiNewFrame() override;
+	void SwapBuffers() override;
 	
 	void BindShader(uint32_t ShaderProgramID) override;
 	int32_t GetAttributeLocation(const uint32_t ShaderProgram, std::string AttributeName) override;

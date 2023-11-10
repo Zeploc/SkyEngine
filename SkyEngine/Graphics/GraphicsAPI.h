@@ -57,6 +57,8 @@ public:
 	virtual void ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, STransform Transform) = 0;
 
 	virtual void RenderImGui() = 0;
+	virtual void ImGuiNewFrame() = 0;
+	virtual void SwapBuffers() = 0;
 
 	virtual TPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) = 0;	
 

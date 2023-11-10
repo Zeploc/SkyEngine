@@ -97,8 +97,7 @@ void CCanvasManager::Update()
 	const SVector2 WindowSize = SVector2(GetApplication()->GetApplicationWindow()->GetSize());
 	Io.DisplaySize = { WindowSize.X, WindowSize.Y};
 
-	ImGui_ImplOpenGL3_NewFrame();
-	// ImGui_ImplGlfw_NewFrame();
+	GetGraphicsAPI()->ImGuiNewFrame();
 	ImGui::NewFrame();
 	ImGuizmo::BeginFrame();
 	
