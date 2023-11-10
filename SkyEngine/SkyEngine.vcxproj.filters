@@ -117,6 +117,9 @@
     <ClInclude Include="Core\EventListener.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Core\String.h">
+      <Filter>Core</Filter>
+    </ClInclude>
     <ClInclude Include="Core\WorldManager.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -126,10 +129,16 @@
     <ClInclude Include="Entity\2DParticleSystem.h">
       <Filter>Entity</Filter>
     </ClInclude>
+    <ClInclude Include="Entity\Body2DComponent.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
     <ClInclude Include="Entity\Button3DEntity.h">
       <Filter>Entity</Filter>
     </ClInclude>
     <ClInclude Include="Entity\Camera.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\CollisionBodyComponent.h">
       <Filter>Entity</Filter>
     </ClInclude>
     <ClInclude Include="Entity\CollisionBounds.h">
@@ -273,10 +282,10 @@
     <ClInclude Include="Render\Meshes\Basic\Cube.h">
       <Filter>Render\Meshes\Basic</Filter>
     </ClInclude>
-    <ClInclude Include="Render\Meshes\Basic\Plane.h">
+    <ClInclude Include="Render\Meshes\Basic\DefaultMeshes.h">
       <Filter>Render\Meshes\Basic</Filter>
     </ClInclude>
-    <ClInclude Include="Render\Meshes\Basic\Pyramid.h">
+    <ClInclude Include="Render\Meshes\Basic\Plane.h">
       <Filter>Render\Meshes\Basic</Filter>
     </ClInclude>
     <ClInclude Include="Render\Meshes\Basic\Sphere.h">
@@ -285,10 +294,16 @@
     <ClInclude Include="Render\Meshes\Basic\Triangle.h">
       <Filter>Render\Meshes\Basic</Filter>
     </ClInclude>
-    <ClInclude Include="Render\Meshes\Mesh.h">
+    <ClInclude Include="Render\Meshes\BoxComponent.h">
+      <Filter>Render\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Meshes\MeshComponent.h">
       <Filter>Render\Meshes</Filter>
     </ClInclude>
     <ClInclude Include="Render\Meshes\MeshData.h">
+      <Filter>Render\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Meshes\MeshManager.h">
       <Filter>Render\Meshes</Filter>
     </ClInclude>
     <ClInclude Include="Render\Meshes\Model\AnimatedModel.h">
@@ -319,6 +334,9 @@
       <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="Render\SceneRenderer.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SceneVisual.h">
       <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="Render\Shaders\PBRShader.h">
@@ -403,10 +421,16 @@
     <ClCompile Include="Entity\2DParticleSystem.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
+    <ClCompile Include="Entity\Body2DComponent.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
     <ClCompile Include="Entity\Button3DEntity.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
     <ClCompile Include="Entity\Camera.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\CollisionBodyComponent.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
     <ClCompile Include="Entity\CollisionBounds.cpp">
@@ -493,10 +517,10 @@
     <ClCompile Include="Render\Meshes\Basic\Cube.cpp">
       <Filter>Render\Meshes\Basic</Filter>
     </ClCompile>
-    <ClCompile Include="Render\Meshes\Basic\Plane.cpp">
+    <ClCompile Include="Render\Meshes\Basic\DefaultMeshes.cpp">
       <Filter>Render\Meshes\Basic</Filter>
     </ClCompile>
-    <ClCompile Include="Render\Meshes\Basic\Pyramid.cpp">
+    <ClCompile Include="Render\Meshes\Basic\Plane.cpp">
       <Filter>Render\Meshes\Basic</Filter>
     </ClCompile>
     <ClCompile Include="Render\Meshes\Basic\Sphere.cpp">
@@ -505,10 +529,16 @@
     <ClCompile Include="Render\Meshes\Basic\Triangle.cpp">
       <Filter>Render\Meshes\Basic</Filter>
     </ClCompile>
-    <ClCompile Include="Render\Meshes\Mesh.cpp">
+    <ClCompile Include="Render\Meshes\BoxComponent.cpp">
+      <Filter>Render\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Meshes\MeshComponent.cpp">
       <Filter>Render\Meshes</Filter>
     </ClCompile>
     <ClCompile Include="Render\Meshes\MeshData.cpp">
+      <Filter>Render\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Meshes\MeshManager.cpp">
       <Filter>Render\Meshes</Filter>
     </ClCompile>
     <ClCompile Include="Render\Meshes\Model\AnimatedModel.cpp">
@@ -539,6 +569,9 @@
       <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="Render\SceneRenderer.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SceneVisual.cpp">
       <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="Render\Shaders\PBRShader.cpp">

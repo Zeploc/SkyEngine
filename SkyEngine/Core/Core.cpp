@@ -33,6 +33,6 @@ void __M_Assert(const char* expr_str, bool expr, const char* file, int line, con
 {
 	if (!__M_Ensure(expr_str, expr, file, line, msg))
 	{
-		/* TODO: Error*/
+		abort();
 	}
 }

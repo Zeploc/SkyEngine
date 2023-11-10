@@ -32,7 +32,7 @@ class ENGINE_API IGraphicsAPI
 {
 public:
 	virtual ~IGraphicsAPI() = default;
-	virtual void Init() {}
+	virtual void Init() = 0;
 	
 	virtual std::string GetGraphicsDisplayName() = 0;
 

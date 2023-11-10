@@ -40,7 +40,8 @@ void CCanvasManager::SetupCanvasManager(TPointer<CEngineWindow> InOwningWindow)
 	Io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
 	Io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 	Io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	Io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; 
+	// TODO: Re-enable this once we've implemented a callback for ImGui::GetPlatformIO().Platform_CreateVkSurface
+	//Io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; 
 	
 	// TODO: TEMPORARY: swap with sky engine keycodes
 	// Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.

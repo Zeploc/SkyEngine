@@ -208,10 +208,6 @@
     <ClInclude Include="Platform\Window\GLFW\imgui_impl_glfw.h" />
     <ClInclude Include="Platform\Windows\WindowsPlatform.h" />
     <ClInclude Include="Render\Framebuffer.h" />
-    <ClInclude Include="Render\Meshes\Basic\DefaultMeshes.h" />
-    <ClInclude Include="Render\Meshes\BoxComponent.h" />
-    <ClInclude Include="Render\Meshes\MeshManager.h" />
-    <ClInclude Include="Render\SceneVisual.h" />
     <ClInclude Include="Render\Lighting.h" />
     <ClInclude Include="Render\Materials\InternalMaterial.h" />
     <ClInclude Include="Render\Materials\Material.h" />
@@ -220,11 +216,14 @@
     <ClInclude Include="Render\Meshes\Advanced\GeometryObject.h" />
     <ClInclude Include="Render\Meshes\Advanced\TessMesh.h" />
     <ClInclude Include="Render\Meshes\Basic\Cube.h" />
+    <ClInclude Include="Render\Meshes\Basic\DefaultMeshes.h" />
     <ClInclude Include="Render\Meshes\Basic\Plane.h" />
     <ClInclude Include="Render\Meshes\Basic\Sphere.h" />
     <ClInclude Include="Render\Meshes\Basic\Triangle.h" />
+    <ClInclude Include="Render\Meshes\BoxComponent.h" />
     <ClInclude Include="Render\Meshes\MeshComponent.h" />
     <ClInclude Include="Render\Meshes\MeshData.h" />
+    <ClInclude Include="Render\Meshes\MeshManager.h" />
     <ClInclude Include="Render\Meshes\Model\AnimatedModel.h" />
     <ClInclude Include="Render\Meshes\Model\Model.h" />
     <ClInclude Include="Render\Meshes\Model\ModelMesh.h" />
@@ -235,6 +234,7 @@
     <ClInclude Include="Render\Particle\ParticleSystemGPU.h" />
     <ClInclude Include="Render\Renderer.h" />
     <ClInclude Include="Render\SceneRenderer.h" />
+    <ClInclude Include="Render\SceneVisual.h" />
     <ClInclude Include="Render\Shaders\PBRShader.h" />
     <ClInclude Include="Render\Shaders\Shader.h" />
     <ClInclude Include="Render\Shaders\ShaderManager.h" />
@@ -292,10 +292,6 @@
     <ClCompile Include="Platform\Window\GLFW\imgui_impl_glfw.cpp" />
     <ClCompile Include="Platform\Windows\WindowsPlatform.cpp" />
     <ClCompile Include="Render\Framebuffer.cpp" />
-    <ClCompile Include="Render\Meshes\Basic\DefaultMeshes.cpp" />
-    <ClCompile Include="Render\Meshes\BoxComponent.cpp" />
-    <ClCompile Include="Render\Meshes\MeshManager.cpp" />
-    <ClCompile Include="Render\SceneVisual.cpp" />
     <ClCompile Include="Render\Lighting.cpp" />
     <ClCompile Include="Render\Materials\InternalMaterial.cpp" />
     <ClCompile Include="Render\Materials\Material.cpp" />
@@ -303,11 +299,14 @@
     <ClCompile Include="Render\Meshes\Advanced\GeometryObject.cpp" />
     <ClCompile Include="Render\Meshes\Advanced\TessMesh.cpp" />
     <ClCompile Include="Render\Meshes\Basic\Cube.cpp" />
+    <ClCompile Include="Render\Meshes\Basic\DefaultMeshes.cpp" />
     <ClCompile Include="Render\Meshes\Basic\Plane.cpp" />
     <ClCompile Include="Render\Meshes\Basic\Sphere.cpp" />
     <ClCompile Include="Render\Meshes\Basic\Triangle.cpp" />
+    <ClCompile Include="Render\Meshes\BoxComponent.cpp" />
     <ClCompile Include="Render\Meshes\MeshComponent.cpp" />
     <ClCompile Include="Render\Meshes\MeshData.cpp" />
+    <ClCompile Include="Render\Meshes\MeshManager.cpp" />
     <ClCompile Include="Render\Meshes\Model\AnimatedModel.cpp" />
     <ClCompile Include="Render\Meshes\Model\Model.cpp" />
     <ClCompile Include="Render\Meshes\Model\ModelMesh.cpp" />
@@ -318,6 +317,7 @@
     <ClCompile Include="Render\Particle\ParticleSystemGPU.cpp" />
     <ClCompile Include="Render\Renderer.cpp" />
     <ClCompile Include="Render\SceneRenderer.cpp" />
+    <ClCompile Include="Render\SceneVisual.cpp" />
     <ClCompile Include="Render\Shaders\PBRShader.cpp" />
     <ClCompile Include="Render\Shaders\Shader.cpp" />
     <ClCompile Include="Render\Shaders\ShaderManager.cpp" />

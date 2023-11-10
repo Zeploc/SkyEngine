@@ -8,11 +8,11 @@
 
 class CRenderer;
 
-class IGLAPI : public IGraphicsAPI
+class CGLAPI : public IGraphicsAPI
 {
 public:
-	IGLAPI();
-	~IGLAPI() override;
+	CGLAPI();
+	~CGLAPI() override;
 	virtual void Init() override;
 	std::string GetGraphicsDisplayName() override;
 	

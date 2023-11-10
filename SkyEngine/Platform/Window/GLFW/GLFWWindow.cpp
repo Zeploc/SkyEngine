@@ -7,6 +7,7 @@
 #include <glew/glew.h>
 #include <Render/Shaders/ShaderManager.h>
 
+#include "Core/Application.h"
 #include "Render/Framebuffer.h"
 #include "Input/CXBOXController.h"
 #include "Input/Input.h"
@@ -27,10 +28,22 @@ CGLFWWindow::CGLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+
+	switch (GetApplication()->GraphicsApiType) {
+	case EGraphicsAPI::OPENGL:
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+		break;
+	case EGraphicsAPI::VULKAN:
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+		break;
+	case EGraphicsAPI::DIRECTX:
+	default:
+		// Not Implemented
+		break;
+	}
 	
 	// Enable debugging context
-	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 	// TODO: Only needed once, should be in main glfw api separate to per window?
 	glfwSetErrorCallback(glfw_onError);
 	
@@ -56,7 +69,12 @@ CGLFWWindow::CGLFWWindow(std::string InWindowName, SVector2i InWindowSize, bool 
 	{
 		return;// -1;
 	}
-	glfwMakeContextCurrent(GlWindow);
+
+	if (GetApplication()->GraphicsApiType == EGraphicsAPI::OPENGL)
+	{
+		glfwMakeContextCurrent(GlWindow);
+	}
+	
 	glfwSetWindowUserPointer(GlWindow, reinterpret_cast<void *>(this));
 
 	if (!bFullScreen)
