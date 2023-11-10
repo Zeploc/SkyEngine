@@ -35,7 +35,7 @@ namespace SkyEngine
 		ensure(!EngineApplication, "Application already exist!");
 		EngineApplication = this;
 		MainWindowSize = SVector2i(1280, 720);
-		GraphicsApiType = EGraphicsAPI::OPENGL;
+		GraphicsApiType = EGraphicsAPI::VULKAN;
 	}
 
 	Application::~Application()

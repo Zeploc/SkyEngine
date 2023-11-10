@@ -5,6 +5,7 @@
 
 #include "GL/GLAPI.h"
 #include "System/LogManager.h"
+#include "Vulkan/VulkanAPI.h"
 
 TPointer<IGraphicsAPI> IGraphicsAPI::CreateGraphicsAPI(EGraphicsAPI APIType)
 {
@@ -12,8 +13,9 @@ TPointer<IGraphicsAPI> IGraphicsAPI::CreateGraphicsAPI(EGraphicsAPI APIType)
 	switch (APIType)
 	{
 	case EGraphicsAPI::OPENGL:
-		NewGraphicsApi = std::make_shared<IGLAPI>();
+		NewGraphicsApi = std::make_shared<CGLAPI>();
 	case EGraphicsAPI::VULKAN:
+		NewGraphicsApi = std::make_shared<CVulkanAPI>();
 		break;
 	case EGraphicsAPI::DIRECTX:
 		break;

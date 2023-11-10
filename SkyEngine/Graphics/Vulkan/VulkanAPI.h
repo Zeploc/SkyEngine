@@ -1,14 +1,20 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
+#include <vulkan/vulkan_core.h>
+
+#include "imgui_impl_vulkan.h"
 #include "Graphics/GraphicsAPI.h"
 
-class VulkanAPI : public IGraphicsAPI
+class CVulkanAPI : public IGraphicsAPI
 {
 public:
-	~VulkanAPI() override;
-	std::string GetGraphicsDisplayName() override;
+	~CVulkanAPI() override;
+
+	void Init() override;
 	void ImGuiInit() override;
+	
+	std::string GetGraphicsDisplayName() override;
 	TPointer<CTexture> GetTexture(const std::string& TextureSource, bool bAA) override;
 	bool CreateShaderProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename,
 		const char* GeometryShaderFilename) override;
@@ -36,4 +42,23 @@ public:
 	void PassAttributeToShader(int32_t ShaderLocation, SVector4 Attribute) override;
 	void PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute) override;
 	void PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture> Attribute) override;
+
+private:
+	VkPhysicalDevice SetupVulkan_SelectPhysicalDevice() const;
+	void SetupVulkanWindow(ImGui_ImplVulkanH_Window* Wd, VkSurfaceKHR Surface, int Width, int Height) const;
+	
+	// Data
+	VkAllocationCallbacks*		Allocator = nullptr;
+	VkInstance					Instance = VK_NULL_HANDLE;
+	VkPhysicalDevice			PhysicalDevice = VK_NULL_HANDLE;
+	VkDevice					Device = VK_NULL_HANDLE;
+	uint32_t					QueueFamily = static_cast<uint32_t>(-1);
+	VkQueue						Queue = VK_NULL_HANDLE;
+	VkDebugReportCallbackEXT	DebugReport = VK_NULL_HANDLE;
+	VkPipelineCache				PipelineCache = VK_NULL_HANDLE;
+	VkDescriptorPool			DescriptorPool = VK_NULL_HANDLE;
+
+	ImGui_ImplVulkanH_Window	MainWindowData;
+	int							MinImageCount = 2;
+	bool						SwapChainRebuild = false;
 };

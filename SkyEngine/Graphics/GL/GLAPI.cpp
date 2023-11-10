@@ -17,15 +17,15 @@
 
 void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
-IGLAPI::IGLAPI()
+CGLAPI::CGLAPI()
 {	
 }
 
-IGLAPI::~IGLAPI()
+CGLAPI::~CGLAPI()
 {	
 }
 
-void IGLAPI::Init()
+void CGLAPI::Init()
 {
 	GLenum InitResult = glewInit();
 	// OpenGL init
@@ -48,12 +48,12 @@ void IGLAPI::Init()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-std::string IGLAPI::GetGraphicsDisplayName()
+std::string CGLAPI::GetGraphicsDisplayName()
 {
 	return "OpenGL";
 }
 
-unsigned IGLAPI::CreateVertexBuffer(const MeshData& MeshData)
+unsigned CGLAPI::CreateVertexBuffer(const MeshData& MeshData)
 {
 	// TODO: Move buffer/stride determination to shader
 	
@@ -110,7 +110,7 @@ unsigned IGLAPI::CreateVertexBuffer(const MeshData& MeshData)
 	return vao;
 }
 
-TPointer<CTexture> IGLAPI::GetTexture(const std::string& TextureSource, bool bAA)
+TPointer<CTexture> CGLAPI::GetTexture(const std::string& TextureSource, bool bAA)
 {
 	// TODO: Can have a derived OpenGlTexture for custom aspects of the texture for OpenGL
 	TPointer<CTexture> Texture;
@@ -167,7 +167,7 @@ TPointer<CTexture> IGLAPI::GetTexture(const std::string& TextureSource, bool bAA
 	return Texture;	
 }
 
-void IGLAPI::BindVertexArray(const std::vector<float>& Vertices, const std::vector<uint32_t>& Indices, unsigned& Vao)
+void CGLAPI::BindVertexArray(const std::vector<float>& Vertices, const std::vector<uint32_t>& Indices, unsigned& Vao)
 {
 	glBindVertexArray(Vao);
 	glBufferData(GL_ARRAY_BUFFER, Vertices.size() * sizeof(float), Vertices.data(), GL_STATIC_DRAW);
@@ -175,7 +175,7 @@ void IGLAPI::BindVertexArray(const std::vector<float>& Vertices, const std::vect
 	glBindVertexArray(0);
 }
 
-std::string IGLAPI::ReadShader(const char* filename)
+std::string CGLAPI::ReadShader(const char* filename)
 {
 	std::string shaderCode;
 	std::ifstream file(filename, std::ios::in);
@@ -190,7 +190,7 @@ std::string IGLAPI::ReadShader(const char* filename)
 	return shaderCode;
 }
 
-bool IGLAPI::CreateShader(uint32_t& ShaderID, GLenum shaderType, std::string source, const char* shaderName)
+bool CGLAPI::CreateShader(uint32_t& ShaderID, GLenum shaderType, std::string source, const char* shaderName)
 {
 	// TODO: Change to bool return
 	int compile_result = 0;
@@ -216,7 +216,7 @@ bool IGLAPI::CreateShader(uint32_t& ShaderID, GLenum shaderType, std::string sou
 	return true;
 }
 
-bool IGLAPI::CreateShaderProgram(uint32_t& ProgramID, const char* vertexShaderFilename, const char* fragmentShaderFilename, const char* geometryShaderFilename)
+bool CGLAPI::CreateShaderProgram(uint32_t& ProgramID, const char* vertexShaderFilename, const char* fragmentShaderFilename, const char* geometryShaderFilename)
 {
 	//read the shader files and save the code
 	std::string vertex_shader_code = ReadShader(vertexShaderFilename);
@@ -268,7 +268,7 @@ bool IGLAPI::CreateShaderProgram(uint32_t& ProgramID, const char* vertexShaderFi
 	return true;
 }
 
-bool IGLAPI::CreateTessProgram(uint32_t& ProgramID, const char* vertexShaderFilename, const char* fragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename)
+bool CGLAPI::CreateTessProgram(uint32_t& ProgramID, const char* vertexShaderFilename, const char* fragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename)
 {
 	//read the shader files and save the code
 	std::string vertex_shader_code = ReadShader(vertexShaderFilename);
@@ -320,7 +320,7 @@ bool IGLAPI::CreateTessProgram(uint32_t& ProgramID, const char* vertexShaderFile
 	return true;
 }
 
-bool IGLAPI::CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename)
+bool CGLAPI::CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename)
 {
 	//read the shader files and save the code
 	std::string compute_shader_code = ReadShader(ComputeShaderFilename);
@@ -351,24 +351,24 @@ bool IGLAPI::CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShader
 	return true;
 }
 
-TPointer<IFramebuffer> IGLAPI::CreateFramebuffer(const SFramebufferSpecification& Specification)
+TPointer<IFramebuffer> CGLAPI::CreateFramebuffer(const SFramebufferSpecification& Specification)
 {
 	return CreatePointer<GLFramebuffer>(Specification);
 }
 
-void IGLAPI::ImGuiInit()
+void CGLAPI::ImGuiInit()
 {
 	ImGui_ImplOpenGL3_Init("#version 410 core");
 }
 
-void IGLAPI::RenderMesh(TPointer<CMeshComponent> Mesh)
+void CGLAPI::RenderMesh(TPointer<CMeshComponent> Mesh)
 {	
 	glBindVertexArray(Mesh->vao);
 	glDrawElements(GL_TRIANGLES, Mesh->IndicesCount, GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 }
 
-void IGLAPI::CleanupMesh(TPointer<CMeshComponent> Mesh)
+void CGLAPI::CleanupMesh(TPointer<CMeshComponent> Mesh)
 {
 	if (!Mesh)
 	{
@@ -378,7 +378,7 @@ void IGLAPI::CleanupMesh(TPointer<CMeshComponent> Mesh)
 	// TODO: Look into further cleanup
 }
 
-void IGLAPI::ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, STransform Transform)
+void CGLAPI::ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, STransform Transform)
 {
 	glm::mat4 ModelMatrix = Transform.GetModelMatrix();
 	glUniformMatrix4fv(glGetUniformLocation(Program, "model"), 1, GL_FALSE, value_ptr(ModelMatrix));
@@ -389,12 +389,12 @@ void IGLAPI::ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, STrans
 	glUniformMatrix4fv(glGetUniformLocation(Program, "MVP"), 1, GL_FALSE, value_ptr(MVP));
 }
 
-void IGLAPI::RenderImGui()
+void CGLAPI::RenderImGui()
 {
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());	
 }
 
-void IGLAPI::BindShader(uint32_t ShaderProgramID)
+void CGLAPI::BindShader(uint32_t ShaderProgramID)
 {
 	// TODO: Check if overhead and not change if current shader program is active
 	glUseProgram(ShaderProgramID);	
@@ -406,42 +406,42 @@ void IGLAPI::BindShader(uint32_t ShaderProgramID)
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-int32_t IGLAPI::GetAttributeLocation(const uint32_t ShaderProgram, std::string AttributeName)
+int32_t CGLAPI::GetAttributeLocation(const uint32_t ShaderProgram, std::string AttributeName)
 {	
 	return glGetUniformLocation(ShaderProgram, AttributeName.c_str());
 }
 
-void IGLAPI::PassAttributeToShader(int32_t ShaderID, float Attribute)
+void CGLAPI::PassAttributeToShader(int32_t ShaderID, float Attribute)
 {
 	glUniform1f(ShaderID, Attribute);
 }
 
-void IGLAPI::PassAttributeToShader(int32_t ShaderID, int Attribute)
+void CGLAPI::PassAttributeToShader(int32_t ShaderID, int Attribute)
 {
 	glUniform1i(ShaderID, Attribute);
 }
 
-void IGLAPI::PassAttributeToShader(int32_t ShaderID, bool Attribute)
+void CGLAPI::PassAttributeToShader(int32_t ShaderID, bool Attribute)
 {
 	glUniform1i(ShaderID, Attribute);
 }
 
-void IGLAPI::PassAttributeToShader(int32_t ShaderID, SVector Attribute)
+void CGLAPI::PassAttributeToShader(int32_t ShaderID, SVector Attribute)
 {
 	glUniform3fv(ShaderID, 1, Attribute.ToValuePtr());
 }
 
-void IGLAPI::PassAttributeToShader(int32_t ShaderID, SVector4 Attribute)
+void CGLAPI::PassAttributeToShader(int32_t ShaderID, SVector4 Attribute)
 {
 	glUniform4fv(ShaderID, 1, Attribute.ToValuePtr());
 }
 
-void IGLAPI::PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute)
+void CGLAPI::PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute)
 {
 	glUniformMatrix4fv(ShaderLocation, 1, GL_FALSE, value_ptr(Attribute.ToGLM()));
 }
 
-void IGLAPI::PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture> Attribute)
+void CGLAPI::PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture> Attribute)
 {
 	if (!Attribute || !Attribute->IsValid())
 	{
@@ -456,13 +456,13 @@ void IGLAPI::PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture> At
 	glBindTexture(GL_TEXTURE_2D, Attribute->TextureID);	
 }
 
-void IGLAPI::Clear(SVector ClearColour)
+void CGLAPI::Clear(SVector ClearColour)
 {
 	glClearColor(ClearColour.R, ClearColour.G, ClearColour.B, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void IGLAPI::SetRenderViewportSize(const SVector2i InViewportSize)
+void CGLAPI::SetRenderViewportSize(const SVector2i InViewportSize)
 {
 	// TODO: Option to expoose/override viewport position
 	// Fill whole window with viewport by default
@@ -470,12 +470,12 @@ void IGLAPI::SetRenderViewportSize(const SVector2i InViewportSize)
 	glViewport(0, 0, InViewportSize.X, InViewportSize.Y);	
 }
 
-void IGLAPI::SetWireframeMode(bool bInWireframeEnabled)
+void CGLAPI::SetWireframeMode(bool bInWireframeEnabled)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, bInWireframeEnabled ? GL_LINE : GL_FILL);
 }
 
-void IGLAPI::ApplyMaterialFlags(TPointer<CMaterialInterface>InMaterial)
+void CGLAPI::ApplyMaterialFlags(TPointer<CMaterialInterface>InMaterial)
 {
 	if (!InMaterial->bTwoSided)
 	{
