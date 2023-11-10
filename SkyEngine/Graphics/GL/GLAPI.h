@@ -16,15 +16,16 @@ public:
 	virtual void Init() override;
 	std::string GetGraphicsDisplayName() override;
 	
-	unsigned int CreateVertexBuffer(const MeshData& MeshData) override;
+	unsigned int CreateVertexBuffer(const CMeshData& MeshData) override;
 	TPointer<CTexture> GetTexture(const std::string& TextureSource, bool bAA) override;
 	void BindVertexArray(const std::vector<float>& Vertices, const std::vector<uint32_t>& Indices, unsigned& Vao) override;
 	bool CreateShaderProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* GeometryShaderFilename) override;
 	bool CreateTessProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename) override;
 	bool CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename) override;
 	TPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) override;
-	void RenderMesh(TPointer<CMeshComponent> Mesh) override;
-	void CleanupMesh(TPointer<CMeshComponent> Mesh) override;
+	void RenderMesh(ISceneVisual* SceneVisual) override;
+	void RenderLines(ISceneVisual* SceneVisual, float Thickness) override;
+	void CleanupMesh(ISceneVisual* SceneVisual) override;
 	void ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, STransform Transform) override;
 	void RenderImGui() override;
 	void ImGuiInit() override;

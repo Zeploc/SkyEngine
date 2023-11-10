@@ -2,32 +2,59 @@
 
 #pragma once
 
+#include "Core/Core.h"
+#include "Math/Transform.h"
 #include "Math/Vector4.h"
+#include "Math/Vector.h"
 
-class MeshData
+// TODO: STDL warnings with exporting class with vector
+#pragma warning (disable : 4251)
+
+struct STriangle
+{
+	SVector Position1;
+	SVector Position2;
+	SVector Position3;
+
+	void TransformTriangle(STransform Transform);
+	
+	/* Triangle should be in world space */
+	bool TestHit(SVector RayStart, SVector RayDirection, SVector& HitPos) const;
+};
+
+class ENGINE_API CMeshData
 {
 public:
-	MeshData(const std::vector<float> &PositionData, const std::vector<uint32_t> &IndexData, const std::vector<float>& NormalData);
+	CMeshData();
+	CMeshData(const TArray<float> &PositionData, const TArray<uint32_t> &IndexData, const TArray<float>& NormalData);
+	~CMeshData() {}
 	
 	void SetUVs(const std::vector<float>& UVData);
 
 	void BindData(unsigned int vao) const;
 
-	void GetFinalData(std::vector<float>& OutVertices, std::vector<uint32_t>& OutIndices) const;
+	void GetFinalData(TArray<float>& OutVertices, TArray<uint32_t>& OutIndices) const;
+	bool IsValid() const { return GetIndicesCount() > 0; }
 	int GetIndicesCount() const;
-	bool HasUVData() const { return !UVs.empty(); } 
+	bool HasUVData() const { return !UVs.empty(); }
+
+	TArray<float> GetPositions() const { return Positions; }
+	TArray<uint32_t> GetIndices() const { return Indices; }
+
+	TArray<STriangle> GetTriangles() const;
 	
 #define POSITION_ELEMENTS_COUNT 3
 #define NORMAL_ELEMENTS_COUNT 3
 #define UV_ELEMENTS_COUNT 2
 	
 protected:
-	void PushPositions(std::vector<float>& OutVertices, int VertexIndex) const;
-	void PushUVs(std::vector<float>& OutVertices, int VertexIndex) const;
-	void PushNormals(std::vector<float>& OutVertices, int VertexIndex) const;
-	
-	std::vector<float> Positions;
-	std::vector<uint32_t> Indices;
-	std::vector<float> UVs;
-	std::vector<float> Normals;
+	void PushPositions(TArray<float>& OutVertices, int VertexIndex) const;
+	void PushUVs(TArray<float>& OutVertices, int VertexIndex) const;
+	void PushNormals(TArray<float>& OutVertices, int VertexIndex) const;
+		
+	TArray<float> Positions;
+	TArray<uint32_t> Indices;
+	TArray<float> UVs;
+	TArray<float> Normals;
+
 };

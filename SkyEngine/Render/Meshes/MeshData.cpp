@@ -5,19 +5,47 @@
 
 #include "Core/Application.h"
 
-MeshData::MeshData(const std::vector<float> &PositionData, const std::vector<uint32_t> &IndexData, const std::vector<float>& NormalData)
+void STriangle::TransformTriangle(STransform Transform)
 {
-	Positions = PositionData;
-	Normals = NormalData;
-	Indices = IndexData;
+	Position1 = Transform.TransformPosition(Position1);
+	Position2 = Transform.TransformPosition(Position2);
+	Position3 = Transform.TransformPosition(Position3);
 }
 
-void MeshData::SetUVs(const std::vector<float>& UVData)
+bool STriangle::TestHit(SVector RayStart, SVector RayDirection, SVector& HitPos) const
+{
+	// TODO: Hit pos
+	// Temp:
+	HitPos = Position1;
+	
+	SVector E1 = Position2-Position1;
+	SVector E2 = Position3-Position1;
+	SVector N = cross(E1,E2);
+	float det = -RayDirection.Dot(N);
+	float invdet = 1.0/det;
+	SVector AO  = RayStart - Position1;
+	SVector DAO = cross(AO, RayDirection);
+	float u =  E2.Dot(DAO) * invdet;
+	float v = -E1.Dot(DAO) * invdet;
+	float t =  AO.Dot(N)  * invdet; 
+	return (det >= 1e-6 && t >= 0.0 && u >= 0.0 && v >= 0.0 && (u+v) <= 1.0);
+}
+
+CMeshData::CMeshData()
+{
+}
+
+CMeshData::CMeshData(const TArray<float> &PositionData, const TArray<uint32_t> &IndexData, const TArray<float>& NormalData)
+	: Positions(PositionData), Indices(IndexData), Normals(NormalData)
+{
+}
+
+void CMeshData::SetUVs(const TArray<float>& UVData)
 {
 	UVs = UVData;
 }
 
-void MeshData::BindData(unsigned vao) const
+void CMeshData::BindData(unsigned vao) const
 {
 	std::vector<float> OutVertices;
 	std::vector<uint32_t> OutIndices;
@@ -25,7 +53,7 @@ void MeshData::BindData(unsigned vao) const
 	GetGraphicsAPI()->BindVertexArray(OutVertices, OutIndices, vao);	
 }
 
-void MeshData::GetFinalData(std::vector<float>& OutVertices, std::vector<uint32_t>& OutIndices) const
+void CMeshData::GetFinalData(TArray<float>& OutVertices, TArray<uint32_t>& OutIndices) const
 {
 	OutIndices = Indices;
 	OutVertices.clear();
@@ -51,12 +79,44 @@ void MeshData::GetFinalData(std::vector<float>& OutVertices, std::vector<uint32_
 	}
 }
 
-int MeshData::GetIndicesCount() const
+int CMeshData::GetIndicesCount() const
 {
 	return static_cast<int>(Indices.size());
 }
 
-void MeshData::PushPositions(std::vector<float>& OutVertices, int VertexIndex) const
+TArray<STriangle> CMeshData::GetTriangles() const
+{
+	TArray<STriangle> Triangles;
+	int CurrentIndex = 0;
+	STriangle CurrentTriangle;
+	for (uint32_t VertexIndex : Indices)
+	{
+		uint32_t PositionStartingIndex = VertexIndex * POSITION_ELEMENTS_COUNT;
+		float X = Positions[PositionStartingIndex];
+		float Y = Positions[PositionStartingIndex + 1];
+		float Z = Positions[PositionStartingIndex + 2];
+		SVector NewPosition = {X, Y, Z};
+		switch (CurrentIndex)
+		{
+		case 0:
+			CurrentTriangle.Position1 = NewPosition;
+			CurrentIndex++;
+			break;
+		case 1:
+			CurrentTriangle.Position2 = NewPosition;
+			CurrentIndex++;
+			break;
+		case 2:
+			CurrentTriangle.Position3 = NewPosition;
+			Triangles.push_back(CurrentTriangle);
+			CurrentTriangle = STriangle();
+			CurrentIndex = 0;
+		}
+	}
+	return Triangles;
+}
+
+void CMeshData::PushPositions(TArray<float>& OutVertices, int VertexIndex) const
 {
 	const int StartingPosition = VertexIndex * POSITION_ELEMENTS_COUNT;
 	for (int i = 0; i < POSITION_ELEMENTS_COUNT; ++i)
@@ -66,7 +126,7 @@ void MeshData::PushPositions(std::vector<float>& OutVertices, int VertexIndex) c
 	}	
 }
 
-void MeshData::PushUVs(std::vector<float>& OutVertices, int VertexIndex) const
+void CMeshData::PushUVs(TArray<float>& OutVertices, int VertexIndex) const
 {
 	const int StartingPosition = VertexIndex * UV_ELEMENTS_COUNT;
 	for (int i = 0; i < UV_ELEMENTS_COUNT; ++i)
@@ -76,7 +136,7 @@ void MeshData::PushUVs(std::vector<float>& OutVertices, int VertexIndex) const
 	}
 }
 
-void MeshData::PushNormals(std::vector<float>& OutVertices, int VertexIndex) const
+void CMeshData::PushNormals(TArray<float>& OutVertices, int VertexIndex) const
 {
 	const int StartingPosition = VertexIndex * NORMAL_ELEMENTS_COUNT;
 	for (int i = 0; i < NORMAL_ELEMENTS_COUNT; ++i)

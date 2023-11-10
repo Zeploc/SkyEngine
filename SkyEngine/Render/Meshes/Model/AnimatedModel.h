@@ -3,7 +3,7 @@
 #pragma once
 
 // This Includes //
-#include "Render/Meshes/Mesh.h"
+#include "Render/Meshes/MeshComponent.h"
 
 // Engine Includes //
 #include "System/Math_3d.h"

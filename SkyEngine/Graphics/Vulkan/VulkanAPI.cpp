@@ -17,7 +17,7 @@ void VKCheck(VkResult Err)
 	}
 
 	// TODO: Remove duplicate logging after assert / ensure outputs proper logs
-	CLogManager::GetInstance()->DisplayLogError(std::format("[vulkan] Error: VkResult = {}\n", static_cast<int32_t>(Err)));
+	CLogManager::Get()->DisplayError(std::format("[vulkan] Error: VkResult = {}\n", static_cast<int32_t>(Err)));
 	ASSERT(Err == 0, std::format("[vulkan] Error: VkResult = {}\n", static_cast<int32_t>(Err)).c_str());
 }
 
@@ -36,12 +36,12 @@ CVulkanAPI::~CVulkanAPI()
 
 void CVulkanAPI::Init()
 {
-	// TODO: Allow requesting extra extensions before calling init?
-	std::vector<const char*> extensions;
+	// TODO: Allow requesting extra extensions externally before calling init?
+	std::vector<const char*> InstanceExtensions;
 	uint32_t ExtensionsCount = 0;
 	const char** GlfwExtensions = glfwGetRequiredInstanceExtensions(&ExtensionsCount);
 	for (uint32_t i = 0; i < ExtensionsCount; i++)
-		extensions.push_back(GlfwExtensions[i]);
+		InstanceExtensions.push_back(GlfwExtensions[i]);
 
 	VkResult Err;
 
@@ -59,7 +59,6 @@ void CVulkanAPI::Init()
 		VKCheck(Err);
 
 		// Enable required extensions
-		std::vector<const char*> InstanceExtensions;
 		if (IsExtensionAvailable(InstProperties, VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME))
 			InstanceExtensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 #ifdef VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME
@@ -107,11 +106,13 @@ void CVulkanAPI::Init()
 			auto* Queues = static_cast<VkQueueFamilyProperties*>(malloc(sizeof(VkQueueFamilyProperties) * Count));
 			vkGetPhysicalDeviceQueueFamilyProperties(PhysicalDevice, &Count, Queues);
 			for (uint32_t i = 0; i < Count; i++)
+			{
 				if (Queues[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
 				{
 					QueueFamily = i;
 					break;
 				}
+			}
 			free(Queues);
 			ASSERT(QueueFamily != static_cast<uint32_t>(-1), "Invalid QueueFamily");
 		}
@@ -301,7 +302,7 @@ TPointer<IFramebuffer> CVulkanAPI::CreateFramebuffer(const SFramebufferSpecifica
 	return nullptr;
 }
 
-unsigned CVulkanAPI::CreateVertexBuffer(const MeshData& MeshData)
+unsigned CVulkanAPI::CreateVertexBuffer(const CMeshData& MeshData)
 {
 	//TODO: Implement
 	return -1;
@@ -313,12 +314,12 @@ void CVulkanAPI::BindVertexArray(const std::vector<float>& vertices, const std::
 	//TODO: Implement
 }
 
-void CVulkanAPI::RenderMesh(TPointer<CMeshComponent> Mesh)
+void CVulkanAPI::RenderMesh(ISceneVisual* SceneVisual)
 {
 	//TODO: Implement
 }
 
-void CVulkanAPI::CleanupMesh(TPointer<CMeshComponent> Mesh)
+void CVulkanAPI::CleanupMesh(ISceneVisual* SceneVisual)
 {
 	//TODO: Implement
 }
@@ -329,6 +330,11 @@ void CVulkanAPI::ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, ST
 }
 
 void CVulkanAPI::RenderImGui()
+{
+	//TODO: Implement
+}
+
+void CVulkanAPI::RenderLines(ISceneVisual* SceneVisual, float Thickness)
 {
 	//TODO: Implement
 }

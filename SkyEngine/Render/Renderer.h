@@ -9,6 +9,7 @@
 #include "Math/Vector2.h"
 #include "Scene/Scene.h"
 
+class ISceneVisual;
 class IFramebuffer;
 class CEngineWindow;
 class UIElement;
@@ -25,11 +26,15 @@ public:
 	CRenderer();
 	virtual ~CRenderer() = default;	
 	
-	void InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender);
+	void InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, TArray<ISceneVisual*>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender);
 	void RenderScenes();
 	void Render(std::vector<TPointer<Entity>> Entities);
-	void RenderMesh(TPointer<CMeshComponent> Mesh, STransform Transform);
+	void RenderMesh(ISceneVisual* SceneVisual, STransform Transform);
+	void RenderLines(ISceneVisual* SceneVisual, STransform Transform);
 	void RenderImGui();
+
+	// void AddBox(ISceneVisual* BoxVisual);
+	// void RemoveBox(ISceneVisual* BoxVisual);
 
 	TPointer<CSceneRenderer> AddSceneRenderer(TPointer<Scene> InTargetScene, SVector2i InSize);
 	
@@ -39,6 +44,9 @@ protected:
 	std::vector<TPointer<CSceneRenderer>> SceneRenderers;
 	Matrix4 CurrentView;
 	Matrix4 CurrentProjection;
+
+	// TArray<ISceneVisual*> BoxVisuals;
+	// TPointer<CShader> BoxShader;
 };
 
 // template <typename T>

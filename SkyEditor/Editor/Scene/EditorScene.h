@@ -13,6 +13,7 @@ class EditorScene : public Scene
 {
 public:
 	EditorScene(const std::string& InSceneName);
+	void OnLoadScene() override;
 	void AddSampleEntities();
 
 	void Update() override;

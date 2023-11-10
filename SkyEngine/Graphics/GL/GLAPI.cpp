@@ -10,8 +10,8 @@
 #include "GLFramebuffer.h"
 #include "imgui_impl_opengl3.h"
 #include "Math/Matrix.h"
+#include "Render/SceneVisual.h"
 #include "Render/Materials/InternalMaterial.h"
-#include "Render/Meshes/Mesh.h"
 #include "Render/Shaders/ShaderManager.h"
 #include "System/LogManager.h"
 
@@ -31,7 +31,7 @@ void CGLAPI::Init()
 	// OpenGL init
 	if (InitResult != GLEW_OK)
 	{
-		CLogManager::GetInstance()->DisplayLogError("Failed to init glew");
+		CLogManager::Get()->DisplayError("Failed to init glew");
 		return;
 	}
 
@@ -53,7 +53,7 @@ std::string CGLAPI::GetGraphicsDisplayName()
 	return "OpenGL";
 }
 
-unsigned CGLAPI::CreateVertexBuffer(const MeshData& MeshData)
+unsigned CGLAPI::CreateVertexBuffer(const CMeshData& MeshData)
 {
 	// TODO: Move buffer/stride determination to shader
 	
@@ -156,7 +156,7 @@ TPointer<CTexture> CGLAPI::GetTexture(const std::string& TextureSource, bool bAA
 			glBindTexture(GL_TEXTURE_2D, 0);
 
 			ShaderManager::Textures.insert(std::pair(TextureSource, Texture));
-			CLogManager::GetInstance()->DisplayLogMessage("Adding Texture, \"" + std::string(TextureSource) + "\", Total Texture Count : " + std::to_string(ShaderManager::Textures.size()));
+			CLogManager::Get()->DisplayMessage("Adding Texture, \"" + std::string(TextureSource) + "\", Total Texture Count : " + std::to_string(ShaderManager::Textures.size()));
 		}
 		else
 		{
@@ -361,20 +361,30 @@ void CGLAPI::ImGuiInit()
 	ImGui_ImplOpenGL3_Init("#version 410 core");
 }
 
-void CGLAPI::RenderMesh(TPointer<CMeshComponent> Mesh)
+void CGLAPI::RenderMesh(ISceneVisual* SceneVisual)
 {	
-	glBindVertexArray(Mesh->vao);
-	glDrawElements(GL_TRIANGLES, Mesh->IndicesCount, GL_UNSIGNED_INT, nullptr);
+	glBindVertexArray(SceneVisual->GetVao());
+	glDrawElements(GL_TRIANGLES, SceneVisual->GetIndicesCount(), GL_UNSIGNED_INT, nullptr);
+	glBindVertexArray(0);
+
+}
+
+void CGLAPI::RenderLines(ISceneVisual* SceneVisual, float Thickness)
+{
+	glBindVertexArray(SceneVisual->GetVao());
+	glLineWidth(Thickness);
+	glDrawElements(GL_LINES, SceneVisual->GetIndicesCount(), GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 }
 
-void CGLAPI::CleanupMesh(TPointer<CMeshComponent> Mesh)
+void CGLAPI::CleanupMesh(ISceneVisual* SceneVisual)
 {
-	if (!Mesh)
+	if (!SceneVisual)
 	{
 		return;
 	}
-	glDeleteVertexArrays(1, &Mesh->vao);
+	const uint32_t Vao = SceneVisual->GetVao();
+	glDeleteVertexArrays(1, &Vao);
 	// TODO: Look into further cleanup
 }
 
@@ -527,7 +537,7 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum se
 	const std::string OutputString = std::format("GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
 												 ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
 												 type, severity, message);
-	CLogManager::GetInstance()->DisplayLogError(OutputString);
+	CLogManager::Get()->DisplayError(OutputString);
 	// fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
 	//          ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
 	//          type, severity, message );

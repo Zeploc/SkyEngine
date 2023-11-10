@@ -5,26 +5,36 @@
 
 #include "Framebuffer.h"
 #include "SceneRenderer.h"
+#include "SceneVisual.h"
 #include "Core/Application.h"
+#include "Entity/Component.h"
 #include "Entity/Entity.h"
 #include "Render/Materials/InternalMaterial.h"
 #include "Render/Shaders/Shader.h"
+#include "Shaders/ShaderManager.h"
+#include "Shaders/UnlitShader.h"
 
 CRenderer::CRenderer()
 {
 }
 
-void CRenderer::InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender)
+void CRenderer::InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, TArray<ISceneVisual*>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender)
 {
-	TPointer<CMaterialInterface> Material = EntityToRender->EntityMesh->MeshMaterial;
-	if (!MeshesByMaterial.contains(Material))
+	for (const TPointer<CComponent>& Component : EntityToRender->GetComponents())
 	{
-		std::vector<TPointer<CMeshComponent>> NewVector = {};
-		MeshesByMaterial.insert(std::pair(Material, NewVector));
-	}
-	MeshesByMaterial[Material].push_back(EntityToRender->EntityMesh);
+		ISceneVisual* SceneVisual = GetInterface<ISceneVisual>(Component);
+		if (SceneVisual && SceneVisual->GetMaterial())
+		{
+			TPointer<CMaterialInterface> Material = SceneVisual->GetMaterial();
+			if (!MeshesByMaterial.contains(Material))
+			{
+				TArray<ISceneVisual*> NewVector = {};
+				MeshesByMaterial.insert(std::pair(Material, NewVector));
+			}
+			MeshesByMaterial[Material].push_back(SceneVisual);
+		}
+	}	
 }
-
 
 void CRenderer::RenderScenes()
 {
@@ -39,7 +49,7 @@ void CRenderer::RenderScenes()
 void CRenderer::Render(std::vector<TPointer<Entity>> Entities)
 {
 	// TODO: Later store in/update list as new meshes added
-	std::map<TPointer<CMaterialInterface>, std::vector<TPointer<CMeshComponent>>> MeshesByMaterial;
+	std::map<TPointer<CMaterialInterface>, TArray<ISceneVisual*>> MeshesByMaterial;
 	
 	for (const TPointer<Entity>& EntityToRender : Entities)
 	{
@@ -74,12 +84,37 @@ void CRenderer::Render(std::vector<TPointer<Entity>> Entities)
 		Material->BindMaterial();
 
 		// Draw meshes
-		for (TPointer<CMeshComponent> MeshComponent : MaterialMeshSet.second)
+		for (ISceneVisual* SceneVisual : MaterialMeshSet.second)
 		{
-			const STransform AnchoredTransform = MeshComponent->Owner->GetAnchoredTransform();
-			RenderMesh(MeshComponent, AnchoredTransform);
+			const STransform Transform = SceneVisual->GetRenderTransform();
+			if (SceneVisual->ShouldRenderFaces())
+			{
+				RenderMesh(SceneVisual, Transform);
+			}
+			else
+			{
+				RenderLines(SceneVisual, Transform);
+			}
 		}
 	}
+
+	// if (!BoxVisuals.empty())
+	// {
+	//
+	// 	if (!BoxShader)
+	// 	{
+	// 		BoxShader = ShaderManager::GetShader<CUnlitShader>();
+	// 	}
+	// 	
+	// 	ActiveShader = BoxShader;
+	// 	ActiveShader->BindShader();
+	// 	
+	// 	for (ISceneVisual* BoxVisual : BoxVisuals)
+	// 	{
+	// 		const STransform Transform = BoxVisual->GetRenderTransform();
+	// 		RenderLines(BoxVisual, Transform);
+	// 	}
+	// }
 	
 	// for (const TPointer<UIElement>& UIElement : UIElements)
 	// {
@@ -88,16 +123,39 @@ void CRenderer::Render(std::vector<TPointer<Entity>> Entities)
 	ActiveShader = nullptr;
 }
 
-void CRenderer::RenderMesh(TPointer<CMeshComponent> Mesh, STransform Transform)
+void CRenderer::RenderMesh(ISceneVisual* SceneVisual, STransform Transform)
 {
 	GetGraphicsAPI()->ApplyMVP(ActiveShader->GetShaderProgram(), CurrentView, CurrentProjection, Transform);
-	GetGraphicsAPI()->RenderMesh(Mesh);
+	GetGraphicsAPI()->RenderMesh(SceneVisual);
+}
+
+void CRenderer::RenderLines(ISceneVisual* SceneVisual, STransform Transform)
+{
+	GetGraphicsAPI()->ApplyMVP(ActiveShader->GetShaderProgram(), CurrentView, CurrentProjection, Transform);
+	GetGraphicsAPI()->RenderLines(SceneVisual, 2.0f);
 }
 
 void CRenderer::RenderImGui()
 {
 	GetGraphicsAPI()->RenderImGui();
 }
+
+// void CRenderer::AddBox(ISceneVisual* BoxVisual)
+// {
+// 	BoxVisuals.push_back(BoxVisual);
+// }
+//
+// void CRenderer::RemoveBox(ISceneVisual* BoxVisual)
+// {
+// 	for (auto It = BoxVisuals.begin(); It != BoxVisuals.end(); ++It)
+// 	{
+// 		if (*It == BoxVisual)
+// 		{
+// 			BoxVisuals.erase(It);
+// 			break;
+// 		}
+// 	}
+// }
 
 TPointer<CSceneRenderer> CRenderer::AddSceneRenderer(TPointer<Scene> InTargetScene, SVector2i InSize)
 {

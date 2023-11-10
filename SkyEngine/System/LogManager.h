@@ -14,13 +14,13 @@ public:
 
 	void Render();
 
-	virtual void DisplayLogMessage(const std::string& InMessage);
-	virtual void DisplayLogWarning(const std::string& InMessage);
-	virtual void DisplayLogError(const std::string& InMessage);
+	virtual void DisplayMessage(const std::string& InMessage);
+	virtual void DisplayWarning(const std::string& InMessage);
+	virtual void DisplayError(const std::string& InMessage);
 
 	// Singleton
 public:
-	static TPointer<CLogManager> GetInstance();
+	static TPointer<CLogManager> Get();
 
 	CLogManager();
 	~CLogManager(); // Shared pointer has to be able to call destructor so can't be private

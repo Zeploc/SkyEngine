@@ -57,7 +57,7 @@ bool CEditorViewportCanvas::PreRender()
 	centralAlways.DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoDockingOverMe | ImGuiDockNodeFlags_PassthruCentralNode;
 	ImGuiWindowFlags window_flags = 0;
 	window_flags |= ImGuiWindowFlags_NoBackground;
-	window_flags |= ImGuiWindowFlags_NoMouseInputs;
+	// window_flags |= ImGuiWindowFlags_NoMouseInputs;
 	window_flags |= ImGuiWindowFlags_NoNavFocus;
 	window_flags |= ImGuiWindowFlags_NoMove;
 	ImGui::SetNextWindowClass(&centralAlways);
@@ -108,18 +108,18 @@ void CEditorViewportCanvas::OnRender()
 		ImGuizmo::SetDrawlist();
 		ImGuizmo::SetRect(ViewportNode->Pos.x, ViewportNode->Pos.y, ViewportNode->Size.x, ViewportNode->Size.y);
 		glm::mat4 EntityModel = SelectedEntity->Transform.GetModelMatrix();
-
+	
 		STransform OriginalTransform = SelectedEntity->Transform;
 		STransform Transform = OriginalTransform;
 		Transform.FromMatrix(EntityModel);
 		
 		ImGuizmo::Manipulate(glm::value_ptr(SceneRenderer->GetView().ToGLM()), glm::value_ptr(SceneRenderer->GetProjection().ToGLM()),
 		                     ImGuizmo::OPERATION(GizmoMode), ImGuizmo::MODE(GizmoTransformSpace), value_ptr(EntityModel));
-		// const SRotator OriginalRotation = SelectedEntity->Transform.Rotation;
-		// SelectedEntity->Transform.FromMatrix(EntityModel);
-		// // Used to stop gimbol lock
-		// const SRotator DeltaRotation = SelectedEntity->Transform.Rotation - OriginalRotation;
-		// SelectedEntity->Transform.Rotation = OriginalRotation + DeltaRotation;
+		const SRotator OriginalRotation = SelectedEntity->Transform.Rotation;
+		SelectedEntity->Transform.FromMatrix(EntityModel);
+		// Used to stop gimbol lock
+		const SRotator DeltaRotation = SelectedEntity->Transform.Rotation - OriginalRotation;
+		SelectedEntity->Transform.Rotation = OriginalRotation;// + DeltaRotation;
 	}
 
 }
@@ -150,6 +150,12 @@ SVector2i CEditorViewportCanvas::GetViewportPosition()
 	return {(int)CentralViewportNode->Pos.x, (int)CentralViewportNode->Pos.y};
 }
 
+void CEditorViewportCanvas::StartGizmoViewDrag()
+{
+	bGizmoViewDrag = true;
+	InitialViewLockOffset = ViewportCamera->Transform.Position - SelectedEntity->Transform.Position;
+}
+
 bool CEditorViewportCanvas::OnMouseButtonPressed(int MouseButton, int Mods)
 {
 	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
@@ -157,10 +163,25 @@ bool CEditorViewportCanvas::OnMouseButtonPressed(int MouseButton, int Mods)
 	const SVector2i MousePos = ApplicationWindow->GetInput().MousePos;
 	
 	// TODO: Refine mouse visibility toggle/state
+	
+	// When ove the gizmo, don't go into normal viewport controls
+	if (ImGuizmo::IsOver())
+	{
+		if (Mods & CWindowInput::ModiferType::Alt)
+		{
+			// TODO: Duplicate entity
+		}
+		else if (Mods & CWindowInput::ModiferType::Shift)
+		{
+			StartGizmoViewDrag();
+		}
+		return true;
+	}
 
 	bool bHandled = false;
 	if (Mods == 0)
 	{
+		
 		// Right click with no mods
 		if (MouseButton == GLFW_MOUSE_BUTTON_RIGHT)
 		{
@@ -238,6 +259,7 @@ bool CEditorViewportCanvas::OnMouseButtonReleased(int MouseButton, int Mods)
 	}
 	if (MouseButton == GLFW_MOUSE_BUTTON_LEFT)
 	{
+		bGizmoViewDrag = false;
 		return true;
 	}
 	return false;
@@ -249,6 +271,13 @@ bool CEditorViewportCanvas::OnMouseMoved(SVector2i MousePos)
 	const SVector2i ScreenCenter = GetViewportPosition() + GetViewportSize() / 2;
 	const SVector2i ScreenOffset = (MousePos) - ScreenCenter;
 	const SVector2 Offset = SVector2(ScreenOffset) * MouseSensitivity;
+	
+	if (bGizmoViewDrag)
+	{
+		// TODO: Needs improvement, has accelerate feel as its not simple the mouse movement on the gizmo
+		ViewportCamera->Transform.Position = SelectedEntity->Transform.Position + InitialViewLockOffset;
+		return true;
+	}
 	
 	const SVector CameraPivotPoint = ViewportCamera->Transform.Position + ViewportCamera->GetForwardVector() * CurrentFocusDistance;
 	if (bRotatingAroundPoint)
@@ -294,8 +323,21 @@ bool CEditorViewportCanvas::OnMouseScrolled(float XOffset, float YOffset)
 	return false;
 }
 
+void CEditorViewportCanvas::FocusEntity()
+{
+	ViewportCamera->Transform.Position = SelectedEntity->Transform.Position + (-ViewportCamera->GetForwardVector() * CurrentFocusDistance);
+}
+
 bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 {
+	if (bUseSpectatorControls)
+	{
+		return false;
+	}
+	if (ImGuizmo::IsUsing() && KeyCode == GLFW_KEY_LEFT_SHIFT)
+	{			
+		StartGizmoViewDrag();
+	}
 	if (bPanning || bLookingAround || bRotatingAroundPoint)
 	{
 		return false;
@@ -313,7 +355,7 @@ bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 	{
 		if (SelectedEntity)
 		{
-			ViewportCamera->Transform.Position = SelectedEntity->Transform.Position + (-ViewportCamera->GetForwardVector() * CurrentFocusDistance);
+			FocusEntity();
 			return true;
 		}
 	}
@@ -341,10 +383,7 @@ bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 	}
 	if (KeyCode == GLFW_KEY_W)
 	{
-		if (!bUseSpectatorControls)
-		{
-			GizmoMode = ImGuizmo::OPERATION::TRANSLATE;
-		}
+		GizmoMode = ImGuizmo::OPERATION::TRANSLATE;
 		return true;
 	}
 	return false;
@@ -397,6 +436,10 @@ bool CEditorViewportCanvas::OnKeyTyped(int KeyCode, int Mods)
 
 bool CEditorViewportCanvas::OnKeyReleased(int KeyCode, int Mods)
 {
+	if (KeyCode == GLFW_KEY_LEFT_SHIFT)
+	{		
+		bGizmoViewDrag = false;
+	}
 	return false;
 }
 
@@ -405,7 +448,7 @@ bool CEditorViewportCanvas::OnWindowResize(unsigned int Width, unsigned int Heig
 	return false;
 }
 
-void CEditorViewportCanvas::SelectEntity(TPointer<Entity> HitEntity)
+void CEditorViewportCanvas::SelectEntity(TPointer<Entity> HitEntity, bool bFocusCamera)
 {
 	if (HitEntity == SelectedEntity)
 	{
@@ -423,6 +466,10 @@ void CEditorViewportCanvas::SelectEntity(TPointer<Entity> HitEntity)
 		if (bNewVisibleState)
 		{
 			CurrentFocusDistance = 7.0f;
+			if (bFocusCamera)
+			{
+				FocusEntity();
+			}
 		}
 	}
 }
@@ -444,18 +491,18 @@ void CEditorViewportCanvas::UpdateSelectedEntity()
 	std::vector<SVector> HitPosition;
 	for (auto& Ent : EditorScene->Entities)
 	{
-		if (!Ent->bRayCast || !Ent->EntityMesh || !Ent->IsVisible())
+		if (!Ent->bRayCast || !Ent->IsVisible())
 		{
 			continue; // Don't check for raycast
 		}
-		// TODO: Fix check hit for plane and pryamid
 		if (Ent->CheckHit(rayStart, RayDirection, HitPos))
 		{
 			HitEntities.push_back(Ent);
 			HitPosition.push_back(HitPos);
 		}
 	}
-	if (HitEntities.size() > 0)
+	// Poor mans depth testing
+	if (!HitEntities.empty())
 	{
 		int ClosestHitID = 0;
 		for (int i = 0; i < HitEntities.size(); i++)
@@ -470,5 +517,9 @@ void CEditorViewportCanvas::UpdateSelectedEntity()
 		HitPos = HitPosition[ClosestHitID];
 
 		SelectEntity(HitEntity);
+	}
+	else
+	{		
+		SelectEntity(nullptr);
 	}
 }

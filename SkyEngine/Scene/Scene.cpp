@@ -25,7 +25,8 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Scene::Scene(const std::string& InSceneName) : SceneName(InSceneName)
+Scene::Scene(const std::string& InSceneName)
+: SceneName(InSceneName), World2D({0.0f, 1.0f})
 {
 }
 
@@ -71,10 +72,10 @@ void Scene::RenderScene()
 #--Parameters--#: 	Entity to add
 #--Return--#: 		NA
 ************************************************************/
-void Scene::AddEntity(TPointer<Entity> _Entity, bool IsInitial)
+void Scene::AddEntity(TPointer<Entity> _Entity)
 {
 	Entities.push_back(_Entity);
-	_Entity->SetInitialEntity(IsInitial);
+	_Entity->AddToScene(shared_from_this());
 }
 
 /************************************************************
@@ -85,11 +86,7 @@ void Scene::AddEntity(TPointer<Entity> _Entity, bool IsInitial)
 ************************************************************/
 void Scene::DestroyEntity(TPointer<Entity> _Entity)
 {
-	if (_Entity->IsInitialEntity())
-	{
-		DestroyedEntities.push_back(_Entity);
-		_Entity->SetActive(false);
-	}
+	DestroyedEntities.push_back(_Entity);
 	_Entity->OnDestroy();
 
 	// Find entity in entities
@@ -113,13 +110,10 @@ void Scene::DestroyEntity(TPointer<Entity> _Entity)
 #--Return--#: 		NA
 ************************************************************/
 void Scene::Update()
-{	
-	for (int i = 0; i < Entities.size(); i++)
+{		
+	for (const TPointer<Entity>& Entity : Entities)
 	{
-		if (Entities[i])
-		{
-			Entities[i]->BaseUpdate();
-		}
+		Entity->BaseUpdate();
 	}
 
 	Button3DEntity::bButtonPressedThisFrame = false;	
@@ -129,16 +123,20 @@ void Scene::OnLoadScene()
 {
 	if (!bIsPersistant)
 	{
+		// TODO: Would load from serialization
 		for (auto& EntDestroy : DestroyedEntities)
 		{
 			Entities.push_back(EntDestroy);
 		}
 		DestroyedEntities.clear();
-		DestroyAllNonInitialEntities();
-		for (auto& Ent : Entities)
-		{
-			Ent->Reset();
-		}
+	}
+}
+
+void Scene::BeginPlay()
+{
+	for (const TPointer<Entity>& Entity : Entities)
+	{
+		Entity->BeginPlay();
 	}
 }
 
@@ -196,21 +194,3 @@ bool Scene::OnKeyReleased(int KeyCode, int Mods)
 	return false;
 }
 
-void Scene::DestroyAllNonInitialEntities()
-{
-	auto EndIt = Entities.end();
-	for (auto it = Entities.begin(); it != EndIt; ++it)
-	{
-		if (!(*it)->IsInitialEntity())
-		{
-			b2Body* EntBody = (*it)->body;
-			if (EntBody)
-			{
-				EntBody->GetWorld()->DestroyBody(EntBody);
-			}
-			it = Entities.erase(it);
-			--it;
-			EndIt = Entities.end();
-		}
-	}
-}

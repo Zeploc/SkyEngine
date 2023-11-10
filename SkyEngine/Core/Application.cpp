@@ -20,6 +20,7 @@
 #include "Scene/SceneManager.h"
 #include "System/TimeManager.h"
 #include "Render/Renderer.h"
+#include "Render/Meshes/MeshManager.h"
 
 // make sure the winsock lib is included...
 #pragma comment(lib,"ws2_32.lib")
@@ -34,7 +35,7 @@ namespace SkyEngine
 	{
 		ensure(!EngineApplication, "Application already exist!");
 		EngineApplication = this;
-		MainWindowSize = SVector2i(1280, 720);
+		MainWindowSize = SVector2i(1920, 1080);
 		GraphicsApiType = EGraphicsAPI::VULKAN;
 	}
 
@@ -62,10 +63,11 @@ namespace SkyEngine
 		
 		GraphicsApi = IGraphicsAPI::CreateGraphicsAPI(GraphicsApiType);
 		ApplicationWindow->SetupWindow();
-		ShaderManager::LoadAllDefaultShadersInCurrentContext();
+		ShaderManager::LoadAllDefaultShaders();
 		Renderer = CreatePointer<CRenderer>();
 
 		CTimeManager::Start();
+		MeshManager.Init();
 		SoundManager::GetInstance()->InitFMod();
 
 		SetupViewportLayer();
@@ -95,7 +97,7 @@ namespace SkyEngine
 		}
 		else
 		{
-			CLogManager::GetInstance()->DisplayLogError("Application failed to setup, could not start run loop!");
+			CLogManager::Get()->DisplayError("Application failed to setup, could not start run loop!");
 		}
 		
 		OnExit();
@@ -160,4 +162,9 @@ TPointer<IGraphicsAPI> GetGraphicsAPI()
 TPointer<CRenderer> GetRenderer()
 {
 	return SkyEngine::Application::Get()->Renderer;
+}
+
+CMeshManager* GetMeshManager()
+{
+	return &SkyEngine::Application::Get()->MeshManager;
 }

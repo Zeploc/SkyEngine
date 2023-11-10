@@ -164,11 +164,14 @@
     <ClInclude Include="Core\Delegates.h" />
     <ClInclude Include="Core\EntryPoint.h" />
     <ClInclude Include="Core\EventListener.h" />
+    <ClInclude Include="Core\String.h" />
     <ClInclude Include="Core\WorldManager.h" />
     <ClInclude Include="Dependencies\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="Entity\2DParticleSystem.h" />
+    <ClInclude Include="Entity\Body2DComponent.h" />
     <ClInclude Include="Entity\Button3DEntity.h" />
     <ClInclude Include="Entity\Camera.h" />
+    <ClInclude Include="Entity\CollisionBodyComponent.h" />
     <ClInclude Include="Entity\CollisionBounds.h" />
     <ClInclude Include="Entity\Component.h" />
     <ClInclude Include="Entity\Entity.h" />
@@ -216,12 +219,14 @@
     <ClInclude Include="Render\Meshes\Advanced\GeometryObject.h" />
     <ClInclude Include="Render\Meshes\Advanced\TessMesh.h" />
     <ClInclude Include="Render\Meshes\Basic\Cube.h" />
+    <ClInclude Include="Render\Meshes\Basic\DefaultMeshes.h" />
     <ClInclude Include="Render\Meshes\Basic\Plane.h" />
-    <ClInclude Include="Render\Meshes\Basic\Pyramid.h" />
     <ClInclude Include="Render\Meshes\Basic\Sphere.h" />
     <ClInclude Include="Render\Meshes\Basic\Triangle.h" />
-    <ClInclude Include="Render\Meshes\Mesh.h" />
+    <ClInclude Include="Render\Meshes\BoxComponent.h" />
+    <ClInclude Include="Render\Meshes\MeshComponent.h" />
     <ClInclude Include="Render\Meshes\MeshData.h" />
+    <ClInclude Include="Render\Meshes\MeshManager.h" />
     <ClInclude Include="Render\Meshes\Model\AnimatedModel.h" />
     <ClInclude Include="Render\Meshes\Model\Model.h" />
     <ClInclude Include="Render\Meshes\Model\ModelMesh.h" />
@@ -232,6 +237,7 @@
     <ClInclude Include="Render\Particle\ParticleSystemGPU.h" />
     <ClInclude Include="Render\Renderer.h" />
     <ClInclude Include="Render\SceneRenderer.h" />
+    <ClInclude Include="Render\SceneVisual.h" />
     <ClInclude Include="Render\Shaders\PBRShader.h" />
     <ClInclude Include="Render\Shaders\Shader.h" />
     <ClInclude Include="Render\Shaders\ShaderManager.h" />
@@ -264,8 +270,10 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Entity\2DParticleSystem.cpp" />
+    <ClCompile Include="Entity\Body2DComponent.cpp" />
     <ClCompile Include="Entity\Button3DEntity.cpp" />
     <ClCompile Include="Entity\Camera.cpp" />
+    <ClCompile Include="Entity\CollisionBodyComponent.cpp" />
     <ClCompile Include="Entity\CollisionBounds.cpp" />
     <ClCompile Include="Entity\Component.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
@@ -294,12 +302,14 @@
     <ClCompile Include="Render\Meshes\Advanced\GeometryObject.cpp" />
     <ClCompile Include="Render\Meshes\Advanced\TessMesh.cpp" />
     <ClCompile Include="Render\Meshes\Basic\Cube.cpp" />
+    <ClCompile Include="Render\Meshes\Basic\DefaultMeshes.cpp" />
     <ClCompile Include="Render\Meshes\Basic\Plane.cpp" />
-    <ClCompile Include="Render\Meshes\Basic\Pyramid.cpp" />
     <ClCompile Include="Render\Meshes\Basic\Sphere.cpp" />
     <ClCompile Include="Render\Meshes\Basic\Triangle.cpp" />
-    <ClCompile Include="Render\Meshes\Mesh.cpp" />
+    <ClCompile Include="Render\Meshes\BoxComponent.cpp" />
+    <ClCompile Include="Render\Meshes\MeshComponent.cpp" />
     <ClCompile Include="Render\Meshes\MeshData.cpp" />
+    <ClCompile Include="Render\Meshes\MeshManager.cpp" />
     <ClCompile Include="Render\Meshes\Model\AnimatedModel.cpp" />
     <ClCompile Include="Render\Meshes\Model\Model.cpp" />
     <ClCompile Include="Render\Meshes\Model\ModelMesh.cpp" />
@@ -310,6 +320,7 @@
     <ClCompile Include="Render\Particle\ParticleSystemGPU.cpp" />
     <ClCompile Include="Render\Renderer.cpp" />
     <ClCompile Include="Render\SceneRenderer.cpp" />
+    <ClCompile Include="Render\SceneVisual.cpp" />
     <ClCompile Include="Render\Shaders\PBRShader.cpp" />
     <ClCompile Include="Render\Shaders\Shader.cpp" />
     <ClCompile Include="Render\Shaders\ShaderManager.cpp" />

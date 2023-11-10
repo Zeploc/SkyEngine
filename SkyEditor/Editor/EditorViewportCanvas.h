@@ -17,15 +17,17 @@ public:
 	void AddViewportWidget(TPointer<CUIWidget> InWidget);
 	SVector2i GetViewportSize() override;
 	SVector2i GetViewportPosition() override;
-	
+	void StartGizmoViewDrag();
+
 	TPointer<Entity> GetSelectedEntity() const { return SelectedEntity; }
-	void SelectEntity(TPointer<Entity> HitEntity);
+	void SelectEntity(TPointer<Entity> HitEntity, bool bFocusCamera = false);
 
 protected:
 	bool OnMouseButtonPressed(int MouseButton, int Mods) override;
 	bool OnMouseButtonReleased(int MouseButton, int Mods) override;
 	bool OnMouseMoved(SVector2i MousePos) override;
 	bool OnMouseScrolled(float XOffset, float YOffset) override;
+	void FocusEntity();
 	bool OnKeyPressed(int KeyCode, int Mods, int RepeatCount) override;
 	bool OnKeyTyped(int KeyCode, int Mods) override;
 	bool OnKeyReleased(int KeyCode, int Mods) override;
@@ -52,6 +54,10 @@ protected:
 	bool bRotatingAroundPoint = false;
 	bool bLookingAround = false;
 	bool bPanning = false;
+	/* When pressing shift and moving an object, the camera will maintain the offset */
+	bool bGizmoViewDrag = false;
+	SVector InitialViewLockOffset;
+	
 	bool bWireframe = false;
 	
 	SVector2i PreviousMousePosition;

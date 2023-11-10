@@ -7,6 +7,7 @@
 #include <soil/SOIL2.h>
 
 // Engine Includes //
+#include "../MeshManager.h"
 #include "Render/Shaders/ShaderManager.h"
 #include "Core/Application.h"
 #include "Render/Materials/Material.h"
@@ -19,11 +20,11 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CPlane::CPlane(const TPointer<Entity>& InOwner, float fWidth, float fHeight, TPointer<CMaterialInterface> InMaterial)
-: CMeshComponent(InOwner, fWidth, fHeight, 0.0f, InMaterial)
+CPlane::CPlane(const TPointer<Entity>& InOwner, TPointer<CMaterialInterface> InMaterial)
+: CMeshComponent(InOwner, MESH_PLANE, InMaterial)
 {
-	CollisionBox.fHeight = m_fHeight;
-	CollisionBox.fWidth = m_fWidth;
+	CollisionBox.fHeight = LEGACY_Height;
+	CollisionBox.fWidth = LEGACY_Width;
 	BindMeshData();	
 }
 
@@ -33,11 +34,11 @@ CPlane::CPlane(const TPointer<Entity>& InOwner, float fWidth, float fHeight, TPo
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CPlane::CPlane(const TPointer<Entity>& InOwner, float InWidth, float InHeight, TPointer<CMaterialInterface> InMaterial, glm::vec2 v2FrameCounts, int _iFPS)
-: CMeshComponent(InOwner, InWidth, InHeight, 0.0f, InMaterial)
+CPlane::CPlane(const TPointer<Entity>& InOwner, TPointer<CMaterialInterface> InMaterial, glm::vec2 v2FrameCounts, int _iFPS)
+: CMeshComponent(InOwner, MESH_PLANE, InMaterial)
 {
-	CollisionBox.fHeight = m_fHeight;
-	CollisionBox.fWidth = m_fWidth;
+	CollisionBox.fHeight = LEGACY_Height;
+	CollisionBox.fWidth = LEGACY_Width;
 	BindMeshData();
 	
 	AnimationInfo.iFPS = _iFPS;
@@ -63,17 +64,17 @@ CPlane::CPlane(const TPointer<Entity>& InOwner, float InWidth, float InHeight, T
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CPlane::CPlane(const TPointer<Entity>& InOwner, float InWidth, float InHeight, TPointer<CMaterialInterface> InMaterial, int iCount, bool bHorizontal)
-: CMeshComponent(InOwner, InWidth, InHeight, 0.0f, InMaterial)
+CPlane::CPlane(const TPointer<Entity>& InOwner, TPointer<CMaterialInterface> InMaterial, int iCount, bool bHorizontal)
+: CMeshComponent(InOwner, MESH_PLANE, InMaterial)
 {	
-	CollisionBox.fHeight = m_fHeight;
-	CollisionBox.fWidth = m_fWidth;
+	CollisionBox.fHeight = LEGACY_Height;
+	CollisionBox.fWidth = LEGACY_Width;
 	BindMeshData();	
 
 	const TPointer<TMaterial<CPBRShader>> Material = std::static_pointer_cast<CMaterial_PBR>(MeshMaterial);
 	const TPointer<CTexture> TextureData = Material->Params.DiffuseTexture;
 	float fImageRatio = static_cast<float>(TextureData->Width) / static_cast<float>(TextureData->Height);
-	float fObjectRatio = InHeight / InWidth;
+	float fObjectRatio = LEGACY_Height / LEGACY_Width;
 	float hSize = static_cast<float>(iCount);
 	float vSize = static_cast<float>(iCount);
 	if (bHorizontal)
@@ -89,32 +90,10 @@ CPlane::CPlane(const TPointer<Entity>& InOwner, float InWidth, float InHeight, T
 	UVCoords = glm::vec4(0, hSize, 0, vSize);
 }
 
-/************************************************************
-#--Description--#:  Destructor function
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	NA
-#--Return--#: 		NA
-************************************************************/
 CPlane::~CPlane()
 {
 }
 
-void CPlane::Reset()
-{
-	CMeshComponent::Reset();
-	// Reset plane specific states
-	AnimationInfo = m_PlaneInitialState.AnimationInfo;
-	m_dFPSCounter = m_PlaneInitialState.m_dFPSCounter;
-	m_fFrameCheck = m_PlaneInitialState.m_fFrameCheck;
-	CollisionBox = m_PlaneInitialState.CollisionBox;
-}
-
-/************************************************************
-#--Description--#:	Render Current Mesh to the screen
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
 void CPlane::Render(STransform Newtransform)
 {
 	// TODO: move too renderer linking to plane
@@ -154,49 +133,4 @@ void CPlane::Update()
 			AnimationInfo.Advance();
 		}
 	}
-}
-
-bool CPlane::CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos, TPointer<Entity> EntityCheck)
-{
-	glm::vec3 HalfDimensionvec = glm::vec3(m_fWidth / 2.0f, m_fHeight / 2.0f, m_fDepth / 2.0f);
-	return Utils::CheckFaceHit(glm::vec3(-HalfDimensionvec.x, -HalfDimensionvec.y, HalfDimensionvec.z), glm::vec3(HalfDimensionvec.x, HalfDimensionvec.y, HalfDimensionvec.z), RayStart, RayDirection, EntityCheck, HitPos);
-}
-
-MeshData CPlane::GetMeshData()
-{
-	const float HalfWidth = m_fWidth / 2;
-	const float HalfHeight = m_fHeight / 2;
-	const float HalfDepth = m_fDepth / 2;
-	
-	const std::vector<float> VertexPositions = {
-		// Front Face
-		-HalfWidth, HalfHeight, HalfDepth, 
-		HalfWidth, HalfHeight, HalfDepth, 
-		HalfWidth, -HalfHeight, HalfDepth,
-		-HalfWidth, -HalfHeight, HalfDepth,
-	};
-	const std::vector<float> UVCoords = {
-		0.0f, 0.0f,
-		1.0f, 0.0f,
-		1.0f, 1.0f,
-		0.0f, 1.0f,
-	};
-	const std::vector<float> Normals = {
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,		
-	};
-	
-	const std::vector<uint32_t> Indices = {
-		0, 1, 2, // First Triangle
-		0, 2, 3 // Second Triangle
-	};
-
-	MeshData PlaneMeshData(VertexPositions, Indices, Normals);
-	if (MeshMaterial->HasTexture())
-	{
-		PlaneMeshData.SetUVs(UVCoords);
-	}
-	return PlaneMeshData;
 }

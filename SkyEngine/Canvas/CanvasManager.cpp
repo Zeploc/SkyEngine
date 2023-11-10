@@ -40,7 +40,8 @@ void CCanvasManager::SetupCanvasManager(TPointer<CEngineWindow> InOwningWindow)
 	Io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
 	Io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 	Io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	Io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; 
+	// TODO: Re-enable this once we've implemented a callback for ImGui::GetPlatformIO().Platform_CreateVkSurface
+	//Io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; 
 	
 	// TODO: TEMPORARY: swap with sky engine keycodes
 	// Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
@@ -66,6 +67,7 @@ void CCanvasManager::SetupCanvasManager(TPointer<CEngineWindow> InOwningWindow)
 	Io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
 	Io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
 	//
+	GetGraphicsAPI()->ImGuiInit();
 }
 
 void CCanvasManager::OnEvent(CEvent& Event)
@@ -184,7 +186,7 @@ bool CCanvasManager::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
 	}
 
 	// Won't be hovered properly since mouse pos only updated in imgui when window is focused
-	CLogManager::GetInstance()->DisplayLogMessage(std::format("wants capture: {}", ImGui::GetIO().WantCaptureMouse));
+	CLogManager::Get()->DisplayMessage(std::format("wants capture: {}", ImGui::GetIO().WantCaptureMouse));
 
 	// if (!ImGui::GetIO().WantCaptureMouse)
 	// {
@@ -289,7 +291,7 @@ bool CCanvasManager::OnKeyPressedEvent(CKeyPressedEvent& Event)
 	io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
 	io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
 
-	CLogManager::GetInstance()->DisplayLogMessage(std::format("wants keyboard capture: {}", ImGui::GetIO().WantCaptureKeyboard));
+	CLogManager::Get()->DisplayMessage(std::format("wants keyboard capture: {}", ImGui::GetIO().WantCaptureKeyboard));
 	
 	SendCanvasEvents(Event);		
 	if (Event.WasHandled())

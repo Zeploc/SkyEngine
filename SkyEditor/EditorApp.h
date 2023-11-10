@@ -25,6 +25,7 @@ public:
 	void SetupViewportLayer() override;
 	
 	void Update() override;
+	void MainMenuBar();
 
 	void Render() override;
 

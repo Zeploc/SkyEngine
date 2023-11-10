@@ -9,8 +9,8 @@
 class CEditorLogManager : public CLogManager
 {
 public:
-	void DisplayLogMessage(const std::string& InMessage) override;
-	void DisplayLogWarning(const std::string& InMessage) override;
-	void DisplayLogError(const std::string& InMessage) override;
+	void DisplayMessage(const std::string& InMessage) override;
+	void DisplayWarning(const std::string& InMessage) override;
+	void DisplayError(const std::string& InMessage) override;
 	
 };

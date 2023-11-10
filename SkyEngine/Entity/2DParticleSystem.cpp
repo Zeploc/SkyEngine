@@ -26,7 +26,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-ParticleSystem2D::ParticleSystem2D(STransform _Transform, const char* _CharName) : Entity(_Transform, EANCHOR::CENTER)
+ParticleSystem2D::ParticleSystem2D(STransform _Transform, const char* _CharName) : Entity(_Transform)
 {
 	m_vParticlePaths.push_back(_CharName);
 }
@@ -191,9 +191,10 @@ void ParticleSystem2D::Update()
 		ParticleMaterial->Params.DiffuseColour = SVector4(1.0f, 1.0f, 1.0f, 1.0f);
 		ParticleMaterial->Params.DiffuseTexture = ParticleTexture;
 		
-		TPointer<Entity> NewParticleEntity = std::make_shared<Entity>(Transform, EANCHOR::CENTER);
-		TPointer<CPlane> NewParticlePlaneMesh = std::make_shared<CPlane>(NewParticleEntity, fNewSize, fNewSize, ParticleMaterial);
-		NewParticleEntity->AddMesh(NewParticlePlaneMesh);
+		TPointer<Entity> NewParticleEntity = std::make_shared<Entity>(Transform);
+		NewParticleEntity->Transform.Scale = fNewSize;
+		TPointer<CPlane> NewParticlePlaneMesh = std::make_shared<CPlane>(NewParticleEntity, ParticleMaterial);
+		NewParticleEntity->AddComponent(NewParticlePlaneMesh);
 
 		Particle2D NewParticle = {NewParticleEntity, fNewSpeed, v2NewDirection, fNewFalloffDistance, fNewFalloffTime, 0.0f};
 		m_vParticles.push_back(NewParticle);

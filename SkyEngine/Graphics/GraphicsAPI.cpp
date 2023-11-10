@@ -14,20 +14,24 @@ TPointer<IGraphicsAPI> IGraphicsAPI::CreateGraphicsAPI(EGraphicsAPI APIType)
 	{
 	case EGraphicsAPI::OPENGL:
 		NewGraphicsApi = std::make_shared<CGLAPI>();
+		break;
 	case EGraphicsAPI::VULKAN:
 		NewGraphicsApi = std::make_shared<CVulkanAPI>();
 		break;
 	case EGraphicsAPI::DIRECTX:
+	default:
+		// Not implemented
 		break;
-	default: ;
 	}
+	
 	if (NewGraphicsApi)
 	{
 		NewGraphicsApi->Init();
 	}
 	else
 	{
-		CLogManager::GetInstance()->DisplayLogMessage("No valid Graphics API Set!");		
+		CLogManager::Get()->DisplayError("No valid Graphics API Set!");		
 	}
+	
 	return NewGraphicsApi;
 }

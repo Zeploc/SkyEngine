@@ -22,13 +22,14 @@ public:
 		const char* TessControlShaderFilename, const char* TessEvalShaderFilename) override;
 	bool CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename) override;
 	TPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) override;
-	unsigned CreateVertexBuffer(const MeshData& MeshData) override;
+	unsigned CreateVertexBuffer(const CMeshData& MeshData) override;
 	void BindVertexArray(const std::vector<float>& vertices, const std::vector<uint32_t>& indices,
 		unsigned& vao) override;
-	void RenderMesh(TPointer<CMeshComponent> Mesh) override;
-	void CleanupMesh(TPointer<CMeshComponent> Mesh) override;
-	void ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, STransform Transform) override;
+	void RenderMesh(ISceneVisual* SceneVisual) override;
+	void CleanupMesh(ISceneVisual* SceneVisual) override;
 	void RenderImGui() override;
+	void RenderLines(ISceneVisual* SceneVisual, float Thickness) override;
+	void ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, STransform Transform) override;
 	void BindShader(uint32_t ShaderProgramID) override;
 	void Clear(SVector ClearColour) override;
 	void SetRenderViewportSize(const SVector2i InViewportSize) override;
@@ -59,6 +60,6 @@ private:
 	VkDescriptorPool			DescriptorPool = VK_NULL_HANDLE;
 
 	ImGui_ImplVulkanH_Window	MainWindowData;
-	int							MinImageCount = 2;
+	int32_t						MinImageCount = 2;
 	bool						SwapChainRebuild = false;
 };

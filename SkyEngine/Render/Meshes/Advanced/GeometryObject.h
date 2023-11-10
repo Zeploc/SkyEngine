@@ -3,7 +3,7 @@
 #pragma once
 
 // This Includes //
-#include "Render/Meshes/Mesh.h"
+#include "Render/Meshes/MeshComponent.h"
 
 class ENGINE_API GeometryObject : public CMeshComponent
 {
@@ -19,5 +19,5 @@ public:
 	// TODO: Update to graphics instance
 	void Render(STransform Newtransform);
 protected:
-	MeshData GetMeshData() override;
+	CMeshData GetMeshData() override;
 };

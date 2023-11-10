@@ -5,7 +5,7 @@
 #include "Core/Core.h"
 
 // Local Includes //
-#include "Render/Meshes/Mesh.h"
+#include "Render/Meshes/MeshComponent.h"
 
 class ENGINE_API Particle
 {

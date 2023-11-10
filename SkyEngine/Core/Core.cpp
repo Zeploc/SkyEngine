@@ -7,13 +7,14 @@
 #include <iostream>
 
 #include "Input/CXBOXController.h"
+#include "System/LogManager.h"
 
 bool __M_Ensure(const char* expr_str, bool expr, const char* file, int line, const char* msg)
 {
 	if (!expr)
 	{
 		std::string Message = std::format("Assert failed:\t {}\nExpected:\t{}\nSource:\t\t{}:{}\n", msg, expr_str, file, line);
-		std::cerr << Message;
+		CLogManager::Get()->DisplayError(Message);
 		// TODO: Continue/retry popup 
 		__debugbreak();
 		/* TODO: Error through macro that logs */
