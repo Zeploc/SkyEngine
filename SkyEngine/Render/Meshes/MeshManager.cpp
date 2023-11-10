@@ -32,6 +32,9 @@ bool CMeshManager::AddMesh(const std::string MeshName, const CMeshData& MeshData
 		return false;
 	}
 	MeshDatas.insert(std::make_pair(MeshName, CMeshData(MeshData)));
+	CMeshData& StoredMesh = MeshDatas[MeshName];
+	StoredMesh.SetupMeshData();
+	CLogManager::Get()->DisplayMessage(std::format("Created Mesh {} with vao {}", MeshName, StoredMesh.GetVao()));
 	return true;
 }
 

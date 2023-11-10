@@ -54,9 +54,6 @@ public:
 
 	virtual void OnDestroy() {}
 
-	void BindMeshData();
-	virtual void Rebind();
-
 	void AddCollisionBounds(float fHeight, float fWidth, float fDepth, TPointer<Entity> _EntityRef);
 
 	void AddCollisionBounds(TPointer<CCollisionBounds> NewCollision);
@@ -70,11 +67,9 @@ public:
 	float LEGACY_Width;
 	float LEGACY_Height;
 	float LEGACY_Depth = 0;
-	uint32_t vao = 0;
-	int IndicesCount;
 	
 protected:
-	virtual CMeshData GetMeshData();
+	virtual CMeshData GetMeshData() const;
 protected:
 	TPointer<CCollisionBounds> MeshCollisionBounds;
 	std::string MeshAsset;

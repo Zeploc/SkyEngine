@@ -38,8 +38,6 @@ public:
 
 	void Update() override;
 
-	void Rebind() override;
-
 private:
 #define INVALID_MATERIAL 0xFFFFFFFF
 #define NUM_BONES_PER_VERTEX 4

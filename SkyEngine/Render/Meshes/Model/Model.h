@@ -20,8 +20,6 @@ public:
 
 	void BindModel();
 
-	void Rebind() override;
-
 	// TODO: Update to graphics instance
 	void Render(STransform Newtransform);
 

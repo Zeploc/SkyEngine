@@ -20,7 +20,6 @@ CTriangle::CTriangle(const TPointer<Entity>& InOwner, glm::vec3 _Point1, glm::ve
 	CenterPoint.z = (Point1.z + Point2.z + Point3.z) / 3;
 	LEGACY_Width = length(CenterPoint - Point1);
 	LEGACY_Height = LEGACY_Width;
-	BindMeshData();
 }
 
 CTriangle::CTriangle(const TPointer<Entity>& InOwner, glm::vec3 CenterPoint, float Width, TPointer<CMaterialInterface> InMaterial)
@@ -29,14 +28,13 @@ CTriangle::CTriangle(const TPointer<Entity>& InOwner, glm::vec3 CenterPoint, flo
 	Point1 = CenterPoint + glm::vec3(0, Width, 0);
 	Point2 = CenterPoint + glm::vec3(1, -0.5, 0) * Width;
 	Point3 = CenterPoint + glm::vec3(-1, -0.5, 0) * Width;
-	BindMeshData();
 }
 
 CTriangle::~CTriangle()
 {
 }
 
-CMeshData CTriangle::GetMeshData()
+CMeshData CTriangle::GetMeshData() const
 {
 	const std::vector<float> VertexPositions = {
 		// Front Face

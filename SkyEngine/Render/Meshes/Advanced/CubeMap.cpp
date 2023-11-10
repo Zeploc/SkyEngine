@@ -114,7 +114,7 @@ void CubeMap::BindCubeMap()
 		20, 22, 23
 	};
 	
-	IndicesCount = 36;
+	// IndicesCount = 36;
 	
 	GLuint vbo = 0;
 	GLuint ebo = 0;
@@ -156,17 +156,6 @@ void CubeMap::BindCubeMap()
 	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	// glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	// glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-}
-
-/************************************************************
-#--Description--#: 	Rebinds the vao with the colour (not texture)
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
-void CubeMap::Rebind()
-{
-	BindCubeMap();
 }
 
 /************************************************************

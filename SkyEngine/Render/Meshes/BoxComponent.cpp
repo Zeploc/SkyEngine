@@ -9,31 +9,26 @@
 CBoxComponent::CBoxComponent(const TPointer<Entity>& InOwner, const TPointer<CMaterialInterface>& InMaterial)
 	: CComponent(InOwner), BoxMaterial(InMaterial)
 {
+	BoxMeshName = "Box";
 }
 
 void CBoxComponent::OnAttached()
 {
 	CComponent::OnAttached();
-	BindMeshData();
+	if (!GetMeshManager()->HasMesh(BoxMeshName))
+	{
+		GetMeshManager()->AddMesh(BoxMeshName, DefaultMesh::GetBoxData());
+	}
 }
 
 uint32_t CBoxComponent::GetVao() const
 {
-	return vao;
+	return GetMeshManager()->GetMesh(BoxMeshName).GetVao();
 }
 
 int CBoxComponent::GetIndicesCount() const
 {
-	return IndicesCount;
-}
-
-void CBoxComponent::BindMeshData()
-{
-	CMeshData MeshData = DefaultMesh::GetBoxData();
-	vao = GetGraphicsAPI()->CreateVertexBuffer(MeshData);
-	CLogManager::Get()->DisplayMessage(std::format("Created box with vao {}", vao));
-	IndicesCount = MeshData.GetIndicesCount();
-	MeshData.BindData(vao);
+	return GetMeshManager()->GetMesh(BoxMeshName).GetIndicesCount();
 }
 
 bool CBoxComponent::ShouldRender() const

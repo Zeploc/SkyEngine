@@ -42,7 +42,7 @@ AnimatedModel::AnimatedModel(const TPointer<Entity>& InOwner, std::string modelF
 	// TODO: Set texture attribute
 	// MeshMaterial->SetTexture(texFilename);
 
-	vao = 0;
+	// vao = 0;
 	ZERO_MEM(m_Buffers);
 	m_NumBones = 0;
 	m_pScene = nullptr;
@@ -97,72 +97,67 @@ void AnimatedModel::Update()
 {
 }
 
-void AnimatedModel::Rebind()
-{
-	//BindMesh(fileName);
-}
-
 void AnimatedModel::BindMesh(std::string fileName)
 {
-	Clear();
-	//return;
-
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	//glBindVertexArray(0);
-	//return;
-
-	//create buffers for vertex attributes
-	glGenBuffers(ARRAY_SIZE_IN_ELEMENTS(m_Buffers), m_Buffers);
-
-	bool ret = false;
-
-	m_pScene = m_Importer.ReadFile(fileName.c_str(), ASSIMP_LOAD_FLAGS);
-
-	startFrame = 31;
-	endFrame = 50;
-	animFps = static_cast<int>(m_pScene->mAnimations[0]->mChannels[0]->mNumPositionKeys) / static_cast<int>(m_pScene->mAnimations[0]->mDuration);
-
-	animStartTime = (float)startFrame / (float)animFps;
-	animEndtime = (float)endFrame / (float)animFps;
-	animationTime = animStartTime;
-	animSpeed = 0.500f;
-
-	animTick = 1.0f / static_cast<float>(animFps) * animSpeed;
-
-	if (m_pScene)
-	{
-		m_GlobalInverseTransform = m_pScene->mRootNode->mTransformation; // scene space
-		m_GlobalInverseTransform.Inverse(); //= glm::inverse(m_GlobalInverseTransform); //scene inverse space
-
-		InitFromScene(m_pScene, fileName);
-	}
-	else
-	{
-		printf("Error parsing '%s': '%s'\n", fileName.c_str(), m_Importer.GetErrorString());
-	}
-
-	const aiAnimation* pAnimation = m_pScene->mAnimations[0];
-
-	for (size_t i = 0; i < pAnimation->mNumChannels; i++)
-	{
-		aiNodeAnim* pNodeAnim = pAnimation->mChannels[i];
-		std::string nodeName = pNodeAnim->mNodeName.data;
-
-		printf("ChannelName : %s \n", nodeName.c_str());
-
-		// stored in the m_boneinfo vector 
-		if (boneHierarchy.find(nodeName) == boneHierarchy.end())
-		{
-			boneHierarchy[nodeName] = pNodeAnim;
-		}
-	}
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	// Make sure the VAO is not changed from the outside
-	glBindVertexArray(0);
+	// Clear();
+	// //return;
+	//
+	// glGenVertexArrays(1, &vao);
+	// glBindVertexArray(vao);
+	//
+	// //glBindVertexArray(0);
+	// //return;
+	//
+	// //create buffers for vertex attributes
+	// glGenBuffers(ARRAY_SIZE_IN_ELEMENTS(m_Buffers), m_Buffers);
+	//
+	// bool ret = false;
+	//
+	// m_pScene = m_Importer.ReadFile(fileName.c_str(), ASSIMP_LOAD_FLAGS);
+	//
+	// startFrame = 31;
+	// endFrame = 50;
+	// animFps = static_cast<int>(m_pScene->mAnimations[0]->mChannels[0]->mNumPositionKeys) / static_cast<int>(m_pScene->mAnimations[0]->mDuration);
+	//
+	// animStartTime = (float)startFrame / (float)animFps;
+	// animEndtime = (float)endFrame / (float)animFps;
+	// animationTime = animStartTime;
+	// animSpeed = 0.500f;
+	//
+	// animTick = 1.0f / static_cast<float>(animFps) * animSpeed;
+	//
+	// if (m_pScene)
+	// {
+	// 	m_GlobalInverseTransform = m_pScene->mRootNode->mTransformation; // scene space
+	// 	m_GlobalInverseTransform.Inverse(); //= glm::inverse(m_GlobalInverseTransform); //scene inverse space
+	//
+	// 	InitFromScene(m_pScene, fileName);
+	// }
+	// else
+	// {
+	// 	printf("Error parsing '%s': '%s'\n", fileName.c_str(), m_Importer.GetErrorString());
+	// }
+	//
+	// const aiAnimation* pAnimation = m_pScene->mAnimations[0];
+	//
+	// for (size_t i = 0; i < pAnimation->mNumChannels; i++)
+	// {
+	// 	aiNodeAnim* pNodeAnim = pAnimation->mChannels[i];
+	// 	std::string nodeName = pNodeAnim->mNodeName.data;
+	//
+	// 	printf("ChannelName : %s \n", nodeName.c_str());
+	//
+	// 	// stored in the m_boneinfo vector 
+	// 	if (boneHierarchy.find(nodeName) == boneHierarchy.end())
+	// 	{
+	// 		boneHierarchy[nodeName] = pNodeAnim;
+	// 	}
+	// }
+	//
+	// glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//
+	// // Make sure the VAO is not changed from the outside
+	// glBindVertexArray(0);
 }
 
 bool AnimatedModel::InitFromScene(const aiScene* pScene, const std::string Filename)
@@ -715,9 +710,9 @@ void AnimatedModel::Clear()
 		glDeleteBuffers(ARRAY_SIZE_IN_ELEMENTS(m_Buffers), m_Buffers);
 	}
 
-	if (vao != 0)
-	{
-		glDeleteVertexArrays(1, &vao);
-		vao = 0;
-	}
+	// if (vao != 0)
+	// {
+	// 	glDeleteVertexArrays(1, &vao);
+	// 	vao = 0;
+	// }
 }

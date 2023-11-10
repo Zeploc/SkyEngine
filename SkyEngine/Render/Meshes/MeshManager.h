@@ -21,7 +21,8 @@ class ENGINE_API CMeshManager
 public:
 	CMeshManager();
 	void Init();
-	
+
+	// TODO: Should take mesh asset instead
 	bool AddMesh(const std::string MeshName, const CMeshData& MeshData);
 	bool HasMesh(const std::string MeshName) const;
 	CMeshData GetMesh(const std::string MeshName);

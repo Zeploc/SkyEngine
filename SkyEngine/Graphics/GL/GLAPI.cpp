@@ -362,8 +362,10 @@ void IGLAPI::ImGuiInit()
 }
 
 void IGLAPI::RenderMesh(ISceneVisual* SceneVisual)
-{	
-	glBindVertexArray(SceneVisual->GetVao());
+{
+	const uint32_t Vao = SceneVisual->GetVao();
+	ensure(Vao > 0, "Invalid vao!");
+	glBindVertexArray(Vao);
 	glDrawElements(GL_TRIANGLES, SceneVisual->GetIndicesCount(), GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 

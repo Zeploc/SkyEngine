@@ -19,7 +19,7 @@ TessMesh::TessMesh(const TPointer<Entity>& InOwner,float fWidth, float fHeight, 
 {
 	LEGACY_Width = fWidth;
 	LEGACY_Height = fHeight;
-	IndicesCount = 4;
+	// IndicesCount = 4;
 	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>("TessMesh", ShaderManager::GetUndefinedShader("TessProgram"));
 	// MeshMaterial->Colour = _Colour;
 	BindTess();
@@ -112,33 +112,28 @@ void TessMesh::Render(STransform Newtransform)
 	// glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void TessMesh::Rebind()
-{
-	BindTess();
-}
-
 void TessMesh::BindTess()
 {
-	float fHalfWidth = LEGACY_Width / 2;
-	float fHalfHeight = LEGACY_Height / 2;
-
-	GLfloat points[] = {
-		-fHalfWidth, -fHalfHeight, 0.0f,
-		fHalfWidth, -fHalfHeight, 0.0f,
-		fHalfWidth, fHalfHeight, 0.0f,
-		-fHalfWidth, fHalfHeight, 0.0f
-	};
-
-	GLuint vbo;
-
-	glPatchParameteri(GL_PATCH_VERTICES, 4); //comment for tri patch
-
-	glGenBuffers(1, &vbo);
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(points), &points, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), nullptr);
-	glBindVertexArray(0);
+	// float fHalfWidth = LEGACY_Width / 2;
+	// float fHalfHeight = LEGACY_Height / 2;
+	//
+	// GLfloat points[] = {
+	// 	-fHalfWidth, -fHalfHeight, 0.0f,
+	// 	fHalfWidth, -fHalfHeight, 0.0f,
+	// 	fHalfWidth, fHalfHeight, 0.0f,
+	// 	-fHalfWidth, fHalfHeight, 0.0f
+	// };
+	//
+	// GLuint vbo;
+	//
+	// glPatchParameteri(GL_PATCH_VERTICES, 4); //comment for tri patch
+	//
+	// glGenBuffers(1, &vbo);
+	// glGenVertexArrays(1, &vao);
+	// glBindVertexArray(vao);
+	// glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	// glBufferData(GL_ARRAY_BUFFER, sizeof(points), &points, GL_STATIC_DRAW);
+	// glEnableVertexAttribArray(0);
+	// glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), nullptr);
+	// glBindVertexArray(0);
 }

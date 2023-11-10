@@ -14,10 +14,8 @@ public:
 
 	void BindGeometryObject();
 
-	void Rebind() override;
-
 	// TODO: Update to graphics instance
 	void Render(STransform Newtransform);
 protected:
-	CMeshData GetMeshData() override;
+	CMeshData GetMeshData() const override;
 };

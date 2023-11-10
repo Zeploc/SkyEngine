@@ -34,7 +34,6 @@ CMeshComponent::~CMeshComponent()
 void CMeshComponent::OnAttached()
 {
 	CComponent::OnAttached();
-	BindMeshData();
 }
 
 bool CMeshComponent::ShouldRender() const
@@ -59,7 +58,6 @@ bool CMeshComponent::SetMeshAsset(std::string NewMeshAssetName)
 		return false;
 	}
 	MeshAsset = NewMeshAssetName;
-	Rebind();
 	// GetGraphicsAPI()->CleanupMesh(this);
 	// BindMeshData();
 	return true;
@@ -67,12 +65,12 @@ bool CMeshComponent::SetMeshAsset(std::string NewMeshAssetName)
 
 uint32_t CMeshComponent::GetVao() const
 {
-	return vao;
+	return GetMeshData().GetVao();
 }
 
 int CMeshComponent::GetIndicesCount() const
 {
-	return IndicesCount;
+	return GetMeshData().GetIndicesCount();
 }
 
 STransform CMeshComponent::GetRenderTransform() const
@@ -90,24 +88,6 @@ bool CMeshComponent::CheckHit(SVector RayStart, SVector RayDirection, SVector& H
 	return Utils::CheckMeshHit(GetOwner()->Transform, GetMeshData(), RayStart, RayDirection, HitPos);
 }
 
-void CMeshComponent::BindMeshData()
-{
-	vao = GetGraphicsAPI()->CreateVertexBuffer(GetMeshData());
-	CLogManager::Get()->DisplayMessage(std::format("Created Mesh {} with vao {}", MeshAsset, vao));
-	
-	// TODO: Should be created and bound elsewhere and just pointed to by this component
-	CMeshData MeshData = GetMeshData();
-	IndicesCount = MeshData.GetIndicesCount();
-	MeshData.BindData(vao);
-	CLogManager::Get()->DisplayMessage(std::format("Bound Mesh {} with vao {}", MeshAsset, vao));
-}
-
-void CMeshComponent::Rebind()
-{
-	GetGraphicsAPI()->CleanupMesh(this);
-	BindMeshData();
-}
-
 void CMeshComponent::SetVisible(bool bNewVisible)
 {
 	bVisible = bNewVisible;
@@ -123,7 +103,7 @@ void CMeshComponent::AddCollisionBounds(TPointer<CCollisionBounds> NewCollision)
 	MeshCollisionBounds = NewCollision;
 }
 
-CMeshData CMeshComponent::GetMeshData()
+CMeshData CMeshComponent::GetMeshData() const
 {
 	return GetMeshManager()->GetMesh(MeshAsset);
 }

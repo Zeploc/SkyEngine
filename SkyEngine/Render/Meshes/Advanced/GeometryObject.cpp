@@ -23,7 +23,7 @@ GeometryObject::GeometryObject(const TPointer<Entity>& InOwner, glm::vec4 _Colou
 {
 	LEGACY_Width = 1;
 	LEGACY_Height = 1;
-	IndicesCount = 1;
+	// IndicesCount = 1;
 	
 	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>("GeometryObjectMaterial", ShaderManager::GetUndefinedShader("GeometryShader"));
 	// MeshMaterial->Colour = _Colour;
@@ -60,17 +60,6 @@ void GeometryObject::BindGeometryObject()
 }
 
 /************************************************************
-#--Description--#: 	Rebinds the vao with the colour (not texture)
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
-void GeometryObject::Rebind()
-{
-	BindGeometryObject();
-}
-
-/************************************************************
 #--Description--#:	Render Current Mesh to the screen
 #--Author--#: 		Alex Coultas
 #--Parameters--#: 	NA
@@ -99,7 +88,7 @@ void GeometryObject::Render(STransform Newtransform)
 	// glBindVertexArray(0);
 }
 
-CMeshData GeometryObject::GetMeshData()
+CMeshData GeometryObject::GetMeshData() const
 {
 	const std::vector<float> VertexPositions;
 	const std::vector<float> Normals;

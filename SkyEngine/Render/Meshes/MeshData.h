@@ -31,11 +31,12 @@ public:
 	
 	void SetUVs(const std::vector<float>& UVData);
 
-	void BindData(unsigned int vao) const;
+	void SetupMeshData();
 
 	void GetFinalData(TArray<float>& OutVertices, TArray<uint32_t>& OutIndices) const;
 	bool IsValid() const { return GetIndicesCount() > 0; }
 	int GetIndicesCount() const;
+	uint32_t GetVao() const { return Vao; }
 	bool HasUVData() const { return !UVs.empty(); }
 
 	TArray<float> GetPositions() const { return Positions; }
@@ -48,6 +49,7 @@ public:
 #define UV_ELEMENTS_COUNT 2
 	
 protected:
+	void BindData(unsigned int vao) const;
 	void PushPositions(TArray<float>& OutVertices, int VertexIndex) const;
 	void PushUVs(TArray<float>& OutVertices, int VertexIndex) const;
 	void PushNormals(TArray<float>& OutVertices, int VertexIndex) const;
@@ -57,4 +59,6 @@ protected:
 	TArray<float> UVs;
 	TArray<float> Normals;
 
+	uint32_t Vao = 0;
+	int IndicesCount;
 };

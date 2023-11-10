@@ -16,8 +16,6 @@ public:
 	int GetIndicesCount() const override;
 	bool ShouldRenderFaces() const override { return false; }
 	
-protected:
-	void BindMeshData();
 public:
 	bool ShouldRender() const override;
 	bool IsVisible() const override;
@@ -25,7 +23,6 @@ public:
 	TPointer<CMaterialInterface> GetMaterial() const override;
 	STransform GetRenderTransform() const override;
 protected:
-	uint32_t vao = 0;
-	int IndicesCount = 0;
 	TPointer<CMaterialInterface> BoxMaterial;
+	std::string BoxMeshName;
 };

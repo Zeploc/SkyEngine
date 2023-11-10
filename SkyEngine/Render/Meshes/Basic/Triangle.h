@@ -14,7 +14,7 @@ public:
 	~CTriangle();
 	
 protected:
-	CMeshData GetMeshData() override;
+	CMeshData GetMeshData() const override;
 	
 	glm::vec3 Point1;
 	glm::vec3 Point2;

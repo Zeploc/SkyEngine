@@ -66,17 +66,6 @@ void Model::BindModel()
 }
 
 /************************************************************
-#--Description--#: 	Rebinds the vao with the colour (not texture)
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
-void Model::Rebind()
-{
-	BindModel();
-}
-
-/************************************************************
 #--Description--#:	Render Current Mesh to the screen
 #--Author--#: 		Alex Coultas
 #--Parameters--#: 	NA

@@ -4,6 +4,7 @@
 #include "MeshData.h"
 
 #include "Core/Application.h"
+#include "System/LogManager.h"
 
 void STriangle::TransformTriangle(STransform Transform)
 {
@@ -51,6 +52,13 @@ void CMeshData::BindData(unsigned vao) const
 	std::vector<uint32_t> OutIndices;
 	GetFinalData(OutVertices, OutIndices);
 	GetGraphicsAPI()->BindVertexArray(OutVertices, OutIndices, vao);	
+}
+
+void CMeshData::SetupMeshData()
+{
+	Vao = GetGraphicsAPI()->CreateVertexBuffer(*this);
+	IndicesCount = GetIndicesCount();
+	BindData(Vao);
 }
 
 void CMeshData::GetFinalData(TArray<float>& OutVertices, TArray<uint32_t>& OutIndices) const

@@ -25,7 +25,6 @@ CPlane::CPlane(const TPointer<Entity>& InOwner, TPointer<CMaterialInterface> InM
 {
 	CollisionBox.fHeight = LEGACY_Height;
 	CollisionBox.fWidth = LEGACY_Width;
-	BindMeshData();	
 }
 
 /************************************************************
@@ -39,7 +38,6 @@ CPlane::CPlane(const TPointer<Entity>& InOwner, TPointer<CMaterialInterface> InM
 {
 	CollisionBox.fHeight = LEGACY_Height;
 	CollisionBox.fWidth = LEGACY_Width;
-	BindMeshData();
 	
 	AnimationInfo.iFPS = _iFPS;
 	m_fFrameCheck = 1.0f / AnimationInfo.iFPS;
@@ -69,7 +67,6 @@ CPlane::CPlane(const TPointer<Entity>& InOwner, TPointer<CMaterialInterface> InM
 {	
 	CollisionBox.fHeight = LEGACY_Height;
 	CollisionBox.fWidth = LEGACY_Width;
-	BindMeshData();	
 
 	const TPointer<TMaterial<CPBRShader>> Material = std::static_pointer_cast<CMaterial_PBR>(MeshMaterial);
 	const TPointer<CTexture> TextureData = Material->Params.DiffuseTexture;

@@ -15,7 +15,5 @@ public:
 	// TODO: Update to graphics instance
 	void Render(STransform Newtransform);
 
-	void Rebind() override; // Will replace if texture exists
-
 	void BindTess();
 };
