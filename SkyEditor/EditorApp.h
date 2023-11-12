@@ -22,6 +22,9 @@ public:
 	
 	bool ApplicationSetup(std::string ExecutablePath) override;
 
+	// TODO: Remove once material assets setup
+	void SetupPlaceholderMaterials();
+
 	void SetupLogManager() override;
 	void SetupViewportLayer() override;
 	
@@ -34,12 +37,13 @@ public:
 	void OnExit() override;
 
 	void OpenScene();
+	bool OpenScene(std::string FilePath);
 	void SaveScene(bool bAsNew = false);
 
 	unsigned int DockSpaceID = 0;
 	
 	CEditorViewportCanvas* EditorViewportLayer;
 
-	std::string SceneFilePath;
+	std::string ScenePath;
 	std::string ContentPath;
 };

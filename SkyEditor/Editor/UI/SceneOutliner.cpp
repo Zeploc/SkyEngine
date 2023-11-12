@@ -25,7 +25,7 @@ void CSceneOutliner::OnRender()
 		TPointer<Entity> NewSelectedEntity = nullptr;
 		for (TPointer<Entity> Entity : EditorScene->Entities)
 		{
-			if (ImGui::Selectable(Entity->GetEntityName().c_str(), Entity == SelectedEntity))
+			if (ImGui::Selectable((Entity->GetEntityName() + "##" + std::to_string(Entity->GetEntityID())).c_str(), Entity == SelectedEntity))
 			{
 				NewSelectedEntity = Entity;
 			}

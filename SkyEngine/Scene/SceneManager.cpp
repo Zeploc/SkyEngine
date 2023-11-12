@@ -127,6 +127,7 @@ void SceneManager::SwitchScene(std::string SceneName, bool _bInstant)
 		}
 		
 		CurrentScene = SceneName;
+		SceneToSwitch = CurrentScene;
 		CLogManager::Get()->DisplayMessage("Switching to Scene \"" + GetCurrentScene()->SceneName + "\"");
 		GetCurrentScene()->OnLoadScene();
 		// TODO: Move elsewhere

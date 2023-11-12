@@ -11,39 +11,25 @@
 
 #include "Editor/Windows/EditorWindow.h"
 #include "Editor/Windows/EditorWindowManager.h"
-#include <Render/Meshes/Advanced/GeometryObject.h>
-#include <Render/Meshes/Model/Model.h>
 #include <Render/Particle/ParticleSystem.h>
 #include <Render/Meshes/Basic/Plane.h>
 
 #include <Windows.h>
 
-#include "EditorApp.h"
 #include "Core/Application.h"
 #include "Editor/EditorViewportCanvas.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Render/Materials/Material.h"
 #include "Render/Meshes/BoxComponent.h"
 #include "Render/Meshes/MeshManager.h"
-#include "Render/Shaders/PBRShader.h"
-#include "Render/Shaders/UndefinedShader.h"
-#include "Render/Shaders/ShaderManager.h"
-#include "Render/Shaders/UnlitShader.h"
 
 EditorScene::EditorScene(const std::string& InSceneName) : Scene(InSceneName)
 {
 	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
-	const SVector2i WindowSize = ApplicationWindow->GetSize();
-	
-
-	// LevelNameText = std::make_shared<UIText>(glm::vec2(WindowSize.X - 540, WindowSize.Y - 15.0f), 0.0f, glm::vec4(0.3, 0.3, 0.3, 1.0f), "Level Name", "Resources/Fonts/Roboto-Regular.ttf", 20, EANCHOR::BOTTOM_RIGHT);
-	// AddUIElement(LevelNameText);
+	const SVector2i WindowSize = ApplicationWindow->GetSize();	
 
 	// TPointer<UIText> TipText(new UIText({WindowSize.X - 20, 15.0f}, 0, {0.3, 0.3, 0.3, 1.0f}, "G - Wireframe  |  WASD - Move  |  Mouse - Look  |  Space - Jump  |  ESC - Mouse Toggle", "Resources/Fonts/Roboto-Regular.ttf", 22, EANCHOR::TOP_RIGHT));
 	// AddUIElement(TipText);
-
-	Lighting::SetLightPosition({5, 5, 5});
-	Lighting::SetSunDirection({3, -1, 5});
 	
 	EditorWindow* NewWindow = new EditorWindow("Outliner", ApplicationWindow, glm::vec2(300, 400), glm::vec2(0, 0));
 	NewWindow->SetBackColour(glm::vec3(0.2, 0.6, 0.8));
@@ -53,7 +39,6 @@ EditorScene::EditorScene(const std::string& InSceneName) : Scene(InSceneName)
 
 	//EditorWindow* ExternalWindow = new EditorWindow("External Test", nullptr, glm::vec2(500, 300), glm::vec2(100, 100));
 	//ExternalWindow->SetBackColour(glm::vec3(0.6, 0.3, 0.4));
-
 }
 
 void EditorScene::OnLoadScene()
@@ -64,36 +49,12 @@ void EditorScene::OnLoadScene()
 
 void EditorScene::AddSampleEntities()
 {
-	TPointer<CTexture> BrickTexture = GetGraphicsAPI()->GetTexture("Resources/Images/StoneWall_2x2.jpg");
-	// TPointer<CMaterial_PBR> BrickMaterial = std::make_shared<CMaterial_PBR>();
-	TPointer<TMaterial<CUndefinedShader>> BrickMaterial = std::make_shared<TMaterial<CUndefinedShader>>("BrickMaterial", ShaderManager::GetUndefinedShader("BaseProgram"));
-	BrickMaterial->Params.DiffuseTexture = BrickTexture;
-	GetMaterialManager()->AddMaterial(BrickMaterial);
+	TPointer<CMaterialInterface> ColouredBrickMaterial = GetMaterialManager()->FindMaterial("ColouredBrickMaterial");
+	TPointer<CMaterialInterface> ColouredBrickPlaneMaterial = GetMaterialManager()->FindMaterial("ColouredBrickPlaneMaterial");
+	TPointer<CMaterialInterface> CliffMaterial = GetMaterialManager()->FindMaterial("CliffMaterial");
+	TPointer<CMaterialInterface> PlaneMaterial = GetMaterialManager()->FindMaterial("PlaneMaterial");
+	TPointer<CMaterialInterface> BoxMaterial = GetMaterialManager()->FindMaterial("BoxMaterial");
 	
-	// Would be nice to be able to copy an existing material as a template
-	TPointer<CMaterial_PBR> ColouredBrickMaterial = std::make_shared<CMaterial_PBR>("ColouredBrickMaterial");
-	ColouredBrickMaterial->Params.DiffuseTexture = BrickTexture;
-	ColouredBrickMaterial->Params.DiffuseColour = {0.5f, 0.3f, 0.3f, 1.0f};
-	GetMaterialManager()->AddMaterial(ColouredBrickMaterial);
-	
-	TPointer<CMaterial_PBR> ColouredBrickPlaneMaterial = std::make_shared<CMaterial_PBR>("ColouredBrickPlaneMaterial");
-	ColouredBrickPlaneMaterial->Params.DiffuseTexture = BrickTexture;
-	ColouredBrickPlaneMaterial->Params.DiffuseColour = {0.5f, 0.3f, 0.3f, 1.0f};
-	ColouredBrickPlaneMaterial->bTwoSided = true;
-	GetMaterialManager()->AddMaterial(ColouredBrickPlaneMaterial);
-	
-	TPointer<CMaterial_PBR> CliffMaterial = std::make_shared<CMaterial_PBR>("CliffMaterial");
-	TPointer<CTexture> CliffTexture = GetGraphicsAPI()->GetTexture("Resources/Images/SmoothCliff_1024.jpg");
-	CliffMaterial->Params.DiffuseTexture = BrickTexture;
-	CliffMaterial->Params.DiffuseColour = {0.1f, 0.8f, 0.3f, 1.0f};	
-	GetMaterialManager()->AddMaterial(CliffMaterial);
-
-	TPointer<CMaterial_PBR> PlaneMaterial = std::make_shared<CMaterial_PBR>("PlaneMaterial");
-	PlaneMaterial->Params.DiffuseColour = {0.5f, 0.5f, 0.5f, 1.0f};
-	PlaneMaterial->bTwoSided = true;
-	GetMaterialManager()->AddMaterial(PlaneMaterial);
-
-	// TODO: Switch all below to make shared
 	TPointer<Entity> SphereRaycastTest(new Entity(STransform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {2, 2, 2}}, "Sphere"));
 	TPointer<CMeshComponent> SphereRaycastMesh = std::make_shared<CMeshComponent>(SphereRaycastTest, MESH_SPHERE, CliffMaterial);
 	SphereRaycastTest->AddComponent(SphereRaycastMesh);
@@ -154,10 +115,6 @@ void EditorScene::AddSampleEntities()
 	PlaneEntity->AddComponent(PlaneMesh);
 	AddEntity(PlaneEntity);
 	
-	TPointer<CMaterial_Unlit> BoxMaterial = std::make_shared<CMaterial_Unlit>("BoxMaterial");
-	BoxMaterial->Params.DiffuseColour = SVector4(1.0f, 0.1f, 0.1f, 1.0f);
-	GetMaterialManager()->AddMaterial(BoxMaterial);
-	
 	TPointer<Entity> BoxEntity = std::make_shared<Entity>(STransform{{5.0f, 5.0f, 10.0f}, {0, 0, 0}, {2, 2, 2}}, "Box");
 	TPointer<CBoxComponent> BoxComponent = CreatePointer<CBoxComponent>(BoxEntity, BoxMaterial);
 	BoxEntity->AddComponent(BoxComponent);
@@ -167,11 +124,7 @@ void EditorScene::AddSampleEntities()
 
 void EditorScene::Update()
 {	
-	Scene::Update();
-	// TODO:
-	// LevelNameText->sText = SceneName;
-	TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
-	
+	Scene::Update();	
 	// TODO: Change later?
 	EditorWindowManager::UpdateWindows();
 }
