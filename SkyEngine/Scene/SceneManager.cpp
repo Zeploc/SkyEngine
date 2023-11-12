@@ -48,12 +48,17 @@ SceneManager::~SceneManager()
 ************************************************************/
 void SceneManager::AddScene(TPointer<Scene> _Scene)
 {
+	if (Scenes.contains(_Scene->SceneName))
+	{
+		ensure(false, "Attempted to add scene with same name as existing!");
+		return;
+	}
 	if (Scenes.empty())
 	{
 		Scenes.insert(std::pair<std::string, TPointer<Scene>>(_Scene->SceneName, _Scene));
-		CurrentScene = _Scene->SceneName;
-		SceneToSwitch = CurrentScene;
-		_Scene->OnLoadScene();
+
+		SceneToSwitch = _Scene->SceneName;
+		SwitchScene(SceneToSwitch, true);
 	}
 	else
 	{
@@ -106,7 +111,7 @@ void SceneManager::RemoveScene(TPointer<Scene> _Scene)
 ************************************************************/
 void SceneManager::SwitchScene(std::string SceneName, bool _bInstant)
 {
-	if (Scenes.count(SceneName) == 0)
+	if (Scenes.empty())
 	{
 		// Scene Doesn't exist
 		CLogManager::Get()->DisplayMessage("Could not find scene " + SceneName);
@@ -115,6 +120,12 @@ void SceneManager::SwitchScene(std::string SceneName, bool _bInstant)
 
 	if (_bInstant)
 	{
+		if (!CurrentScene.empty())
+		{
+			const TPointer<Scene> ExistingScene = GetCurrentScene();
+			ExistingScene->UnloadScene();
+		}
+		
 		CurrentScene = SceneName;
 		CLogManager::Get()->DisplayMessage("Switching to Scene \"" + GetCurrentScene()->SceneName + "\"");
 		GetCurrentScene()->OnLoadScene();
@@ -139,11 +150,7 @@ void SceneManager::UpdateCurrentScene()
 	// Switch to scene flag has been set
 	if (SceneToSwitch != CurrentScene)
 	{
-		CurrentScene = SceneToSwitch;
-		CLogManager::Get()->DisplayMessage("Switching to Scene \"" + Scenes[SceneToSwitch]->SceneName + "\"");
-		Scenes[SceneToSwitch]->OnLoadScene();
-		// TODO: Move elsewhere
-		GetCurrentScene()->BeginPlay();
+		SwitchScene(SceneToSwitch, true);
 	}
 }
 

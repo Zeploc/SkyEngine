@@ -68,33 +68,38 @@ void EditorScene::AddSampleEntities()
 	// TPointer<CMaterial_PBR> BrickMaterial = std::make_shared<CMaterial_PBR>();
 	TPointer<TMaterial<CUndefinedShader>> BrickMaterial = std::make_shared<TMaterial<CUndefinedShader>>("BrickMaterial", ShaderManager::GetUndefinedShader("BaseProgram"));
 	BrickMaterial->Params.DiffuseTexture = BrickTexture;
+	GetMaterialManager()->AddMaterial(BrickMaterial);
 	
 	// Would be nice to be able to copy an existing material as a template
 	TPointer<CMaterial_PBR> ColouredBrickMaterial = std::make_shared<CMaterial_PBR>("ColouredBrickMaterial");
 	ColouredBrickMaterial->Params.DiffuseTexture = BrickTexture;
 	ColouredBrickMaterial->Params.DiffuseColour = {0.5f, 0.3f, 0.3f, 1.0f};
+	GetMaterialManager()->AddMaterial(ColouredBrickMaterial);
 	
 	TPointer<CMaterial_PBR> ColouredBrickPlaneMaterial = std::make_shared<CMaterial_PBR>("ColouredBrickPlaneMaterial");
 	ColouredBrickPlaneMaterial->Params.DiffuseTexture = BrickTexture;
 	ColouredBrickPlaneMaterial->Params.DiffuseColour = {0.5f, 0.3f, 0.3f, 1.0f};
 	ColouredBrickPlaneMaterial->bTwoSided = true;
+	GetMaterialManager()->AddMaterial(ColouredBrickPlaneMaterial);
 	
-	TPointer<CTexture> CliffTexture = GetGraphicsAPI()->GetTexture("Resources/Images/SmoothCliff_1024.jpg");
 	TPointer<CMaterial_PBR> CliffMaterial = std::make_shared<CMaterial_PBR>("CliffMaterial");
+	TPointer<CTexture> CliffTexture = GetGraphicsAPI()->GetTexture("Resources/Images/SmoothCliff_1024.jpg");
 	CliffMaterial->Params.DiffuseTexture = BrickTexture;
 	CliffMaterial->Params.DiffuseColour = {0.1f, 0.8f, 0.3f, 1.0f};	
+	GetMaterialManager()->AddMaterial(CliffMaterial);
 
 	TPointer<CMaterial_PBR> PlaneMaterial = std::make_shared<CMaterial_PBR>("PlaneMaterial");
 	PlaneMaterial->Params.DiffuseColour = {0.5f, 0.5f, 0.5f, 1.0f};
 	PlaneMaterial->bTwoSided = true;
+	GetMaterialManager()->AddMaterial(PlaneMaterial);
 
 	// TODO: Switch all below to make shared
-	TPointer<Entity> SphereRaycastTest(new Entity(STransform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {2, 2, 2}}));
+	TPointer<Entity> SphereRaycastTest(new Entity(STransform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {2, 2, 2}}, "Sphere"));
 	TPointer<CMeshComponent> SphereRaycastMesh = std::make_shared<CMeshComponent>(SphereRaycastTest, MESH_SPHERE, CliffMaterial);
 	SphereRaycastTest->AddComponent(SphereRaycastMesh);
 	AddEntity(SphereRaycastTest);
 			
-	TPointer<Entity> FloorEntity(new Entity({{0, 0, 0}, {0, -90, 0}, {50}}));
+	TPointer<Entity> FloorEntity(new Entity({{0, 0, 0}, {0, -90, 0}, {50}}, "Floor Plane"));
 	//glm::vec3 Points[4] = { {-10, 10, 1}, {10, 10, -1 }, { 10, -10, 0 }, { -10, -10, -3 } };
 	const TPointer<CMeshComponent> FloorPlanMesh = std::make_shared<CMeshComponent>(FloorEntity, MESH_PLANE, PlaneMaterial);
 	FloorEntity->AddComponent(FloorPlanMesh);
@@ -127,32 +132,33 @@ void EditorScene::AddSampleEntities()
 	// ModelEntityMesh->SetReflection(true);
 	// AddEntity(ModelEntity, true);
 	
-	TPointer<Entity> CubeEnty(new Entity(STransform{{10.0f, 4.0f, 4.0f}, {0, 0, 0}, {3, 3, 3}}));
+	TPointer<Entity> CubeEnty(new Entity(STransform{{10.0f, 4.0f, 4.0f}, {0, 0, 0}, {3, 3, 3}}, "Cube"));
 	TPointer<CMeshComponent> CubyMesh(new CMeshComponent(CubeEnty, MESH_CUBE, ColouredBrickMaterial));
 	CubeEnty->AddComponent(CubyMesh);
 	AddEntity(CubeEnty);
 	
-	TPointer<Entity> PyramidEntity(new Entity(STransform{{10.0f, 4.0f, 8.0f}, {0, 0, 0}, {3, 3, 3}}));
+	TPointer<Entity> PyramidEntity(new Entity(STransform{{10.0f, 4.0f, 8.0f}, {0, 0, 0}, {3, 3, 3}}, "Pyramid"));
 	TPointer<CMeshComponent> PyramidMesh(new CMeshComponent(PyramidEntity, MESH_PYRAMID, ColouredBrickMaterial));
 	PyramidEntity->AddComponent(PyramidMesh);
 	// PyramidMesh->SetLit(false, true);
 	// TODO: Identify and fix pyramid lighting
 	AddEntity(PyramidEntity);
 	
-	TPointer<Entity> SphereEntity(new Entity(STransform{{10.0f, 4.0f, 12.0f}, {0, 0, 0}, {2, 2, 2}}));
+	TPointer<Entity> SphereEntity(new Entity(STransform{{10.0f, 4.0f, 12.0f}, {0, 0, 0}, {2, 2, 2}}, "Sphere 2"));
 	TPointer<CMeshComponent> SphereMesh(new CMeshComponent(SphereEntity, MESH_SPHERE, ColouredBrickMaterial));
 	SphereEntity->AddComponent(SphereMesh);
 	AddEntity(SphereEntity);
 	
-	TPointer<Entity> PlaneEntity = std::make_shared<Entity>(STransform{{10.0f, 4.0f, 16.0f}, {0, -90, 0}, {2, 2, 2}});
+	TPointer<Entity> PlaneEntity = std::make_shared<Entity>(STransform{{10.0f, 4.0f, 16.0f}, {0, -90, 0}, {2, 2, 2}}, "Plane");
 	TPointer<CPlane> PlaneMesh = CreatePointer<CPlane>(PlaneEntity, ColouredBrickPlaneMaterial);
 	PlaneEntity->AddComponent(PlaneMesh);
 	AddEntity(PlaneEntity);
 	
 	TPointer<CMaterial_Unlit> BoxMaterial = std::make_shared<CMaterial_Unlit>("BoxMaterial");
 	BoxMaterial->Params.DiffuseColour = SVector4(1.0f, 0.1f, 0.1f, 1.0f);
+	GetMaterialManager()->AddMaterial(BoxMaterial);
 	
-	TPointer<Entity> BoxEntity = std::make_shared<Entity>(STransform{{5.0f, 5.0f, 10.0f}, {0, 0, 0}, {2, 2, 2}});
+	TPointer<Entity> BoxEntity = std::make_shared<Entity>(STransform{{5.0f, 5.0f, 10.0f}, {0, 0, 0}, {2, 2, 2}}, "Box");
 	TPointer<CBoxComponent> BoxComponent = CreatePointer<CBoxComponent>(BoxEntity, BoxMaterial);
 	BoxEntity->AddComponent(BoxComponent);
 	// GetRenderer()->AddBox(GetInterface<ISceneVisual>(BoxComponent));
@@ -173,151 +179,4 @@ void EditorScene::Update()
 void EditorScene::RenderScene()
 {
 	Scene::RenderScene();
-}
-
-void EditorScene::OpenFile()
-{
-	// TODO: Open dialogue (Currently makes file not openable?)
-	// use IFileSaveDialog
-	// https://learn.microsoft.com/en-us/windows/win32/shell/common-file-dialog
-	
-	// OPENFILENAME ofn;
-	// ZeroMemory(&ofn, sizeof(ofn));
-	// char szFile[100];
-	// ofn.lStructSize = sizeof(ofn);
-	// ofn.hwndOwner = NULL; //CameraManager::GetInstance()->MainWindow
-	// ofn.lpstrFile = szFile;
-	// ofn.lpstrFile[0] = '\0';
-	// ofn.nMaxFile = sizeof(szFile);
-	// ofn.lpstrFilter = "Level (*.slvl)\0*.slvl\0Text\0*.TXT\0";
-	// ofn.nFilterIndex = 1;
-	// ofn.lpstrFileTitle = NULL;
-	// ofn.nMaxFileTitle = 0;
-	// ofn.lpstrInitialDir = "Resources/Levels/";
-	// ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-	// if (!GetOpenFileNameA(&ofn))
-	// {
-	// 	// MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);
-	// 	return;
-	// }
-
-	/*std::filesystem::path CurrentPath(szFile);
-	std::filesystem::path RootResources("D:\\Projects\\OpenGL\\Graphics Combination\\Graphics Combination\\");
-	std::filesystem::path relativePath = CurrentPath.lexically_relative(RootResources);
-	std::string relative = relativePath.string();
-	std::replace(relative.begin(), relative.end(), '\\', '/');*/
-
-	std::string FileName = SceneName == "Example" ? "Resources/Levels/Demo Scene.slvl" : "Resources/Levels/Example.slvl";// = szFile;
-	std::string line;
-	std::ifstream OpenedFile(FileName);//szFile); //
-	if (!OpenedFile.is_open())
-	{
-		MessageBoxA(NULL, FileName.c_str(), "Failed to open", MB_OK);
-		return;
-	}
-
-	LoadLevel(OpenedFile);	
-	
-	OpenedFile.close();
-}
-
-void EditorScene::LoadLevel(std::ifstream& OpenedLevelFile)
-{
-	// std::string LevelName = OpenedLevelFile[0].substr(1, OpenedLevelFile[0].length() - 2);
-	// SceneName = LevelName;
-
-	std::vector< TPointer<Entity>> EntitiesCopy = Entities;
-	for (TPointer<Entity> CurrentEnt : EntitiesCopy)
-	{
-		
-		DestroyEntity(CurrentEnt);
-	}
-
-	std::string Empty;
-	std::getline(OpenedLevelFile, Empty, '[');
-	std::getline(OpenedLevelFile, SceneName, ']');
-	std::getline(OpenedLevelFile, Empty, '\n');
-	
-	while(OpenedLevelFile.peek() != EOF )
-	{
-		TPointer<Entity> NewEntity(new Entity(STransform()));
-		NewEntity->Transform.Scale = SVector(3.0f);
-		OpenedLevelFile >> NewEntity;
-		std::getline(OpenedLevelFile, Empty, '\n');
-		
-		TPointer<CMaterial_PBR> TestMaterial = std::make_shared<CMaterial_PBR>("TestMaterial");
-		TestMaterial->Params.DiffuseColour = {0.7f, 0.4f, 0.3f, 1.0f};
-		
-		TPointer<CMeshComponent> CubeMesh = std::make_shared<CMeshComponent>(NewEntity, MESH_CUBE, TestMaterial);
-		NewEntity->AddComponent(CubeMesh);
-		AddEntity(NewEntity);
-	}
-	
-	// for (std::string Line : OpenedLevelFile)
-	// {
-	// 	std::string IsEntity = Line.substr(0, 8);
-	// 	if (IsEntity == "[Entity]")
-	// 	{
-	// 		// Pointer<Entity> NewEntity;
-	// 		// IsEntity >> NewEntity;
-	// 		
-	// 		Pointer<Entity> CubeEnty(new Entity(Line));
-	// 		//Pointer<Sphere> SphereMesh(Sphere(2.0f, 2.0f, 2.0f, { 0.1f, 0.8f, 0.3f, 1.0f }));
-	// 		Pointer<Cube> CubyMesh(new Cube(3.0f, 3.0f, 3.0f, {0.7f, 0.4f, 0.3f, 1.0f}));
-	//
-	// 		CubeEnty->AddMesh(CubyMesh);
-	// 		CubeEnty->SetInitialEntity(true);
-	// 		
-	// 		//Pointer<GeometryObject> GeomShape(new GeometryObject({0.0, 0.9f, 0.3f, 1.0f}));
-	// 		//CubeEnty->AddMesh(GeomShape);
-	// 		
-	// 		//CubyMesh->SetLit(true);
-	// 		AddEntity(CubeEnty, true);
-	// 	}
-	// }
-}
-
-void EditorScene::SaveAsNew()
-{
-	//IFileSaveDialog
-	
-	OPENFILENAME ofn;
-	ZeroMemory(&ofn, sizeof(ofn));
-	char szFile[100];
-	ofn.lStructSize = sizeof(ofn);
-	ofn.hwndOwner = NULL;
-	ofn.lpstrFile = LPWSTR(szFile);
-	ofn.lpstrFile[0] = '\0';
-	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter = LPCWSTR("Level (*.slvl)\0*.slvl\0Text\0*.TXT\0");
-	ofn.nFilterIndex = 1;
-	ofn.lpstrFileTitle = LPWSTR("Untitled.slvl");
-	ofn.nMaxFileTitle = 0;
-	ofn.lpstrInitialDir = LPCWSTR("Resources/Levels/");
-	ofn.Flags = OFN_PATHMUSTEXIST;// | OFN_FILEMUSTEXIST;
-	if (!GetSaveFileNameA(LPOPENFILENAMEA(&ofn)))
-	{
-		// MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);
-		return;
-	}
-	MessageBoxA(NULL, LPCSTR(ofn.lpstrFile), "File Name (WIP)", MB_OK);
-}
-
-void EditorScene::SaveCurrentLevel()
-{
-	 std::ofstream LevelFile;
-	 std::string LevelPath = "Resources/Levels/" + SceneName + ".slvl";
-	 LevelFile.open(LevelPath);
-	 if (!LevelFile.is_open())
-     {
-     	MessageBoxA(NULL, LevelPath.c_str(), "Failed to edit", MB_OK);
-     	return;
-     }
-	 LevelFile << "[" + SceneName + "]\n";
-	 for (TPointer<Entity> Entity : Entities)
-	 {	 	
-	 	LevelFile << Entity << "\n";
-	 }
-
-	LevelFile.close();
 }

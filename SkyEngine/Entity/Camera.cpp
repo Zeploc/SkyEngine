@@ -2,6 +2,6 @@
 #include "Camera.h"
 
 Camera::Camera(const STransform& InTransform)
-: Entity(InTransform)
+: Entity(InTransform, "Camera")
 {
 }

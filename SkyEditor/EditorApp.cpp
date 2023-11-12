@@ -4,6 +4,8 @@
 
 #include "EditorApp.h"
 
+#include <fstream>
+
 #include "SEPCH.h"
 #include <SkyEngine.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -24,22 +26,44 @@
 #include "Editor/Windows/EditorWindowManager.h"
 #include "Canvas/Canvas.h"
 #include "Canvas/ViewportCanvas.h"
+#include "Platform/PlatformInterface.h"
+#include "Platform/File/FileManager.h"
+#include "Platform/File/PathUtils.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Render/SceneRenderer.h"
+#include "Scene/SceneUtils.h"
 
 
 EditorApplication::EditorApplication() : Application()
 {
 	EditorApp = this;
+	SceneFilePath = "Resources\\Levels\\Untitled.slvl";
 }
 
-bool EditorApplication::ApplicationSetup()
+void EditorApplication::SetContentDirectory(std::string ExecutablePath)
 {
-	const bool bSuccessfulSetup = Application::ApplicationSetup();
+	uint64_t DirectoryEndIndex = ExecutablePath.find_last_of("\\");
+	ContentPath = ExecutablePath.substr(0, DirectoryEndIndex);
+	DirectoryEndIndex = ContentPath.find_last_of("\\");
+	ContentPath = ContentPath.substr(0, DirectoryEndIndex);
+	DirectoryEndIndex = ContentPath.find_last_of("\\");
+	ContentPath = ContentPath.substr(0, DirectoryEndIndex);
+	DirectoryEndIndex = ContentPath.find_last_of("\\");
+	ContentPath = ContentPath.substr(0, DirectoryEndIndex);
+
+	// TODO: Should be moved out of editor
+	ContentPath += "\\SkyEditor\\";
+}
+
+bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
+{
+	const bool bSuccessfulSetup = Application::ApplicationSetup(ExecutablePath);
+	
+	SetContentDirectory(ExecutablePath);
 	// TODO: Move to application base default scene
 	if (bSuccessfulSetup)
 	{			
-		TPointer<EditorScene> NewScene = TPointer<EditorScene>(new EditorScene("Editor"));			
+		TPointer<EditorScene> NewScene = TPointer<EditorScene>(new EditorScene("Untitled"));		
 		SceneManager::GetInstance()->AddScene(NewScene);
 		ViewportCanvas->GetSceneRenderer()->SetSceneTarget(NewScene);
 		ViewportCanvas->SetupCamera();
@@ -86,8 +110,18 @@ void EditorApplication::MainMenuBar()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Open Scene", "CTRL+O")) {}
-			if (ImGui::MenuItem("Save Scene", "CTRL+S")) {}
+			if (ImGui::MenuItem("Open Scene", "CTRL+O"))
+			{
+				OpenScene();
+			}
+			if (ImGui::MenuItem("Save Scene", "CTRL+S"))
+			{
+				SaveScene();
+			}
+			if (ImGui::MenuItem("Save Scene As", "CTRL+SHIFT+S"))
+			{
+				SaveScene(true);
+			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Edit"))
@@ -112,7 +146,7 @@ void EditorApplication::MainMenuBar()
 				}
 				else if (ImGui::MenuItem("Cube"))
 				{
-					const TPointer<Entity> NewEntity(new Entity(STransform()));
+					const TPointer<Entity> NewEntity(new Entity(STransform(), "Cube"));
 					SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
 					EditorViewportLayer->SelectEntity(NewEntity, true);
 					TPointer<CMeshComponent> NewMeshComponent = std::make_shared<CMeshComponent>(NewEntity, MESH_CUBE, nullptr);
@@ -120,7 +154,7 @@ void EditorApplication::MainMenuBar()
 				}
 				else if (ImGui::MenuItem("Sphere"))
 				{
-					const TPointer<Entity> NewEntity(new Entity(STransform()));
+					const TPointer<Entity> NewEntity(new Entity(STransform(), "Sphere"));
 					SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
 					EditorViewportLayer->SelectEntity(NewEntity, true);
 					TPointer<CMeshComponent> NewMeshComponent = std::make_shared<CMeshComponent>(NewEntity, MESH_SPHERE, nullptr);
@@ -128,7 +162,10 @@ void EditorApplication::MainMenuBar()
 				}
 				ImGui::EndMenu();
 			}
-			if (ImGui::MenuItem("Delete Entity", "DEL")) {}
+			if (ImGui::MenuItem("Delete Entity", "DEL"))
+			{
+				EditorViewportLayer->DeleteSelected();
+			}
 			ImGui::Separator();
 			TPointer<Entity> SelectedEntity = EditorViewportLayer->GetSelectedEntity();
 			if (ImGui::BeginMenu("Add New Component", SelectedEntity != nullptr))
@@ -187,6 +224,71 @@ void EditorApplication::OnExit()
 {
 	EditorWindowManager::CleanupWindows();
 	Application::OnExit();
+}
+
+void EditorApplication::OpenScene()
+{
+	std::string FilePath;
+	if (!CFileManager::OpenFile(FilePath))
+	{
+		// No file opened (cancelled)
+		return;
+	}
+	std::string FileContents;
+	if (!CFileManager::ReadFile(FilePath, FileContents))
+	{
+		PlatformInterface->DisplayMessageBox("Failed to read file", FilePath, MB_OK);
+		return;
+	}
+	std::stringstream FileStream(FileContents);
+
+	const TPointer<Scene> NewScene = CreatePointer<Scene>("LoadedScene");
+	if (!NewScene->Deserialize(FileStream))
+	{
+		PlatformInterface->DisplayMessageBox("Failed to deserialize scene", FilePath, MB_OK);		
+		return;
+	}
+	ApplicationWindow->SetWindowTitle("Sky Editor: " + NewScene->SceneName);
+	TPointer<Scene> PreviousScene = SceneManager::GetInstance()->GetCurrentScene();
+	SceneManager::GetInstance()->AddScene(NewScene);
+	SceneManager::GetInstance()->SwitchScene(NewScene->SceneName, false);
+	const TPointer<Camera> FoundCamera = SceneUtils::FindEntityOfClass<Camera>();
+	ViewportCanvas->GetSceneRenderer()->SetSceneTarget(NewScene);
+	if (FoundCamera)
+	{
+		ViewportCanvas->SetCamera(FoundCamera);
+	}
+	else
+	{
+		ViewportCanvas->SetupCamera();
+		NewScene->AddEntity(ViewportCanvas->GetViewportCamera());
+	}
+	// SceneManager::GetInstance()->RemoveScene(PreviousScene);
+}
+
+void EditorApplication::SaveScene(bool bAsNew)
+{
+	const TPointer<Scene> Scene = SceneManager::GetInstance()->GetCurrentScene();
+	bAsNew |= Scene->SceneName == "Untitled";
+	if (bAsNew)
+	{
+		const std::string FileName = PathUtils::GetFileName(SceneFilePath);
+		std::string Directory = PathUtils::GetDirectory(SceneFilePath);
+		Directory = ContentPath + Directory;
+		std::string ChosenFilePath;
+		if (!CFileManager::SaveAsFile(ChosenFilePath, "Level (*.slvl)\0*.slvl\0Text\0*.TXT\0", FileName, Directory))
+		{
+			return;
+		}
+		PathUtils::SetExtension(ChosenFilePath, "slvl");
+		SceneFilePath = ChosenFilePath;
+	}
+	const std::string SceneName = PathUtils::GetFileName(SceneFilePath, false);
+	Scene->SceneName = SceneName;
+	ApplicationWindow->SetWindowTitle("Sky Editor: \"" + SceneName + "\"");
+	const std::string SerializedScene = Scene->Serialize();
+	CFileManager::SaveFile(SceneFilePath, SerializedScene);
+	GetPlatformInterface()->DisplayMessageBox("Saved scene", std::format("Saved Scene \"{}\"!", SceneName), MB_OK);
 }
 
 SkyEngine::Application* SkyEngine::CreateApplication()

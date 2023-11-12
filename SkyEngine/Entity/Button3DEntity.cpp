@@ -17,24 +17,28 @@
 // Static Variables //
 bool Button3DEntity::bButtonPressedThisFrame = false;
 
-Button3DEntity::Button3DEntity(STransform _Transform, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, void (*func)()) : Entity(_Transform)
+Button3DEntity::Button3DEntity(STransform _Transform, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, void (*func)())
+: Entity(_Transform, "Button 3D")
 {
 	// TODO: Link UI pointer and set colour?
 	TPointer<CMaterial_Unlit> UIMaterial = std::make_shared<CMaterial_Unlit>("UIMaterial");
 	UIMaterial->Params.DiffuseColour = _Colour;
+	GetMaterialManager()->AddMaterial(UIMaterial);
 	TPointer<CMeshComponent> ButtonCubeMesh = std::make_shared<CMeshComponent>(shared_from_this(), MESH_CUBE, UIMaterial);
 	AddComponent(ButtonCubeMesh);
 	btnColour = _Colour;
 	btnHighlightColour = _HightlightColour;
 }
 
-Button3DEntity::Button3DEntity(STransform _Transform, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, const char* Texturepath, void (*func)()) : Entity(_Transform)
+Button3DEntity::Button3DEntity(STransform _Transform, float fWidth, float fHeight, float fDepth, glm::vec4 _Colour, glm::vec4 _HightlightColour, const char* Texturepath, void (*func)())
+: Entity(_Transform, "Button 3D")
 {
 	// TODO: Link UI pointer and set colour?
 	TPointer<CTexture> ButtonTexture = GetGraphicsAPI()->GetTexture(Texturepath);
 	TPointer<CMaterial_Unlit> UIMaterial = std::make_shared<CMaterial_Unlit>("UIMaterial");
 	UIMaterial->Params.DiffuseColour = _Colour;
 	UIMaterial->Params.DiffuseTexture = ButtonTexture;
+	GetMaterialManager()->AddMaterial(UIMaterial);
 	TPointer<CMeshComponent> ButtonCubeMesh = std::make_shared<CMeshComponent>(shared_from_this(), MESH_CUBE, UIMaterial);
 	AddComponent(ButtonCubeMesh);
 	btnColour = _Colour;

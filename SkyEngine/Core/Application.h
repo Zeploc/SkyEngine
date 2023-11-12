@@ -7,6 +7,7 @@
 #include "Core/Core.h"
 #include "Graphics/GraphicsAPI.h"
 #include "Math/Vector2.h"
+#include "Render/Materials/MaterialManager.h"
 #include "Render/Meshes/MeshManager.h"
 
 class CViewportCanvas;
@@ -28,12 +29,12 @@ namespace SkyEngine
 		Application();
 		virtual ~Application();
 
-		virtual bool ApplicationSetup();
+		virtual bool ApplicationSetup(std::string ExecutablePath);
 		virtual void SetupLogManager();
 		virtual void SetupViewportLayer();
 
 		// TODO: Add return type for error handling
-		int Run();
+		int Run(std::string ExecutablePath);
 		void Quit();
 
 		virtual void Update();
@@ -45,11 +46,12 @@ namespace SkyEngine
 		SVector2i MainWindowSize;
 
 		TPointer<IGraphicsAPI> GraphicsApi;
-		TPointer<IPlatformInterface> PlatformInterface;		
+		IPlatformInterface* PlatformInterface;
 		TPointer<CRenderer> Renderer;
 		EGraphicsAPI GraphicsApiType;
 		TPointer<CLogManager> LogManager;
 		CMeshManager MeshManager;
+		CMaterialManager MaterialManager;
 
 		// TODO: Weak pointer to not hold ref
 		TPointer<CEngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
@@ -74,6 +76,8 @@ namespace SkyEngine
 
 ENGINE_API SkyEngine::Application* GetApplication();
 ENGINE_API TPointer<IGraphicsAPI> GetGraphicsAPI();
+ENGINE_API IPlatformInterface* GetPlatformInterface();
 ENGINE_API TPointer<CRenderer> GetRenderer();
 ENGINE_API CMeshManager* GetMeshManager();
+ENGINE_API CMaterialManager* GetMaterialManager();
 

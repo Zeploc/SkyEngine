@@ -46,9 +46,9 @@ namespace SkyEngine
 	// Types //
 	using namespace std;
 
-	bool Application::ApplicationSetup()
+	bool Application::ApplicationSetup(std::string ExecutablePath)
 	{
-		PlatformInterface = std::make_shared<WindowsPlatform>();
+		PlatformInterface = new WindowsPlatform();
 		SetupLogManager();
 		ENSURE(LogManager != nullptr, "Log manager not created!");
 		LogManager->Init();
@@ -85,9 +85,9 @@ namespace SkyEngine
 		ViewportCanvas = new CViewportCanvas(ApplicationWindow);
 	}
 
-	int Application::Run()
+	int Application::Run(std::string ExecutablePath)
 	{
-		if (ApplicationSetup())
+		if (ApplicationSetup(ExecutablePath))
 		{
 			while (!ApplicationWindow->ShouldWindowClose())
 			{				
@@ -159,6 +159,11 @@ TPointer<IGraphicsAPI> GetGraphicsAPI()
 	return SkyEngine::Application::Get()->GraphicsApi;
 }
 
+IPlatformInterface* GetPlatformInterface()
+{
+	return SkyEngine::Application::Get()->PlatformInterface;
+}
+
 TPointer<CRenderer> GetRenderer()
 {
 	return SkyEngine::Application::Get()->Renderer;
@@ -167,4 +172,9 @@ TPointer<CRenderer> GetRenderer()
 CMeshManager* GetMeshManager()
 {
 	return &SkyEngine::Application::Get()->MeshManager;
+}
+
+CMaterialManager* GetMaterialManager()
+{
+	return &SkyEngine::Application::Get()->MaterialManager;
 }

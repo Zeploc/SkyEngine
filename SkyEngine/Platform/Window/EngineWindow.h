@@ -28,6 +28,7 @@ public:
 
 	virtual void SetWindowFullScreen(bool bFullScreen) = 0;
 	virtual bool ShouldWindowClose() const { return false; }
+	virtual void SetWindowTitle(const std::string& NewTitle) = 0;
 	virtual bool CloseWindow() = 0;
 	virtual void FocusWindow() const = 0;
 	

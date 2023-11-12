@@ -18,10 +18,24 @@ void CComponent::BeginPlay()
 {
 }
 
+void CComponent::Unload()
+{
+}
+
 void CComponent::Update()
 {
 }
 
 void CComponent::OnDestroy()
 {
+}
+
+std::ostream& operator<<(std::ostream& os, const TPointer<CComponent>& InComponent)
+{
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, TPointer<CComponent>& InComponent)
+{
+	return is;
 }

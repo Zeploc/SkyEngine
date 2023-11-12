@@ -8,7 +8,12 @@ int main(int argc, char** argv)
 {
 	const auto App = SkyEngine::CreateApplication();
 	// TPointer<SkyEngine::Application> ApplicationLifetimePointer(App);
-	int AppExitState = App->Run();
+	std::string ExecutablePath;
+	if (argv)
+	{
+		ExecutablePath = std::string(*argv);
+	}
+	int AppExitState = App->Run(ExecutablePath);
 	delete App;
 	return AppExitState;
 }

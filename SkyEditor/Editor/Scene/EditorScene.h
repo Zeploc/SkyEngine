@@ -19,15 +19,5 @@ public:
 	void Update() override;
 	void RenderScene() override;
 	
-	void OpenFile();
-
-	void LoadLevel(std::ifstream& OpenedLevelFile);
-
-	void SaveAsNew();
-	void SaveCurrentLevel();
-	
 protected:
-public:
-	
-	TPointer<UIText> LevelNameText;
 };

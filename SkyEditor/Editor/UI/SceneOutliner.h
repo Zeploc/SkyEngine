@@ -4,7 +4,7 @@
 
 #include "Canvas/UICanvas.h"
 
-class EditorScene;
+class Scene;
 
 class CSceneOutliner : public CUICanvas
 {
@@ -12,5 +12,5 @@ public:
 	CSceneOutliner(TWeakPointer<CEngineWindow> InOwningWindow);
 	virtual void OnRender() override;
 	
-	TPointer<EditorScene> EditorScene;
+	TPointer<Scene> EditorScene;
 };

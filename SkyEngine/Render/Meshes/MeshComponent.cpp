@@ -9,6 +9,7 @@
 #include "Entity/CollisionBounds.h"
 #include "Entity/Entity.h"
 #include "Render/Renderer.h"
+#include "Render/Materials/InternalMaterial.h"
 #include "Render/Shaders/PBRShader.h"
 #include "Render/Shaders/Shader.h"
 #include "System/LogManager.h"
@@ -44,6 +45,11 @@ CMeshComponent::~CMeshComponent()
 void CMeshComponent::OnAttached()
 {
 	CComponent::OnAttached();
+}
+
+void CMeshComponent::Unload()
+{
+	CComponent::Unload();	
 }
 
 bool CMeshComponent::ShouldRender() const
@@ -116,4 +122,35 @@ void CMeshComponent::AddCollisionBounds(TPointer<CCollisionBounds> NewCollision)
 CMeshData CMeshComponent::GetMeshData() const
 {
 	return GetMeshManager()->GetMesh(MeshAsset);
+}
+
+std::string CMeshComponent::GetSerializeType()
+{
+	return "[MeshComponent]";
+}
+
+std::ostream& operator<<(std::ostream& os, const TPointer<CMeshComponent>& InMeshComponent)
+{
+	os << " " << CMeshComponent::GetSerializeType() << " ";
+	os << InMeshComponent->MeshAsset << " ";
+	os << InMeshComponent->MeshMaterial->GetMaterialName() << " ";
+	const std::string VisibilityString = InMeshComponent->bVisible ? "true" : "false";
+	os << VisibilityString;
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, TPointer<CMeshComponent>& InMeshComponent)
+{
+	std::string Empty;
+	// TODO: Remove need for first space removal
+	// std::getline(is, Empty, ' ');
+	is >> InMeshComponent->MeshAsset;
+	// std::getline(is, Empty, ' ');
+	std::string MaterialName;
+	is >> MaterialName;
+	InMeshComponent->MeshMaterial = GetMaterialManager()->FindMaterial(MaterialName);
+	std::string VisibilityString;
+	is >> VisibilityString;
+	InMeshComponent->bVisible = VisibilityString == "true";
+	return is;
 }

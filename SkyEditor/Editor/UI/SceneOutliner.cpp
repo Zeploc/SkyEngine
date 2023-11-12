@@ -11,12 +11,13 @@ CSceneOutliner::CSceneOutliner(TWeakPointer<CEngineWindow> InOwningWindow)
 : CUICanvas(InOwningWindow, "Scene Outliner")
 {
 	// TODO: Remove once redundant
-    EditorScene = std::static_pointer_cast<class EditorScene>(SceneManager::GetInstance()->GetCurrentScene());
-	StartingSize = {430, 450};    
+	StartingSize = {430, 450};
+    EditorScene = SceneManager::GetInstance()->GetCurrentScene();
 }
 
 void CSceneOutliner::OnRender()
 {
+    EditorScene = SceneManager::GetInstance()->GetCurrentScene();
 	// TODO: Convert to widget and use base render
 	if (ImGui::BeginListBox("##SceneOutlinerEntityList", ImVec2(-FLT_MIN, -FLT_MIN)))
 	{

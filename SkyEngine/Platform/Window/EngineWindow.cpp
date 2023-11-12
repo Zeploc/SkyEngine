@@ -42,7 +42,7 @@ CEngineWindow::~CEngineWindow()
 
 TPointer<CEngineWindow> CEngineWindow::CreateEngineWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bInFullScreen)
 {	
-	TPointer<CEngineWindow> NewWindow = GetApplication()->PlatformInterface->CreateNewWindow(InWindowName, InWindowSize, bInFullScreen);	
+	TPointer<CEngineWindow> NewWindow = GetPlatformInterface()->CreateNewWindow(InWindowName, InWindowSize, bInFullScreen);	
 	return NewWindow;
 }
 

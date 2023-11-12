@@ -78,8 +78,6 @@ public:
 
 	static glm::vec2 GetDifference2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2);
 
-	static int AddEntityID();
-
 	static std::vector<std::string> SeparateString(std::string _string, char _seperator);
 
 	// TODO: Convert to type from string
@@ -99,7 +97,6 @@ public:
 	static TPointer<Entity> WorldCubeMap;
 
 private:
-	static int iEntityNumber;
 
 
 };

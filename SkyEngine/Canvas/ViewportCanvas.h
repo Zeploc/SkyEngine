@@ -29,6 +29,7 @@ public:
 
 	// TODO: Resolve to not be needed
 	void SetupCamera();
+	void SetCamera(TPointer<Camera> NewCamera);
 
 	virtual SVector2i GetViewportSize();
 	virtual SVector2i GetViewportPosition();

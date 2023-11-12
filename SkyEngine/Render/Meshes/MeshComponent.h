@@ -32,7 +32,8 @@ public:
 	CMeshComponent(const TPointer<Entity>& InOwner, std::string InMeshAsset, const TPointer<CMaterialInterface>& InMaterial = nullptr);
 	virtual ~CMeshComponent();
 
-	void OnAttached() override;	
+	void OnAttached() override;
+	virtual void Unload() override;
 
 	virtual bool IsVisible() const override { return bVisible; }
 	virtual void SetVisible(bool bNewVisible) override;
@@ -62,6 +63,10 @@ public:
 	{
 		return MeshCollisionBounds;
 	}
+	
+	static std::string GetSerializeType();
+	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const TPointer<CMeshComponent>& InMeshComponent);
+	ENGINE_API friend std::istream& operator>>(std::istream& is, TPointer<CMeshComponent>& InMeshComponent);
 
 	TPointer<CMaterialInterface> MeshMaterial;
 	float LEGACY_Width;

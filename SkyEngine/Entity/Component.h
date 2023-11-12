@@ -15,11 +15,15 @@ public:
 	CComponent(const TPointer<Entity>& InOwner);
 	virtual void OnAttached();
 	virtual void BeginPlay();
+	virtual void Unload();
 
 	virtual void Update();
 	virtual void OnDestroy();
 
 	TPointer<Entity> GetOwner() const { return Owner; }
+	
+	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const TPointer<CComponent>& InComponent);
+	ENGINE_API friend std::istream& operator>>(std::istream& is, TPointer<CComponent>& InComponent);
 
 private:
 	TPointer<Entity> Owner;

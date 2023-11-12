@@ -11,33 +11,39 @@
 #include <format>
 
 #include "Component.h"
+#include "Core/StringUtils.h"
 #include "Render/Meshes/MeshComponent.h"
+#include "Scene/Scene.h"
+#include "Scene/SceneManager.h"
 #include "System/LogManager.h"
 #include "System/Utils.h"
 
-Entity::Entity(std::string _FromString)
+Entity::Entity(std::stringstream& ss)
 {
-	std::stringstream ss(_FromString);
 	std::string Name;
 	ss >> Name;
 	if (Name != "[Entity]")
 	{
 		return;
 	}
-	ss >> iEntityID;
-	ss >> Transform;
+	std::shared_ptr<Entity> Entity = shared_from_this();
+	ss >> Entity;
 }
 
-Entity::Entity(STransform InTransform) : Transform(InTransform)
+Entity::Entity(STransform InTransform, std::string EntityName)
+: Transform(InTransform), Name(EntityName)
 {
-	iEntityID = Utils::AddEntityID();
-	CLogManager::Get()->DisplayMessage("New Entity created with ID #" + std::to_string(iEntityID));
-	Name = std::format("Entity {}", iEntityID);
+	CLogManager::Get()->DisplayMessage("New Entity created with ID #" + std::to_string(EntityID));
+	if (Name.empty())
+	{
+		Name = std::format("Entity_{}", EntityID);
+	}
+	StringUtils::Replace(Name, " ", "_");
 }
 
 Entity::~Entity()
 {
-	CLogManager::Get()->DisplayMessage("Entity " + std::to_string(iEntityID) + " destroyed!");	
+	CLogManager::Get()->DisplayMessage("Entity " + std::to_string(EntityID) + " destroyed!");	
 }
 
 void Entity::AddComponent(TPointer<CComponent> NewComponent)
@@ -56,6 +62,14 @@ void Entity::BeginPlay()
 	for (const TPointer<CComponent>& Component : Components)
 	{
 		Component->BeginPlay();
+	}
+}
+
+void Entity::Unload()
+{
+	for (const TPointer<CComponent>& Component : Components)
+	{
+		Component->Unload();
 	}
 }
 
@@ -152,7 +166,7 @@ bool Entity::CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos)
 
 void Entity::OnDestroy()
 {
-	CLogManager::Get()->DisplayMessage("Entity with ID #" + std::to_string(iEntityID) + " destroyed!");
+	CLogManager::Get()->DisplayMessage("Entity with ID #" + std::to_string(EntityID) + " destroyed!");
 	for (TPointer<CComponent> Component : Components)
 	{
 		Component->OnDestroy();
@@ -173,7 +187,7 @@ std::string Entity::EntityToString()
 {
 	std::stringstream sEntity("");
 	sEntity << "[Entity] ";
-	sEntity << iEntityID << " ";
+	sEntity << EntityID << " ";
 	sEntity << Transform.ToString();
 	return sEntity.str();
 }
@@ -182,8 +196,22 @@ std::ostream& operator<<(std::ostream& os, const TPointer<Entity>& InEntity)
 {
 	// std::stringstream sEntity("");
 	os << "[Entity] ";
-	os << InEntity->iEntityID << " ";
+	os << InEntity->Name << " ";
+	os << InEntity->EntityID << " ";
 	os << InEntity->Transform;
+	for (const TPointer<CComponent>& Component : InEntity->Components)
+	{
+		// TODO: Proper inheritance archiving
+		TPointer<CMeshComponent> MeshComponent = Cast<CMeshComponent>(Component);
+		if (MeshComponent)
+		{
+			os << MeshComponent;
+		}
+		else
+		{
+			os << Component;
+		}
+	}
 	return os;
 }
 
@@ -192,9 +220,25 @@ std::istream& operator>>(std::istream& is, TPointer<Entity>& InEntity)
 	std::string Empty;
 	// TODO: Remove need for first space removal
 	std::getline(is, Empty, ' ');
-	is >> InEntity->iEntityID;
+	is >> InEntity->Name;
+	is >> InEntity->EntityID;
 	// std::getline(is, Empty, ' ');
 	is >> InEntity->Transform;
+	while (is.peek() != EOF)
+	{
+		const std::istream::pos_type OriginalPosition = is.tellg();	
+		std::string ComponentType;
+		is >> ComponentType;
+		if (ComponentType == CMeshComponent::GetSerializeType())
+		{
+			TPointer<CMeshComponent> NewMeshComponent = std::make_shared<CMeshComponent>(InEntity, "", nullptr);
+			is >> NewMeshComponent;
+			InEntity->AddComponent(NewMeshComponent);
+			continue;
+		}
+		is.seekg(OriginalPosition);
+		break;
+	}
 	return is;
 }
 
@@ -216,4 +260,9 @@ void Entity::SetScale(SVector _NewScale)
 Matrix4 Entity::GetModel()
 {
 	return Transform.GetModelMatrix();
+}
+
+void Entity::AssignEntityID(int ID)
+{
+	EntityID = ID;
 }

@@ -20,6 +20,7 @@ CRenderer::CRenderer()
 	DefaultPbrMaterial->Params.DiffuseColour = {0.5f, 0.5f, 0.5f, 1.0f};
 	DefaultPbrMaterial->bTwoSided = true;
 	DefaultMaterial = DefaultPbrMaterial;
+	GetMaterialManager()->AddMaterial(DefaultPbrMaterial);
 }
 
 void CRenderer::InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, TArray<ISceneVisual*>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender)

@@ -17,9 +17,10 @@ public:
 	CConsoleLog* ConsoleLog = nullptr;
 	
 	EditorApplication();
+	void SetContentDirectory(std::string ExecutablePath);
 	~EditorApplication() {}
 	
-	bool ApplicationSetup() override;
+	bool ApplicationSetup(std::string ExecutablePath) override;
 
 	void SetupLogManager() override;
 	void SetupViewportLayer() override;
@@ -32,7 +33,13 @@ public:
 	void ChangeSize(int w, int h) override;
 	void OnExit() override;
 
+	void OpenScene();
+	void SaveScene(bool bAsNew = false);
+
 	unsigned int DockSpaceID = 0;
 	
 	CEditorViewportCanvas* EditorViewportLayer;
+
+	std::string SceneFilePath;
+	std::string ContentPath;
 };

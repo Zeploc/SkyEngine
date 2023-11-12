@@ -67,5 +67,5 @@ double CTimeManager::GetElapsedEngineTime()
 
 double CTimeManager::InternalGetSystemTime()
 {
-	return GetApplication()->PlatformInterface->GetTime();
+	return GetPlatformInterface()->GetTime();
 }

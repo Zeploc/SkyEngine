@@ -1,0 +1,5 @@
+[Test]
+[Entity] Sphere 1 ((18.000000 2.000000 0.000000) (0.000000 0.000000 0.000000) (2.000000 2.000000 2.000000)) [MeshComponent] Sphere CliffMaterial true
+[Entity] Cube 3 ((10.000000 4.000000 4.000000) (0.000000 0.000000 0.000000) (3.000000 3.000000 3.000000)) [MeshComponent] Cube ColouredBrickMaterial true
+[Entity] Sphere_2 5 ((10.000000 4.000000 12.000000) (0.000000 0.000000 0.000000) (2.000000 2.000000 2.000000)) [MeshComponent] Sphere ColouredBrickMaterial true
+[Entity] Box 7 ((5.000000 5.000000 10.000000) (0.000000 0.000000 0.000000) (2.000000 2.000000 2.000000))

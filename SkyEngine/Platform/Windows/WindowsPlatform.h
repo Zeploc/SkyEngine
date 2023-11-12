@@ -12,4 +12,5 @@ public:
 	
 	TPointer<CEngineWindow> CreateNewWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bFullScreen) override;
 	double GetTime() override;
+	int32_t DisplayMessageBox(std::string Title, std::string Message, uint32_t Options) override;
 };

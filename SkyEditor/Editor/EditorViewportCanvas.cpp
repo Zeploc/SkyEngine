@@ -169,7 +169,12 @@ bool CEditorViewportCanvas::OnMouseButtonPressed(int MouseButton, int Mods)
 	{
 		if (Mods & CWindowInput::ModiferType::Alt)
 		{
-			// TODO: Duplicate entity
+			std::stringstream DuplicateString;
+			DuplicateString << SelectedEntity;			
+			TPointer<Entity> NewEntity(new Entity(STransform(), "New"));
+			DuplicateString >> NewEntity;
+			SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
+			SelectEntity(NewEntity);
 		}
 		else if (Mods & CWindowInput::ModiferType::Shift)
 		{
@@ -328,6 +333,19 @@ void CEditorViewportCanvas::FocusEntity()
 	ViewportCamera->Transform.Position = SelectedEntity->Transform.Position + (-ViewportCamera->GetForwardVector() * CurrentFocusDistance);
 }
 
+bool CEditorViewportCanvas::DeleteSelected()
+{
+	if (!SelectedEntity)
+	{
+		return false;
+	}
+	const TPointer<Scene> Scene = SceneManager::GetInstance()->GetCurrentScene();
+	Scene->DestroyEntity(SelectedEntity);
+	SelectedEntity = nullptr;
+	SelectEntity(nullptr);
+	return true;
+}
+
 bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 {
 	if (bUseSpectatorControls)
@@ -366,10 +384,18 @@ bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 		GetGraphicsAPI()->SetWireframeMode(bWireframe);
 		return true;
 	}
+	if (KeyCode == GLFW_KEY_DELETE)
+	{
+		if (DeleteSelected())
+		{
+			return true;
+		}
+	}
 	if (KeyCode == GLFW_KEY_Q)
 	{
-		GizmoMode = -1;
-		return true;
+		// TODO: Enable once stencil selection is implemented
+		// GizmoMode = -1;
+		// return true;
 	}
 	if (KeyCode == GLFW_KEY_E)
 	{
@@ -476,12 +502,8 @@ void CEditorViewportCanvas::SelectEntity(TPointer<Entity> HitEntity, bool bFocus
 
 void CEditorViewportCanvas::UpdateSelectedEntity()
 {
-	// TODO: Remove once redundant
-	if (!EditorScene)
-	{
-		EditorScene = std::static_pointer_cast<class EditorScene>(SceneManager::GetInstance()->GetCurrentScene());
-	}
-	
+	TPointer<Scene> Scene = SceneManager::GetInstance()->GetCurrentScene();
+
 	TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 	SVector2i MousePos = ApplicationWindow->GetInput().MousePos;
 	SVector rayStart = ViewportCamera->Transform.Position;
@@ -489,7 +511,7 @@ void CEditorViewportCanvas::UpdateSelectedEntity()
 	SVector HitPos;
 	std::vector<TPointer<Entity>> HitEntities;
 	std::vector<SVector> HitPosition;
-	for (auto& Ent : EditorScene->Entities)
+	for (auto& Ent : Scene->Entities)
 	{
 		if (!Ent->bRayCast || !Ent->IsVisible())
 		{

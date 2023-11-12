@@ -26,9 +26,9 @@ class CComponent;
 class ENGINE_API Entity : public std::enable_shared_from_this<Entity>
 {
 public:
-	Entity(std::string _FromString);
+	Entity(std::stringstream& ss);
 
-	Entity(STransform InTransform);
+	Entity(STransform InTransform, std::string EntityName = {});
 
 	//Entity() {};
 	/*Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, Utils::ESHAPE _eShape);
@@ -40,6 +40,7 @@ public:
 	void AddComponent(TPointer<CComponent> NewComponent);
 	void AddToScene(TPointer<Scene> InScene);
 	virtual void BeginPlay();
+	virtual void Unload();
 
 	//void AddMesh(Utils::ESHAPE _NewShape);
 
@@ -87,7 +88,8 @@ public:
 
 	STransform Transform;
 
-	int GetEntityValue() const { return iEntityID; }
+	void AssignEntityID(int ID);
+	int GetEntityID() const { return EntityID; }
 	std::string GetEntityName() const { return Name; }
 	TPointer<Scene> GetOwningScene() const { return OwningScene; }
 	TArray<TPointer<CComponent>> GetComponents() const { return Components; }
@@ -105,7 +107,7 @@ protected:
 	TArray<TPointer<CComponent>> Components;
 	TPointer<Scene> OwningScene;
 
-	int iEntityID;
+	int EntityID;
 };
 
 template <typename T>

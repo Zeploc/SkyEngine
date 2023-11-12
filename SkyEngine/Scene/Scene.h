@@ -29,6 +29,11 @@ public:
 	void AddEntity(TPointer<Entity> _Entity);
 
 	void DestroyEntity(TPointer<Entity> _Entity);
+	std::string Serialize() const;
+	bool Deserialize(std::stringstream& SerializedScene);
+
+	int AddEntityID();
+	void VerifyEntityID(TPointer<Entity> EntityToVerify);
 
 	virtual void Update();
 	virtual bool OnMouseButtonPressed(int Button, int Mods);
@@ -39,6 +44,7 @@ public:
 	virtual bool OnKeyReleased(int KeyCode, int Mods);
 
 	virtual void OnLoadScene();
+	virtual void UnloadScene();
 	virtual void BeginPlay();
 
 	b2World& GetWorld2D() { return World2D; }
@@ -60,4 +66,5 @@ protected:
 	b2World World2D;
 
 private:
+	int LastEntityID = -1;
 };

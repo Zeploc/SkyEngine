@@ -13,6 +13,7 @@ public:
 	
 	void SetWindowFullScreen(bool bInFullScreen) override;
 	bool ShouldWindowClose() const override;
+	void SetWindowTitle(const std::string& NewTitle) override;
 	bool CloseWindow() override;
 	void FocusWindow() const override;
 	
@@ -33,6 +34,6 @@ protected:
 	void OnFrameBufferResized(int NewWidth, int NewHeight) override;
 
 	static int ConvertModiferToCustomInputMod(int GlfwMods);
-	
+protected:
 	GLFWwindow* GlWindow = nullptr;
 };

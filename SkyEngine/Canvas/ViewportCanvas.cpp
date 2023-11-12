@@ -56,7 +56,12 @@ void CViewportCanvas::OnViewportResize()
 
 void CViewportCanvas::SetupCamera()
 {	
-	ViewportCamera = CreatePointer<Camera>(STransform(SVector(-10.0f, 10.0f, 10.0f), SRotator(-90.0f, 0.0f, 0.0f)));
+	SetCamera(CreatePointer<Camera>(STransform(SVector(-10.0f, 10.0f, 10.0f), SRotator(-90.0f, 0.0f, 0.0f))));
+}
+
+void CViewportCanvas::SetCamera(TPointer<Camera> NewCamera)
+{
+	ViewportCamera = NewCamera;
 	SceneRenderer->LinkCamera(ViewportCamera);
 }
 

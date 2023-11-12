@@ -18,7 +18,6 @@
 // Local Includes //
 
 // Static Variables //
-int Utils::iEntityNumber = 0;
 TPointer<Entity> Utils::WorldCubeMap;
 
 /************************************************************
@@ -337,12 +336,6 @@ glm::vec2 Utils::GetDifference2D(TPointer<Entity> Entity1, TPointer<Entity> Enti
 		fDistance.y = (Entity1Pos.y  - HalfHeight1) - (Entity2Pos.y + HalfHeight2);
 	}
 	return fDistance;
-}
-
-int Utils::AddEntityID()
-{
-	iEntityNumber++;
-	return iEntityNumber;
 }
 
 std::vector<std::string> Utils::SeparateString(std::string _string, char _seperator)

@@ -28,7 +28,8 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-ParticleSystem::ParticleSystem(STransform _Transform) : Entity(_Transform)
+ParticleSystem::ParticleSystem(STransform _Transform)
+: Entity(_Transform, "Particle System")
 {
 	Colour = glm::vec4(123.0f / 255.0f, 173.0f / 255.0f, 203.0f / 255.0f, 2.0f);
 }

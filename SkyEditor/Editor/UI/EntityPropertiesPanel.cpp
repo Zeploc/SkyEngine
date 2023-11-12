@@ -3,7 +3,6 @@
 #include <string>
 
 #include "EditorApp.h"
-#include "Core/String.h"
 #include "Dependencies/ImGui/imgui.h"
 #include "Editor/EditorViewportCanvas.h"
 #include "Editor/Scene/EditorScene.h"
@@ -71,7 +70,7 @@ int CEntityPropertiesPanel::MaterialTextChanged(ImGuiInputTextCallbackData* data
 {
 	CMeshComponent* MeshComponent = static_cast<CMeshComponent*>(data->UserData);
 	const std::string InputtedName = data->Buf;
-	if (const TPointer<CMaterialInterface> FoundMaterial = FindMaterial(InputtedName))
+	if (const TPointer<CMaterialInterface> FoundMaterial = GetMaterialManager()->FindMaterial(InputtedName))
 	{
 		MeshComponent->SetMaterial(FoundMaterial);
 	}
@@ -128,28 +127,4 @@ void CEntityPropertiesPanel::DrawMeshComponent(const std::shared_ptr<CMeshCompon
 	ImGui::Spacing();	
         
 	ImGui::Separator();
-}
-
-
-TPointer<CMaterialInterface> CEntityPropertiesPanel::FindMaterial(std::string MaterialName)
-{
-	for (TPointer<Entity> Entity : SceneManager::GetInstance()->GetCurrentScene()->Entities)
-	{
-		const TPointer<CMeshComponent> MeshComponent = Entity->FindComponent<CMeshComponent>();
-		if (!MeshComponent)
-		{
-			continue;
-		}
-		TPointer<CMaterialInterface> MeshMaterial = MeshComponent->GetMaterial();
-		if (!MeshMaterial)
-		{
-			continue;
-		}
-		std::string MeshMaterialName = MeshMaterial->GetMaterialName();
-		if (MeshMaterialName == MaterialName)
-		{
-			return MeshMaterial;
-		}
-	}
-	return nullptr;
 }

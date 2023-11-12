@@ -11,6 +11,7 @@
 #include "Render/Framebuffer.h"
 #include "Input/CXBOXController.h"
 #include "Input/Input.h"
+#include "Platform/PlatformInterface.h"
 #include "System/LogManager.h"
 
 void glfw_onError(int error, const char * description);
@@ -165,6 +166,11 @@ bool CGLFWWindow::ShouldWindowClose() const
 	return glfwWindowShouldClose(GlWindow);
 }
 
+void CGLFWWindow::SetWindowTitle(const std::string& NewTitle)
+{
+	glfwSetWindowTitle(GlWindow, NewTitle.c_str());
+}
+
 void CGLFWWindow::PreRender()
 {
 	glfwMakeContextCurrent(GlWindow);	
@@ -258,5 +264,5 @@ void glfw_onError(int error, const char* description)
 {
 	// print message in Windows popup dialog box
 	CLogManager::Get()->DisplayError(description);
-	MessageBoxA(NULL, description, "GLFW error", MB_OK);
+	GetPlatformInterface()->DisplayMessageBox("GLFW error", description, MB_OK);
 }

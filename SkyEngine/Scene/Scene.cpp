@@ -13,11 +13,17 @@
 
 // This Includes //
 
+#include <fstream>
+
 #include "Core/Application.h"
 #include "Entity/Button3DEntity.h"
 #include "Render/Renderer.h"
 #include "Input/Input.h"
 #include "Platform/Window/GLFW/GLFWIncludes.h"
+#include "Render/Materials/Material.h"
+#include "Render/Meshes/MeshComponent.h"
+#include "Render/Shaders/PBRShader.h"
+#include "System/LogManager.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -74,6 +80,7 @@ void Scene::RenderScene()
 ************************************************************/
 void Scene::AddEntity(TPointer<Entity> _Entity)
 {
+	VerifyEntityID(_Entity);
 	Entities.push_back(_Entity);
 	_Entity->AddToScene(shared_from_this());
 }
@@ -103,6 +110,60 @@ void Scene::DestroyEntity(TPointer<Entity> _Entity)
 	//EntDetroy.reset();
 }
 
+std::string Scene::Serialize() const
+{
+	std::stringstream Serialized;
+	Serialized << "[" + SceneName + "]\n";
+	for (TPointer<Entity> Entity : Entities)
+	{	 	
+		Serialized << Entity << "\n";
+	}
+	return Serialized.str();
+}
+
+bool Scene::Deserialize(std::stringstream& SerializedScene)
+{
+	std::vector< TPointer<Entity>> EntitiesCopy = Entities;
+	for (TPointer<Entity> CurrentEnt : EntitiesCopy)
+	{		
+		DestroyEntity(CurrentEnt);
+	}
+	LastEntityID = -1;
+	
+	std::string Empty;
+	std::getline(SerializedScene, Empty, '[');
+	std::getline(SerializedScene, SceneName, ']');
+	std::getline(SerializedScene, Empty, '\n');
+	
+	while(SerializedScene.peek() != EOF )
+	{
+		TPointer<Entity> NewEntity(new Entity(STransform()));
+		SerializedScene >> NewEntity;
+		std::getline(SerializedScene, Empty, '\n');
+		AddEntity(NewEntity);
+	}	
+	
+	return true;
+}
+
+void Scene::VerifyEntityID(TPointer<Entity> EntityToVerify)
+{
+	for (const TPointer<Entity>& Entity : Entities)
+	{
+		if (EntityToVerify->GetEntityID() == Entity->GetEntityID())
+		{			
+			EntityToVerify->AssignEntityID(AddEntityID());
+			return;
+		}
+	}
+}
+
+int Scene::AddEntityID()
+{
+	LastEntityID++;
+	return LastEntityID;
+}
+
 /************************************************************
 #--Description--#: 	Updated every frame
 #--Author--#: 		Alex Coultas
@@ -129,6 +190,14 @@ void Scene::OnLoadScene()
 			Entities.push_back(EntDestroy);
 		}
 		DestroyedEntities.clear();
+	}
+}
+
+void Scene::UnloadScene()
+{
+	for (const TPointer<Entity>& Entity : Entities)
+	{
+		Entity->Unload();
 	}
 }
 

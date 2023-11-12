@@ -12,7 +12,6 @@ public:
 	CEditorViewportCanvas(TWeakPointer<CEngineWindow> InOwningWindow);
 	void OnUpdate() override;
 	void OnRender() override;
-
 	
 	void AddViewportWidget(TPointer<CUIWidget> InWidget);
 	SVector2i GetViewportSize() override;
@@ -21,6 +20,7 @@ public:
 
 	TPointer<Entity> GetSelectedEntity() const { return SelectedEntity; }
 	void SelectEntity(TPointer<Entity> HitEntity, bool bFocusCamera = false);
+	bool DeleteSelected();
 
 protected:
 	bool OnMouseButtonPressed(int MouseButton, int Mods) override;
@@ -40,7 +40,6 @@ protected:
 	void SpectatorUpdate();
 
 	std::vector<TPointer<CUIWidget>> Widgets;
-	TPointer<EditorScene> EditorScene;
 
 	TPointer<Entity> SelectedEntity;
 	int GizmoMode = 7;
