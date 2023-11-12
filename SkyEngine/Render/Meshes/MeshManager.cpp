@@ -51,3 +51,13 @@ CMeshData CMeshManager::GetMesh(const std::string MeshName)
 	}
 	return MeshDatas[MeshName];
 }
+
+TArray<std::string> CMeshManager::GetAvailableMeshes() const
+{
+	TArray<std::string> MeshNames;
+	for (auto MeshPair : MeshDatas)
+	{
+		MeshNames.push_back(MeshPair.first);
+	}
+	return MeshNames;
+}

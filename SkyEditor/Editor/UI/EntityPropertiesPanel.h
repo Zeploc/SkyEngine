@@ -13,9 +13,9 @@ public:
 	CEntityPropertiesPanel(TWeakPointer<CEngineWindow> InOwningWindow);
 	virtual void OnRender() override;
 
-	TPointer<EditorScene> EditorScene;
 protected:
 	void DrawMeshComponent(const std::shared_ptr<CMeshComponent>& MeshComponent);
-	static int MaterialTextChanged(ImGuiInputTextCallbackData* data);
-	static int MeshTextChanged(ImGuiInputTextCallbackData* data);
+
+	void MaterialsDropdown(const std::shared_ptr<CMeshComponent>& MeshComponent);
+	void MeshDropdown(const std::shared_ptr<CMeshComponent>& MeshComponent);
 };

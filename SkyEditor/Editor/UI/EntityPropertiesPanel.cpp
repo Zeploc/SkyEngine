@@ -3,6 +3,7 @@
 #include <string>
 
 #include "EditorApp.h"
+#include "imgui_internal.h"
 #include "Dependencies/ImGui/imgui.h"
 #include "Editor/EditorViewportCanvas.h"
 #include "Editor/Scene/EditorScene.h"
@@ -14,15 +15,13 @@
 CEntityPropertiesPanel::CEntityPropertiesPanel(TWeakPointer<CEngineWindow> InOwningWindow)
     : CUICanvas(InOwningWindow, "Entity: Property editor")
 {
-	// TODO: Remove once redundant
-    EditorScene = std::static_pointer_cast<class EditorScene>(SceneManager::GetInstance()->GetCurrentScene());
 	StartingSize = {430, 450};
 }
 
 void CEntityPropertiesPanel::OnRender()
 {
 	// TODO: Convert to widget and use base render
-	TPointer<Entity> SelectedEntity = EditorApp->EditorViewportLayer->GetSelectedEntity();
+	const TPointer<Entity> SelectedEntity = EditorApp->EditorViewportLayer->GetSelectedEntity();
     
 	if (SelectedEntity)
 	{
@@ -66,28 +65,6 @@ void CEntityPropertiesPanel::OnRender()
 	}
 }
 
-int CEntityPropertiesPanel::MaterialTextChanged(ImGuiInputTextCallbackData* data)
-{
-	CMeshComponent* MeshComponent = static_cast<CMeshComponent*>(data->UserData);
-	const std::string InputtedName = data->Buf;
-	if (const TPointer<CMaterialInterface> FoundMaterial = GetMaterialManager()->FindMaterial(InputtedName))
-	{
-		MeshComponent->SetMaterial(FoundMaterial);
-	}
-	return 0;
-}
-
-int CEntityPropertiesPanel::MeshTextChanged(ImGuiInputTextCallbackData* data)
-{
-	CMeshComponent* MeshComponent = static_cast<CMeshComponent*>(data->UserData);
-	const std::string InputtedName = data->Buf;
-	if (!InputtedName.empty())
-	{
-		MeshComponent->SetMeshAsset(InputtedName);
-	}
-	return 0;
-}
-
 void CEntityPropertiesPanel::DrawMeshComponent(const std::shared_ptr<CMeshComponent>& MeshComponent)
 {
 	ImGui::Text("Mesh Component");
@@ -97,18 +74,23 @@ void CEntityPropertiesPanel::DrawMeshComponent(const std::shared_ptr<CMeshCompon
 	ImGui::Text("Vao: %i", MeshComponent->GetVao());
 	ImGui::Spacing();
 	
-	static std::string MeshName = "No Mesh";
-	MeshName.reserve(50);
-	std::string CurrentMeshAsset = MeshComponent->GetMeshAsset();
-	if (!CurrentMeshAsset.empty())
-	{
-		MeshName = CurrentMeshAsset;
-	}
 	ImGui::Text("Mesh:");
 	ImGui::SameLine();
-	ImGui::InputText("##MeshName", (char*)MeshName.c_str(), MeshName.capacity() + 1, ImGuiInputTextFlags_CallbackEdit, MeshTextChanged, MeshComponent.get());
+	MeshDropdown(MeshComponent);
 	ImGui::Spacing();	
+	
+	ImGui::Text("Material:");
+	ImGui::SameLine();
+	MaterialsDropdown(MeshComponent);
+	ImGui::Spacing();
+        
+	ImGui::Separator();
+}
 
+void CEntityPropertiesPanel::MaterialsDropdown(const std::shared_ptr<CMeshComponent>& MeshComponent)
+{
+    ImGuiContext& g = *GImGui;
+	
 	static std::string MaterialName = "No Material";
 	MaterialName.reserve(50);
 	TPointer<CMaterialInterface> CurrentMaterial = MeshComponent->GetMaterial();
@@ -121,10 +103,93 @@ void CEntityPropertiesPanel::DrawMeshComponent(const std::shared_ptr<CMeshCompon
 		MaterialName = "No Material";
 	}
 	
-	ImGui::Text("Material:");
-	ImGui::SameLine();
-	ImGui::InputText("##MeshMaterial", (char*)MaterialName.c_str(), MaterialName.capacity() + 1, ImGuiInputTextFlags_CallbackEdit, MaterialTextChanged, MeshComponent.get());
-	ImGui::Spacing();	
-        
-	ImGui::Separator();
+	if (!ImGui::BeginCombo("##MaterialsDropdown", MaterialName.c_str(), ImGuiComboFlags_None))
+	{
+		return;
+	}
+
+    // Display items
+	// FIXME-OPT: Use clipper (but we need to disable it on the appearing frame to make sure our call to SetItemDefaultFocus() is processed)
+	bool bValueChanged = false;
+
+    const TArray<TPointer<CMaterialInterface>> Materials = GetMaterialManager()->GetAllMaterials();
+	for (int i = 0; i < Materials.size(); i++)
+	{
+		TPointer<CMaterialInterface> Material = Materials[i];
+		ImGui::PushID(i);
+		const bool bItemSelected = (Material == CurrentMaterial);
+		// if (!items_getter(data, i, &item_text))
+		// 	item_text = "*Unknown item*";
+		if (ImGui::Selectable(Material->GetMaterialName().c_str(), bItemSelected))
+		{
+			bValueChanged = true;
+			MeshComponent->SetMaterial(Material);
+			CurrentMaterial = Material;
+		}
+		if (bItemSelected)
+		{
+			ImGui::SetItemDefaultFocus();
+		}
+		ImGui::PopID();
+	}
+
+	ImGui::EndCombo();
+
+	if (bValueChanged)
+	{
+		ImGui::MarkItemEdited(g.LastItemData.ID);
+	}
+}
+
+void CEntityPropertiesPanel::MeshDropdown(const std::shared_ptr<CMeshComponent>& MeshComponent)
+{
+	static std::string CurrentMeshName = "No Mesh";
+	CurrentMeshName.reserve(50);
+	std::string CurrentMeshAsset = MeshComponent->GetMeshAsset();
+	if (!CurrentMeshAsset.empty())
+	{
+		CurrentMeshName = CurrentMeshAsset;
+	}
+	
+	ImGuiContext& g = *GImGui;	
+
+	if (!ImGui::BeginCombo("##MeshDropdown", CurrentMeshName.c_str(), ImGuiComboFlags_None))
+	{
+		return;
+	}
+
+	// Display items
+	// FIXME-OPT: Use clipper (but we need to disable it on the appearing frame to make sure our call to SetItemDefaultFocus() is processed)
+	bool bValueChanged = false;
+
+	const TArray<std::string> MeshNames = GetMeshManager()->GetAvailableMeshes();
+	for (int i = 0; i < MeshNames.size(); i++)
+	{
+		std::string MeshName = MeshNames[i];
+		ImGui::PushID(i);
+		const bool bItemSelected = (MeshName == CurrentMeshName);
+		// if (!items_getter(data, i, &item_text))
+		// 	item_text = "*Unknown item*";
+		if (ImGui::Selectable(MeshName.c_str(), bItemSelected))
+		{
+			if (GetMeshManager()->HasMesh(MeshName))
+			{
+				MeshComponent->SetMeshAsset(MeshName);
+				CurrentMeshName = MeshName;
+				bValueChanged = true;
+			}
+		}
+		if (bItemSelected)
+		{
+			ImGui::SetItemDefaultFocus();
+		}
+		ImGui::PopID();
+	}
+
+	ImGui::EndCombo();
+
+	if (bValueChanged)
+	{
+		ImGui::MarkItemEdited(g.LastItemData.ID);
+	}
 }

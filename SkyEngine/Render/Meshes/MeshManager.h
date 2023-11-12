@@ -26,6 +26,8 @@ public:
 	bool AddMesh(const std::string MeshName, const CMeshData& MeshData);
 	bool HasMesh(const std::string MeshName) const;
 	CMeshData GetMesh(const std::string MeshName);
+
+	TArray<std::string> GetAvailableMeshes() const;
 	
 private:
 	std::map<std::string, CMeshData> MeshDatas;
