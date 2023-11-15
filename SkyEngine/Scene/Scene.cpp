@@ -69,7 +69,7 @@ void Scene::DeleteScene()
 ************************************************************/
 void Scene::RenderScene()
 {
-	//GetRenderer()->Render(Entities);
+	GetRenderer()->Render(Entities);
 }
 
 /************************************************************
