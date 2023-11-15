@@ -181,6 +181,7 @@
     <ClInclude Include="Graphics\GL\GLIncludes.h" />
     <ClInclude Include="Graphics\GL\imgui_impl_opengl3.h" />
     <ClInclude Include="Graphics\GraphicsAPI.h" />
+    <ClInclude Include="Graphics\Vulkan\VkFramebuffer.h" />
     <ClInclude Include="Graphics\Vulkan\VulkanAPI.h" />
     <ClInclude Include="Graphics\Vulkan\imgui_impl_vulkan.h" />
     <ClInclude Include="Input\CXBOXController.h" />
@@ -283,6 +284,7 @@
     <ClCompile Include="Graphics\GL\GLFramebuffer.cpp" />
     <ClCompile Include="Graphics\GL\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Graphics\GraphicsAPI.cpp" />
+    <ClCompile Include="Graphics\Vulkan\VkFramebuffer.cpp" />
     <ClCompile Include="Graphics\Vulkan\VulkanAPI.cpp" />
     <ClCompile Include="Graphics\Vulkan\imgui_impl_vulkan.cpp" />
     <ClCompile Include="Input\CXBOXController.cpp" />

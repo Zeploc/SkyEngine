@@ -1,6 +1,7 @@
 #include "SEPCH.h"
 #include "VulkanAPI.h"
 #include "imgui_impl_vulkan.h"
+#include "VkFramebuffer.h"
 #include "Core/Application.h"
 #include "Math/Matrix.h"
 #include "Math/Transform.h"
@@ -141,7 +142,7 @@ void CVulkanAPI::Init()
 			QueueInfo[0].pQueuePriorities = QueuePriority;
 			VkDeviceCreateInfo DeviceCreateInfo = {};
 			DeviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-			DeviceCreateInfo.queueCreateInfoCount = std::size(QueueInfo);
+			DeviceCreateInfo.queueCreateInfoCount = static_cast<uint32_t>(std::size(QueueInfo));
 			DeviceCreateInfo.pQueueCreateInfos = QueueInfo;
 			DeviceCreateInfo.enabledExtensionCount = static_cast<uint32_t>(DeviceExtensions.size());
 			DeviceCreateInfo.ppEnabledExtensionNames = DeviceExtensions.data();
@@ -181,8 +182,7 @@ void CVulkanAPI::ImGuiInit()
 	// Create Framebuffers
 	int Width, Height;
 	glfwGetFramebufferSize(Window, &Width, &Height);
-	ImGui_ImplVulkanH_Window* Wd = &MainWindowData;
-	SetupVulkanWindow(Wd, Surface, Width, Height);
+	SetupVulkanWindow(Surface, Width, Height);
 
 	// Setup Platform/Renderer backends
 	ImGui_ImplGlfw_InitForVulkan(Window, true);
@@ -196,11 +196,58 @@ void CVulkanAPI::ImGuiInit()
 	InitInfo.DescriptorPool = DescriptorPool;
 	InitInfo.Subpass = 0;
 	InitInfo.MinImageCount = MinImageCount;
-	InitInfo.ImageCount = Wd->ImageCount;
+	InitInfo.ImageCount = ImGuiWindow.ImageCount;
 	InitInfo.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
 	InitInfo.Allocator = Allocator;
 	InitInfo.CheckVkResultFn = VKCheck;
-	ImGui_ImplVulkan_Init(&InitInfo, Wd->RenderPass);
+	ImGui_ImplVulkan_Init(&InitInfo, ImGuiWindow.RenderPass);
+
+	// Load Fonts
+    // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
+    // - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
+    // - If the file cannot be loaded, the function will return a nullptr. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
+    // - The fonts will be rasterized at a given size (w/ oversampling) and stored into a texture when calling ImFontAtlas::Build()/GetTexDataAsXXXX(), which ImGui_ImplXXXX_NewFrame below will call.
+    // - Use '#define IMGUI_ENABLE_FREETYPE' in your imconfig file to use Freetype for higher quality font rendering.
+    // - Read 'docs/FONTS.md' for more instructions and details.
+    // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
+    //io.Fonts->AddFontDefault();
+    //io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
+    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
+    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
+    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
+    //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
+    //IM_ASSERT(font != nullptr);
+
+    // Upload Fonts
+    {
+        // Use any command queue
+        const VkCommandPool CommandPool = ImGuiWindow.Frames[ImGuiWindow.FrameIndex].CommandPool;
+        const VkCommandBuffer CommandBuffer = ImGuiWindow.Frames[ImGuiWindow.FrameIndex].CommandBuffer;
+
+        Err = vkResetCommandPool(Device, CommandPool, 0);
+        VKCheck(Err);
+        VkCommandBufferBeginInfo BeginInfo = {};
+        BeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        BeginInfo.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+        Err = vkBeginCommandBuffer(CommandBuffer, &BeginInfo);
+        VKCheck(Err);
+
+        ImGui_ImplVulkan_CreateFontsTexture(CommandBuffer);
+
+        VkSubmitInfo EndInfo = {};
+        EndInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        EndInfo.commandBufferCount = 1;
+        EndInfo.pCommandBuffers = &CommandBuffer;
+        Err = vkEndCommandBuffer(CommandBuffer);
+        VKCheck(Err);
+        Err = vkQueueSubmit(Queue, 1, &EndInfo, VK_NULL_HANDLE);
+        VKCheck(Err);
+
+        Err = vkDeviceWaitIdle(Device);
+        VKCheck(Err);
+        ImGui_ImplVulkan_DestroyFontUploadObjects();
+    }
+
 }
 
 VkPhysicalDevice CVulkanAPI::SetupVulkan_SelectPhysicalDevice() const
@@ -232,13 +279,13 @@ VkPhysicalDevice CVulkanAPI::SetupVulkan_SelectPhysicalDevice() const
 	return VK_NULL_HANDLE;
 }
 
-void CVulkanAPI::SetupVulkanWindow(ImGui_ImplVulkanH_Window* Wd, VkSurfaceKHR Surface, int Width, int Height) const
+void CVulkanAPI::SetupVulkanWindow(VkSurfaceKHR Surface, int Width, int Height)
 {
-	Wd->Surface = Surface;
+	ImGuiWindow.Surface = Surface;
 
 	// Check for WSI support
 	VkBool32 Res;
-	vkGetPhysicalDeviceSurfaceSupportKHR(PhysicalDevice, QueueFamily, Wd->Surface, &Res);
+	vkGetPhysicalDeviceSurfaceSupportKHR(PhysicalDevice, QueueFamily, ImGuiWindow.Surface, &Res);
 	if (Res != VK_TRUE)
 	{
 		ASSERT(false, "Error no WSI support on physical device 0\n");
@@ -247,7 +294,7 @@ void CVulkanAPI::SetupVulkanWindow(ImGui_ImplVulkanH_Window* Wd, VkSurfaceKHR Su
 	// Select Surface Format
 	constexpr VkFormat RequestSurfaceImageFormat[] = { VK_FORMAT_B8G8R8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM, VK_FORMAT_B8G8R8_UNORM, VK_FORMAT_R8G8B8_UNORM };
 	constexpr VkColorSpaceKHR RequestSurfaceColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
-	Wd->SurfaceFormat = ImGui_ImplVulkanH_SelectSurfaceFormat(PhysicalDevice, Wd->Surface, RequestSurfaceImageFormat, (size_t)IM_ARRAYSIZE(RequestSurfaceImageFormat), RequestSurfaceColorSpace);
+	ImGuiWindow.SurfaceFormat = ImGui_ImplVulkanH_SelectSurfaceFormat(PhysicalDevice, ImGuiWindow.Surface, RequestSurfaceImageFormat, (size_t)IM_ARRAYSIZE(RequestSurfaceImageFormat), RequestSurfaceColorSpace);
 
 	// Select Present Mode
 	#ifdef IMGUI_UNLIMITED_FRAME_RATE
@@ -255,12 +302,12 @@ void CVulkanAPI::SetupVulkanWindow(ImGui_ImplVulkanH_Window* Wd, VkSurfaceKHR Su
 #else
 	constexpr VkPresentModeKHR PresentModes[] = { VK_PRESENT_MODE_FIFO_KHR };
 #endif
-	Wd->PresentMode = ImGui_ImplVulkanH_SelectPresentMode(PhysicalDevice, Wd->Surface, &PresentModes[0], IM_ARRAYSIZE(PresentModes));
-	//printf("[vulkan] Selected PresentMode = %d\n", wd->PresentMode);
+	ImGuiWindow.PresentMode = ImGui_ImplVulkanH_SelectPresentMode(PhysicalDevice, ImGuiWindow.Surface, &PresentModes[0], IM_ARRAYSIZE(PresentModes));
+	//printf("[vulkan] Selected PresentMode = %d\n", ImGuiWindow.PresentMode);
 
 	// Create SwapChain, RenderPass, Framebuffer, etc.
 	ASSERT(MinImageCount >= 2, "MinImageCount must be >= 2");
-	ImGui_ImplVulkanH_CreateOrResizeWindow(Instance, PhysicalDevice, Device, Wd, QueueFamily, Allocator, Width, Height, MinImageCount);
+	ImGui_ImplVulkanH_CreateOrResizeWindow(Instance, PhysicalDevice, Device, &ImGuiWindow, QueueFamily, Allocator, Width, Height, MinImageCount);
 }
 
 
@@ -298,8 +345,7 @@ bool CVulkanAPI::CreateComputeProgram(uint32_t& ProgramID, const char* ComputeSh
 
 TPointer<IFramebuffer> CVulkanAPI::CreateFramebuffer(const SFramebufferSpecification& Specification)
 {
-	//TODO: Implement
-	return nullptr;
+	return CreatePointer<CVkFramebuffer>(Specification);
 }
 
 unsigned CVulkanAPI::CreateVertexBuffer(const CMeshData& MeshData)
@@ -331,7 +377,94 @@ void CVulkanAPI::ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, ST
 
 void CVulkanAPI::RenderImGui()
 {
-	//TODO: Implement
+	const VkSemaphore ImageAcquiredSemaphore  = ImGuiWindow.FrameSemaphores[ImGuiWindow.SemaphoreIndex].ImageAcquiredSemaphore;
+	const VkSemaphore RenderCompleteSemaphore = ImGuiWindow.FrameSemaphores[ImGuiWindow.SemaphoreIndex].RenderCompleteSemaphore;
+    VkResult Err = vkAcquireNextImageKHR(Device, ImGuiWindow.Swapchain, UINT64_MAX, ImageAcquiredSemaphore,
+                                         VK_NULL_HANDLE, &ImGuiWindow.FrameIndex);
+    if (Err == VK_ERROR_OUT_OF_DATE_KHR || Err == VK_SUBOPTIMAL_KHR)
+    {
+    	// TODO: Handle swap chain rebuild
+        ENSURE(false, "vkAcquireNextImageKHR failed");
+        return;
+    }
+    VKCheck(Err);
+
+	const ImGui_ImplVulkanH_Frame* Frame = &ImGuiWindow.Frames[ImGuiWindow.FrameIndex];
+    {
+        Err = vkWaitForFences(Device, 1, &Frame->Fence, VK_TRUE, UINT64_MAX);    // wait indefinitely instead of periodically checking
+        VKCheck(Err);
+
+        Err = vkResetFences(Device, 1, &Frame->Fence);
+        VKCheck(Err);
+    }
+    {
+        Err = vkResetCommandPool(Device, Frame->CommandPool, 0);
+        VKCheck(Err);
+        VkCommandBufferBeginInfo Info = {};
+        Info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        Info.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+        Err = vkBeginCommandBuffer(Frame->CommandBuffer, &Info);
+        VKCheck(Err);
+    }
+    {
+        VkRenderPassBeginInfo Info = {};
+        Info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        Info.renderPass = ImGuiWindow.RenderPass;
+        Info.framebuffer = Frame->Framebuffer;
+        Info.renderArea.extent.width = ImGuiWindow.Width;
+        Info.renderArea.extent.height = ImGuiWindow.Height;
+        Info.clearValueCount = 1;
+        Info.pClearValues = &ImGuiWindow.ClearValue;
+        vkCmdBeginRenderPass(Frame->CommandBuffer, &Info, VK_SUBPASS_CONTENTS_INLINE);
+    }
+
+    // Record dear imgui primitives into command buffer
+    ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), Frame->CommandBuffer);
+
+    // Submit command buffer
+    vkCmdEndRenderPass(Frame->CommandBuffer);
+    {
+        VkPipelineStageFlags wait_stage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        VkSubmitInfo Info = {};
+        Info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        Info.waitSemaphoreCount = 1;
+        Info.pWaitSemaphores = &ImageAcquiredSemaphore;
+        Info.pWaitDstStageMask = &wait_stage;
+        Info.commandBufferCount = 1;
+        Info.pCommandBuffers = &Frame->CommandBuffer;
+        Info.signalSemaphoreCount = 1;
+        Info.pSignalSemaphores = &RenderCompleteSemaphore;
+
+        Err = vkEndCommandBuffer(Frame->CommandBuffer);
+        VKCheck(Err);
+        Err = vkQueueSubmit(Queue, 1, &Info, Frame->Fence);
+        VKCheck(Err);
+    }
+}
+
+void CVulkanAPI::ImGuiNewFrame()
+{
+	ImGui_ImplVulkan_NewFrame();
+}
+
+void CVulkanAPI::SwapBuffers()
+{
+	const VkSemaphore RenderCompleteSemaphore = ImGuiWindow.FrameSemaphores[ImGuiWindow.SemaphoreIndex].RenderCompleteSemaphore;
+	VkPresentInfoKHR Info = {};
+	Info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+	Info.waitSemaphoreCount = 1;
+	Info.pWaitSemaphores = &RenderCompleteSemaphore;
+	Info.swapchainCount = 1;
+	Info.pSwapchains = &ImGuiWindow.Swapchain;
+	Info.pImageIndices = &ImGuiWindow.FrameIndex;
+	VkResult Err = vkQueuePresentKHR(Queue, &Info);
+	if (Err == VK_ERROR_OUT_OF_DATE_KHR || Err == VK_SUBOPTIMAL_KHR)
+	{
+		ENSURE(false, "vkQueuePresentKHR failed");
+		return;
+	}
+	VKCheck(Err);
+	ImGuiWindow.SemaphoreIndex = (ImGuiWindow.SemaphoreIndex + 1) % ImGuiWindow.ImageCount; // Now we can use the next set of semaphores
 }
 
 void CVulkanAPI::RenderLines(ISceneVisual* SceneVisual, float Thickness)

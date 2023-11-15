@@ -27,7 +27,11 @@ public:
 		unsigned& vao) override;
 	void RenderMesh(ISceneVisual* SceneVisual) override;
 	void CleanupMesh(ISceneVisual* SceneVisual) override;
+	
 	void RenderImGui() override;
+	void ImGuiNewFrame() override;
+	void SwapBuffers() override;
+	
 	void RenderLines(ISceneVisual* SceneVisual, float Thickness) override;
 	void ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, STransform Transform) override;
 	void BindShader(uint32_t ShaderProgramID) override;
@@ -46,7 +50,7 @@ public:
 
 private:
 	VkPhysicalDevice SetupVulkan_SelectPhysicalDevice() const;
-	void SetupVulkanWindow(ImGui_ImplVulkanH_Window* Wd, VkSurfaceKHR Surface, int Width, int Height) const;
+	void SetupVulkanWindow(VkSurfaceKHR Surface, int Width, int Height);
 	
 	// Data
 	VkAllocationCallbacks*		Allocator = nullptr;
@@ -59,7 +63,7 @@ private:
 	VkPipelineCache				PipelineCache = VK_NULL_HANDLE;
 	VkDescriptorPool			DescriptorPool = VK_NULL_HANDLE;
 
-	ImGui_ImplVulkanH_Window	MainWindowData;
+	ImGui_ImplVulkanH_Window	ImGuiWindow;
 	int32_t						MinImageCount = 2;
 	bool						SwapChainRebuild = false;
 };

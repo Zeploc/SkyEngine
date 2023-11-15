@@ -58,6 +58,7 @@ void ShaderManager::CleanUp()
 
 void ShaderManager::LoadAllDefaultShaders()
 {
+	/*
 	AddShaderProgram("BaseProgram", "Resources/Shaders/TextureVertexShader.vs", "Resources/Shaders/TextureFragmentShader.fs");
 	AddComputeProgram("ComputeProgram", "Resources/Shaders/ComputeShader.comps");
 	AddShaderProgram("GPUParticlesProgram", "Resources/Shaders/ParticleShaderCompute.vs", "Resources/Shaders/ParticleShaderCompute.fs");
@@ -75,6 +76,7 @@ void ShaderManager::LoadAllDefaultShaders()
 	AddShaderProgram("ParticleShader", "Resources/Shaders/ParticleShader.vs", "Resources/Shaders/ParticleShader.fs", "Resources/Shaders/ParticleShader.gs");
 	AddTessProgram("TessProgram", "Resources/Shaders/Tessellation.vs", "Resources/Shaders/Tessellation.fs", "Resources/Shaders/TessControl.tc", "Resources/Shaders/TessEval.te");
 	AddShaderProgram("FrameBuffer", "Resources/Shaders/FrameBuffer.vs", "Resources/Shaders/FrameBuffer.fs");
+	*/
 
 	AddShader<CPBRShader>();
 	AddShader<CUnlitShader>();
@@ -106,7 +108,7 @@ void ShaderManager::ShaderCreated(const TPointer<CShader>NewShader)
 	if (!NewShader->CompileShader())
 	{
 		const std::string ErrorMessage = "Failed to create shader" + ShaderName;
-		ensure(false, ErrorMessage.c_str());
+		//ensure(false, ErrorMessage.c_str());
 		return;
 	}
 	Shaders.insert(std::pair(ShaderName, NewShader));

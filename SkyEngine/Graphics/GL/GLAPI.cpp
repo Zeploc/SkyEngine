@@ -4,12 +4,15 @@
 #include "GLAPI.h"
 
 #include <fstream>
+#include <GLFW/glfw3.h>
 #include <glm/gtc/type_ptr.inl>
 #include <soil/SOIL2.h>
 
 #include "GLFramebuffer.h"
 #include "imgui_impl_opengl3.h"
+#include "Core/Application.h"
 #include "Math/Matrix.h"
+#include "Platform/Window/GLFW/GLFWWindow.h"
 #include "Render/SceneVisual.h"
 #include "Render/Materials/InternalMaterial.h"
 #include "Render/Shaders/ShaderManager.h"
@@ -403,6 +406,17 @@ void CGLAPI::ApplyMVP(uint32_t Program, Matrix4 View, Matrix4 Projection, STrans
 void CGLAPI::RenderImGui()
 {
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());	
+}
+
+void CGLAPI::ImGuiNewFrame()
+{
+	ImGui_ImplOpenGL3_NewFrame();
+}
+
+void CGLAPI::SwapBuffers()
+{
+	// TODO: Make this not rely on the GLFW??
+	glfwSwapBuffers(Cast<CGLFWWindow>(GetApplication()->GetApplicationWindow())->GetGlWindow());
 }
 
 void CGLAPI::BindShader(uint32_t ShaderProgramID)

@@ -173,7 +173,10 @@ void CGLFWWindow::SetWindowTitle(const std::string& NewTitle)
 
 void CGLFWWindow::PreRender()
 {
-	glfwMakeContextCurrent(GlWindow);	
+	if (GetApplication()->GraphicsApiType == EGraphicsAPI::OPENGL)
+	{
+		glfwMakeContextCurrent(GlWindow);
+	}
 	CEngineWindow::PreRender();
 }
 
@@ -182,7 +185,7 @@ void CGLFWWindow::PostRender()
 	CEngineWindow::PostRender();
 	
 	glfwPollEvents();
-	glfwSwapBuffers(GlWindow);
+	GetGraphicsAPI()->SwapBuffers();
 }
 
 // TODO: VSync with glfwSwapInterval(1);
