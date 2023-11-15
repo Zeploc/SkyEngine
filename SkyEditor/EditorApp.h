@@ -4,6 +4,7 @@
 #include "Core/Application.h"
 #include "Core/Core.h"
 
+class CKeyPressedEvent;
 class CEditorViewportCanvas;
 class CConsoleLog;
 class EditorApplication;
@@ -33,7 +34,8 @@ public:
 
 	void Render() override;
 
-	void ChangeSize(int w, int h) override;
+	void OnEvent(CEvent& Event) override;
+	bool OnKeyPressedEvent(CKeyPressedEvent& Event);
 	void OnExit() override;
 
 	void OpenScene();

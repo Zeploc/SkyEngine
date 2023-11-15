@@ -8,7 +8,7 @@
 class ENGINE_API CFileManager
 {
 public:
-	static bool OpenFile(std::string& OpenedFile);
+	static bool OpenFile(std::string& OpenedFile, const std::string& Extension = {}, std::string DefaultFolder = {});
 	static bool ReadFile(const std::string& FilePath, std::string& FileContents);
 	static bool SaveFile(const std::string& FilePath, std::string FileContents);
 	static bool SaveAsFile(std::string& ChosenFilePath, std::string FileExtension, std::string FileName = std::string(), std::string FileDirectory = std::string());

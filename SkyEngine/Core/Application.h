@@ -40,7 +40,6 @@ namespace SkyEngine
 		virtual void Update();
 		void OnEvent(CEvent& Event) override;
 		virtual void Render();
-		virtual void ChangeSize(int w, int h);
 		virtual void OnExit();
 		
 		SVector2i MainWindowSize;

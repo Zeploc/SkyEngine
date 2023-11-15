@@ -19,6 +19,11 @@ void StringUtils::Replace(std::string& InString, const std::string& From, const 
 	}
 }
 
+std::wstring StringUtils::ToWString(const std::string& InString)
+{
+	return std::wstring(InString.begin(), InString.end());
+}
+
 // // trim from start (in place)
 // static inline void ltrim(std::string &s) {
 // 	s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {

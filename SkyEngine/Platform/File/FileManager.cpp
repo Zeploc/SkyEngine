@@ -5,9 +5,10 @@
 #include <shobjidl.h> 
 
 #include "Core/Application.h"
+#include "Core/StringUtils.h"
 #include "Platform/PlatformInterface.h"
 
-bool CFileManager::OpenFile(std::string& OpenedFile)
+bool CFileManager::OpenFile(std::string& OpenedFile, const std::string& Extension, std::string DefaultFolder)
 {
 	// TODO: Open dialogue (Currently makes file not openable?)
 	// use IFileSaveDialog
@@ -29,6 +30,27 @@ bool CFileManager::OpenFile(std::string& OpenedFile)
 		return false;
 	}
 
+	if (!DefaultFolder.empty())
+	{
+		IShellItem *pCurFolder = NULL;
+		const std::wstring Wstring = StringUtils::ToWString(DefaultFolder);
+		const wchar_t* Folder = Wstring.c_str();
+		hr = SHCreateItemFromParsingName(Folder, NULL, IID_PPV_ARGS(&pCurFolder));
+		if (SUCCEEDED(hr))
+		{
+			pFileOpen->SetDefaultFolder(pCurFolder);
+			pCurFolder->Release();
+		}
+	}
+
+	if (!Extension.empty())
+	{
+		// TODO: Get working
+		const std::wstring Wstring = StringUtils::ToWString(Extension);
+		const wchar_t* WExtension = Wstring.c_str();
+		pFileOpen->SetDefaultExtension(WExtension);
+	}
+	
 	// Show the Open dialog box.
 	hr = pFileOpen->Show(NULL);
 

@@ -21,6 +21,7 @@ public:
 	TPointer<Entity> GetSelectedEntity() const { return SelectedEntity; }
 	void SelectEntity(TPointer<Entity> HitEntity, bool bFocusCamera = false);
 	bool DeleteSelected();
+	void CreateEntity(const std::string& MeshAsset = {});
 
 protected:
 	bool OnMouseButtonPressed(int MouseButton, int Mods) override;

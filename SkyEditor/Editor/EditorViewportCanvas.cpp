@@ -12,6 +12,7 @@
 #include "Platform/Window/EngineWindow.h"
 #include "Render/Framebuffer.h"
 #include "Render/SceneRenderer.h"
+#include "Render/Meshes/MeshComponent.h"
 #include "Scene/SceneManager.h"
 #include "System/LogManager.h"
 #include "System/TimeManager.h"
@@ -346,6 +347,23 @@ bool CEditorViewportCanvas::DeleteSelected()
 	return true;
 }
 
+void CEditorViewportCanvas::CreateEntity(const std::string& MeshAsset)
+{
+	std::string EntityName = MeshAsset;
+	if (EntityName.empty())
+	{
+		EntityName = "NewEntity";
+	}
+	const TPointer<Entity> NewEntity(new Entity(STransform(), EntityName));
+	SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
+	SelectEntity(NewEntity, true);
+	if (!MeshAsset.empty())
+	{
+		TPointer<CMeshComponent> NewMeshComponent = std::make_shared<CMeshComponent>(NewEntity, MeshAsset, nullptr);
+		NewEntity->AddComponent(NewMeshComponent);
+	}
+}
+
 bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 {
 	if (bUseSpectatorControls)
@@ -368,6 +386,16 @@ bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 			return true;
 		}
 		// ApplicationWindow->SetCursorVisible(true);
+	}
+	if (KeyCode == GLFW_KEY_F && Mods & CWindowInput::ModiferType::Control)
+	{
+		CreateEntity(MESH_CUBE);
+		return true;
+	}
+	if (KeyCode == GLFW_KEY_G && Mods & CWindowInput::ModiferType::Control)
+	{
+		CreateEntity(MESH_SPHERE);
+		return true;
 	}
 	if (KeyCode == GLFW_KEY_F)
 	{

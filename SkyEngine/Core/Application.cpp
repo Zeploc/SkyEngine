@@ -125,11 +125,6 @@ namespace SkyEngine
 		ApplicationWindow->Render();
 	}
 
-	void Application::ChangeSize(int w, int h)
-	{
-		// TODO: Move to relevant place
-	}
-
 	void Application::OnExit()
 	{
 		ApplicationWindow.reset();

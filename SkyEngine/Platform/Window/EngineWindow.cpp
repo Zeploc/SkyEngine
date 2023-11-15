@@ -152,6 +152,10 @@ void CEngineWindow::SendEvent(CEvent& Event)
 	{
 		EventListener->OnEvent(Event);
 	}
+	if (Event.WasHandled())
+	{
+		return;
+	}
 	
 	CanvasManager.OnEvent(Event);
 }

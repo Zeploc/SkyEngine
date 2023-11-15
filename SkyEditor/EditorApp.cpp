@@ -8,6 +8,8 @@
 
 #include "SEPCH.h"
 #include <SkyEngine.h>
+#include "Graphics/GL/GLIncludes.h"
+#include <GLFW/glfw3.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <Scene/SceneManager.h>
 
@@ -195,25 +197,15 @@ void EditorApplication::MainMenuBar()
 			{
 				if (ImGui::MenuItem("Empty"))
 				{
-					const TPointer<Entity> NewEntity(new Entity(STransform()));
-					SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
-					EditorViewportLayer->SelectEntity(NewEntity, true);
+					EditorViewportLayer->CreateEntity();
 				}
 				else if (ImGui::MenuItem("Cube"))
 				{
-					const TPointer<Entity> NewEntity(new Entity(STransform(), "Cube"));
-					SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
-					EditorViewportLayer->SelectEntity(NewEntity, true);
-					TPointer<CMeshComponent> NewMeshComponent = std::make_shared<CMeshComponent>(NewEntity, MESH_CUBE, nullptr);
-					NewEntity->AddComponent(NewMeshComponent);
+					EditorViewportLayer->CreateEntity(MESH_CUBE);
 				}
 				else if (ImGui::MenuItem("Sphere"))
 				{
-					const TPointer<Entity> NewEntity(new Entity(STransform(), "Sphere"));
-					SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
-					EditorViewportLayer->SelectEntity(NewEntity, true);
-					TPointer<CMeshComponent> NewMeshComponent = std::make_shared<CMeshComponent>(NewEntity, MESH_SPHERE, nullptr);
-					NewEntity->AddComponent(NewMeshComponent);
+					EditorViewportLayer->CreateEntity(MESH_SPHERE);
 				}
 				ImGui::EndMenu();
 			}
@@ -269,12 +261,39 @@ void EditorApplication::Render()
 	EditorWindowManager::RenderWindows();	
 }
 
-void EditorApplication::ChangeSize(int w, int h)
+void EditorApplication::OnEvent(CEvent& Event)
 {
-	Application::ChangeSize(w, h);		
-
-	EditorWindowManager::MainWindowSizeChanged(w, h);
+	Application::OnEvent(Event);
+	
+	EventDispatcher dispatcher(Event);
+	dispatcher.Dispatch<CKeyPressedEvent>(SE_BIND_EVENT_FN(EditorApplication::OnKeyPressedEvent));
 }
+
+bool EditorApplication::OnKeyPressedEvent(CKeyPressedEvent& Event)
+{
+	if (Event.GetMods() & CWindowInput::ModiferType::Control)
+	{
+		if (Event.GetKeyCode() == GLFW_KEY_O)
+		{
+			OpenScene();
+			return true;
+		}
+		if (Event.GetKeyCode() == GLFW_KEY_S)
+		{
+			if (Event.GetMods() & CWindowInput::ModiferType::Shift)
+			{
+				SaveScene(true);
+			}
+			else
+			{
+				SaveScene();
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
 void EditorApplication::OnExit()
 {
 	EditorWindowManager::CleanupWindows();
@@ -284,7 +303,7 @@ void EditorApplication::OnExit()
 void EditorApplication::OpenScene()
 {
 	std::string FilePath;
-	if (!CFileManager::OpenFile(FilePath))
+	if (!CFileManager::OpenFile(FilePath, "slvl", ContentPath))
 	{
 		// No file opened (cancelled)
 		return;
