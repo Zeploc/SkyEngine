@@ -16,6 +16,9 @@ public:
 	int GetIndicesCount() const override;
 	bool ShouldRenderFaces() const override { return false; }
 	
+	std::string GetComponentClassName() override;
+	static std::string GetStaticName();
+	
 public:
 	bool ShouldRender() const override;
 	bool IsVisible() const override;
@@ -23,6 +26,7 @@ public:
 	TPointer<CMaterialInterface> GetMaterial() const override;
 	STransform GetRenderTransform() const override;
 protected:
+	void Deserialize(std::istream& is) override;
 	TPointer<CMaterialInterface> BoxMaterial;
 	std::string BoxMeshName;
 };

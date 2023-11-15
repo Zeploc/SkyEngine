@@ -26,9 +26,7 @@ class CMaterialInterface;
 class ENGINE_API CMeshComponent : public CComponent, public ISceneVisual
 {
 public:
-	// TODO: Remove empty constructor once made redundant 
 	CMeshComponent(const TPointer<Entity>& InOwner);
-	// TODO: Replace width with mesh data
 	CMeshComponent(const TPointer<Entity>& InOwner, std::string InMeshAsset, const TPointer<CMaterialInterface>& InMaterial = nullptr);
 	virtual ~CMeshComponent();
 
@@ -64,9 +62,8 @@ public:
 		return MeshCollisionBounds;
 	}
 	
-	static std::string GetSerializeType();
-	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const TPointer<CMeshComponent>& InMeshComponent);
-	ENGINE_API friend std::istream& operator>>(std::istream& is, TPointer<CMeshComponent>& InMeshComponent);
+	std::string GetComponentClassName() override;
+	static std::string GetStaticName();
 
 	TPointer<CMaterialInterface> MeshMaterial;
 	float LEGACY_Width;
@@ -75,7 +72,8 @@ public:
 	
 protected:
 	virtual CMeshData GetMeshData() const;
-protected:
+	void Serialize(std::ostream& os) override;
+	void Deserialize(std::istream& is) override;
 	TPointer<CCollisionBounds> MeshCollisionBounds;
 	std::string MeshAsset;
 

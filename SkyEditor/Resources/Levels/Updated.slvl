@@ -1,8 +1,9 @@
-[Default]
+[Updated]
 [Entity] Sphere 1 ((-2.000000 5.000000 -14.000000) (0.000000 0.000000 0.000000) (5.000000 5.000000 5.000000)) [MeshComponent] Sphere CliffMaterial true
 [Entity] Floor_Plane 2 ((0.000000 0.000000 0.000000) (-90.000000 0.000000 0.000000) (50.000000 50.000000 50.000000)) [MeshComponent] Plane PlaneMaterial true
-[Entity] Cube 3 ((10.000000 1.500000 -4.000000) (0.000000 0.000000 0.000000) (3.000000 3.000000 3.000000)) [MeshComponent] Cube ColouredBrickMaterial true
+[Entity] Cube 3 ((1.709078 1.500000 -1.961940) (0.000000 0.000000 0.000000) (6.243134 3.000000 3.000000)) [MeshComponent] Cube ColouredBrickMaterial true
 [Entity] Pyramid 4 ((10.000000 1.500000 0.000000) (0.000000 0.000000 0.000000) (3.000000 3.000000 3.000000)) [MeshComponent] Pyramid ColouredBrickMaterial true
 [Entity] Sphere_2 5 ((10.000000 1.500000 4.000000) (0.000000 0.000000 0.000000) (2.000000 2.000000 2.000000)) [MeshComponent] Sphere ColouredBrickMaterial true
-[Entity] Box 7 ((4.551271 2.476239 15.842440) (0.000000 0.000000 0.000000) (8.000000 2.000000 4.000000)) [BoxComponent]
-[Camera] Camera -842150451 ((-19.535593 21.451048 8.223121) (-35.722858 -16.867025 0.000000) (0.000000 0.000000 0.000000))
+[Camera] Camera 0 ((-11.491455 15.795731 10.114738) (-41.089798 -35.895561 0.000000) (0.000000 0.000000 0.000000))
+[Entity] Cube 1 ((1.709078 3.920860 -5.038333) (0.000000 0.000000 0.000000) (6.243134 7.497558 3.000000)) [MeshComponent] Cube ColouredBrickMaterial true
+[Entity] Cube 2 ((1.709078 3.920860 5.310656) (0.000000 0.000000 0.000000) (15.365466 16.720175 1.164790)) [MeshComponent] Cube ColouredBrickMaterial true

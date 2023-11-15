@@ -10,6 +10,7 @@
 // Engine Includes //
 #include <format>
 
+#include "Camera.h"
 #include "Component.h"
 #include "Core/StringUtils.h"
 #include "Render/Meshes/MeshComponent.h"
@@ -186,59 +187,96 @@ void Entity::SetVisible(bool _bIsVisible)
 std::string Entity::EntityToString()
 {
 	std::stringstream sEntity("");
-	sEntity << "[Entity] ";
-	sEntity << EntityID << " ";
-	sEntity << Transform.ToString();
+	sEntity << this;
 	return sEntity.str();
 }
 
-std::ostream& operator<<(std::ostream& os, const TPointer<Entity>& InEntity)
+std::string Entity::GetEntityClassName()
 {
-	// std::stringstream sEntity("");
-	os << "[Entity] ";
-	os << InEntity->Name << " ";
-	os << InEntity->EntityID << " ";
-	os << InEntity->Transform;
-	for (const TPointer<CComponent>& Component : InEntity->Components)
-	{
-		// TODO: Proper inheritance archiving
-		TPointer<CMeshComponent> MeshComponent = Cast<CMeshComponent>(Component);
-		if (MeshComponent)
-		{
-			os << MeshComponent;
-		}
-		else
-		{
-			os << Component;
-		}
-	}
-	return os;
+	return "Entity";
 }
 
-std::istream& operator>>(std::istream& is, TPointer<Entity>& InEntity)
+TPointer<Entity> Entity::MakeEntityFromClassName(const std::string& ClassName)
 {
-	std::string Empty;
-	// TODO: Remove need for first space removal
-	std::getline(is, Empty, ' ');
-	is >> InEntity->Name;
-	is >> InEntity->EntityID;
+	if (ClassName == Camera::GetStaticName())
+	{
+		TPointer<Camera> NewCameraEntity = std::make_shared<Camera>(STransform());
+		return NewCameraEntity;
+	}
+	
+	TPointer<Entity> NewEntity = std::make_shared<Entity>(STransform());
+	return NewEntity;
+}
+
+TPointer<Entity> Entity::GetEntityFromStringStream(std::stringstream& ss)
+{	
+	std::string _;
+	std::string EntityClass;
+	std::getline(ss, _, '[');
+	std::getline(ss, EntityClass, ']');
+	TPointer<Entity> NewEntity = MakeEntityFromClassName(EntityClass);
+	ss >> NewEntity;
+	return NewEntity;
+}
+
+void Entity::Serialize(std::ostream& os)
+{
+	// std::stringstream sEntity("");
+	os << "[" << GetEntityClassName() << "]";
+	os << " " << Name;
+	os << " " << EntityID;
+	os << " " << Transform;
+}
+
+void Entity::SerializeComponents(std::ostream& os)
+{
+	for (const TPointer<CComponent>& Component : Components)
+	{
+		os << Component;
+	}
+}
+
+void Entity::Deserialize(std::istream& is)
+{
+	is >> Name;
+	is >> EntityID;
 	// std::getline(is, Empty, ' ');
-	is >> InEntity->Transform;
+	is >> Transform;
+}
+
+void Entity::DeserializeComponents(std::istream& is)
+{
 	while (is.peek() != EOF)
 	{
 		const std::istream::pos_type OriginalPosition = is.tellg();	
 		std::string ComponentType;
-		is >> ComponentType;
-		if (ComponentType == CMeshComponent::GetSerializeType())
+		std::string _;
+		std::getline(is, _, '[');
+		std::getline(is, ComponentType, ']');
+		// is >> ComponentType;
+		TPointer<CComponent> NewComponent = CComponent::MakeComponentFromClassName(ComponentType, shared_from_this());
+		if (NewComponent)
 		{
-			TPointer<CMeshComponent> NewMeshComponent = std::make_shared<CMeshComponent>(InEntity, "", nullptr);
-			is >> NewMeshComponent;
-			InEntity->AddComponent(NewMeshComponent);
+			is >> NewComponent;
+			AddComponent(NewComponent);
 			continue;
 		}
 		is.seekg(OriginalPosition);
 		break;
 	}
+}
+
+std::ostream& operator<<(std::ostream& os, const TPointer<Entity>& InEntity)
+{
+	InEntity->Serialize(os);
+	InEntity->SerializeComponents(os);
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, TPointer<Entity>& InEntity)
+{
+	InEntity->Deserialize(is);
+	InEntity->DeserializeComponents(is);
 	return is;
 }
 

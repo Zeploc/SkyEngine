@@ -71,6 +71,9 @@ public:
 	bool IsVisible() const { return bVisible; }
 
 	std::string EntityToString();
+	virtual std::string GetEntityClassName();
+	static TPointer<Entity> MakeEntityFromClassName(const std::string& ClassName);
+	static TPointer<Entity> GetEntityFromStringStream(std::stringstream& ss);
 
 	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const TPointer<Entity>& InEntity);
 	ENGINE_API friend std::istream& operator>>(std::istream& is, TPointer<Entity>& InEntity);
@@ -99,7 +102,12 @@ public:
 
 	bool bRayCast = true;
 
-protected:
+protected:	
+	virtual void Serialize(std::ostream& os);
+	void SerializeComponents(std::ostream& os);
+	virtual void Deserialize(std::istream& is);
+	void DeserializeComponents(std::istream& is);
+	
 	bool bActive = true;
 	bool bVisible = true;
 	std::string Name;

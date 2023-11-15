@@ -21,10 +21,17 @@ public:
 	virtual void OnDestroy();
 
 	TPointer<Entity> GetOwner() const { return Owner; }
+	virtual std::string GetComponentClassName();
+
+	static TPointer<CComponent> MakeComponentFromClassName(const std::string& ClassName, TPointer<Entity> Owner);
 	
 	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const TPointer<CComponent>& InComponent);
 	ENGINE_API friend std::istream& operator>>(std::istream& is, TPointer<CComponent>& InComponent);
 
+protected:
+	virtual void Serialize(std::ostream& os);
+	virtual void Deserialize(std::istream& is);
+	
 private:
 	TPointer<Entity> Owner;
 	// TODO: Parent component?

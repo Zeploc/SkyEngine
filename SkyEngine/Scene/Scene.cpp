@@ -16,6 +16,7 @@
 #include <fstream>
 
 #include "Core/Application.h"
+#include "Core/StringUtils.h"
 #include "Entity/Button3DEntity.h"
 #include "Render/Renderer.h"
 #include "Input/Input.h"
@@ -137,10 +138,10 @@ bool Scene::Deserialize(std::stringstream& SerializedScene)
 	
 	while(SerializedScene.peek() != EOF )
 	{
-		TPointer<Entity> NewEntity(new Entity(STransform()));
-		SerializedScene >> NewEntity;
-		std::getline(SerializedScene, Empty, '\n');
+		TPointer<Entity> NewEntity = Entity::GetEntityFromStringStream(SerializedScene);
 		AddEntity(NewEntity);
+		// New line
+		std::getline(SerializedScene, Empty, '\n');
 	}	
 	
 	return true;

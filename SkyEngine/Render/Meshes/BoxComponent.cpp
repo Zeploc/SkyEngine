@@ -31,6 +31,16 @@ int CBoxComponent::GetIndicesCount() const
 	return GetMeshManager()->GetMesh(BoxMeshName).GetIndicesCount();
 }
 
+std::string CBoxComponent::GetComponentClassName()
+{
+	return GetStaticName();
+}
+
+std::string CBoxComponent::GetStaticName()
+{
+	return "BoxComponent";
+}
+
 bool CBoxComponent::ShouldRender() const
 {
 	return true;
@@ -53,4 +63,11 @@ TPointer<CMaterialInterface> CBoxComponent::GetMaterial() const
 STransform CBoxComponent::GetRenderTransform() const
 {
 	return GetOwner()->Transform;
+}
+
+void CBoxComponent::Deserialize(std::istream& is)
+{
+	CComponent::Deserialize(is);
+	
+	BoxMaterial = GetMaterialManager()->FindMaterial("BoxMaterial");
 }

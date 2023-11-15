@@ -171,9 +171,8 @@ bool CEditorViewportCanvas::OnMouseButtonPressed(int MouseButton, int Mods)
 		if (Mods & CWindowInput::ModiferType::Alt)
 		{
 			std::stringstream DuplicateString;
-			DuplicateString << SelectedEntity;			
-			TPointer<Entity> NewEntity(new Entity(STransform(), "New"));
-			DuplicateString >> NewEntity;
+			DuplicateString << SelectedEntity;
+			const TPointer<Entity> NewEntity = Entity::GetEntityFromStringStream(DuplicateString);
 			SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
 			SelectEntity(NewEntity);
 		}

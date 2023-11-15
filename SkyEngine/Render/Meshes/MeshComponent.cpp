@@ -124,33 +124,39 @@ CMeshData CMeshComponent::GetMeshData() const
 	return GetMeshManager()->GetMesh(MeshAsset);
 }
 
-std::string CMeshComponent::GetSerializeType()
+void CMeshComponent::Serialize(std::ostream& os)
 {
-	return "[MeshComponent]";
-}
-
-std::ostream& operator<<(std::ostream& os, const TPointer<CMeshComponent>& InMeshComponent)
-{
-	os << " " << CMeshComponent::GetSerializeType() << " ";
-	os << InMeshComponent->MeshAsset << " ";
-	os << InMeshComponent->MeshMaterial->GetMaterialName() << " ";
-	const std::string VisibilityString = InMeshComponent->bVisible ? "true" : "false";
+	CComponent::Serialize(os);
+	
+	os << MeshAsset << " ";
+	os << MeshMaterial->GetMaterialName() << " ";
+	const std::string VisibilityString = bVisible ? "true" : "false";
 	os << VisibilityString;
-	return os;
 }
 
-std::istream& operator>>(std::istream& is, TPointer<CMeshComponent>& InMeshComponent)
+void CMeshComponent::Deserialize(std::istream& is)
 {
+	CComponent::Deserialize(is);
+	
 	std::string Empty;
 	// TODO: Remove need for first space removal
 	// std::getline(is, Empty, ' ');
-	is >> InMeshComponent->MeshAsset;
+	is >> MeshAsset;
 	// std::getline(is, Empty, ' ');
 	std::string MaterialName;
 	is >> MaterialName;
-	InMeshComponent->MeshMaterial = GetMaterialManager()->FindMaterial(MaterialName);
+	MeshMaterial = GetMaterialManager()->FindMaterial(MaterialName);
 	std::string VisibilityString;
 	is >> VisibilityString;
-	InMeshComponent->bVisible = VisibilityString == "true";
-	return is;
+	bVisible = VisibilityString == "true";
+}
+
+std::string CMeshComponent::GetComponentClassName()
+{
+	return GetStaticName();
+}
+
+std::string CMeshComponent::GetStaticName()
+{
+	return "MeshComponent";
 }
