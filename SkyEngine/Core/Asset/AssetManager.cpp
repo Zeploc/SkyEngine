@@ -60,7 +60,8 @@ TArray<TPointer<CAsset>> CAssetManager::GetAssetsOfClass(const std::string& Clas
 	TArray<TPointer<CAsset>> FoundAssets;
 	for (const TPointer<CAsset>& Asset : Assets)
 	{
-		if (Asset->Class == ClassName)
+		// TODO: Review starts with check (used for materials where it ends with the material type eg :PBR )
+		if (Asset->Class == ClassName || Asset->Class.starts_with(ClassName))
 		{
 			FoundAssets.push_back(Asset);
 		}

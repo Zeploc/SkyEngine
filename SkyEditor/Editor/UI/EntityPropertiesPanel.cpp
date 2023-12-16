@@ -4,6 +4,7 @@
 
 #include "EditorApp.h"
 #include "imgui_internal.h"
+#include "Core/Asset/Asset.h"
 #include "Dependencies/ImGui/imgui.h"
 #include "Editor/EditorViewportCanvas.h"
 #include "Editor/Scene/EditorScene.h"
@@ -112,19 +113,20 @@ void CEntityPropertiesPanel::MaterialsDropdown(const std::shared_ptr<CMeshCompon
 	// FIXME-OPT: Use clipper (but we need to disable it on the appearing frame to make sure our call to SetItemDefaultFocus() is processed)
 	bool bValueChanged = false;
 
-    const TArray<TPointer<CMaterialInterface>> Materials = GetMaterialManager()->GetAllMaterials();
+    const TArray<TPointer<CAsset>> Materials = GetAssetManager()->GetAssetsOfClass(CMaterialInterface::GetStaticName());
 	for (int i = 0; i < Materials.size(); i++)
 	{
-		TPointer<CMaterialInterface> Material = Materials[i];
+		TPointer<CAsset> MaterialAsset = Materials[i];
 		ImGui::PushID(i);
-		const bool bItemSelected = (Material == CurrentMaterial);
+		const bool bItemSelected = (MaterialAsset == CurrentMaterial->Asset);
 		// if (!items_getter(data, i, &item_text))
 		// 	item_text = "*Unknown item*";
-		if (ImGui::Selectable(Material->GetMaterialName().c_str(), bItemSelected))
+		if (ImGui::Selectable(MaterialAsset->DisplayName.c_str(), bItemSelected))
 		{
 			bValueChanged = true;
-			MeshComponent->SetMaterial(Material);
-			CurrentMaterial = Material;
+			TPointer<CMaterialInterface> LoadedMaterial = MaterialAsset->Load<CMaterialInterface>();
+			MeshComponent->SetMaterial(LoadedMaterial);
+			CurrentMaterial = LoadedMaterial;
 		}
 		if (bItemSelected)
 		{

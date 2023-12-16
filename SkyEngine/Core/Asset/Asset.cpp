@@ -36,7 +36,7 @@ TPointer<CObject> CAsset::Load()
 {
 	if (Object)
 	{
-		CLogManager::Get()->DisplayWarning(std::format("Attempted to load already loaded asset! Path: {0}", FilePath));
+		// CLogManager::Get()->DisplayWarning(std::format("Attempted to load already loaded asset! Path: {0}", FilePath));
 		return Object;
 	}
 	CLogManager::Get()->DisplayMessage(std::format("Loading asset at {0}", FilePath));

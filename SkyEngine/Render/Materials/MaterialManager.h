@@ -14,7 +14,7 @@ class ENGINE_API CMaterialManager
 public:
 	void AddMaterial(TPointer<CMaterialInterface> NewMaterial);
 	TPointer<CMaterialInterface> FindMaterial(const std::string& MaterialName) const;
-	TArray<TPointer<CMaterialInterface>> GetAllMaterials() const { return Materials; }
+	TArray<TPointer<CMaterialInterface>> GetAllLoadedMaterials() const { return Materials; }
 	
 private:
 	TArray<TPointer<CMaterialInterface>> Materials;
