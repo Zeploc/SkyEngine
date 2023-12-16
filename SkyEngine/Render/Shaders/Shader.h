@@ -3,6 +3,9 @@
 #pragma once
 
 #include "Core/Core.h"
+
+#include "Core/Application.h"
+#include "Render/Texture.h"
 // #include "Render/Materials/MaterialType.h"
 // #include "Render/Materials/Material.h"
 
@@ -27,7 +30,6 @@ public:
 	virtual bool CompileShader();
 	void BindMaterial(TPointer<CMaterialInterface> InMaterial);
 	virtual void BindShader();
-
 
 	std::string GetShaderName() const { return ShaderName; }
 	// const std::map<std::string, MaterialAttribute>& GetShaderAttributes() { return ShaderAttributes; }
@@ -66,18 +68,54 @@ protected:
 #define DefineShaderFloatParam(ParamName, DefaultValue)\
 	float ParamName = DefaultValue;\
 	int32_t ParamName##Location = -1;\
-	std::string ParamName##Name = #ParamName;
+	std::string ParamName##Name = #ParamName;\
+	void Serialize##ParamName(std::ostream& os) const\
+	{\
+		os << ParamName##Name << std::string(" ") << std::to_string(ParamName) << std::string(" ");\
+	}\
+	void Deserialize##ParamName(std::istream& is)\
+	{\
+		std::string FoundFloat;\
+		is >> ParamName##Name >> FoundFloat;\
+		ParamName = std::stof(FoundFloat);\
+	}\
 
 #define DefineShaderVector4Param(ParamName, DefaultValue)\
 	SVector4 ParamName = DefaultValue;\
 	int32_t ParamName##Location = -1;\
-	std::string ParamName##Name = #ParamName;
+	std::string ParamName##Name = #ParamName;\
+	void Serialize##ParamName(std::ostream& os) const\
+    {\
+    	os << ParamName##Name << std::string(" ") << ParamName << std::string(" ");\
+    }\
+    void Deserialize##ParamName(std::istream& is)\
+    {\
+    	is >> ParamName##Name >> ParamName;\
+    }\
 
 #define DefineShaderTextureParam(ParamName, DefaultValue)\
 	TPointer<CTexture> ParamName = DefaultValue;\
 	int32_t ParamName##Location = -1;\
 	int32_t Has##ParamName##Location = -1;\
-	std::string ParamName##Name = #ParamName;
+	std::string ParamName##Name = #ParamName;\
+	void Serialize##ParamName(std::ostream& os) const\
+	{\
+		std::string TexturePath = "None";\
+		if (ParamName)\
+		{\
+			TexturePath = ParamName->Path;\
+		}\
+		os << ParamName##Name << std::string(" ") << TexturePath << std::string(" ");\
+    }\
+    void Deserialize##ParamName(std::istream& is)\
+    {\
+		std::string TexturePath;\
+        is >> ParamName##Name >> TexturePath;\
+        if (TexturePath != "None")\
+        {\
+			ParamName = GetGraphicsAPI()->GetTexture(TexturePath);\
+		}\
+    }\
 
 
 /* We want to reduce switching shaders as much as we can, so we will create a shader program for the base shader from file

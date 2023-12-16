@@ -9,12 +9,17 @@
 #include "Render/Lighting.h"
 
 CPBRShader::CPBRShader()
-: CShader("PBR","Resources/Shaders/PBRVertexShader.vs", "Resources/Shaders/PBRFragmentShader.fs")
+: CShader(GetStaticName(),"Resources/Shaders/PBRVertexShader.vs", "Resources/Shaders/PBRFragmentShader.fs")
 {
 }
 
 CPBRShader::~CPBRShader()
 {
+}
+
+std::string CPBRShader::GetStaticName()
+{
+	return "PBR";
 }
 
 bool CPBRShader::CompileShader()
@@ -53,4 +58,22 @@ void CPBRShader::UploadMaterialParameters(const ShaderParameters& InParams)
 bool CPBRShader::HasTexture(const ShaderParameters& InParams)
 {
 	return InParams.DiffuseTexture != nullptr;
+}
+
+std::ostream& operator<<(std::ostream& os, const CPBRShader::ShaderParameters& InShaderParameters)
+{	
+	InShaderParameters.SerializeDiffuseColour(os);
+	InShaderParameters.SerializeDiffuseTexture(os);
+	InShaderParameters.SerializeSpecularStrength(os);
+	InShaderParameters.SerializeShininess(os);
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, CPBRShader::ShaderParameters& InShaderParameters)
+{
+	InShaderParameters.DeserializeDiffuseColour(is);
+	InShaderParameters.DeserializeDiffuseTexture(is);
+	InShaderParameters.DeserializeSpecularStrength(is);
+	InShaderParameters.DeserializeShininess(is);
+	return is;
 }

@@ -41,9 +41,9 @@ EditorScene::EditorScene(const std::string& InSceneName) : Scene(InSceneName)
 	//ExternalWindow->SetBackColour(glm::vec3(0.6, 0.3, 0.4));
 }
 
-void EditorScene::OnLoadScene()
+void EditorScene::OnLoaded()
 {
-	Scene::OnLoadScene();
+	Scene::OnLoaded();
 	AddSampleEntities();
 }
 

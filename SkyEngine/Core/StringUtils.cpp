@@ -1,6 +1,8 @@
 ﻿#include "SEPCH.h"
 #include "StringUtils.h"
 
+#include <filesystem>
+
 bool StringUtils::ReplaceFirst(std::string& InString, const std::string& From, const std::string& To) {
 	const size_t Start_Pos = InString.find(From);
 	if(Start_Pos == std::string::npos)
@@ -22,6 +24,13 @@ void StringUtils::Replace(std::string& InString, const std::string& From, const 
 std::wstring StringUtils::ToWString(const std::string& InString)
 {
 	return std::wstring(InString.begin(), InString.end());
+}
+
+std::string StringUtils::NormalizePath(const std::string& MessyPath)
+{
+	std::filesystem::path Path(MessyPath);
+	std::string NPath = Path.make_preferred().string();
+	return NPath;
 }
 
 // trim from start (in place)

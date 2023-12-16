@@ -4,6 +4,7 @@
 
 // #include "CEngineWindow.h"
 #include "EventListener.h"
+#include "Asset/AssetManager.h"
 #include "Core/Core.h"
 #include "Graphics/GraphicsAPI.h"
 #include "Math/Vector2.h"
@@ -51,6 +52,7 @@ namespace SkyEngine
 		TPointer<CLogManager> LogManager;
 		CMeshManager MeshManager;
 		CMaterialManager MaterialManager;
+		CAssetManager AssetManager;
 
 		// TODO: Weak pointer to not hold ref
 		TPointer<CEngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
@@ -79,4 +81,5 @@ ENGINE_API IPlatformInterface* GetPlatformInterface();
 ENGINE_API TPointer<CRenderer> GetRenderer();
 ENGINE_API CMeshManager* GetMeshManager();
 ENGINE_API CMaterialManager* GetMaterialManager();
+ENGINE_API CAssetManager* GetAssetManager();
 

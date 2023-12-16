@@ -48,6 +48,53 @@ Scene::~Scene()
 	DeleteScene();
 }
 
+std::shared_ptr<Scene> Scene::shared_from_this()
+{
+	return std::static_pointer_cast<Scene>(CObject::shared_from_this());
+}
+
+void Scene::Serialize(std::ostream& os)
+{	
+	os << "[" + SceneName + "]\n";
+	for (TPointer<Entity> Entity : Entities)
+	{	 	
+		os << Entity << "\n";
+	}
+}
+
+void Scene::Deserialize(std::istream& is)
+{
+	std::vector< TPointer<Entity>> EntitiesCopy = Entities;
+	for (TPointer<Entity> CurrentEnt : EntitiesCopy)
+	{		
+		DestroyEntity(CurrentEnt);
+	}
+	LastEntityID = -1;
+	
+	std::string Empty;
+	std::getline(is, Empty, '[');
+	std::getline(is, SceneName, ']');
+	std::getline(is, Empty, '\n');
+	
+	while(is.peek() != EOF )
+	{
+		TPointer<Entity> NewEntity = Entity::GetEntityFromStringStream(is);
+		AddEntity(NewEntity);
+		// New line
+		std::getline(is, Empty, '\n');
+	}	
+}
+
+std::string Scene::GetStaticName()
+{
+	return "Scene";
+}
+
+std::string Scene::GetAssetClassName()
+{
+	return GetStaticName();
+}
+
 /************************************************************
 #--Description--#:	Delete all entities in scene
 #--Author--#: 		Alex Coultas
@@ -111,42 +158,6 @@ void Scene::DestroyEntity(TPointer<Entity> _Entity)
 	//EntDetroy.reset();
 }
 
-std::string Scene::Serialize() const
-{
-	std::stringstream Serialized;
-	Serialized << "[" + SceneName + "]\n";
-	for (TPointer<Entity> Entity : Entities)
-	{	 	
-		Serialized << Entity << "\n";
-	}
-	return Serialized.str();
-}
-
-bool Scene::Deserialize(std::stringstream& SerializedScene)
-{
-	std::vector< TPointer<Entity>> EntitiesCopy = Entities;
-	for (TPointer<Entity> CurrentEnt : EntitiesCopy)
-	{		
-		DestroyEntity(CurrentEnt);
-	}
-	LastEntityID = -1;
-	
-	std::string Empty;
-	std::getline(SerializedScene, Empty, '[');
-	std::getline(SerializedScene, SceneName, ']');
-	std::getline(SerializedScene, Empty, '\n');
-	
-	while(SerializedScene.peek() != EOF )
-	{
-		TPointer<Entity> NewEntity = Entity::GetEntityFromStringStream(SerializedScene);
-		AddEntity(NewEntity);
-		// New line
-		std::getline(SerializedScene, Empty, '\n');
-	}	
-	
-	return true;
-}
-
 void Scene::VerifyEntityID(TPointer<Entity> EntityToVerify)
 {
 	for (const TPointer<Entity>& Entity : Entities)
@@ -181,11 +192,11 @@ void Scene::Update()
 	Button3DEntity::bButtonPressedThisFrame = false;	
 }
 
-void Scene::OnLoadScene()
+void Scene::OnLoaded()
 {
 	if (!bIsPersistant)
 	{
-		// TODO: Would load from serialization
+		// TODO: Would load from serialization - ie not needed
 		for (auto& EntDestroy : DestroyedEntities)
 		{
 			Entities.push_back(EntDestroy);
@@ -194,7 +205,7 @@ void Scene::OnLoadScene()
 	}
 }
 
-void Scene::UnloadScene()
+void Scene::OnUnloaded()
 {
 	for (const TPointer<Entity>& Entity : Entities)
 	{
@@ -263,4 +274,5 @@ bool Scene::OnKeyReleased(int KeyCode, int Mods)
 {
 	return false;
 }
+
 

@@ -27,6 +27,15 @@ bool PathUtils::HasExtension(const std::string& Path)
 	return ExtensionEndIndex < FileName.length() - 1;
 }
 
+std::string PathUtils::CombinePath(const std::string& Part1, const std::string& Part2)
+{
+	if (Part1.ends_with("\\"))
+	{
+		return Part1 + Part2;
+	}
+	return Part1 + std::string("\\") + Part2;
+}
+
 void PathUtils::SetExtension(std::string& Path, const std::string& Extension)
 {
 	if (HasExtension(Path))

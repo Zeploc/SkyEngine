@@ -12,4 +12,5 @@ public:
 	static bool ReadFile(const std::string& FilePath, std::string& FileContents);
 	static bool SaveFile(const std::string& FilePath, std::string FileContents);
 	static bool SaveAsFile(std::string& ChosenFilePath, std::string FileExtension, std::string FileName = std::string(), std::string FileDirectory = std::string());
+	static TArray<std::string> ListFilesInDirectory(const std::string& DirectoryPath, bool bInRecursive = false);
 };

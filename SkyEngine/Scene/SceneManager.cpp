@@ -8,6 +8,7 @@
 
 // Engine Includes //
 #include "Scene.h"
+#include "Core/Asset/Asset.h"
 #include "System/LogManager.h"
 
 // Local Includes //
@@ -120,16 +121,18 @@ void SceneManager::SwitchScene(std::string SceneName, bool _bInstant)
 
 	if (_bInstant)
 	{
+		// TODO: Switch to storing scene assets and using load operations
 		if (!CurrentScene.empty())
 		{
 			const TPointer<Scene> ExistingScene = GetCurrentScene();
-			ExistingScene->UnloadScene();
+			ExistingScene->Asset->Unload();
 		}
 		
 		CurrentScene = SceneName;
 		SceneToSwitch = CurrentScene;
 		CLogManager::Get()->DisplayMessage("Switching to Scene \"" + GetCurrentScene()->SceneName + "\"");
-		GetCurrentScene()->OnLoadScene();
+		// TODO: Switch to just load once storing assets in scene manager?
+		GetCurrentScene()->Asset->Reload();
 		// TODO: Move elsewhere
 		GetCurrentScene()->BeginPlay();
 	}

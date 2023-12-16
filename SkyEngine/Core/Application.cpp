@@ -173,3 +173,8 @@ CMaterialManager* GetMaterialManager()
 {
 	return &SkyEngine::Application::Get()->MaterialManager;
 }
+
+CAssetManager* GetAssetManager()
+{
+	return &SkyEngine::Application::Get()->AssetManager;
+}

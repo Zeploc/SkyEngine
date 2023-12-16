@@ -14,6 +14,7 @@ class ENGINE_API CPBRShader : public CShader
 public:
 	CPBRShader();
 	~CPBRShader() override;
+	static std::string GetStaticName();
 	bool CompileShader() override;
 	
 	struct ShaderParameters
@@ -21,7 +22,8 @@ public:
 		DefineShaderVector4Param(DiffuseColour, SVector4(1.0f))
 		DefineShaderTextureParam(DiffuseTexture, nullptr)
 		DefineShaderFloatParam(SpecularStrength, 1.0f)
-		DefineShaderFloatParam(Shininess, 32.0f)	
+		DefineShaderFloatParam(Shininess, 32.0f)
+		
 		// TODO: Setup shader uniforms
 		// TODO:
 		// Metallic Texture and/or strength
@@ -30,6 +32,9 @@ public:
 		// Translucency/Mask and/or strength
 		// Reflection
 	};
+	
+	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const ShaderParameters& InShaderParameters);
+	ENGINE_API friend std::istream& operator>>(std::istream& is, ShaderParameters& InShaderParameters);
 
 	ShaderParameters Params;
 

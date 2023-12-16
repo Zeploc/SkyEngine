@@ -1,7 +1,9 @@
 ﻿#include "SEPCH.h"
 #include "MaterialManager.h"
 
-#include "InternalMaterial.h"
+#include "Material.h"
+#include "Core/Application.h"
+#include "Core/Asset/Asset.h"
 
 void CMaterialManager::AddMaterial(TPointer<CMaterialInterface> NewMaterial)
 {
@@ -17,5 +19,13 @@ TPointer<CMaterialInterface> CMaterialManager::FindMaterial(const std::string& M
 			return Material;
 		}
 	}
+	if (const TPointer<CAsset> Asset = GetAssetManager()->GetAssetByName(MaterialName))
+	{
+		if (TPointer<CMaterialInterface> LoadedMaterial = Asset->Load<CMaterialInterface>())
+		{
+			return LoadedMaterial;
+		}
+	}
+
 	return nullptr;
 }

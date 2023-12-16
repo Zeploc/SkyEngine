@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/Object.h"
 #include "Math/Transform.h"
 #include "Math/Vector4.h"
 #include "Math/Vector.h"
@@ -22,7 +23,7 @@ struct STriangle
 	bool TestHit(SVector RayStart, SVector RayDirection, SVector& HitPos) const;
 };
 
-class ENGINE_API CMeshData
+class ENGINE_API CMeshData : public CObject
 {
 public:
 	CMeshData();

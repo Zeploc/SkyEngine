@@ -73,7 +73,7 @@ public:
 	std::string EntityToString();
 	virtual std::string GetEntityClassName();
 	static TPointer<Entity> MakeEntityFromClassName(const std::string& ClassName);
-	static TPointer<Entity> GetEntityFromStringStream(std::stringstream& ss);
+	static TPointer<Entity> GetEntityFromStringStream(std::istream& is);
 
 	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const TPointer<Entity>& InEntity);
 	ENGINE_API friend std::istream& operator>>(std::istream& is, TPointer<Entity>& InEntity);

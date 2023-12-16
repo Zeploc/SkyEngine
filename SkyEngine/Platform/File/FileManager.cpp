@@ -2,7 +2,8 @@
 
 #include <fstream>
 #include <windows.h>
-#include <shobjidl.h> 
+#include <shobjidl.h>
+#include <filesystem>
 
 #include "Core/Application.h"
 #include "Core/StringUtils.h"
@@ -184,4 +185,44 @@ bool CFileManager::SaveAsFile(std::string& ChosenFilePath, std::string FileExten
 	ChosenFilePath = std::string(LPCSTR(ofn.lpstrFile));
 	// std::wstring FilePath();
 	return true;	
+}
+
+namespace fs = std::filesystem;
+TArray<std::string> CFileManager::ListFilesInDirectory(const std::string& DirectoryPath, bool bInRecursive)
+{
+	TArray<std::string> FoundFiles;
+	for (const auto & entry : fs::directory_iterator(DirectoryPath))
+	{
+		if (entry.is_directory())
+		{
+			if (bInRecursive)
+			{
+				TArray<std::string> SubFiles = ListFilesInDirectory(entry.path().string(), bInRecursive);
+				for (std::string SubFile : SubFiles)
+				{
+					FoundFiles.push_back(SubFile);
+				}
+			}
+		}
+		else
+		{
+			std::string FullPath = entry.path().string();
+			FoundFiles.push_back(FullPath);
+		}
+	}
+	
+	// std::string search_path = DirectoryPath + "*.*";
+	// WIN32_FIND_DATA fd; 
+	// HANDLE hFind = ::FindFirstFile(LPCWSTR(search_path.c_str()), &fd); 
+	// if(hFind != INVALID_HANDLE_VALUE) { 
+	// 	do { 
+	// 		// read all (real) files in current folder
+	// 		// , delete '!' read other 2 default folder . and ..
+	// 		if(! (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) ) {
+	// 			FoundFiles.push_back(std::string(std::begin(fd.cFileName), std::end(fd.cFileName)));
+	// 		}
+	// 	}while(::FindNextFile(hFind, &fd)); 
+	// 	::FindClose(hFind); 
+	// }
+	return FoundFiles;
 }

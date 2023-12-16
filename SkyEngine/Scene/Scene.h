@@ -8,6 +8,7 @@
 
 #include <Box2D/b2_world.h>
 
+#include "Core/Asset/AssetInterface.h"
 #include "Events/Event.h"
 #include "Events/KeyEvent.h"
 #include "Events/MouseEvent.h"
@@ -16,11 +17,19 @@
 class UIText;
 class Entity;
 
-class ENGINE_API Scene : public std::enable_shared_from_this<Scene>
+class ENGINE_API Scene : public CObject, public IAssetObjectInterface
 {
 public:
 	Scene(const std::string& InSceneName);
-	virtual ~Scene();
+	~Scene() override;
+	// Override shared_from_this so manual downcast not needed
+	// ReSharper disable once CppHidingFunction
+	std::shared_ptr<Scene> shared_from_this();
+	
+	void Serialize(std::ostream& os) override;
+	void Deserialize(std::istream& is) override;
+	static std::string GetStaticName();
+	std::string GetAssetClassName() override;
 
 	void DeleteScene();
 
@@ -29,8 +38,6 @@ public:
 	void AddEntity(TPointer<Entity> _Entity);
 
 	void DestroyEntity(TPointer<Entity> _Entity);
-	std::string Serialize() const;
-	bool Deserialize(std::stringstream& SerializedScene);
 
 	int AddEntityID();
 	void VerifyEntityID(TPointer<Entity> EntityToVerify);
@@ -43,8 +50,8 @@ public:
 	virtual bool OnKeyPressed(int KeyCode, int Mods, int RepeatCount);
 	virtual bool OnKeyReleased(int KeyCode, int Mods);
 
-	virtual void OnLoadScene();
-	virtual void UnloadScene();
+	void OnLoaded() override;
+	void OnUnloaded() override;
 	virtual void BeginPlay();
 
 	b2World& GetWorld2D() { return World2D; }

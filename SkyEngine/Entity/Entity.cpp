@@ -208,14 +208,14 @@ TPointer<Entity> Entity::MakeEntityFromClassName(const std::string& ClassName)
 	return NewEntity;
 }
 
-TPointer<Entity> Entity::GetEntityFromStringStream(std::stringstream& ss)
+TPointer<Entity> Entity::GetEntityFromStringStream(std::istream& is)
 {	
 	std::string _;
 	std::string EntityClass;
-	std::getline(ss, _, '[');
-	std::getline(ss, EntityClass, ']');
+	std::getline(is, _, '[');
+	std::getline(is, EntityClass, ']');
 	TPointer<Entity> NewEntity = MakeEntityFromClassName(EntityClass);
-	ss >> NewEntity;
+	is >> NewEntity;
 	return NewEntity;
 }
 

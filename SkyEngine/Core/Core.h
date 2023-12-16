@@ -5,6 +5,11 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include "CoreTypes.h"
+
+
+// TODO: Warnings with exporting class containing STDL
+#pragma warning (disable : 4251)
 
 // #define NDEBUG
 
@@ -19,43 +24,12 @@
 	#error SkyEngine only supports Windows!
 #endif
 
-template<typename T>
-using TPointer = std::shared_ptr<T>;
-template<typename T>
-using TWeakPointer = std::weak_ptr<T>;
-
-// TODO: Fix errors not showing until compile when invalid args are given
-template<typename T, typename ... Args>
-constexpr TPointer<T> CreatePointer(Args&& ... args)
-{
-	return std::make_shared<T>(std::forward<Args>(args)...);
-}
-
-template<typename T, typename U>
-TPointer<T> Cast(TPointer<U> Base)
-{
-	return std::dynamic_pointer_cast<T>(Base);
-}
-
-template<typename T, typename U>
-T* GetInterface(TPointer<U> Base)
-{
-	// TODO: Is dynamic correct?
-	return dynamic_cast<T*>(Base.get());
-}
-
-template<typename T>
-using TArray = std::vector<T>;
-
-template<typename T>
-using TScope = std::unique_ptr<T>;
-template<typename T, typename ... Args>
-constexpr TScope<T> CreateScope(Args&& ... args)
-{
-	return std::make_unique<T>(std::forward<Args>(args)...);
-}
-
 #define SE_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+
+#define DISABLE_OPTIMISATION
+	#pragma optimize("", off)
+#define ENABLE_OPTIMISATION
+	#pragma optimize("", on)
 
 #ifdef SKYENGINE_DEBUG
 	#define SE_ENABLE_ASSERTS

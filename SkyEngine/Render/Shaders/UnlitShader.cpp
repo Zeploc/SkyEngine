@@ -7,9 +7,14 @@
 
 
 CUnlitShader::CUnlitShader()
-: CShader("Unlit","Resources/Shaders/UnlitVertexShader.vs", "Resources/Shaders/UnlitFragmentShader.fs")
+: CShader(GetStaticName(), "Resources/Shaders/UnlitVertexShader.vs", "Resources/Shaders/UnlitFragmentShader.fs")
 {
 	// TODO: Setup shader uniforms
+}
+
+std::string CUnlitShader::GetStaticName()
+{
+	return "Unlit";
 }
 
 bool CUnlitShader::CompileShader()
@@ -41,4 +46,18 @@ void CUnlitShader::UploadMaterialParameters(const ShaderParameters& InParams)
 bool CUnlitShader::HasTexture(const ShaderParameters& InParams)
 {
 	return InParams.DiffuseTexture != nullptr;
+}
+
+std::ostream& operator<<(std::ostream& os, const CUnlitShader::ShaderParameters& InShaderParameters)
+{
+	InShaderParameters.SerializeDiffuseColour(os);
+	InShaderParameters.SerializeDiffuseTexture(os);
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, CUnlitShader::ShaderParameters& InShaderParameters)
+{
+	InShaderParameters.DeserializeDiffuseColour(is);
+	InShaderParameters.DeserializeDiffuseTexture(is);
+	return is;
 }

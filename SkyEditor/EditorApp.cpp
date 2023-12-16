@@ -28,6 +28,8 @@
 #include "Editor/Windows/EditorWindowManager.h"
 #include "Canvas/Canvas.h"
 #include "Canvas/ViewportCanvas.h"
+#include "Core/StringUtils.h"
+#include "Core/Asset/Asset.h"
 #include "Platform/PlatformInterface.h"
 #include "Platform/File/FileManager.h"
 #include "Platform/File/PathUtils.h"
@@ -43,7 +45,7 @@
 EditorApplication::EditorApplication() : Application()
 {
 	EditorApp = this;
-	ScenePath = "Resources\\Levels\\Default.slvl";
+	ScenePath = "Levels\\Default.slvl";
 }
 
 void EditorApplication::SetContentDirectory(std::string ExecutablePath)
@@ -58,38 +60,43 @@ void EditorApplication::SetContentDirectory(std::string ExecutablePath)
 	ContentPath = ContentPath.substr(0, DirectoryEndIndex);
 
 	// TODO: Should be moved out of editor
-	ContentPath += "\\SkyEditor\\";
+	ContentPath += "\\SkyEditor\\Assets\\";
 }
 
 bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 {
 	const bool bSuccessfulSetup = Application::ApplicationSetup(ExecutablePath);
+	if (!bSuccessfulSetup)
+	{
+		return false;
+	}
 	
 	SetContentDirectory(ExecutablePath);
-	SetupPlaceholderMaterials();
+	AssetManager.SetAssetPath(ContentPath);
+	AssetManager.ScanForAssets();
+
+	//SetupPlaceholderMaterials();
 	
 	// TODO: Move to application base default scene
-	if (bSuccessfulSetup)
+	if (OpenScene(ContentPath + ScenePath))
 	{
-		if (OpenScene(ContentPath + ScenePath))
-		{
-			SceneManager::GetInstance()->GetCurrentScene()->SceneName = "Untitled";
-		}
-		// Failed, open empty scene
-		else
-		{
-			const TPointer<Scene> NewScene = CreatePointer<Scene>("Untitled");		
-			SceneManager::GetInstance()->AddScene(NewScene);
-			ViewportCanvas->GetSceneRenderer()->SetSceneTarget(NewScene);
-			ViewportCanvas->SetupCamera();
-			NewScene->AddEntity(ViewportCanvas->GetViewportCamera());
-		}
-
-		// TODO: Swap out with light entity
-		Lighting::SetLightPosition({5, 5, 5});
-		Lighting::SetSunDirection({3, -1, 5});
-		ApplicationWindow->SetWindowTitle("Sky Editor: Untitled");
+		SceneManager::GetInstance()->GetCurrentScene()->SceneName = "Untitled";
 	}
+	// Failed, open empty scene
+	else
+	{
+		const TPointer<Scene> NewScene = CreatePointer<Scene>("Untitled");		
+		SceneManager::GetInstance()->AddScene(NewScene);
+		ViewportCanvas->GetSceneRenderer()->SetSceneTarget(NewScene);
+		ViewportCanvas->SetupCamera();
+		NewScene->AddEntity(ViewportCanvas->GetViewportCamera());
+	}
+
+	// TODO: Swap out with light entity
+	Lighting::SetLightPosition({5, 5, 5});
+	Lighting::SetSunDirection({3, -1, 5});
+	ApplicationWindow->SetWindowTitle("Sky Editor: Untitled");
+
 	TPointer<CLayerInfoWidget> LayerInfoWidget = std::make_shared<CLayerInfoWidget>();
 	EditorViewportLayer->AddViewportWidget(LayerInfoWidget);
 	// TPointer<CEntityPropertiesPanel> EntityPropertiesPanel = std::make_shared<CEntityPropertiesPanel>(ApplicationWindow);
@@ -112,11 +119,20 @@ bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 void EditorApplication::SetupPlaceholderMaterials()
 {
 	TPointer<CTexture> BrickTexture = GetGraphicsAPI()->GetTexture("Resources/Images/StoneWall_2x2.jpg");
-	// TPointer<CMaterial_PBR> BrickMaterial = std::make_shared<CMaterial_PBR>();
-	TPointer<TMaterial<CUndefinedShader>> BrickMaterial = std::make_shared<TMaterial<CUndefinedShader>>("BrickMaterial", ShaderManager::GetUndefinedShader("BaseProgram"));
+	
+	TPointer<CMaterial_PBR> BrickMaterial;
+	
+	TPointer<CAsset> StoneWallMaterialAsset = AssetManager.FindAsset("Materials/StoneWallMaterial.sasset");
+	// if (StoneWallMaterialAsset)
+	// {
+	// 	BrickMaterial = StoneWallMaterialAsset->Load<CMaterial_PBR>();
+	// }
+	// else
+	BrickMaterial = std::make_shared<CMaterial_PBR>("BrickMaterial");
+	// TPointer<TMaterial<CUndefinedShader>> BrickMaterial = std::make_shared<TMaterial<CUndefinedShader>>("BrickMaterial", ShaderManager::GetUndefinedShader("BaseProgram"));
 	BrickMaterial->Params.DiffuseTexture = BrickTexture;
 	GetMaterialManager()->AddMaterial(BrickMaterial);
-	
+
 	// Would be nice to be able to copy an existing material as a template
 	TPointer<CMaterial_PBR> ColouredBrickMaterial = std::make_shared<CMaterial_PBR>("ColouredBrickMaterial");
 	ColouredBrickMaterial->Params.DiffuseTexture = BrickTexture;
@@ -142,7 +158,17 @@ void EditorApplication::SetupPlaceholderMaterials()
 	
 	TPointer<CMaterial_Unlit> BoxMaterial = std::make_shared<CMaterial_Unlit>("BoxMaterial");
 	BoxMaterial->Params.DiffuseColour = SVector4(1.0f, 0.1f, 0.1f, 1.0f);
-	GetMaterialManager()->AddMaterial(BoxMaterial);
+	GetMaterialManager()->AddMaterial(BoxMaterial);	
+	
+	TPointer<CAsset> MaterialAsset;
+	TArray<TPointer<CMaterialInterface>> Materials = {BrickMaterial, ColouredBrickMaterial, ColouredBrickPlaneMaterial, CliffMaterial, PlaneMaterial, BoxMaterial};
+	for (TPointer<CMaterialInterface> Material : Materials)
+	{
+		MaterialAsset = AssetManager.AddAsset(std::string("Materials/") + Material->GetMaterialName() + std::string(".sasset"));
+		MaterialAsset->SetDefaultObject(Material);
+		MaterialAsset->Save();
+	}
+	
 }
 
 void EditorApplication::SetupLogManager()
@@ -313,21 +339,16 @@ void EditorApplication::OpenScene()
 
 bool EditorApplication::OpenScene(std::string FilePath)
 {
-	std::string FileContents;
-	if (!CFileManager::ReadFile(FilePath, FileContents))
+	StringUtils::Replace(FilePath, ContentPath, "");
+	TPointer<CAsset> NewSceneAsset = AssetManager.FindAsset(FilePath);
+	TPointer<Scene> NewScene = NewSceneAsset->Load<Scene>();	
+	if (!NewScene)
 	{
-		PlatformInterface->DisplayMessageBox("Failed to read file", FilePath, MB_OK);
-		return false;
-	}
-	std::stringstream FileStream(FileContents);
-
-	TPointer<Scene> NewScene = CreatePointer<Scene>("LoadedScene");
-	if (!NewScene->Deserialize(FileStream))
-	{
-		PlatformInterface->DisplayMessageBox("Failed to deserialize scene", FilePath, MB_OK);
+		PlatformInterface->DisplayMessageBox("Failed to load scene", FilePath, MB_OK);
 		NewScene = nullptr;
 		return false;
 	}
+	ScenePath = FilePath;
 	ApplicationWindow->SetWindowTitle("Sky Editor: " + NewScene->SceneName);
 	TPointer<Scene> PreviousScene = SceneManager::GetInstance()->GetCurrentScene();
 	SceneManager::GetInstance()->AddScene(NewScene);
@@ -366,10 +387,11 @@ void EditorApplication::SaveScene(bool bAsNew)
 	}
 	const std::string SceneName = PathUtils::GetFileName(ScenePath, false);
 	Scene->SceneName = SceneName;
-	ApplicationWindow->SetWindowTitle("Sky Editor: \"" + SceneName + "\"");
-	const std::string SerializedScene = Scene->Serialize();
-	CFileManager::SaveFile(ScenePath, SerializedScene);
-	GetPlatformInterface()->DisplayMessageBox("Saved scene", std::format("Saved Scene \"{}\"!", SceneName), MB_OK);
+	ApplicationWindow->SetWindowTitle("Sky Editor: \"" + SceneName + "\"");	
+	if (Scene->Asset->Save())
+	{
+		GetPlatformInterface()->DisplayMessageBox("Saved scene", std::format("Saved Scene \"{}\"!", SceneName), MB_OK);
+	}
 }
 
 SkyEngine::Application* SkyEngine::CreateApplication()

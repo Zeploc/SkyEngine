@@ -4,6 +4,8 @@
 
 #include "InternalMaterial.h"
 #include "Core/Application.h"
+#include "Core/Object.h"
+#include "Core/Asset/AssetInterface.h"
 #include "Render/Renderer.h"
 #include "Render/Lighting.h"
 #include "Render/Shaders/ShaderManager.h"
@@ -23,16 +25,16 @@ enum class EAttributeType
 };
 
 template <class S = CShader>
-class TMaterial : public CMaterialInterface
+class TMaterial : public CMaterialInterface, public IAssetObjectInterface
 {
 	// TODO: Once all shaders switched over, also make base CShader not allowed
 	static_assert(std::is_base_of<CShader, S>::value, "Template S must inherit from Shader");
 	
 public:
-	TMaterial(std::string MaterialName);
+	TMaterial(std::string InMaterialName);
 	
 	// TODO: Remove once from file system setup
-	TMaterial(std::string MaterialName, const TPointer<S> InShader);
+	TMaterial(std::string InMaterialName, const TPointer<S> InShader);
 
 	// TODO: Make redundant
 	TPointer<S> GetShader() const;
@@ -42,10 +44,17 @@ public:
 	TPointer<CShader> GetBaseShader() override;
 	void BindMaterial() override;
 	bool HasTexture() override;
+	virtual std::string GetMaterialName() const override { return MaterialName; }
+	
+	void Serialize(std::ostream& os) override;
+	void Deserialize(std::istream& is) override;
+	std::string GetAssetClassName() override;
+	void OnLoaded() override;
 
 	TPointer<S> Shader;
 protected:
 	// CMaterial(std::string ShaderName);
+	std::string MaterialName;
 
 	// Stencil
 	bool bStencil = false;
@@ -79,10 +88,39 @@ bool TMaterial<S>::HasTexture()
 }
 
 template <class S>
-TMaterial<S>::TMaterial(std::string MaterialName)
-	: CMaterialInterface(MaterialName)
+void TMaterial<S>::Serialize(std::ostream& os)
 {
+	os << MaterialName << std::string("\n");
+	os << Params;
+}
+
+template <class S>
+void TMaterial<S>::Deserialize(std::istream& is)
+{
+	is >> MaterialName;
+	is >> Params;
+}
+
+template <class S>
+std::string TMaterial<S>::GetAssetClassName()
+{
+	return GetStaticName() + std::string(":") + Shader->GetShaderName();
+}
+
+template <class S>
+void TMaterial<S>::OnLoaded()
+{
+	GetMaterialManager()->AddMaterial(shared_from_this());
+}
+
+template <class S>
+TMaterial<S>::TMaterial(std::string InMaterialName)
+{
+	MaterialName = InMaterialName;
 	Shader = ShaderManager::GetShader<S>();
+	// TODO: Read from material path
+	// Convert to values and store
+	// Get shader from material file and store pointer
 }
 
 // template <class S>
@@ -95,9 +133,9 @@ TMaterial<S>::TMaterial(std::string MaterialName)
 // }
 
 template <class S>
-TMaterial<S>::TMaterial(std::string MaterialName, const TPointer<S> InShader)
-	: CMaterialInterface(MaterialName)
+TMaterial<S>::TMaterial(std::string InMaterialName, const TPointer<S> InShader)
 {
+	MaterialName = InMaterialName;
 	Shader = InShader;
 	// MaterialAttributes = Shader->GetShaderAttributes();
 }

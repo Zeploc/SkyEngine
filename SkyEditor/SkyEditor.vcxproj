@@ -264,6 +264,17 @@
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Levels\Default.slvl" />
+    <Content Include="Assets\Levels\Fence.slvl" />
+    <Content Include="Assets\Levels\New.slvl" />
+    <Content Include="Assets\Levels\Updated.slvl" />
+    <Content Include="Assets\Materials\BrickMaterial.sasset" />
+    <Content Include="Assets\Materials\CliffMaterial.sasset" />
+    <Content Include="Assets\Materials\ColouredBrickMaterial.sasset" />
+    <Content Include="Assets\Materials\ColouredBrickPlaneMaterial.sasset" />
+    <Content Include="Assets\Materials\PlaneMaterial.sasset" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

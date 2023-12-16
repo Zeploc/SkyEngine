@@ -12,6 +12,7 @@ class ENGINE_API CUnlitShader : public CShader
 {
 public:
 	CUnlitShader();
+	static std::string GetStaticName();
 	bool CompileShader() override;
 	
 	struct ShaderParameters
@@ -25,6 +26,9 @@ public:
 	void UploadMaterialParameters(const ShaderParameters& InParams);
 
 	bool HasTexture(const ShaderParameters& InParams);
+	
+	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const ShaderParameters& InShaderParameters);
+	ENGINE_API friend std::istream& operator>>(std::istream& is, ShaderParameters& InShaderParameters);
 };
 
 using CMaterial_Unlit = TMaterial<CUnlitShader>;

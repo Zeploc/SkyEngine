@@ -22,6 +22,8 @@ public:
 		DefineShaderFloatParam(Shininess, 32.0f)
 	};
 
+	friend std::ostream& operator<<(std::ostream& os, const ShaderParameters& InShaderParameters);
+	friend std::istream& operator>>(std::istream& is, ShaderParameters& InShaderParameters);
 	
 	// TODO: place holder, remove
 	bool HasTexture(const ShaderParameters& InParams);
