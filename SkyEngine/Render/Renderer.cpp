@@ -7,6 +7,7 @@
 #include "SceneRenderer.h"
 #include "SceneVisual.h"
 #include "Core/Application.h"
+#include "Core/Asset/Asset.h"
 #include "Entity/Component.h"
 #include "Entity/Entity.h"
 #include "Materials/Material.h"
@@ -15,12 +16,22 @@
 #include "Shaders/PBRShader.h"
 
 CRenderer::CRenderer()
-{	
-	const TPointer<CMaterial_PBR> DefaultPbrMaterial = std::make_shared<CMaterial_PBR>("DefaultMaterial");
-	DefaultPbrMaterial->Params.DiffuseColour = {0.5f, 0.5f, 0.5f, 1.0f};
-	DefaultPbrMaterial->bTwoSided = true;
-	DefaultMaterial = DefaultPbrMaterial;
-	GetMaterialManager()->AddMaterial(DefaultPbrMaterial);
+{
+	TPointer<CAsset> DefaultMaterialAsset = GetAssetManager()->FindAsset("Materials/DefaultMaterial.sasset");
+	if (DefaultMaterialAsset)
+	{
+		DefaultMaterial = DefaultMaterialAsset->Load<CMaterial_PBR>();
+	}
+	else
+	{
+		TPointer<CAsset> DefaultMaterialAsset = GetAssetManager()->AddAsset("Materials/DefaultMaterial.sasset");
+		const TPointer<CMaterial_PBR> DefaultPbrMaterial = std::make_shared<CMaterial_PBR>("DefaultMaterial");
+		DefaultPbrMaterial->Params.DiffuseColour = {0.5f, 0.5f, 0.5f, 1.0f};
+		DefaultPbrMaterial->bTwoSided = true;
+		DefaultMaterial = DefaultPbrMaterial;
+		DefaultMaterialAsset->SetDefaultObject(DefaultMaterial);
+	}
+	GetMaterialManager()->AddMaterial(DefaultMaterial);
 }
 
 void CRenderer::InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, TArray<ISceneVisual*>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender)

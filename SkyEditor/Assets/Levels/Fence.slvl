@@ -1,13 +1,13 @@
 [Scene]
 [Fence]
-[Entity] Sphere 1 ((3.000000 10.915930 -6.000000) (0.000000 0.000000 0.000000) (2.200000 2.200000 2.200000)) [MeshComponent] Sphere DefaultMaterial true
-[Entity] Floor_Plane 2 ((0.000000 0.000000 0.000000) (-90.000000 0.000000 0.000000) (50.000000 50.000000 50.000000)) [MeshComponent] Plane PlaneMaterial true
-[Entity] Box 7 ((5.000000 5.000000 10.000000) (0.000000 0.000000 0.000000) (2.000000 2.000000 2.000000)) [BoxComponent]
-[Entity] Cube 10 ((3.000000 5.074870 -6.000000) (0.000000 0.000000 0.000000) (3.000000 10.053120 3.000000)) [MeshComponent] Cube ColouredBrickMaterial true
-[Entity] Cube 12 ((-3.000000 4.805690 -6.000000) (0.000000 0.000000 0.000000) (9.396687 7.830290 1.391492)) [MeshComponent] Cube ColouredBrickMaterial true
-[Entity] Cube 14 ((-9.000000 5.074870 -6.000000) (0.000000 0.000000 0.000000) (3.000000 10.053120 3.000000)) [MeshComponent] Cube ColouredBrickMaterial true
-[Entity] Sphere 20 ((-9.000000 10.915930 -6.000000) (0.000000 0.000000 0.000000) (2.200000 2.200000 2.200000)) [MeshComponent] Sphere DefaultMaterial true
-[Camera] Camera 0 ((-1.485757 20.175449 16.600431) (-33.448437 -90.381699 0.000000) (0.000000 0.000000 0.000000))
-[Entity] Cube 1 ((9.300000 4.805690 -6.000000) (0.000000 0.000000 0.000000) (9.396687 7.830290 1.391492)) [MeshComponent] Cube ColouredBrickMaterial true
-[Entity] Cube 2 ((15.000000 5.074870 -6.000000) (0.000000 0.000000 0.000000) (3.000000 10.053120 3.000000)) [MeshComponent] Cube ColouredBrickMaterial true
-[Entity] Sphere 3 ((15.000000 10.915930 -6.000000) (0.000000 0.000000 0.000000) (2.200000 2.200000 2.200000)) [MeshComponent] Sphere DefaultMaterial true
+[Entity] Sphere 1 ((3.000000 10.915930 -6.000000) (0.000000 0.000000 0.000000) (2.200000 2.200000 2.200000)) [MeshComponent] Sphere Materials\DefaultMaterial.sasset true
+[Entity] Floor_Plane 2 ((0.000000 0.000000 0.000000) (-90.000000 0.000000 0.000000) (50.000000 50.000000 50.000000)) [MeshComponent] Plane Materials\PlaneMaterial.sasset true
+[Entity] Box 7 ((5.000000 5.000000 10.000000) (0.000000 0.000000 0.000000) (2.000000 2.000000 2.000000)) [BoxComponent] 
+[Entity] Cube 10 ((3.000000 5.074870 -6.000000) (0.000000 0.000000 0.000000) (3.000000 10.053120 3.000000)) [MeshComponent] Cube Materials\ColouredBrickMaterial.sasset true
+[Entity] Cube 12 ((-3.000000 4.805690 -6.000000) (0.000000 0.000000 0.000000) (9.396687 7.830290 1.391492)) [MeshComponent] Cube Materials\ColouredBrickMaterial.sasset true
+[Entity] Cube 14 ((-9.000000 5.074870 -6.000000) (0.000000 0.000000 0.000000) (3.000000 10.053120 3.000000)) [MeshComponent] Cube Materials\ColouredBrickMaterial.sasset true
+[Entity] Sphere 20 ((-9.000000 10.915930 -6.000000) (0.000000 0.000000 0.000000) (2.200000 2.200000 2.200000)) [MeshComponent] Sphere Materials\DefaultMaterial.sasset true
+[Camera] Camera 0 ((-1.485757 20.175440 16.600431) (-33.448437 -90.381691 0.000000) (0.000000 0.000000 0.000000))
+[Entity] Cube 0 ((9.300000 4.805690 -6.000000) (0.000000 0.000000 0.000000) (9.396687 7.830290 1.391492)) [MeshComponent] Cube Materials\ColouredBrickMaterial.sasset true
+[Entity] Cube 1 ((15.000000 5.074870 -6.000000) (0.000000 0.000000 0.000000) (3.000000 10.053120 3.000000)) [MeshComponent] Cube Materials\ColouredBrickMaterial.sasset true
+[Entity] Sphere 3 ((15.000000 10.915930 -6.000000) (0.000000 0.000000 0.000000) (2.200000 2.200000 2.200000)) [MeshComponent] Sphere Materials\DefaultMaterial.sasset true

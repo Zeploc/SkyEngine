@@ -6,6 +6,7 @@
 // Engine Includes //
 #include "MeshManager.h"
 #include "Core/Application.h"
+#include "Core/Asset/Asset.h"
 #include "Entity/CollisionBounds.h"
 #include "Entity/Entity.h"
 #include "Render/Renderer.h"
@@ -129,7 +130,7 @@ void CMeshComponent::Serialize(std::ostream& os)
 	CComponent::Serialize(os);
 	
 	os << MeshAsset << " ";
-	os << MeshMaterial->GetMaterialName() << " ";
+	os << MeshMaterial->Asset->FilePath << " ";
 	const std::string VisibilityString = bVisible ? "true" : "false";
 	os << VisibilityString;
 }
@@ -143,9 +144,17 @@ void CMeshComponent::Deserialize(std::istream& is)
 	// std::getline(is, Empty, ' ');
 	is >> MeshAsset;
 	// std::getline(is, Empty, ' ');
-	std::string MaterialName;
-	is >> MaterialName;
-	MeshMaterial = GetMaterialManager()->FindMaterial(MaterialName);
+	std::string MaterialPath;
+	is >> MaterialPath;
+	TPointer<CAsset> Asset = GetAssetManager()->FindAsset(MaterialPath);
+	if (Asset)
+	{
+		MeshMaterial = Asset->Load<CMaterialInterface>();
+	}
+	else
+	{
+		CLogManager::Get()->DisplayError(std::format("Failed to find material asset at {}", MaterialPath));
+	}
 	std::string VisibilityString;
 	is >> VisibilityString;
 	bVisible = VisibilityString == "true";

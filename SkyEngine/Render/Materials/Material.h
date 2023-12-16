@@ -25,7 +25,7 @@ enum class EAttributeType
 };
 
 template <class S = CShader>
-class TMaterial : public CMaterialInterface, public IAssetObjectInterface
+class TMaterial : public CMaterialInterface
 {
 	// TODO: Once all shaders switched over, also make base CShader not allowed
 	static_assert(std::is_base_of<CShader, S>::value, "Template S must inherit from Shader");
