@@ -132,6 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\SkyEngine\Dependencies\ImGuizmo\ImGuizmo.h" />
+    <ClInclude Include="Editor\Config\EditorSettingsConfig.h" />
     <ClInclude Include="Editor\EditorLogManager.h" />
     <ClInclude Include="Editor\EditorViewportCanvas.h" />
     <ClInclude Include="Editor\Scene\EditorScene.h" />
@@ -147,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\SkyEngine\Dependencies\ImGuizmo\ImGuizmo.cpp" />
+    <ClCompile Include="Editor\Config\EditorSettingsConfig.cpp" />
     <ClCompile Include="Editor\EditorLogManager.cpp" />
     <ClCompile Include="Editor\EditorViewportCanvas.cpp" />
     <ClCompile Include="Editor\Scene\EditorScene.cpp" />

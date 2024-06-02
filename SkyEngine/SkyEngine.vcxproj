@@ -207,6 +207,8 @@
     <ClInclude Include="Math\Vector.h" />
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Math\Vector4.h" />
+    <ClInclude Include="Platform\Config\Config.h" />
+    <ClInclude Include="Platform\Config\ProjectSettingsConfig.h" />
     <ClInclude Include="Platform\File\FileManager.h" />
     <ClInclude Include="Platform\File\PathUtils.h" />
     <ClInclude Include="Platform\PlatformInterface.h" />
@@ -302,6 +304,8 @@
     <ClCompile Include="Math\Matrix.cpp" />
     <ClCompile Include="Math\Quaternion.cpp" />
     <ClCompile Include="Math\Transform.cpp" />
+    <ClCompile Include="Platform\Config\Config.cpp" />
+    <ClCompile Include="Platform\Config\ProjectSettingsConfig.cpp" />
     <ClCompile Include="Platform\File\FileManager.cpp">
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>

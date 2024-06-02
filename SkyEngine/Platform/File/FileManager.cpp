@@ -5,6 +5,7 @@
 #include <shobjidl.h>
 #include <filesystem>
 
+#include "PathUtils.h"
 #include "Core/Application.h"
 #include "Core/StringUtils.h"
 #include "Platform/PlatformInterface.h"
@@ -137,6 +138,9 @@ bool CFileManager::ReadFile(const std::string& FilePath, std::string& FileConten
 
 bool CFileManager::SaveFile(const std::string& FilePath, std::string FileContents)
 {
+	// TODO: Go through parent directories as this one does the last
+	// Confirm directory exists
+	std::filesystem::create_directory(PathUtils::GetDirectory(FilePath));
 	std::ofstream SaveFile;
 	SaveFile.open(FilePath);
 	if (!SaveFile.is_open())

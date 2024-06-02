@@ -24,6 +24,8 @@
 #include "Render/Meshes/MeshManager.h"
 #include "Scene/SceneUtils.h"
 #include "Entity/Camera.h"
+#include "Platform/Config/Config.h"
+#include "Platform/Config/ProjectSettingsConfig.h"
 
 // make sure the winsock lib is included...
 #pragma comment(lib,"ws2_32.lib")
@@ -72,11 +74,15 @@ namespace SkyEngine
 	bool Application::ApplicationSetup(std::string ExecutablePath)
 	{
 		PlatformInterface = new WindowsPlatform();
+		SetProjectDirectory(ExecutablePath);
 		SetupLogManager();
 		ENSURE(LogManager != nullptr, "Log manager not created!");
 		LogManager->Init();
 
-		ApplicationWindow = CEngineWindow::CreateEngineWindow("Sky Engine", MainWindowSize, false);
+		SetupConfigs();
+
+		const std::string WindowName = CProjectSettingsConfig::Get()->ProjectName;
+		ApplicationWindow = CEngineWindow::CreateEngineWindow(WindowName, MainWindowSize, false);
 		if (!ENSURE(ApplicationWindow != NULL, "Failed to setup application window"))
 		{
 			return false;
@@ -97,6 +103,27 @@ namespace SkyEngine
 		ApplicationWindow->PushLayer(ViewportCanvas);
 		
 		return true;
+	}
+	
+	void Application::SetProjectDirectory(const std::string ExecutablePath)
+	{	
+		uint64_t DirectoryEndIndex = ExecutablePath.find_last_of("\\");
+		ProjectDirectory = ExecutablePath.substr(0, DirectoryEndIndex);
+		DirectoryEndIndex = ProjectDirectory.find_last_of("\\");
+		ProjectDirectory = ProjectDirectory.substr(0, DirectoryEndIndex);
+		DirectoryEndIndex = ProjectDirectory.find_last_of("\\");
+		ProjectDirectory = ProjectDirectory.substr(0, DirectoryEndIndex);
+		DirectoryEndIndex = ProjectDirectory.find_last_of("\\");
+		ProjectDirectory = ProjectDirectory.substr(0, DirectoryEndIndex);
+	}
+
+	void Application::SetupConfigs()
+	{
+		CConfig::RegisterConfig<CProjectSettingsConfig>();
+		LogManager->DisplayMessage("Project Name: " + CProjectSettingsConfig::Get()->ProjectName); 
+
+		MainWindowSize = TVector2<int>(CProjectSettingsConfig::Get()->DefaultResolution);
+		GraphicsApiType = (EGraphicsAPI)CProjectSettingsConfig::Get()->GraphicsMode;
 	}
 
 	void Application::SetupLogManager()

@@ -33,6 +33,7 @@ namespace SkyEngine
 
 		virtual bool OpenScene(TPointer<Scene> NewScene);
 		virtual bool ApplicationSetup(std::string ExecutablePath);
+		virtual void SetupConfigs();
 		virtual void SetupLogManager();
 		virtual void SetupViewportLayer();
 
@@ -59,15 +60,19 @@ namespace SkyEngine
 		// TODO: Weak pointer to not hold ref
 		TPointer<CEngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
 		CViewportCanvas* GetViewportCanvas() const { return ViewportCanvas; }
+		std::string GetProjectDirectory() const { return ProjectDirectory; }
 
 		/* Only called internally in the engine */
 		inline static Application* Get();
 	protected:
+		virtual void SetProjectDirectory(std::string ExecutablePath);
+		
 		// TODO: Remove since viewport layer should make game UI canvas
 		CUICanvas* UILayer;
 		CViewportCanvas* ViewportCanvas;
 		
 		TPointer<CEngineWindow> ApplicationWindow;
+		std::string ProjectDirectory;
 	private:
 		static Application* EngineApplication;
 

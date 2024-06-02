@@ -21,7 +21,7 @@ class CShader;
 class CTexture;
 class ISceneVisual;
 
-enum class EGraphicsAPI
+enum class EGraphicsAPI : int
 {
 	OPENGL,
 	VULKAN,

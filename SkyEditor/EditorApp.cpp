@@ -30,8 +30,10 @@
 #include "Canvas/ViewportCanvas.h"
 #include "Core/StringUtils.h"
 #include "Core/Asset/Asset.h"
+#include "Editor/Config/EditorSettingsConfig.h"
 #include "Editor/UI/ContentBrowser.h"
 #include "Platform/PlatformInterface.h"
+#include "Platform/Config/ProjectSettingsConfig.h"
 #include "Platform/File/FileManager.h"
 #include "Platform/File/PathUtils.h"
 #include "Platform/Window/EngineWindow.h"
@@ -49,19 +51,11 @@ EditorApplication::EditorApplication() : Application()
 	ScenePath = "Levels\\Default.slvl";
 }
 
-void EditorApplication::SetContentDirectory(std::string ExecutablePath)
+void EditorApplication::SetProjectDirectory(std::string ExecutablePath)
 {
-	uint64_t DirectoryEndIndex = ExecutablePath.find_last_of("\\");
-	ContentPath = ExecutablePath.substr(0, DirectoryEndIndex);
-	DirectoryEndIndex = ContentPath.find_last_of("\\");
-	ContentPath = ContentPath.substr(0, DirectoryEndIndex);
-	DirectoryEndIndex = ContentPath.find_last_of("\\");
-	ContentPath = ContentPath.substr(0, DirectoryEndIndex);
-	DirectoryEndIndex = ContentPath.find_last_of("\\");
-	ContentPath = ContentPath.substr(0, DirectoryEndIndex);
-
+	Application::SetProjectDirectory(ExecutablePath);
 	// TODO: Should be moved out of editor
-	ContentPath += "\\SkyEditor\\Assets\\";
+	ContentPath = ProjectDirectory + "\\SkyEditor\\Assets\\";
 }
 
 bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
@@ -72,7 +66,6 @@ bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 		return false;
 	}
 	
-	SetContentDirectory(ExecutablePath);
 	AssetManager.SetAssetPath(ContentPath);
 	AssetManager.ScanForAssets();
 
@@ -96,7 +89,9 @@ bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 	// TODO: Swap out with light entity
 	Lighting::SetLightPosition({5, 5, 5});
 	Lighting::SetSunDirection({3, -1, 5});
-	ApplicationWindow->SetWindowTitle("Sky Editor: Untitled");
+	WindowName = "Sky Editor: " + CProjectSettingsConfig::Get()->ProjectName;
+	CProjectSettingsConfig::Get()->SaveConfig();
+	ApplicationWindow->SetWindowTitle(WindowName + " - Untitled");
 
 	TPointer<CLayerInfoWidget> LayerInfoWidget = std::make_shared<CLayerInfoWidget>();
 	EditorViewportLayer->AddViewportWidget(LayerInfoWidget);
@@ -110,6 +105,7 @@ bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 	// ConsoleLog = std::make_shared<CConsoleLog>();
 	ConsoleLog = new CConsoleLog(ApplicationWindow);
 	ApplicationWindow->PushLayer(ConsoleLog);
+	std::dynamic_pointer_cast<CEditorLogManager>(LogManager)->ConsoleLogCreated();
 	
 	CContentBrowser* ContentBrowser = new CContentBrowser(ApplicationWindow);
 	ApplicationWindow->PushLayer(ContentBrowser);
@@ -173,6 +169,17 @@ void EditorApplication::SetupPlaceholderMaterials()
 		MaterialAsset->Save();
 	}
 	
+}
+
+void EditorApplication::SetupConfigs()
+{
+	Application::SetupConfigs();
+	
+	CConfig::RegisterConfig<CEditorSettingsConfig>();
+	LogManager->DisplayMessage("Resolution: " + CProjectSettingsConfig::Get()->DefaultResolution.ToString()); 
+	LogManager->DisplayMessage("Graphics Mode: " + std::to_string(CProjectSettingsConfig::Get()->GraphicsMode));
+	MainWindowSize = TVector2<int>(CEditorSettingsConfig::Get()->Resolution);
+	GraphicsApiType = (EGraphicsAPI)CEditorSettingsConfig::Get()->GraphicsMode;
 }
 
 void EditorApplication::SetupLogManager()
@@ -398,7 +405,7 @@ bool EditorApplication::OpenScene(TPointer<Scene> NewScene)
 	{
 		return false;
 	}
-	ApplicationWindow->SetWindowTitle("Sky Editor: " + NewScene->SceneName);
+	ApplicationWindow->SetWindowTitle(WindowName + " - " + NewScene->SceneName);
 	return Application::OpenScene(NewScene);
 }
 
@@ -425,7 +432,7 @@ void EditorApplication::SaveScene(bool bAsNew)
 	}
 	const std::string SceneName = PathUtils::GetFileName(ScenePath, false);
 	Scene->SceneName = SceneName;
-	ApplicationWindow->SetWindowTitle("Sky Editor: \"" + SceneName + "\"");
+	ApplicationWindow->SetWindowTitle(WindowName + " - \"" + SceneName + "\"");
 	if (Scene->Asset->Save())
 	{
 		GetPlatformInterface()->DisplayMessageBox("Saved scene", std::format("Saved Scene \"{}\"!", SceneName), MB_OK);

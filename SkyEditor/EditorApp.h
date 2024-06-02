@@ -18,7 +18,6 @@ public:
 	CConsoleLog* ConsoleLog = nullptr;
 	
 	EditorApplication();
-	void SetContentDirectory(std::string ExecutablePath);
 	~EditorApplication() {}
 	
 	bool ApplicationSetup(std::string ExecutablePath) override;
@@ -26,6 +25,7 @@ public:
 	// TODO: Remove once material assets setup
 	void SetupPlaceholderMaterials();
 
+	void SetupConfigs() override;
 	void SetupLogManager() override;
 	void SetupViewportLayer() override;
 	
@@ -50,4 +50,8 @@ public:
 
 	std::string ScenePath;
 	std::string ContentPath;
+	std::string WindowName;
+
+protected:
+	void SetProjectDirectory(std::string ExecutablePath) override;
 };

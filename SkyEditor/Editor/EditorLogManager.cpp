@@ -10,6 +10,10 @@ void CEditorLogManager::DisplayMessage(const std::string& InMessage)
 	{
 		EditorApp->ConsoleLog->AddLog(std::format("{}\n", InMessage).c_str());
 	}
+	else
+	{
+		QueuedMessages.push_back(InMessage);
+	}
 }
 
 void CEditorLogManager::DisplayWarning(const std::string& InMessage)
@@ -18,6 +22,10 @@ void CEditorLogManager::DisplayWarning(const std::string& InMessage)
 	if (EditorApp->ConsoleLog)
 	{
 		EditorApp->ConsoleLog->AddLog(std::format("{}\n", InMessage).c_str());
+	}
+	else
+	{
+		QueuedMessages.push_back(InMessage);
 	}
 }
 
@@ -28,4 +36,21 @@ void CEditorLogManager::DisplayError(const std::string& InMessage)
 	{
 		EditorApp->ConsoleLog->AddLog(std::format("{}\n", InMessage).c_str());
 	}
+	else
+	{
+		QueuedMessages.push_back(InMessage);
+	}
+}
+
+void CEditorLogManager::ConsoleLogCreated()
+{
+	if (!EditorApp->ConsoleLog)
+	{
+		return;
+	}
+	for (std::string Message : QueuedMessages)
+	{
+		EditorApp->ConsoleLog->AddLog(std::format("{}\n", Message).c_str());
+	}
+	QueuedMessages.clear();
 }

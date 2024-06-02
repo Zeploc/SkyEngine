@@ -117,6 +117,29 @@ struct TVector2 : glm::tvec2<T, glm::highp>
 	// TODO:
 	// friend std::ostream& operator<<(std::ostream& os, const Vector2x& InVector);
 	// friend std::istream& operator>>(std::istream& is, Vector2x& OutVector);
+	
+	friend std::ostream& operator<<(std::ostream& os, const TVector2<T>& InVector)
+	{
+		// TODO: Improve to not use to string
+		os << "(";
+		os << std::to_string(InVector.X) << std::string(" ");
+		os << std::to_string(InVector.Y);
+		os << ")";
+		return os;
+	}
+	friend std::istream& operator>>(std::istream& is, TVector2<T>& OutVector)
+	{
+		std::string Empty;
+		// TODO: Improve bracket removal
+		// std::getline(is, Empty, '(');
+		std::string StringX, StringY;
+		is >> StringX >> StringY;
+		// TODO: Improve from substring
+		OutVector.X = std::stof(StringX.substr(1, StringX.length() - 1));
+		OutVector.Y = std::stof(StringY.substr(0, StringY.length() - 1));
+		// std::getline(is, Empty, ')');
+		return is;
+	}
 
 protected:	
 	template <typename  U>
