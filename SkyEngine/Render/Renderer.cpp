@@ -24,10 +24,10 @@ CRenderer::CRenderer()
 	}
 	else
 	{
-		TPointer<CAsset> DefaultMaterialAsset = GetAssetManager()->AddAsset("Materials/DefaultMaterial.sasset");
 		const TPointer<CMaterial_PBR> DefaultPbrMaterial = std::make_shared<CMaterial_PBR>("DefaultMaterial");
 		DefaultPbrMaterial->Params.DiffuseColour = {0.5f, 0.5f, 0.5f, 1.0f};
 		DefaultPbrMaterial->bTwoSided = true;
+		DefaultMaterialAsset = GetAssetManager()->AddAsset("Materials/DefaultMaterial.sasset", DefaultPbrMaterial->GetAssetClassName());
 		DefaultMaterial = DefaultPbrMaterial;
 		DefaultMaterialAsset->SetDefaultObject(DefaultMaterial);
 	}

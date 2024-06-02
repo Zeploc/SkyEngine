@@ -11,6 +11,7 @@
 #include "Render/Materials/MaterialManager.h"
 #include "Render/Meshes/MeshManager.h"
 
+class Scene;
 class CViewportCanvas;
 class CLogManager;
 class CUICanvas;
@@ -30,6 +31,7 @@ namespace SkyEngine
 		Application();
 		virtual ~Application();
 
+		virtual bool OpenScene(TPointer<Scene> NewScene);
 		virtual bool ApplicationSetup(std::string ExecutablePath);
 		virtual void SetupLogManager();
 		virtual void SetupViewportLayer();

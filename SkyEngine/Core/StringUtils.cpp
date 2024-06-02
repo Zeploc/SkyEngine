@@ -70,3 +70,18 @@ inline std::string StringUtils::Trim_Copy(std::string s) {
 	Trim(s);
 	return s;
 }
+
+TArray<std::string> StringUtils::Split(std::string String, const std::string& Delimniator)
+{
+	TArray<std::string> Tokens;
+	size_t pos;
+	std::string token;
+	while ((pos = String.find(Delimniator)) != std::string::npos) {
+		std::string Token = String.substr(0, pos);
+		Tokens.push_back(Token);
+		String.erase(0, pos + Delimniator.length());
+	}
+	Tokens.push_back(String);
+	
+	return Tokens;
+}

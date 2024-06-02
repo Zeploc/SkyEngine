@@ -19,9 +19,12 @@ public:
 	virtual void Serialize(std::ostream& os) = 0;
 	virtual void Deserialize(std::istream& is) = 0;
 	virtual std::string GetAssetClassName() = 0;
+	virtual TArray<std::string> GetMetaData() const { return {}; }
 
 	virtual void OnLoaded() {}
 	virtual void OnUnloaded() {}
+
+	virtual void Open() = 0;
 	
 	TPointer<CAsset> Asset;
 };

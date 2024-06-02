@@ -95,6 +95,11 @@ std::string Scene::GetAssetClassName()
 	return GetStaticName();
 }
 
+void Scene::Open()
+{
+	GetApplication()->OpenScene(shared_from_this());
+}
+
 /************************************************************
 #--Description--#:	Delete all entities in scene
 #--Author--#: 		Alex Coultas

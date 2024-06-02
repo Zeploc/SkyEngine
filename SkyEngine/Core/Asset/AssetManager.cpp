@@ -5,12 +5,12 @@
 #include "Core/StringUtils.h"
 #include "Platform/File/FileManager.h"
 
-TPointer<CAsset> CAssetManager::AddAsset(const std::string& AssetPath)
+TPointer<CAsset> CAssetManager::AddAsset(const std::string& AssetPath, const std::string& NewClass)
 {	
 	TPointer<CAsset> NewAsset = FindAsset(AssetPath);
 	if (!NewAsset)
 	{
-		NewAsset = CreatePointer<CAsset>(StringUtils::NormalizePath(AssetPath));
+		NewAsset = CreatePointer<CAsset>(StringUtils::NormalizePath(AssetPath), NewClass);
 		Assets.push_back(NewAsset);
 	}
 	return NewAsset;
@@ -60,8 +60,7 @@ TArray<TPointer<CAsset>> CAssetManager::GetAssetsOfClass(const std::string& Clas
 	TArray<TPointer<CAsset>> FoundAssets;
 	for (const TPointer<CAsset>& Asset : Assets)
 	{
-		// TODO: Review starts with check (used for materials where it ends with the material type eg :PBR )
-		if (Asset->Class == ClassName || Asset->Class.starts_with(ClassName))
+		if (Asset->ClassName == ClassName)
 		{
 			FoundAssets.push_back(Asset);
 		}

@@ -74,6 +74,7 @@ SVector2i CViewportCanvas::GetViewportPosition()
 {
 	return {0,0};
 }
+
 SVector CViewportCanvas::ScreenToWorldDirection(SVector2i InScreenPosition)
 {
 	SVector2i ViewportPosition = GetViewportPosition();

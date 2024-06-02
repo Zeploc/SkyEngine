@@ -8,19 +8,21 @@ class CObject;
 class ENGINE_API CAsset : public std::enable_shared_from_this<CAsset>
 {
 public:
-	CAsset(const std::string& AssetPath);
+	CAsset(const std::string& AssetPath, const std::string& InClass = std::string());
 
 	TPointer<CObject> Load();
 	void Unload();
 	void Reload();
 	bool Save();
 	void SetDefaultObject(TPointer<CObject> NewObject);
-
-	static TPointer<CObject> MakeObjectFromClassName(const std::string& ClassName);
+	void Open();
+	/* Clears the object link for this asset (Will load from file when load called again) */
+	void DisconnectObject();
 
 	std::string FilePath;
 	std::string DisplayName;
-	std::string Class;
+	std::string ClassName;
+	TArray<std::string> Metadata;
 
 	// TODO: Unsaved
 	
@@ -28,6 +30,10 @@ public:
 	TPointer<T> Load();
 
 protected:
+	/* Creates the object for this asset when loading based on the class and meta data */
+	TPointer<CObject> MakeObject() const;
+	void ApplyAssetData(std::string AssetData);
+	
 	// TODO: Only for editor
 	TPointer<CObject> Object = nullptr;
 };

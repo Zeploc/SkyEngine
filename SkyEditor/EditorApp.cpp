@@ -30,6 +30,7 @@
 #include "Canvas/ViewportCanvas.h"
 #include "Core/StringUtils.h"
 #include "Core/Asset/Asset.h"
+#include "Editor/UI/ContentBrowser.h"
 #include "Platform/PlatformInterface.h"
 #include "Platform/File/FileManager.h"
 #include "Platform/File/PathUtils.h"
@@ -78,7 +79,7 @@ bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 	//SetupPlaceholderMaterials();
 	
 	// TODO: Move to application base default scene
-	if (OpenScene(ContentPath + ScenePath))
+	if (OpenSceneByPath(ContentPath + ScenePath))
 	{
 		SceneManager::GetInstance()->GetCurrentScene()->SceneName = "Untitled";
 	}
@@ -109,6 +110,9 @@ bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 	// ConsoleLog = std::make_shared<CConsoleLog>();
 	ConsoleLog = new CConsoleLog(ApplicationWindow);
 	ApplicationWindow->PushLayer(ConsoleLog);
+	
+	CContentBrowser* ContentBrowser = new CContentBrowser(ApplicationWindow);
+	ApplicationWindow->PushLayer(ContentBrowser);
 	
 	// Needed to be in this project to have context global variable
 	ImGui::SetCurrentContext(ApplicationWindow->GetCanvasManager().GetGuiContext());
@@ -164,7 +168,7 @@ void EditorApplication::SetupPlaceholderMaterials()
 	TArray<TPointer<CMaterialInterface>> Materials = {BrickMaterial, ColouredBrickMaterial, ColouredBrickPlaneMaterial, CliffMaterial, PlaneMaterial, BoxMaterial};
 	for (TPointer<CMaterialInterface> Material : Materials)
 	{
-		MaterialAsset = AssetManager.AddAsset(std::string("Materials/") + Material->GetMaterialName() + std::string(".sasset"));
+		MaterialAsset = AssetManager.AddAsset(std::string("Materials/") + Material->GetMaterialName() + std::string(".sasset"), Material->GetAssetClassName());
 		MaterialAsset->SetDefaultObject(Material);
 		MaterialAsset->Save();
 	}
@@ -195,7 +199,7 @@ void EditorApplication::MainMenuBar()
 		{
 			if (ImGui::MenuItem("Open Scene", "CTRL+O"))
 			{
-				OpenScene();
+				OpenNewScene();
 			}
 			if (ImGui::MenuItem("Save Scene", "CTRL+S"))
 			{
@@ -301,7 +305,7 @@ bool EditorApplication::OnKeyPressedEvent(CKeyPressedEvent& Event)
 	{
 		if (Event.GetKeyCode() == GLFW_KEY_O)
 		{
-			OpenScene();
+			OpenNewScene();
 			return true;
 		}
 		if (Event.GetKeyCode() == GLFW_KEY_S)
@@ -326,7 +330,7 @@ void EditorApplication::OnExit()
 	Application::OnExit();
 }
 
-void EditorApplication::OpenScene()
+void EditorApplication::OpenNewScene()
 {
 	std::string FilePath;
 	if (!CFileManager::OpenFile(FilePath, "slvl", ContentPath))
@@ -334,10 +338,41 @@ void EditorApplication::OpenScene()
 		// No file opened (cancelled)
 		return;
 	}
-	OpenScene(FilePath);
+	OpenSceneByPath(FilePath);
 }
 
-bool EditorApplication::OpenScene(std::string FilePath)
+bool EditorApplication::UnsavedSceneCheck()
+{
+	TPointer<Scene> CurrentScene = SceneManager::GetInstance()->GetCurrentScene();
+	if (CurrentScene)
+	{
+		std::stringstream SceneStream;
+		CurrentScene->Serialize(SceneStream);
+		std::string _;
+		std::string AssetData;
+		std::getline(SceneStream, _, '[');
+		std::getline(SceneStream, AssetData, ']');
+
+		std::string ExistingFile;
+		if (CFileManager::ReadFile(PathUtils::CombinePath(ContentPath, CurrentScene->Asset->FilePath), ExistingFile))
+		{
+			const std::string Basic_String = SceneStream.str();
+			const std::string FilePrefix = std::format("[{}]\n", Scene::GetStaticName());
+			StringUtils::ReplaceFirst(ExistingFile, FilePrefix, "");
+			if (ExistingFile != Basic_String)
+			{
+				const int UnsavedChangesResponse = PlatformInterface->DisplayMessageBox("Unsaved Changes!", "Unsaved changes, do you want to continue?", MB_YESNO);
+				if (UnsavedChangesResponse == IDNO)
+				{
+					return false;
+				}
+			}		
+		}
+	}
+	return true;
+}
+
+bool EditorApplication::OpenSceneByPath(std::string FilePath)
 {
 	StringUtils::Replace(FilePath, ContentPath, "");
 	TPointer<CAsset> NewSceneAsset = AssetManager.FindAsset(FilePath);
@@ -348,24 +383,23 @@ bool EditorApplication::OpenScene(std::string FilePath)
 		NewScene = nullptr;
 		return false;
 	}
+	// NewScene->Open();
+	if (!OpenScene(NewScene))
+	{
+		return false;	
+	}
 	ScenePath = FilePath;
-	ApplicationWindow->SetWindowTitle("Sky Editor: " + NewScene->SceneName);
-	TPointer<Scene> PreviousScene = SceneManager::GetInstance()->GetCurrentScene();
-	SceneManager::GetInstance()->AddScene(NewScene);
-	SceneManager::GetInstance()->SwitchScene(NewScene->SceneName, true);
-	const TPointer<Camera> FoundCamera = SceneUtils::FindEntityOfClass<Camera>();
-	ViewportCanvas->GetSceneRenderer()->SetSceneTarget(NewScene);
-	if (FoundCamera)
-	{
-		ViewportCanvas->SetCamera(FoundCamera);
-	}
-	else
-	{
-		ViewportCanvas->SetupCamera();
-		NewScene->AddEntity(ViewportCanvas->GetViewportCamera());
-	}
-	SceneManager::GetInstance()->RemoveScene(PreviousScene);
 	return true;
+}
+
+bool EditorApplication::OpenScene(TPointer<Scene> NewScene)
+{	
+	if (!UnsavedSceneCheck())
+	{
+		return false;
+	}
+	ApplicationWindow->SetWindowTitle("Sky Editor: " + NewScene->SceneName);
+	return Application::OpenScene(NewScene);
 }
 
 void EditorApplication::SaveScene(bool bAsNew)
@@ -384,10 +418,14 @@ void EditorApplication::SaveScene(bool bAsNew)
 		}
 		PathUtils::SetExtension(ChosenFilePath, "slvl");
 		ScenePath = ChosenFilePath;
+		StringUtils::Replace(ScenePath, ContentPath, "");
+		TPointer<CAsset> NewSceneAsset = AssetManager.AddAsset(ScenePath, Scene::GetStaticName());
+		Scene->Asset->DisconnectObject();
+		NewSceneAsset->SetDefaultObject(Scene);		
 	}
 	const std::string SceneName = PathUtils::GetFileName(ScenePath, false);
 	Scene->SceneName = SceneName;
-	ApplicationWindow->SetWindowTitle("Sky Editor: \"" + SceneName + "\"");	
+	ApplicationWindow->SetWindowTitle("Sky Editor: \"" + SceneName + "\"");
 	if (Scene->Asset->Save())
 	{
 		GetPlatformInterface()->DisplayMessageBox("Saved scene", std::format("Saved Scene \"{}\"!", SceneName), MB_OK);

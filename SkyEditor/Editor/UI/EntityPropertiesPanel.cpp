@@ -81,7 +81,7 @@ void CEntityPropertiesPanel::DrawMeshComponent(const std::shared_ptr<CMeshCompon
 	ImGui::Spacing();	
 	
 	ImGui::Text("Material:");
-	ImGui::SameLine();
+	// ImGui::SameLine();
 	MaterialsDropdown(MeshComponent);
 	ImGui::Spacing();
         
@@ -103,43 +103,81 @@ void CEntityPropertiesPanel::MaterialsDropdown(const std::shared_ptr<CMeshCompon
 	{
 		MaterialName = "No Material";
 	}
+	ImGui::BeginGroup();
 	
-	if (!ImGui::BeginCombo("##MaterialsDropdown", MaterialName.c_str(), ImGuiComboFlags_None))
+	if (ImGui::Button("Image", ImVec2(60, 60)))
 	{
-		return;
+		// Open combo
+	}
+	ImGui::SameLine();
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, {10,10});
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {10,10});
+		
+	if (ImGui::BeginCombo("##MaterialsDropdown", MaterialName.c_str(), ImGuiComboFlags_None))
+	{
+	    // Display items
+		// FIXME-OPT: Use clipper (but we need to disable it on the appearing frame to make sure our call to SetItemDefaultFocus() is processed)
+		bool bValueChanged = false;
+
+	    const TArray<TPointer<CAsset>> Materials = GetAssetManager()->GetAssetsOfClass(CMaterialInterface::GetStaticName());
+		for (int i = 0; i < Materials.size(); i++)
+		{
+			TPointer<CAsset> MaterialAsset = Materials[i];
+			ImGui::PushID(i);
+			ImGui::BeginGroup();
+
+			const bool bItemSelected = (MaterialAsset == CurrentMaterial->Asset);
+			ImGui::BeginDisabled(bItemSelected);
+			if (ImGui::Button("Image", ImVec2(60, 60)))
+			{
+				bValueChanged = true;
+				TPointer<CMaterialInterface> LoadedMaterial = MaterialAsset->Load<CMaterialInterface>();
+				MeshComponent->SetMaterial(LoadedMaterial);
+				CurrentMaterial = LoadedMaterial;
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			// if (!items_getter(data, i, &item_text))
+			// 	item_text = "*Unknown item*";
+			if (ImGui::Selectable(MaterialAsset->DisplayName.c_str(), bItemSelected))
+			{
+				bValueChanged = true;
+				TPointer<CMaterialInterface> LoadedMaterial = MaterialAsset->Load<CMaterialInterface>();
+				MeshComponent->SetMaterial(LoadedMaterial);
+				CurrentMaterial = LoadedMaterial;
+			}
+			ImGui::EndDisabled();
+			if (bItemSelected)
+			{
+				ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndGroup();
+			ImGui::PopID();
+		}
+
+		ImGui::EndCombo();	
+		if (bValueChanged)
+		{
+			ImGui::MarkItemEdited(g.LastItemData.ID);
+		}
 	}
 
-    // Display items
-	// FIXME-OPT: Use clipper (but we need to disable it on the appearing frame to make sure our call to SetItemDefaultFocus() is processed)
-	bool bValueChanged = false;
+	ImGui::PopStyleVar();
+	ImGui::PopStyleVar();
+	
+	//ImGui::Button("Drop Material", ImVec2(-1, 60));/*, ImVec2(60, 60));*/
 
-    const TArray<TPointer<CAsset>> Materials = GetAssetManager()->GetAssetsOfClass(CMaterialInterface::GetStaticName());
-	for (int i = 0; i < Materials.size(); i++)
+	ImGui::EndGroup();
+	if (ImGui::BeginDragDropTarget())
 	{
-		TPointer<CAsset> MaterialAsset = Materials[i];
-		ImGui::PushID(i);
-		const bool bItemSelected = (MaterialAsset == CurrentMaterial->Asset);
-		// if (!items_getter(data, i, &item_text))
-		// 	item_text = "*Unknown item*";
-		if (ImGui::Selectable(MaterialAsset->DisplayName.c_str(), bItemSelected))
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(std::format("ASSET:{}", CMaterialInterface::GetStaticName()).c_str()))
 		{
-			bValueChanged = true;
-			TPointer<CMaterialInterface> LoadedMaterial = MaterialAsset->Load<CMaterialInterface>();
-			MeshComponent->SetMaterial(LoadedMaterial);
-			CurrentMaterial = LoadedMaterial;
+			IM_ASSERT(payload->DataSize == sizeof(TPointer<CAsset>));
+			TPointer<CAsset> PayloadAsset = *(const TPointer<CAsset>*)payload->Data;
+			CurrentMaterial = PayloadAsset->Load<CMaterialInterface>();
+			MeshComponent->SetMaterial(CurrentMaterial);
 		}
-		if (bItemSelected)
-		{
-			ImGui::SetItemDefaultFocus();
-		}
-		ImGui::PopID();
-	}
-
-	ImGui::EndCombo();
-
-	if (bValueChanged)
-	{
-		ImGui::MarkItemEdited(g.LastItemData.ID);
+		ImGui::EndDragDropTarget();
 	}
 }
 

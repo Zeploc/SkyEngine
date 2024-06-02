@@ -5,6 +5,7 @@
 
 #include "EditorApp.h"
 #include "Core/WorldManager.h"
+#include "Core/Asset/Asset.h"
 #include "Dependencies/ImGui/imgui_internal.h"
 #include "Dependencies/ImGuizmo/ImGuizmo.h"
 #include "Entity/Camera.h"
@@ -17,6 +18,7 @@
 #include "System/LogManager.h"
 #include "System/TimeManager.h"
 #include "UI/UIWidget.h"
+#include "Render/Materials/InternalMaterial.h"
 
 CEditorViewportCanvas::CEditorViewportCanvas(TWeakPointer<CEngineWindow> InOwningWindow)
 	: CViewportCanvas(InOwningWindow)
@@ -61,16 +63,23 @@ bool CEditorViewportCanvas::PreRender()
 	// window_flags |= ImGuiWindowFlags_NoMouseInputs;
 	window_flags |= ImGuiWindowFlags_NoNavFocus;
 	window_flags |= ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_AlwaysUseWindowPadding;
 	ImGui::SetNextWindowClass(&centralAlways);
 	ImGui::SetNextWindowDockID(ViewportNode->ID, ImGuiCond_Always);
 	ImGui::SetNextWindowBgAlpha(0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0,0});
 	if (!ImGui::Begin(CanvasName.c_str(), nullptr, window_flags))
 	{
 		return false;
 	}
-	// TODO: Work out why there is extra padding on the viewport with this set to 0
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {10,10});// { 0, 0 });
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2,2));
 	return true;
+}
+
+void CEditorViewportCanvas::PostRender()
+{
+	CViewportCanvas::PostRender();
+	ImGui::PopStyleVar();
 }
 
 void CEditorViewportCanvas::OnRender()
@@ -89,7 +98,33 @@ void CEditorViewportCanvas::OnRender()
 	}
 
 	uint32_t TextureID = SceneRenderer->GetFramebuffer()->GetColorAttachmentRendererID();//ViewportTexture->GetTextureRenderID();//
-	ImGui::Image((void*)TextureID, ImVec2(ViewportCanvas.Size.X, ViewportCanvas.Size.Y), ImVec2(0, 1), ImVec2(1,0) );	
+	ImGui::Image((void*)TextureID, ImVec2(ViewportCanvas.Size.X, ViewportCanvas.Size.Y), ImVec2(0, 1), ImVec2(1,0) );
+	
+	
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(std::format("ASSET:{}", CMaterialInterface::GetStaticName()).c_str()))
+		{
+			IM_ASSERT(payload->DataSize == sizeof(TPointer<CAsset>));
+			TPointer<CAsset> PayloadAsset = *(const TPointer<CAsset>*)payload->Data;
+			TPointer<CMaterialInterface> DroppedMaterial = PayloadAsset->Load<CMaterialInterface>();
+			if (DroppedMaterial)
+			{
+				UpdateSelectedEntity();
+				if (SelectedEntity)
+				{
+					TPointer<CMeshComponent> MeshComponent = SelectedEntity->FindComponent<CMeshComponent>();
+					if (MeshComponent)
+					{
+						MeshComponent->SetMaterial(DroppedMaterial);
+					}
+					SelectEntity(nullptr);
+				}
+			}
+			
+		}
+		ImGui::EndDragDropTarget();
+	}
 	
 	// Draw a red rectangle in the central node just for demonstration purposes
 	ImGui::GetBackgroundDrawList()->AddRect

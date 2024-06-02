@@ -30,6 +30,7 @@ public:
 	void Deserialize(std::istream& is) override;
 	static std::string GetStaticName();
 	std::string GetAssetClassName() override;
+	void Open() override;
 
 	void DeleteScene();
 

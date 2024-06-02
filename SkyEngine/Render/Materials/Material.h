@@ -49,6 +49,7 @@ public:
 	void Serialize(std::ostream& os) override;
 	void Deserialize(std::istream& is) override;
 	std::string GetAssetClassName() override;
+	TArray<std::string> GetMetaData() const override;
 	void OnLoaded() override;
 
 	TPointer<S> Shader;
@@ -104,7 +105,13 @@ void TMaterial<S>::Deserialize(std::istream& is)
 template <class S>
 std::string TMaterial<S>::GetAssetClassName()
 {
-	return GetStaticName() + std::string(":") + Shader->GetShaderName();
+	return GetStaticName();
+}
+
+template <class S>
+TArray<std::string> TMaterial<S>::GetMetaData() const
+{
+	return {Shader->GetShaderName()};
 }
 
 template <class S>

@@ -54,7 +54,7 @@ protected:
 	void PushPositions(TArray<float>& OutVertices, int VertexIndex) const;
 	void PushUVs(TArray<float>& OutVertices, int VertexIndex) const;
 	void PushNormals(TArray<float>& OutVertices, int VertexIndex) const;
-		
+protected:
 	TArray<float> Positions;
 	TArray<uint32_t> Indices;
 	TArray<float> UVs;

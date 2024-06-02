@@ -11,7 +11,7 @@ class CAsset;
 class ENGINE_API CAssetManager
 {
 public:
-	TPointer<CAsset> AddAsset(const std::string& AssetPath);
+	TPointer<CAsset> AddAsset(const std::string& AssetPath, const std::string& NewClass = std::string());
 	bool LoadAsset(const std::string& AssetPath);
 	TPointer<CAsset> FindAsset(const std::string& AssetPath) const;
 	bool ContainsAsset(const std::string& AssetPath) const;

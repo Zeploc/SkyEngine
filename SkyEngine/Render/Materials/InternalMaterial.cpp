@@ -23,18 +23,16 @@ void CMaterialInterface::BindMaterial()
 
 std::string CMaterialInterface::GetStaticName()
 {
-	return "MaterialAsset";
+	return "Material";
 }
 
-TPointer<CMaterialInterface> CMaterialInterface::MakeMaterialFromClassName(const std::string& ClassName)
+TPointer<CMaterialInterface> CMaterialInterface::MakeMaterialFromShaderName(const std::string& ShaderName)
 {
-	std::string MaterialShader = ClassName;
-	StringUtils::Replace(MaterialShader, GetStaticName() + ":", "");
-	if (MaterialShader == CPBRShader::GetStaticName())
+	if (ShaderName == CPBRShader::GetStaticName())
 	{
 		return std::make_shared<CMaterial_PBR>("New Material");
 	}
-	if (MaterialShader == CUnlitShader::GetStaticName())
+	if (ShaderName == CUnlitShader::GetStaticName())
 	{
 		return std::make_shared<CMaterial_Unlit>("New Material");
 	}
@@ -44,4 +42,9 @@ TPointer<CMaterialInterface> CMaterialInterface::MakeMaterialFromClassName(const
 std::shared_ptr<CMaterialInterface> CMaterialInterface::shared_from_this()
 {
 	return std::static_pointer_cast<CMaterialInterface>(CObject::shared_from_this());
+}
+
+void CMaterialInterface::Open()
+{
+	// TODO: Material window
 }

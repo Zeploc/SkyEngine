@@ -36,6 +36,7 @@ protected:
 	
 	void UpdateSelectedEntity();
 	bool PreRender() override;
+	void PostRender() override;
 
 	bool UsingSpectatorControls() const { return bUseSpectatorControls; }	
 	void SpectatorUpdate();

@@ -4,6 +4,7 @@
 #include <fstream>
 
 #include "Core/Object.h"
+#include "Core/StringUtils.h"
 #include "Platform/File/FileManager.h"
 #include "Platform/File/PathUtils.h"
 #include "Render/Materials/Material.h"
@@ -11,25 +12,42 @@
 #include "Render/Shaders/PBRShader.h"
 #include "System/LogManager.h"
 
-CAsset::CAsset(const std::string& AssetPath)
+CAsset::CAsset(const std::string& AssetPath, const std::string& InClass)
 {
 	FilePath = AssetPath;
 	DisplayName = PathUtils::GetFileName(FilePath, false);
-	
-	std::string FileContents;
-	const std::string FullPath = PathUtils::CombinePath(GetAssetManager()->GetAssetPath(), FilePath);
-	if (CFileManager::ReadFile(FullPath, FileContents))
+
+	if (!InClass.empty())
 	{
-		std::stringstream FileStream(FileContents);
-		std::string _;
-		std::getline(FileStream, _, '[');
-		std::getline(FileStream, Class, ']');
+		ClassName = InClass;
 	}
 	else
 	{
-		CLogManager::Get()->DisplayWarning(std::format("Failed to find asset at path {}", AssetPath));
-	}
+		// Read class from file
+		std::string FileContents;
+		const std::string FullPath = PathUtils::CombinePath(GetAssetManager()->GetAssetPath(), FilePath);
+		if (CFileManager::ReadFile(FullPath, FileContents))
+		{
+			std::stringstream FileStream(FileContents);
+			std::string _;
+			std::string AssetData;
+			std::getline(FileStream, _, '[');
+			std::getline(FileStream, AssetData, ']');
+			ApplyAssetData(AssetData);
+		}
+		else
+		{
+			CLogManager::Get()->DisplayWarning(std::format("Failed to find asset at path {}", AssetPath));
+		}
+	}	
+}
 
+void CAsset::ApplyAssetData(std::string AssetData)
+{
+	TArray<std::string> Tokens = StringUtils::Split(AssetData, ":");
+	ClassName = Tokens[0];
+	Tokens.erase(Tokens.begin());
+	Metadata = Tokens;
 }
 
 TPointer<CObject> CAsset::Load()
@@ -49,12 +67,13 @@ TPointer<CObject> CAsset::Load()
 	}
 
 	std::stringstream FileStream(FileContents);
-	std::string ClassName;
 	std::string _;
+	std::string AssetData;
 	std::getline(FileStream, _, '[');
-	std::getline(FileStream, ClassName, ']');
+	std::getline(FileStream, AssetData, ']');
+	ApplyAssetData(AssetData);
 
-	const TPointer<CObject> CreatedObject = MakeObjectFromClassName(ClassName);
+	const TPointer<CObject> CreatedObject = MakeObject();
 	ensure(CreatedObject != nullptr, "Failed to create class from name!");
 	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(CreatedObject.get());
 	FileStream >> AssetInterface;
@@ -90,9 +109,17 @@ bool CAsset::Save()
 		return false;
 	}
 	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(Object.get());
+	// Update meta data
+	Metadata = AssetInterface->GetMetaData();
+	
 	std::stringstream Serialized;
 	const std::string AssetClassName = AssetInterface->GetAssetClassName();
-	Serialized << "[" + AssetClassName + "]\n";
+	std::string AssetData = AssetClassName;
+	for (const std::string& Data : Metadata)
+	{
+		AssetData += std::string(":") + Data;
+	}
+	Serialized << "[" + AssetData + "]\n";
 	Serialized << AssetInterface;
 
 	const std::string FullPath = PathUtils::CombinePath(GetAssetManager()->GetAssetPath(), FilePath);
@@ -111,14 +138,36 @@ void CAsset::SetDefaultObject(TPointer<CObject> NewObject)
 		return;
 	}
 	AssetInterface->Asset = shared_from_this();
+	Metadata = AssetInterface->GetMetaData();
 	Object = NewObject;
 }
 
-TPointer<CObject> CAsset::MakeObjectFromClassName(const std::string& ClassName)
+void CAsset::Open()
 {
-	if (ClassName.starts_with(CMaterialInterface::GetStaticName()))
-	{		
-		return CMaterialInterface::MakeMaterialFromClassName(ClassName);
+	// Confirm loaded first
+	Load();
+	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(Object.get());
+	if (AssetInterface)
+	{
+		AssetInterface->Open();
+	}
+}
+
+void CAsset::DisconnectObject()
+{
+	Object = nullptr;
+}
+
+TPointer<CObject> CAsset::MakeObject() const
+{
+	if (ClassName == CMaterialInterface::GetStaticName())
+	{
+		ensure(!Metadata.empty(), "Shader meta data required for material");
+		if (Metadata.empty())
+		{
+			return nullptr;
+		}
+		return CMaterialInterface::MakeMaterialFromShaderName(Metadata[0]);
 	}
 	if (ClassName == Scene::GetStaticName())
 	{

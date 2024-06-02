@@ -20,7 +20,10 @@
 #include "Scene/SceneManager.h"
 #include "System/TimeManager.h"
 #include "Render/Renderer.h"
+#include "Render/SceneRenderer.h"
 #include "Render/Meshes/MeshManager.h"
+#include "Scene/SceneUtils.h"
+#include "Entity/Camera.h"
 
 // make sure the winsock lib is included...
 #pragma comment(lib,"ws2_32.lib")
@@ -41,6 +44,26 @@ namespace SkyEngine
 
 	Application::~Application()
 	{
+	}
+
+	bool Application::OpenScene(TPointer<Scene> NewScene)
+	{
+		TPointer<Scene> PreviousScene = SceneManager::GetInstance()->GetCurrentScene();
+		SceneManager::GetInstance()->AddScene(NewScene);
+		SceneManager::GetInstance()->SwitchScene(NewScene->SceneName, true);
+		const TPointer<Camera> FoundCamera = SceneUtils::FindEntityOfClass<Camera>();
+		ViewportCanvas->GetSceneRenderer()->SetSceneTarget(NewScene);
+		if (FoundCamera)
+		{
+			ViewportCanvas->SetCamera(FoundCamera);
+		}
+		else
+		{
+			ViewportCanvas->SetupCamera();
+			NewScene->AddEntity(ViewportCanvas->GetViewportCamera());
+		}
+		SceneManager::GetInstance()->RemoveScene(PreviousScene);
+		return true;
 	}
 
 	// Types //

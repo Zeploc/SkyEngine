@@ -136,6 +136,7 @@
     <ClInclude Include="Editor\EditorViewportCanvas.h" />
     <ClInclude Include="Editor\Scene\EditorScene.h" />
     <ClInclude Include="Editor\UI\ConsoleLog.h" />
+    <ClInclude Include="Editor\UI\ContentBrowser.h" />
     <ClInclude Include="Editor\UI\EntityPropertiesPanel.h" />
     <ClInclude Include="Editor\UI\LayerInfoWidget.h" />
     <ClInclude Include="Editor\UI\SceneOutliner.h" />
@@ -150,6 +151,7 @@
     <ClCompile Include="Editor\EditorViewportCanvas.cpp" />
     <ClCompile Include="Editor\Scene\EditorScene.cpp" />
     <ClCompile Include="Editor\UI\ConsoleLog.cpp" />
+    <ClCompile Include="Editor\UI\ContentBrowser.cpp" />
     <ClCompile Include="Editor\UI\EntityPropertiesPanel.cpp" />
     <ClCompile Include="Editor\UI\LayerInfoWidget.cpp" />
     <ClCompile Include="Editor\UI\SceneOutliner.cpp" />
@@ -269,6 +271,7 @@
     <Content Include="Assets\Levels\Fence.slvl" />
     <Content Include="Assets\Levels\New.slvl" />
     <Content Include="Assets\Levels\Updated.slvl" />
+    <Content Include="Assets\Materials\BoxMaterial.sasset" />
     <Content Include="Assets\Materials\BrickMaterial.sasset" />
     <Content Include="Assets\Materials\CliffMaterial.sasset" />
     <Content Include="Assets\Materials\ColouredBrickMaterial.sasset" />

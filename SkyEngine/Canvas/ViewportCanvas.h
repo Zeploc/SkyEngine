@@ -33,7 +33,7 @@ public:
 
 	virtual SVector2i GetViewportSize();
 	virtual SVector2i GetViewportPosition();
-	TPointer<Camera> GetViewportCamera() const { return ViewportCamera; }
+	TPointer<Camera> GetViewportCamera() const { return ViewportCamera;	}
 	TPointer<CSceneRenderer> GetSceneRenderer() const { return SceneRenderer; }
 	SVector ScreenToWorldDirection(SVector2i InScreenPosition);
 	SVector ScreenToWorldPosition2D(SVector2i InScreenPosition);

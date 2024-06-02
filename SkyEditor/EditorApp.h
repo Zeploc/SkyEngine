@@ -38,8 +38,10 @@ public:
 	bool OnKeyPressedEvent(CKeyPressedEvent& Event);
 	void OnExit() override;
 
-	void OpenScene();
-	bool OpenScene(std::string FilePath);
+	void OpenNewScene();
+	bool UnsavedSceneCheck();
+	bool OpenSceneByPath(std::string FilePath);
+	bool OpenScene(TPointer<Scene> NewScene) override;
 	void SaveScene(bool bAsNew = false);
 
 	unsigned int DockSpaceID = 0;

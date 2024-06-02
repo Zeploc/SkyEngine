@@ -112,6 +112,12 @@ bool CFileManager::OpenFile(std::string& OpenedFile, const std::string& Extensio
 	return true;
 }
 
+bool CFileManager::FileExists(const std::string& FilePath)
+{
+	std::ifstream OpenedFileStream(FilePath);//szFile); //
+	return OpenedFileStream.is_open();
+}
+
 bool CFileManager::ReadFile(const std::string& FilePath, std::string& FileContents)
 {
 	std::string line;
