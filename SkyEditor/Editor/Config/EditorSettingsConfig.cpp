@@ -3,7 +3,7 @@
 #include "EditorSettingsConfig.h"
 
 CEditorSettingsConfig::CEditorSettingsConfig()
-	: CConfig(EditorSettingsPath)
+	: CConfig(EditorSettingsName)
 {
 	DefineConfigVariable(GraphicsMode);
 	DefineConfigVariable(Resolution);

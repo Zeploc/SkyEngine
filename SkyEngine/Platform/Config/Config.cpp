@@ -8,14 +8,14 @@
 
 TArray<TPointer<CConfig>> CConfig::Configs;
 
-CConfig::CConfig(std::string RelativePath)
-	: ConfigPath(RelativePath)
+CConfig::CConfig(std::string Name, std::string RelativePath)
+	: ConfigName(Name), ConfigPath(RelativePath)
 {
 }
 
 std::string CConfig::GetAbsoluteConfigPath() const
 {
-	return GetApplication()->GetProjectDirectory() + "\\Config\\" + ConfigPath + ".ini";
+	return GetApplication()->GetProjectDirectory() + "\\Config\\" + ConfigPath + ConfigName + ".ini";
 }
 
 void CConfig::SerializeVariables(std::ostream& os) const

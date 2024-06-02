@@ -125,7 +125,7 @@ class ENGINE_API CConfig
 {
 public:
 	virtual ~CConfig() = default;
-	CConfig(std::string RelativePath);
+	CConfig(std::string Name, std::string RelativePath = "");
 
 	bool LoadConfig();
 	bool DoesConfigExist() const;
@@ -137,7 +137,12 @@ public:
 	template<class T>
 	static TPointer<T> GetConfig();
 	
+	std::string GetName() const { return ConfigName; }
+	
+	const TArray<ConfigVariable>& GetVariables() const { return Variables; }
+	
 protected:
+	std::string ConfigName;
 	/* Relative to the configs directory */
 	std::string ConfigPath;
 	

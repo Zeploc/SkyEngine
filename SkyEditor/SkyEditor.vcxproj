@@ -136,6 +136,7 @@
     <ClInclude Include="Editor\EditorLogManager.h" />
     <ClInclude Include="Editor\EditorViewportCanvas.h" />
     <ClInclude Include="Editor\Scene\EditorScene.h" />
+    <ClInclude Include="Editor\UI\ConfigSettingsPanel.h" />
     <ClInclude Include="Editor\UI\ConsoleLog.h" />
     <ClInclude Include="Editor\UI\ContentBrowser.h" />
     <ClInclude Include="Editor\UI\EntityPropertiesPanel.h" />
@@ -152,6 +153,7 @@
     <ClCompile Include="Editor\EditorLogManager.cpp" />
     <ClCompile Include="Editor\EditorViewportCanvas.cpp" />
     <ClCompile Include="Editor\Scene\EditorScene.cpp" />
+    <ClCompile Include="Editor\UI\ConfigSettingsPanel.cpp" />
     <ClCompile Include="Editor\UI\ConsoleLog.cpp" />
     <ClCompile Include="Editor\UI\ContentBrowser.cpp" />
     <ClCompile Include="Editor\UI\EntityPropertiesPanel.cpp" />

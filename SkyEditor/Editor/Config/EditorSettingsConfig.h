@@ -16,6 +16,6 @@ public:
 	DeclareConfigVector2(Resolution, SVector2(1920, 1080))
 	
 protected:
-	inline static std::string EditorSettingsPath = "EditorSettings";
+	inline static std::string EditorSettingsName = "EditorSettings";
 
 };

@@ -17,6 +17,6 @@ public:
 	DeclareConfigVector2(DefaultResolution, SVector2(1920, 1080))
 	
 protected:
-	inline static std::string ProjectSettingsPath = "ProjectSettings";
+	inline static std::string ProjectSettingsName = "ProjectSettings";
 
 };

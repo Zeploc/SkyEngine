@@ -31,6 +31,7 @@
 #include "Core/StringUtils.h"
 #include "Core/Asset/Asset.h"
 #include "Editor/Config/EditorSettingsConfig.h"
+#include "Editor/UI/ConfigSettingsPanel.h"
 #include "Editor/UI/ContentBrowser.h"
 #include "Platform/PlatformInterface.h"
 #include "Platform/Config/ProjectSettingsConfig.h"
@@ -90,7 +91,6 @@ bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 	Lighting::SetLightPosition({5, 5, 5});
 	Lighting::SetSunDirection({3, -1, 5});
 	WindowName = "Sky Editor: " + CProjectSettingsConfig::Get()->ProjectName;
-	CProjectSettingsConfig::Get()->SaveConfig();
 	ApplicationWindow->SetWindowTitle(WindowName + " - Untitled");
 
 	TPointer<CLayerInfoWidget> LayerInfoWidget = std::make_shared<CLayerInfoWidget>();
@@ -109,6 +109,9 @@ bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 	
 	CContentBrowser* ContentBrowser = new CContentBrowser(ApplicationWindow);
 	ApplicationWindow->PushLayer(ContentBrowser);
+	
+	CConfigSettingsPanel* EditorSettingsPanel = new CConfigSettingsPanel(ApplicationWindow, CEditorSettingsConfig::Get());
+	ApplicationWindow->PushLayer(EditorSettingsPanel);
 	
 	// Needed to be in this project to have context global variable
 	ImGui::SetCurrentContext(ApplicationWindow->GetCanvasManager().GetGuiContext());
@@ -215,6 +218,26 @@ void EditorApplication::MainMenuBar()
 			if (ImGui::MenuItem("Save Scene As", "CTRL+SHIFT+S"))
 			{
 				SaveScene(true);
+			}
+			ImGui::Separator();
+			if (ImGui::MenuItem("Editor Settings", ""))
+			{
+				const std::string ConfigPanelName = "Config: " + CEditorSettingsConfig::Get()->GetName();
+				ImGui::FocusWindow(ImGui::FindWindowByName(ConfigPanelName.c_str()));
+			}
+			if (ImGui::MenuItem("Project Settings", ""))
+			{
+				const std::string ConfigPanelName = "Config: " + CProjectSettingsConfig::Get()->GetName();
+				ImGuiWindow* FoundWindow = ImGui::FindWindowByName(ConfigPanelName.c_str());
+				if (!FoundWindow)
+				{
+					CConfigSettingsPanel* ProjectSettingsPanel = new CConfigSettingsPanel(ApplicationWindow, CProjectSettingsConfig::Get());
+					ApplicationWindow->PushLayer(ProjectSettingsPanel);
+				}
+				else
+				{
+					ImGui::FocusWindow(FoundWindow);
+				}	
 			}
 			ImGui::EndMenu();
 		}

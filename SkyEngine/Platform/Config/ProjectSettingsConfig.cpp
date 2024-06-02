@@ -4,7 +4,7 @@
 #include "ProjectSettingsConfig.h"
 
 CProjectSettingsConfig::CProjectSettingsConfig()
-	: CConfig(ProjectSettingsPath)
+	: CConfig(ProjectSettingsName)
 {
 	DefineConfigVariable(GraphicsMode);
 	DefineConfigVariable(ProjectName);

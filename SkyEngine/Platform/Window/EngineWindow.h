@@ -50,6 +50,8 @@ public:
 	void SubscribeEventListener(IEventListener* NewEventListener);
 	void PushLayer(CCanvas* InLayer);
 	void PushOverlay(CCanvas* InLayer);
+	template<class T>
+	T* GetCanvas();
 
 	// TODO: Pass in window in delegate
 	FMulticastDelegate OnFocusChangedDelete;	
@@ -84,3 +86,16 @@ protected:
 	CCanvasManager CanvasManager;
 	std::vector<IEventListener*> EventListeners;
 };
+
+template <class T>
+T* CEngineWindow::GetCanvas()
+{
+	for (CCanvas* Canvas : CanvasManager)
+	{
+		if (T* FoundCanvas = dynamic_cast<T*>(Canvas))
+		{
+			return FoundCanvas;
+		}
+	}
+	return nullptr;
+}
