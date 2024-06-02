@@ -13,6 +13,8 @@ CSceneOutliner::CSceneOutliner(TWeakPointer<CEngineWindow> InOwningWindow)
 	// TODO: Remove once redundant
 	StartingSize = {430, 450};
     EditorScene = SceneManager::GetInstance()->GetCurrentScene();
+	// TODO: Make button to open and remove
+	bCanClose = false;
 }
 
 void CSceneOutliner::OnRender()

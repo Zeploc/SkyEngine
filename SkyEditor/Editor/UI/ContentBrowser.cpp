@@ -8,6 +8,8 @@
 CContentBrowser::CContentBrowser(const TWeakPointer<CEngineWindow>& InOwningWindow): CUICanvas(InOwningWindow, "Content Browser")
 {
 	StartingSize = {800, 300};
+	// TODO: Make button to open and remove
+	bCanClose = false;
 }
 
 void CContentBrowser::OnRender()

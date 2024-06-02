@@ -29,6 +29,8 @@ public:
 	inline const std::string& GetName() const { return CanvasName; }
 	TWeakPointer<CEngineWindow> GetOwningWindow() const { return OwningWindow; }
 
+	void Open() { bOpen = true; }
+
 protected:
 	virtual bool OnMouseButtonPressed(int MouseButton, int Mods);
 	virtual bool OnMouseButtonReleased(int MouseButton, int Mods);
@@ -48,6 +50,8 @@ protected:
 	std::string CanvasName;
 	
 	SVector2 StartingSize;
+	bool bOpen = true;
+	bool bCanClose = true;
 
 private:
 	virtual bool OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event);

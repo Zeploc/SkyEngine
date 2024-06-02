@@ -185,7 +185,7 @@ bool CCanvasManager::OnMouseButtonPressedEvent(CMouseButtonPressedEvent& Event)
 	}
 
 	// Won't be hovered properly since mouse pos only updated in imgui when window is focused
-	CLogManager::Get()->DisplayMessage(std::format("wants capture: {}", ImGui::GetIO().WantCaptureMouse));
+	//CLogManager::Get()->DisplayMessage(std::format("wants capture: {}", ImGui::GetIO().WantCaptureMouse));
 
 	// if (!ImGui::GetIO().WantCaptureMouse)
 	// {

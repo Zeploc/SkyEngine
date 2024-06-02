@@ -17,6 +17,8 @@ CEntityPropertiesPanel::CEntityPropertiesPanel(TWeakPointer<CEngineWindow> InOwn
     : CUICanvas(InOwningWindow, "Entity: Property editor")
 {
 	StartingSize = {430, 450};
+	// TODO: Make button to open and remove
+	bCanClose = false;
 }
 
 void CEntityPropertiesPanel::OnRender()

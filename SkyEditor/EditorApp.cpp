@@ -110,7 +110,7 @@ bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 	CContentBrowser* ContentBrowser = new CContentBrowser(ApplicationWindow);
 	ApplicationWindow->PushLayer(ContentBrowser);
 	
-	CConfigSettingsPanel* EditorSettingsPanel = new CConfigSettingsPanel(ApplicationWindow, CEditorSettingsConfig::Get());
+	EditorSettingsPanel = new CConfigSettingsPanel(ApplicationWindow, CEditorSettingsConfig::Get());
 	ApplicationWindow->PushLayer(EditorSettingsPanel);
 	
 	// Needed to be in this project to have context global variable
@@ -222,21 +222,20 @@ void EditorApplication::MainMenuBar()
 			ImGui::Separator();
 			if (ImGui::MenuItem("Editor Settings", ""))
 			{
-				const std::string ConfigPanelName = "Config: " + CEditorSettingsConfig::Get()->GetName();
-				ImGui::FocusWindow(ImGui::FindWindowByName(ConfigPanelName.c_str()));
+				EditorSettingsPanel->Open();
+				ImGui::FocusWindow(ImGui::FindWindowByName(EditorSettingsPanel->GetName().c_str()));
 			}
 			if (ImGui::MenuItem("Project Settings", ""))
 			{
-				const std::string ConfigPanelName = "Config: " + CProjectSettingsConfig::Get()->GetName();
-				ImGuiWindow* FoundWindow = ImGui::FindWindowByName(ConfigPanelName.c_str());
-				if (!FoundWindow)
+				if (!ProjectSettingsPanel)
 				{
-					CConfigSettingsPanel* ProjectSettingsPanel = new CConfigSettingsPanel(ApplicationWindow, CProjectSettingsConfig::Get());
+					ProjectSettingsPanel = new CConfigSettingsPanel(ApplicationWindow, CProjectSettingsConfig::Get());
 					ApplicationWindow->PushLayer(ProjectSettingsPanel);
 				}
 				else
 				{
-					ImGui::FocusWindow(FoundWindow);
+					ProjectSettingsPanel->Open();
+					ImGui::FocusWindow(ImGui::FindWindowByName(ProjectSettingsPanel->GetName().c_str()));
 				}	
 			}
 			ImGui::EndMenu();

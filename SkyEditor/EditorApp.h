@@ -4,6 +4,7 @@
 #include "Core/Application.h"
 #include "Core/Core.h"
 
+class CConfigSettingsPanel;
 class CKeyPressedEvent;
 class CEditorViewportCanvas;
 class CConsoleLog;
@@ -47,6 +48,8 @@ public:
 	unsigned int DockSpaceID = 0;
 	
 	CEditorViewportCanvas* EditorViewportLayer;
+	CConfigSettingsPanel* ProjectSettingsPanel = nullptr;
+	CConfigSettingsPanel* EditorSettingsPanel = nullptr;
 
 	std::string ScenePath;
 	std::string ContentPath;

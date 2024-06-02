@@ -38,6 +38,10 @@ void CCanvas::OnEvent(CEvent& Event)
 
 void CCanvas::Render()
 {
+	if (!bOpen && bCanClose)
+	{
+		return;
+	}
 	if (!PreRender())
 	{
 		ImGui::End();
@@ -50,7 +54,6 @@ void CCanvas::Render()
 
 bool CCanvas::PreRender()
 {
-	static bool bOpen = true;
 	ImGui::SetNextWindowSize(ImVec2(StartingSize.X,StartingSize.Y), ImGuiCond_FirstUseEver);
 	if (!ImGui::Begin(CanvasName.c_str(), &bOpen))
 	{

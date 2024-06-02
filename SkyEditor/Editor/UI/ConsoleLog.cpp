@@ -7,6 +7,8 @@ CConsoleLog::CConsoleLog(TWeakPointer<CEngineWindow> InOwningWindow)
 {
 	StartingSize = {500, 400};
 	// TODO: Get existing log items and add to initial
+	// TODO: Make button to open and remove
+	bCanClose = false;
 }
 
 void CConsoleLog::Clear()
