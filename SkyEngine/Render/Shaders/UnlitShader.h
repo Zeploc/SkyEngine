@@ -13,22 +13,16 @@ class ENGINE_API CUnlitShader : public CShader
 public:
 	CUnlitShader();
 	static std::string GetStaticName();
-	bool CompileShader() override;
 	
-	struct ShaderParameters
-	{
-		DefineShaderVector4Param(DiffuseColour, SVector4(1.0f))
-		DefineShaderTextureParam(DiffuseTexture, nullptr)
-	};
-	
-	ShaderParameters Params;
-	void BindShader() override;
-	void UploadMaterialParameters(const ShaderParameters& InParams);
+	BeginShaderParams()
+		DefineShaderParameter(DiffuseColour);
+		DefineShaderParameter(DiffuseTexture);
+	ListShaderVariables()	
+		SVector4 DiffuseColour = SVector4(1.0f);
+		TPointer<CTexture> DiffuseTexture = nullptr;
+	EndShaderParams()
 
 	bool HasTexture(const ShaderParameters& InParams);
-	
-	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const ShaderParameters& InShaderParameters);
-	ENGINE_API friend std::istream& operator>>(std::istream& is, ShaderParameters& InShaderParameters);
 };
 
 using CMaterial_Unlit = TMaterial<CUnlitShader>;

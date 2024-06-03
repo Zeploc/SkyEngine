@@ -13,16 +13,16 @@
 class CTexture;
 class CShader;
 
-enum class EAttributeType
-{
-	None,
-	Boolean,
-	Integer,
-	Number,
-	Vector3,
-	Vector4,
-	Texture
-};
+// enum class EAttributeType
+// {
+// 	None,
+// 	Boolean,
+// 	Integer,
+// 	Number,
+// 	Vector3,
+// 	Vector4,
+// 	Texture
+// };
 
 template <class S = CShader>
 class TMaterial : public CMaterialInterface
@@ -79,7 +79,7 @@ void TMaterial<S>::BindMaterial()
 {
 	CMaterialInterface::BindMaterial();
 	TPointer<S> TypedShader = std::static_pointer_cast<S>(GetRenderer()->ActiveShader);
-	TypedShader->UploadMaterialParameters(Params);
+	Params.UploadMaterialParameters();
 }
 
 template <class S>
@@ -125,6 +125,7 @@ TMaterial<S>::TMaterial(std::string InMaterialName)
 {
 	MaterialName = InMaterialName;
 	Shader = ShaderManager::GetShader<S>();
+	Params.InitializeMaterialParameters(Shader);
 	// TODO: Read from material path
 	// Convert to values and store
 	// Get shader from material file and store pointer
@@ -144,6 +145,7 @@ TMaterial<S>::TMaterial(std::string InMaterialName, const TPointer<S> InShader)
 {
 	MaterialName = InMaterialName;
 	Shader = InShader;
+	Params.InitializeMaterialParameters(Shader);
 	// MaterialAttributes = Shader->GetShaderAttributes();
 }
 

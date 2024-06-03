@@ -14,18 +14,18 @@ public:
 	
 	using CShader::CShader;
 	
-	struct ShaderParameters
-	{
-		DefineShaderVector4Param(DiffuseColour, SVector4(1.0f))
-		DefineShaderTextureParam(DiffuseTexture, nullptr)
-		DefineShaderFloatParam(SpecularStrength, 1.0f)
-		DefineShaderFloatParam(Shininess, 32.0f)
-	};
-
-	friend std::ostream& operator<<(std::ostream& os, const ShaderParameters& InShaderParameters);
-	friend std::istream& operator>>(std::istream& is, ShaderParameters& InShaderParameters);
+	BeginShaderParams()
+		DefineShaderParameter(DiffuseColour);
+		DefineShaderParameter(DiffuseTexture);
+		DefineShaderParameter(SpecularStrength);
+		DefineShaderParameter(Shininess);
+	ListShaderVariables()
+		SVector4 DiffuseColour = SVector4(1.0f);
+		TPointer<CTexture> DiffuseTexture = nullptr;
+		float SpecularStrength = 1.0f;
+		float Shininess = 32.0f;
+	EndShaderParams()
 	
 	// TODO: place holder, remove
 	bool HasTexture(const ShaderParameters& InParams);
-	void UploadMaterialParameters(const ShaderParameters& InParams);
 };

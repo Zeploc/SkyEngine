@@ -179,10 +179,12 @@ void EditorApplication::SetupConfigs()
 	Application::SetupConfigs();
 	
 	CConfig::RegisterConfig<CEditorSettingsConfig>();
-	LogManager->DisplayMessage("Resolution: " + CProjectSettingsConfig::Get()->DefaultResolution.ToString()); 
-	LogManager->DisplayMessage("Graphics Mode: " + std::to_string(CProjectSettingsConfig::Get()->GraphicsMode));
-	MainWindowSize = TVector2<int>(CEditorSettingsConfig::Get()->Resolution);
-	GraphicsApiType = (EGraphicsAPI)CEditorSettingsConfig::Get()->GraphicsMode;
+	const TPointer<CProjectSettingsConfig> ProjectSettings = CProjectSettingsConfig::Get();
+	const TPointer<CEditorSettingsConfig> EditorSettings = CEditorSettingsConfig::Get();
+	LogManager->DisplayMessage("Resolution: " + ProjectSettings->DefaultResolution.ToString()); 
+	LogManager->DisplayMessage("Graphics Mode: " + std::to_string(ProjectSettings->GraphicsMode));
+	MainWindowSize = TVector2<int>(EditorSettings->Resolution);
+	GraphicsApiType = (EGraphicsAPI)EditorSettings->GraphicsMode;
 }
 
 void EditorApplication::SetupLogManager()

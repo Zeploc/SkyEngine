@@ -10,8 +10,8 @@ CConfigSettingsPanel::CConfigSettingsPanel(TWeakPointer<CEngineWindow> InOwningW
 
 void CConfigSettingsPanel::OnRender()
 {
-	TArray<ConfigVariable> ConfigVariables = Config->GetVariables();
-	for (ConfigVariable ConfigVariable : ConfigVariables)
+	TArray<SConfigVariable> ConfigVariables = Config->GetVariables();
+	for (SConfigVariable ConfigVariable : ConfigVariables)
 	{
 		RenderVariableField(ConfigVariable);
 	}
@@ -30,7 +30,7 @@ void CConfigSettingsPanel::OnRender()
 	// TODO: Later open config file
 }
 
-void CConfigSettingsPanel::RenderVariableField(ConfigVariable ConfigVariable)
+void CConfigSettingsPanel::RenderVariableField(SConfigVariable ConfigVariable)
 {
 	switch (ConfigVariable.Type)
 	{

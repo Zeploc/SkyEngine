@@ -166,6 +166,7 @@
     <ClInclude Include="Core\EntryPoint.h" />
     <ClInclude Include="Core\EventListener.h" />
     <ClInclude Include="Core\Object.h" />
+    <ClInclude Include="Core\SerializableVariable.h" />
     <ClInclude Include="Core\StringUtils.h" />
     <ClInclude Include="Core\WorldManager.h" />
     <ClInclude Include="Dependencies\ImGuizmo\ImGuizmo.h" />
@@ -278,6 +279,7 @@
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Core\EventListener.cpp" />
     <ClCompile Include="Core\Object.cpp" />
+    <ClCompile Include="Core\SerializableVariable.cpp" />
     <ClCompile Include="Core\StringUtils.cpp" />
     <ClCompile Include="Core\WorldManager.cpp" />
     <ClCompile Include="Dependencies\ImGuizmo\ImGuizmo.cpp">

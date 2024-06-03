@@ -4,6 +4,7 @@
 
 #include "Core/Core.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
 
 #include "Math/MathDefinitions.h"
 
@@ -104,7 +105,7 @@ struct TVector4 : glm::tvec4<T, glm::highp>
 		printf("(%.02f, %.02f, %.02f, %.02f)", X, Y, Z, W);
 	}
 
-friend std::ostream& operator<<(std::ostream& os, const TVector4<T>& InVector)
+	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const TVector4<T>& InVector)
 	{
 		// TODO: Improve to not use to string
 		os << "(";
@@ -115,7 +116,7 @@ friend std::ostream& operator<<(std::ostream& os, const TVector4<T>& InVector)
 		os << ")";
 		return os;
 	}
-	friend std::istream& operator>>(std::istream& is, TVector4<T>& OutVector)
+	ENGINE_API friend std::istream& operator>>(std::istream& is, TVector4<T>& OutVector)
 	{
 		std::string Empty;
 		// TODO: Improve bracket removal

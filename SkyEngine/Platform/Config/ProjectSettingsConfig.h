@@ -11,10 +11,10 @@ public:
 	CProjectSettingsConfig();
 
 	static TPointer<CProjectSettingsConfig> Get();
-	
-	DeclareConfigInteger(GraphicsMode, 0)
-	DeclareConfigString(ProjectName, "Sandbox_Project")
-	DeclareConfigVector2(DefaultResolution, SVector2(1920, 1080))
+
+	int GraphicsMode = 0;
+	std::string ProjectName = "Sandbox_Project";
+	SVector2 DefaultResolution =  SVector2(1920, 1080);
 	
 protected:
 	inline static std::string ProjectSettingsName = "ProjectSettings";

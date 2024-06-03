@@ -11,9 +11,9 @@ public:
 	CEditorSettingsConfig();
 
 	static TPointer<CEditorSettingsConfig> Get();
-	
-	DeclareConfigInteger(GraphicsMode, 0)
-	DeclareConfigVector2(Resolution, SVector2(1920, 1080))
+
+	int GraphicsMode = 0;
+	SVector2 Resolution = SVector2(1920, 1080);
 	
 protected:
 	inline static std::string EditorSettingsName = "EditorSettings";

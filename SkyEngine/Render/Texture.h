@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Core/Core.h"
+
 class CTexture
 {
 public:
@@ -39,6 +41,16 @@ public:
 		return TextureID;
 	}
 	
+	friend std::ostream& operator<<(std::ostream& os, const TPointer<CTexture>& InTexture)
+	{
+		os << InTexture->Path;
+		return os;
+	}
+	friend std::istream& operator>>(std::istream& is, TPointer<CTexture>& OutTexture)
+	{
+		is >> OutTexture->Path;
+		return is;
+	}
 
 protected:
 	

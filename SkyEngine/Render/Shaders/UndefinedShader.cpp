@@ -17,17 +17,3 @@ bool CUndefinedShader::HasTexture(const ShaderParameters& InParams)
 {
 	return false;
 }
-
-void CUndefinedShader::UploadMaterialParameters(const ShaderParameters& InParams)
-{
-}
-
-std::ostream& operator<<(std::ostream& os, const CUndefinedShader::ShaderParameters& InShaderParameters)
-{
-	return os;
-}
-
-std::istream& operator>>(std::istream& is, CUndefinedShader::ShaderParameters& InShaderParameters)
-{
-	return is;
-}

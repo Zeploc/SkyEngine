@@ -21,11 +21,10 @@ std::string CConfig::GetAbsoluteConfigPath() const
 void CConfig::SerializeVariables(std::ostream& os) const
 {
 	std::string Section = "Default";
-	for (ConfigVariable Variable : Variables)
+	for (SConfigVariable Variable : Variables)
 	{
-		std::stringstream ss;
-		Variable.SerializeVariable(ss);
-		WritePrivateProfileStringA(Section.c_str(), Variable.VariableName.c_str(), ss.str().c_str(), GetAbsoluteConfigPath().c_str());
+		std::string String = Variable.GetSerializedVariable();
+		WritePrivateProfileStringA(Section.c_str(), Variable.VariableName.c_str(), String.c_str(), GetAbsoluteConfigPath().c_str());
 
 		Variable.SerializeVariable(os);
 	}
@@ -34,7 +33,7 @@ void CConfig::SerializeVariables(std::ostream& os) const
 void CConfig::DeserializeVariables(std::istream& is)
 {
 	std::string Section = "Default";
-	for (ConfigVariable Variable : Variables)
+	for (SConfigVariable Variable : Variables)
 	{
 		char sResult[256] = {};
 		DWORD ResultSize = GetPrivateProfileStringA(Section.c_str(), Variable.VariableName.c_str(), std::string().c_str(), sResult, 255, GetAbsoluteConfigPath().c_str());
@@ -42,7 +41,7 @@ void CConfig::DeserializeVariables(std::istream& is)
 		if (ResultSize > 0)
 		{
 			std::stringstream ss(sResult);
-			Variable.DeserializeVariable(ss);
+			Variable.SetDeserializedVariable(ss);
 		}
 	}
 }

@@ -42,8 +42,13 @@ void main(void)
 	// Diffuse Coloring
 	float diffuseStr = max(dot(Normal, -LightDirection), 0.0f);
 	vec3 diffuse = diffuseStr * LightColour;
-	
-	if (bHasDiffuseTexture == 1) 
+
+	bool bLightingOnly = false; 
+	if (bLightingOnly)
+	{
+	    color = vec4(ambient + diffuse + specular, 1.0f);
+	}
+	else if (bHasDiffuseTexture == 1)
 	{
 	    color = vec4(ambient + diffuse + specular, 1.0f) * texture(DiffuseTexture, PixelTextureCoord) * PixelColor;
 	}

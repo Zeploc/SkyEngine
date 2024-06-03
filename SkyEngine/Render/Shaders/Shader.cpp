@@ -6,6 +6,44 @@
 #include "Core/Application.h"
 #include "Render/Materials/Material.h"
 
+void BaseShaderParameters::UploadMaterialParameters()
+{
+	for (const SShaderParameter& ShaderParameter : ShaderVariables)
+	{
+		const int32_t UniformLocation = ShaderParameter.Location;
+		switch (ShaderParameter.Type)
+		{
+		case EVariableType::Boolean:
+			GetGraphicsAPI()->PassAttributeToShader(UniformLocation, *ShaderParameter.Boolean);
+			break;
+		// case EVariableType::String:
+		// 	GetGraphicsAPI()->PassAttributeToShader(UniformLocation, *ShaderParameter.String);
+			break;
+		case EVariableType::Number:
+			GetGraphicsAPI()->PassAttributeToShader(UniformLocation, *ShaderParameter.Number);
+			break;
+		case EVariableType::Integer:
+			GetGraphicsAPI()->PassAttributeToShader(UniformLocation, *ShaderParameter.Integer);
+			break;
+		// case EVariableType::Vector2:
+		// 	GetGraphicsAPI()->PassAttributeToShader(UniformLocation, *ShaderParameter.Vector2);
+			break;
+		case EVariableType::Vector4:
+			GetGraphicsAPI()->PassAttributeToShader(UniformLocation, *ShaderParameter.Vector4);
+			break;
+		case EVariableType::Texture:
+			{
+				GetGraphicsAPI()->PassAttributeToShader(UniformLocation, *ShaderParameter.Texture);
+				const bool bHasTexture = (*ShaderParameter.Texture) != nullptr;
+				const int32_t Location = Shader->GetHasTextureUniformLocation(ShaderParameter.VariableName);
+				GetGraphicsAPI()->PassAttributeToShader(Location, bHasTexture);
+			}
+			break;
+		default: ;
+		}
+	}
+}
+
 CShader::CShader(const std::string& InShaderName, const std::string& InVertexShaderPath, const std::string& InFragmentShaderPath)
 {
 	ShaderName = InShaderName;
@@ -31,18 +69,84 @@ void CShader::SetTessShader(const std::string& InTessControlShaderPath, const st
 	TessEvalShaderPath = InTessEvalShaderPath;
 }
 
+int32_t CShader::GetUniformLocation(const std::string& VariableName)
+{
+	const TArray<SShaderParameter>& ShaderParameters = GetShaderVariables();
+	for (const SShaderParameter& ShaderParameter : ShaderParameters)
+	{
+		if (ShaderParameter.VariableName == VariableName)
+		{
+			return ShaderParameter.Location;
+		}
+	}
+	// If fails to find location and not setting up, means a material failed to get an expected uniform
+	ensure(bSettingUpUniformLocations, "Failed to find shader uniform for %s in %s", VariableName, GetShaderName());
+	return -1;
+}
+
+int32_t CShader::GetHasTextureUniformLocation(const std::string& VariableName)
+{
+	if (!HasTextureUniformLocations.contains(VariableName))
+	{
+		return -1;
+	}
+	return HasTextureUniformLocations[VariableName];
+}
+
 bool CShader::CompileShader()
 {
+	bool bProgramCreationSuccessful;
 	if (!ComputeShaderPath.empty())
 	{
-		 return GetGraphicsAPI()->CreateComputeProgram(ShaderProgram,ComputeShaderPath.c_str());
+		 bProgramCreationSuccessful = GetGraphicsAPI()->CreateComputeProgram(ShaderProgram,ComputeShaderPath.c_str());
 	}
-	if (!TessControlShaderPath.empty())
+	else if (!TessControlShaderPath.empty())
 	{
-		 return GetGraphicsAPI()->CreateTessProgram(ShaderProgram, VertexShaderPath.c_str(), FragmentShaderPath.c_str(), TessControlShaderPath.c_str(),TessEvalShaderPath.c_str());
+		 bProgramCreationSuccessful = GetGraphicsAPI()->CreateTessProgram(ShaderProgram, VertexShaderPath.c_str(), FragmentShaderPath.c_str(), TessControlShaderPath.c_str(),TessEvalShaderPath.c_str());
+	}
+	else
+	{
+		bProgramCreationSuccessful=  GetGraphicsAPI()->CreateShaderProgram(ShaderProgram, VertexShaderPath.c_str(), FragmentShaderPath.c_str(),GeometryShaderPath.c_str());
+	}
+	if (!bProgramCreationSuccessful)
+	{
+		return false;
 	}
 
-	return GetGraphicsAPI()->CreateShaderProgram(ShaderProgram, VertexShaderPath.c_str(), FragmentShaderPath.c_str(),GeometryShaderPath.c_str());
+	bSettingUpUniformLocations = true;
+	InitializeShaderVariables();
+	TArray<SShaderParameter>& ShaderParameters = GetShaderVariables();
+	for (SShaderParameter& ShaderParameter : ShaderParameters)
+	{
+		ShaderParameter.Location = GetAttributeLocation(ShaderParameter.VariableName);
+		if (ShaderParameter.Type == EVariableType::Texture)
+		{			
+			std::string LocationName = std::string("bHas") + ShaderParameter.VariableName;
+			int32_t HasTextureLocation = GetAttributeLocation(LocationName);
+			HasTextureUniformLocations.insert(std::pair(ShaderParameter.VariableName, HasTextureLocation));
+		}
+	}
+	bSettingUpUniformLocations = false;
+	return true;
+}
+
+std::ostream& operator<<(std::ostream& os, const BaseShaderParameters& InMaterialParameters)
+{
+	for (const SShaderParameter& MaterialParameter : InMaterialParameters.ShaderVariables)
+	{
+		MaterialParameter.SerializeVariable(os);
+	}
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, BaseShaderParameters& InMaterialParameters)
+{
+	for (SShaderParameter& MaterialParameter : InMaterialParameters.ShaderVariables)
+	{
+		// Will overwrite name that is already set from InitializeMaterialParameters() - If this is unwanted DeserializeVariable can be overrridden
+		MaterialParameter.DeserializeVariable(is);
+	}
+	return is;
 }
 
 void CShader::BindMaterial(TPointer<CMaterialInterface> InMaterial)

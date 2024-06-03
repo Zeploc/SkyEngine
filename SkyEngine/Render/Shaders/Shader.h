@@ -5,16 +5,35 @@
 #include "Core/Core.h"
 
 #include "Core/Application.h"
+#include "Core/SerializableVariable.h"
 #include "Render/Texture.h"
 // #include "Render/Materials/MaterialType.h"
 // #include "Render/Materials/Material.h"
 
 class CMaterialInterface;
 
+struct SShaderParameter : public SSerializableVariable
+{
+	using SSerializableVariable::SSerializableVariable;
+	
+	int32_t Location = -1;
+};
+
 // TODO: STDL warnings with exporting class with vector
 #pragma warning (disable : 4251)
 
-class ENGINE_API CShader 
+struct ENGINE_API BaseShaderParameters
+{
+	TArray<SShaderParameter> ShaderVariables;	
+	
+	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const BaseShaderParameters& InMaterialParameters);
+	ENGINE_API friend std::istream& operator>>(std::istream& is, BaseShaderParameters& InMaterialParameters);
+	void UploadMaterialParameters();
+protected:
+	TPointer<CShader> Shader;
+};
+
+class ENGINE_API CShader : public std::enable_shared_from_this<CShader>
 {
 	// TODO: static assert for shader params
 	// static_assert(ShaderParameters::value, "Must have shader parameters");
@@ -26,7 +45,12 @@ public:
 	CShader(const std::string& InShaderName, const std::string& InComputeShaderPath);
 	void SetGeometryShader(const std::string& InGeometryShaderPath);
 	void SetTessShader(const std::string& InTessControlShaderPath, const std::string& InTessEvalShaderPath);
-
+	
+	virtual void InitializeShaderVariables() = 0;
+	virtual TArray<SShaderParameter>& GetShaderVariables() = 0;
+	
+	int32_t GetUniformLocation(const std::string& VariableName);
+	int32_t GetHasTextureUniformLocation(const std::string& VariableName);
 	virtual bool CompileShader();
 	void BindMaterial(TPointer<CMaterialInterface> InMaterial);
 	virtual void BindShader();
@@ -61,62 +85,39 @@ protected:
 	std::string ShaderName;
 	uint32_t ShaderProgram;
 
+	std::map<std::string, int32_t> HasTextureUniformLocations;
 	// std::map<std::string, MaterialAttribute> ShaderAttributes;
-	// std::map<std::string, int32_t> UniformLocations;
+	//std::map<std::string, int32_t> UniformLocations;
+	// TODO: Improve logic to not need this
+	bool bSettingUpUniformLocations = false;
 };
 
-#define DefineShaderFloatParam(ParamName, DefaultValue)\
-	float ParamName = DefaultValue;\
-	int32_t ParamName##Location = -1;\
-	std::string ParamName##Name = #ParamName;\
-	void Serialize##ParamName(std::ostream& os) const\
-	{\
-		os << ParamName##Name << std::string(" ") << std::to_string(ParamName) << std::string(" ");\
-	}\
-	void Deserialize##ParamName(std::istream& is)\
-	{\
-		std::string FoundFloat;\
-		is >> ParamName##Name >> FoundFloat;\
-		ParamName = std::stof(FoundFloat);\
-	}\
+#define DefineShaderParameter(VariableName)\
+SShaderParameter VariableName##Parameter(std::string(#VariableName), &VariableName);\
+VariableName##Parameter.Location = Shader->GetUniformLocation(std::string(#VariableName));\
+ShaderVariables.push_back(VariableName##Parameter)
 
-#define DefineShaderVector4Param(ParamName, DefaultValue)\
-	SVector4 ParamName = DefaultValue;\
-	int32_t ParamName##Location = -1;\
-	std::string ParamName##Name = #ParamName;\
-	void Serialize##ParamName(std::ostream& os) const\
-    {\
-    	os << ParamName##Name << std::string(" ") << ParamName << std::string(" ");\
-    }\
-    void Deserialize##ParamName(std::istream& is)\
-    {\
-    	is >> ParamName##Name >> ParamName;\
-    }\
-
-#define DefineShaderTextureParam(ParamName, DefaultValue)\
-	TPointer<CTexture> ParamName = DefaultValue;\
-	int32_t ParamName##Location = -1;\
-	int32_t Has##ParamName##Location = -1;\
-	std::string ParamName##Name = #ParamName;\
-	void Serialize##ParamName(std::ostream& os) const\
+#define BeginShaderParams()\
+struct ShaderParameters : BaseShaderParameters\
+{\
+	void InitializeMaterialParameters(const TPointer<CShader>& InShader)\
 	{\
-		std::string TexturePath = "None";\
-		if (ParamName)\
-		{\
-			TexturePath = ParamName->Path;\
-		}\
-		os << ParamName##Name << std::string(" ") << TexturePath << std::string(" ");\
-    }\
-    void Deserialize##ParamName(std::istream& is)\
-    {\
-		std::string TexturePath;\
-        is >> ParamName##Name >> TexturePath;\
-        if (TexturePath != "None")\
-        {\
-			ParamName = GetGraphicsAPI()->GetTexture(TexturePath);\
-		}\
-    }\
+		Shader = InShader;
 
+#define ListShaderVariables()\
+	}
+
+#define EndShaderParams()\
+};\
+ShaderParameters Params;\
+virtual void InitializeShaderVariables() override\
+{\
+	Params.InitializeMaterialParameters(shared_from_this());\
+}\
+virtual TArray<SShaderParameter>& GetShaderVariables() override\
+{\
+	return Params.ShaderVariables;\
+}
 
 /* We want to reduce switching shaders as much as we can, so we will create a shader program for the base shader from file
  * When we want to render multiple materials, we will batch all objects that use that material together, switch to this shader program, then
