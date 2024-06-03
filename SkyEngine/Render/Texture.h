@@ -40,7 +40,7 @@ public:
 	{
 		return TextureID;
 	}
-	
+
 	friend std::ostream& operator<<(std::ostream& os, const TPointer<CTexture>& InTexture)
 	{
 		os << InTexture->Path;

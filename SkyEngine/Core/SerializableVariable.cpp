@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "Application.h"
+#include "Render/Texture.h"
 
 void SSerializableVariable::SerializeVariable(std::ostream& os) const
 {
@@ -45,16 +46,13 @@ std::string SSerializableVariable::GetSerializedVariable() const
 		}
 	case EVariableType::Texture:
 		{
-			if (Texture)
+			const TPointer<CTexture> TexturePointer = *Texture;
+			std::stringstream ss("None");
+			if (TexturePointer)
 			{
-				std::stringstream ss("None");
-				if (*Texture)
-				{
-					ss << *Texture;
-				}
-				return ss.str();
+				ss << TexturePointer;
 			}
-			return "";
+			return ss.str();
 		}
 	default: ;
 	}

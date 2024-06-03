@@ -96,10 +96,10 @@ void CAsset::Unload()
 	Object.reset();
 }
 
-void CAsset::Reload()
+TPointer<CObject> CAsset::Reload()
 {
 	Unload();
-	Load();
+	return Load();
 }
 
 bool CAsset::Save()

@@ -12,9 +12,11 @@ public:
 
 	TPointer<CObject> Load();
 	void Unload();
-	void Reload();
+	/* Unloads the asset and reloads from disk, returning new object*/
+	TPointer<CObject> Reload();
 	bool Save();
 	void SetDefaultObject(TPointer<CObject> NewObject);
+	TPointer<CObject> GetDefaultObject() const { return Object; }
 	void Open();
 	/* Clears the object link for this asset (Will load from file when load called again) */
 	void DisconnectObject();

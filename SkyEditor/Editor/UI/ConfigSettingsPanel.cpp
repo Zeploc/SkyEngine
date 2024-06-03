@@ -1,6 +1,11 @@
-﻿#include "ConfigSettingsPanel.h"
+﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
+
+#include "ConfigSettingsPanel.h"
+
+#include "Core/Application.h"
 #include "Platform/Config/Config.h"
 #include "Dependencies/ImGui/imgui.h"
+#include "Render/Texture.h"
 
 CConfigSettingsPanel::CConfigSettingsPanel(TWeakPointer<CEngineWindow> InOwningWindow, TPointer<CConfig> InConfig)
     : CUICanvas(InOwningWindow, "Config: " + InConfig->GetName()), Config((InConfig))
@@ -30,7 +35,7 @@ void CConfigSettingsPanel::OnRender()
 	// TODO: Later open config file
 }
 
-void CConfigSettingsPanel::RenderVariableField(SConfigVariable ConfigVariable)
+void CConfigSettingsPanel::RenderVariableField(SSerializableVariable ConfigVariable)
 {
 	switch (ConfigVariable.Type)
 	{
@@ -68,6 +73,33 @@ void CConfigSettingsPanel::RenderVariableField(SConfigVariable ConfigVariable)
 			ImGui::DragScalarN(ConfigVariable.VariableName.c_str(), ImGuiDataType_U32, Position, 2, 10.0f, nullptr, nullptr);
 			Vector->X = Position[0];
 			Vector->Y = Position[1];
+		}
+		break;
+	case EVariableType::Vector4:
+		{
+			SVector4* Vector = ConfigVariable.Vector4;
+        
+			float Position[4] = { Vector->X, Vector->Y, Vector->Z, Vector->W};
+			ImGui::DragScalarN(ConfigVariable.VariableName.c_str(), ImGuiDataType_Float, Position, 4, 0.1f, nullptr, nullptr);
+			Vector->X = Position[0];
+			Vector->Y = Position[1];
+			Vector->Z = Position[2];
+			Vector->W = Position[3];
+		}
+		break;
+	case EVariableType::Texture:
+		{
+			// TODO: Dropdown like material
+			char str0[128];
+			std::string TexturePath = "";
+			if (*ConfigVariable.Texture)
+			{
+				TexturePath = (*ConfigVariable.Texture)->Path;
+			}
+			sprintf_s(str0,"%s", TexturePath.c_str());
+			ImGui::InputText(ConfigVariable.VariableName.c_str(), str0, IM_ARRAYSIZE(str0));
+		
+			*ConfigVariable.Texture = GetGraphicsAPI()->GetTexture(str0);			
 		}
 		break;
 	default: ;

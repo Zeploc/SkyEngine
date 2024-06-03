@@ -51,6 +51,7 @@ public:
 	std::string GetAssetClassName() override;
 	TArray<std::string> GetMetaData() const override;
 	void OnLoaded() override;
+	virtual TArray<SShaderParameter>& GetMaterialVariables() override;
 
 	TPointer<S> Shader;
 protected:
@@ -118,6 +119,12 @@ template <class S>
 void TMaterial<S>::OnLoaded()
 {
 	GetMaterialManager()->AddMaterial(shared_from_this());
+}
+
+template <class S>
+TArray<SShaderParameter>& TMaterial<S>::GetMaterialVariables()
+{
+	return Params.ShaderVariables;
 }
 
 template <class S>

@@ -5,4 +5,5 @@
 class CShader;
 template<class S>
 class TMaterial;
+// Do not use directly, instead use material interface
 using CMaterial = TMaterial<CShader>;

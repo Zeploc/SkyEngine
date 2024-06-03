@@ -5,7 +5,7 @@
 #include "Canvas/UICanvas.h"
 
 class CConfig;
-struct SConfigVariable;
+struct SSerializableVariable;
 
 class CConfigSettingsPanel : public CUICanvas
 {
@@ -13,8 +13,8 @@ public:
 	CConfigSettingsPanel(TWeakPointer<CEngineWindow> InOwningWindow, TPointer<CConfig> InConfig);
 	virtual void OnRender() override;
 
+	static void RenderVariableField(SSerializableVariable ConfigVariable);
 protected:
-	void RenderVariableField(SConfigVariable ConfigVariable);
 	
 	TPointer<CConfig> Config;
 };

@@ -33,6 +33,7 @@
 #include "Editor/Config/EditorSettingsConfig.h"
 #include "Editor/UI/ConfigSettingsPanel.h"
 #include "Editor/UI/ContentBrowser.h"
+#include "Editor/UI/MaterialEditorPanel.h"
 #include "Platform/PlatformInterface.h"
 #include "Platform/Config/ProjectSettingsConfig.h"
 #include "Platform/File/FileManager.h"
@@ -109,6 +110,8 @@ bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 	
 	CContentBrowser* ContentBrowser = new CContentBrowser(ApplicationWindow);
 	ApplicationWindow->PushLayer(ContentBrowser);
+	CMaterialEditorPanel* MaterialEditorPanel = new CMaterialEditorPanel(ApplicationWindow);
+	ApplicationWindow->PushLayer(MaterialEditorPanel);
 	
 	EditorSettingsPanel = new CConfigSettingsPanel(ApplicationWindow, CEditorSettingsConfig::Get());
 	ApplicationWindow->PushLayer(EditorSettingsPanel);

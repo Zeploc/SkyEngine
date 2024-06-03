@@ -26,6 +26,7 @@ public:
 
 	// TODO: place holder, replace
 	virtual bool HasTexture() = 0;
+	virtual TArray<struct SShaderParameter>& GetMaterialVariables() = 0;
 
 	virtual TPointer<CShader> GetBaseShader() = 0;
 	virtual std::string GetMaterialName() const = 0;

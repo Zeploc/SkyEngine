@@ -2,8 +2,11 @@
 
 #include "imgui.h"
 #include "imgui_internal.h"
+#include "MaterialEditorPanel.h"
 #include "Core/Application.h"
 #include "Core/Asset/Asset.h"
+#include "Platform/Window/EngineWindow.h"
+#include "Render/Materials/Material.h"
 
 CContentBrowser::CContentBrowser(const TWeakPointer<CEngineWindow>& InOwningWindow): CUICanvas(InOwningWindow, "Content Browser")
 {
@@ -47,6 +50,12 @@ void CContentBrowser::OnRender()
 		if (ImGui::Button(std::format("{}\n{}", Asset->DisplayName, Asset->ClassName).c_str(), {65,90}))
 		{
 			Asset->Open();
+			// TODO: Determine structure for opening at a per asset basis without having editor code in engine...
+			TPointer<CMaterialInterface> Material = std::dynamic_pointer_cast<CMaterialInterface>(Asset->GetDefaultObject());
+			if (Material)
+			{
+				GetApplication()->GetApplicationWindow()->GetCanvas<CMaterialEditorPanel>()->SetMaterial(Material);
+			}
 		}
 		// ImGui::BeginChild(i + 100, ImVec2(65, 100), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 		//ImGui::ImageButton(Asset->DisplayName.c_str(), nullptr, ImVec2(60, 60));
