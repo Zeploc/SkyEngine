@@ -13,6 +13,7 @@
 #include "Render/Meshes/MeshManager.h"
 #include "Render/Meshes/Basic/Cube.h"
 #include "Render/Shaders/UnlitShader.h"
+#include "Render/Textures/Texture.h"
 
 // Static Variables //
 bool Button3DEntity::bButtonPressedThisFrame = false;
@@ -34,10 +35,10 @@ Button3DEntity::Button3DEntity(STransform _Transform, float fWidth, float fHeigh
 : Entity(_Transform, "Button 3D")
 {
 	// TODO: Link UI pointer and set colour?
-	TPointer<CTexture> ButtonTexture = GetGraphicsAPI()->GetTexture(Texturepath);
+	TPointer<CTexture> ButtonTexture = GetTextureManager()->FindTexture(Texturepath);
 	TPointer<CMaterial_Unlit> UIMaterial = std::make_shared<CMaterial_Unlit>("UIMaterial");
 	UIMaterial->Params.DiffuseColour = _Colour;
-	UIMaterial->Params.DiffuseTexture = ButtonTexture;
+	UIMaterial->Params.DiffuseTexture = ButtonTexture->Asset;
 	GetMaterialManager()->AddMaterial(UIMaterial);
 	TPointer<CMeshComponent> ButtonCubeMesh = std::make_shared<CMeshComponent>(shared_from_this(), MESH_CUBE, UIMaterial);
 	AddComponent(ButtonCubeMesh);

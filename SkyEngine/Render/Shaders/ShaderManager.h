@@ -8,7 +8,6 @@
 
 // Engine Includes //
 #include "Shader.h"
-#include "Render/Texture.h"
 #include "UI/Legacy/Text.h"
 // #include "Entity/2DParticleSystem.h"
 
@@ -40,7 +39,6 @@ public:
 	static TPointer<T> GetShader();	
 
 	static std::map<std::string, TPointer<ModelObject>> Models;
-	static std::map<std::string, TPointer<CTexture>> Textures;
 
 	static Text::cFont AddFont(std::string fontPath, int iPSize);
 	

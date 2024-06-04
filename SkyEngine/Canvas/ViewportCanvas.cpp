@@ -15,7 +15,6 @@ CViewportCanvas::CViewportCanvas(TWeakPointer<CEngineWindow> InOwningWindow)
 	: CCanvas(InOwningWindow, "Viewport Layer")
 {
 	SkyColour = SVector(0.3f, 0.8f, 0.9f);
-	ViewportTexture = GetGraphicsAPI()->GetTexture("Resources/Images/StoneWall_2x2.jpg");
 	WorldManager = CreatePointer<CWorldManager>();
 	// TODO: Would instead be context based ie what is the viewport opening
 	WorldManager->SwitchScene(SceneManager::GetInstance()->GetCurrentScene());

@@ -22,7 +22,6 @@
 // Local Includes //
 
 std::map<std::string, TPointer<ModelObject>> ShaderManager::Models;
-std::map<std::string, TPointer<CTexture>> ShaderManager::Textures;
 std::map<std::string, TPointer<CShader>> ShaderManager::Shaders;
 
 /************************************************************
@@ -53,7 +52,6 @@ void ShaderManager::CleanUp()
 		Model.second = nullptr;
 	}
 	Models.clear();
-	Textures.clear();
 }
 
 void ShaderManager::LoadAllDefaultShaders()

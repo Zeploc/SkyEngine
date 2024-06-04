@@ -1,10 +1,13 @@
 ﻿#include "SEPCH.h"
 #include "PathUtils.h"
 
+#include "Core/StringUtils.h"
+
 std::string PathUtils::GetFileName(const std::string& Path, bool bWithExtension)
 {
-	const uint64_t DirectoryEndIndex = Path.find_last_of("\\");
-	std::string FileName = Path.substr(DirectoryEndIndex + 1);
+	const std::string NormalizedPath = GetNormalizePath(Path);
+	const uint64_t DirectoryEndIndex = NormalizedPath.find_last_of("\\");
+	std::string FileName = NormalizedPath.substr(DirectoryEndIndex + 1);
 	if (!bWithExtension && HasExtension(Path))
 	{
 		const uint64_t ExtensionEndIndex = FileName.find_last_of(".");
@@ -34,6 +37,18 @@ std::string PathUtils::CombinePath(const std::string& Part1, const std::string& 
 		return Part1 + Part2;
 	}
 	return Part1 + std::string("\\") + Part2;
+}
+
+std::string PathUtils::GetNormalizePath(const std::string& Path)
+{
+	std::string Normalized = Path;
+	NormalizePath(Normalized);
+	return Normalized;
+}
+
+void PathUtils::NormalizePath(std::string& Path)
+{
+	StringUtils::Replace(Path, "/", "\\");
 }
 
 void PathUtils::SetExtension(std::string& Path, const std::string& Extension)

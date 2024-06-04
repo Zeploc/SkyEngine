@@ -15,7 +15,7 @@ public:
 	void ImGuiInit() override;
 	
 	std::string GetGraphicsDisplayName() override;
-	TPointer<CTexture> GetTexture(const std::string& TextureSource, bool bAA) override;
+	bool GenerateTexture(TPointer<CTexture> Texture, bool bAA) override;
 	bool CreateShaderProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename,
 		const char* GeometryShaderFilename) override;
 	bool CreateTessProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename,

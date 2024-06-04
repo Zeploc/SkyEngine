@@ -4,7 +4,18 @@
 #include "Shader.h"
 
 #include "Core/Application.h"
+#include "Core/Asset/Asset.h"
 #include "Render/Materials/Material.h"
+#include "Render/Textures/Texture.h"
+
+void SShaderParameter::SetDeserializedVariable(std::istream& is)
+{
+	SSerializableVariable::SetDeserializedVariable(is);
+	if (Type == EVariableType::Asset && *Asset)
+	{
+		LoadedTexture = (*Asset)->Load<CTexture>();
+	}
+}
 
 void BaseShaderParameters::UploadMaterialParameters()
 {
@@ -31,10 +42,10 @@ void BaseShaderParameters::UploadMaterialParameters()
 		case EVariableType::Vector4:
 			GetGraphicsAPI()->PassAttributeToShader(UniformLocation, *ShaderParameter.Vector4);
 			break;
-		case EVariableType::Texture:
+		case EVariableType::Asset:
 			{
-				GetGraphicsAPI()->PassAttributeToShader(UniformLocation, *ShaderParameter.Texture);
-				const bool bHasTexture = (*ShaderParameter.Texture) != nullptr;
+				GetGraphicsAPI()->PassAttributeToShader(UniformLocation, ShaderParameter.LoadedTexture);
+				const bool bHasTexture = ShaderParameter.LoadedTexture != nullptr;
 				const int32_t Location = Shader->GetHasTextureUniformLocation(ShaderParameter.VariableName);
 				GetGraphicsAPI()->PassAttributeToShader(Location, bHasTexture);
 			}
@@ -119,7 +130,7 @@ bool CShader::CompileShader()
 	for (SShaderParameter& ShaderParameter : ShaderParameters)
 	{
 		ShaderParameter.Location = GetAttributeLocation(ShaderParameter.VariableName);
-		if (ShaderParameter.Type == EVariableType::Texture)
+		if (ShaderParameter.Type == EVariableType::Asset)
 		{			
 			std::string LocationName = std::string("bHas") + ShaderParameter.VariableName;
 			int32_t HasTextureLocation = GetAttributeLocation(LocationName);

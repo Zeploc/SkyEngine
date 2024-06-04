@@ -51,8 +51,7 @@ void CContentBrowser::OnRender()
 		{
 			Asset->Open();
 			// TODO: Determine structure for opening at a per asset basis without having editor code in engine...
-			TPointer<CMaterialInterface> Material = std::dynamic_pointer_cast<CMaterialInterface>(Asset->GetDefaultObject());
-			if (Material)
+			if (TPointer<CMaterialInterface> Material = Asset->Load<CMaterialInterface>())
 			{
 				GetApplication()->GetApplicationWindow()->GetCanvas<CMaterialEditorPanel>()->SetMaterial(Material);
 			}

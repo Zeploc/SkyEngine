@@ -20,7 +20,7 @@ public:
 	std::string GetGraphicsDisplayName() override;
 	
 	unsigned int CreateVertexBuffer(const CMeshData& MeshData) override;
-	TPointer<CTexture> GetTexture(const std::string& TextureSource, bool bAA) override;
+	bool GenerateTexture(TPointer<CTexture> Texture, bool bAA) override;
 	void BindVertexArray(const std::vector<float>& Vertices, const std::vector<uint32_t>& Indices, unsigned& Vao) override;
 	bool CreateShaderProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* GeometryShaderFilename) override;
 	bool CreateTessProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename) override;

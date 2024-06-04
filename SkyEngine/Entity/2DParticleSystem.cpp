@@ -17,6 +17,7 @@
 #include "Render/Shaders/PBRShader.h"
 #include "Render/Shaders/ShaderManager.h"
 #include "Render/Shaders/UnlitShader.h"
+#include "Render/Textures/Texture.h"
 #include "Scene/SceneManager.h"
 #include "System/TimeManager.h"
 
@@ -186,10 +187,10 @@ void ParticleSystem2D::Update()
 		// Random path from paths
 		int iRandPath = rand() % m_vParticlePaths.size();
 
-		TPointer<CTexture> ParticleTexture = GetGraphicsAPI()->GetTexture(m_vParticlePaths[iRandPath]);	
+		TPointer<CTexture> ParticleTexture = GetTextureManager()->FindTexture(m_vParticlePaths[iRandPath]);	
 		TPointer<CMaterial_Unlit> ParticleMaterial = std::make_shared<CMaterial_Unlit>("ParticleMaterial");
 		ParticleMaterial->Params.DiffuseColour = SVector4(1.0f, 1.0f, 1.0f, 1.0f);
-		ParticleMaterial->Params.DiffuseTexture = ParticleTexture;
+		ParticleMaterial->Params.DiffuseTexture = ParticleTexture->Asset;
 		
 		TPointer<Entity> NewParticleEntity = std::make_shared<Entity>(Transform, "Particle");
 		NewParticleEntity->Transform.Scale = fNewSize;

@@ -49,7 +49,6 @@ protected:
 	bool OnWindowResize(unsigned int Width, unsigned int Height) override;
 	
 	SVector SkyColour;
-	TPointer<CTexture> ViewportTexture;
 	TPointer<CWorldManager> WorldManager; 
 	SVector2i ViewportSize;
 	TPointer<CSceneRenderer> SceneRenderer;

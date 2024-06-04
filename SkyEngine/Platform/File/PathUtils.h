@@ -11,6 +11,8 @@ public:
 	static std::string GetDirectory(const std::string& Path);	
 	static bool HasExtension(const std::string& Path);
 	static std::string CombinePath(const std::string& Part1, const std::string& Part2);
+	static std::string GetNormalizePath(const std::string& Path);
+	static void NormalizePath(std::string& Path);
 
 	/* Applies the extension (adding if one doesn't exit), give extension with the dot */
 	static void SetExtension(std::string& Path, const std::string& Extension);

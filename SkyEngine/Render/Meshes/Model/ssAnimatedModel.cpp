@@ -10,6 +10,7 @@
 
 #include "Core/Application.h"
 #include "Render/Shaders/Shader.h"
+#include "Render/Textures/Texture.h"
 
 #define POSITION_LOCATION	  0
 #define TEX_COORD_LOCATION	  1
@@ -308,7 +309,7 @@ bool ssAnimatedModel::initMaterials(const aiScene* pScene, const std::string fil
 
 				std::string FullPath = Dir + "/" + p;
 
-				TPointer<CTexture> Texture = GetGraphicsAPI()->GetTexture(FullPath.c_str(), true);
+				TPointer<CTexture> Texture = GetTextureManager()->FindTexture(FullPath.c_str());
 				m_Textures[i] = Texture;
 
 				if (!m_Textures[i]->IsValid())

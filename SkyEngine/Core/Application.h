@@ -10,6 +10,7 @@
 #include "Math/Vector2.h"
 #include "Render/Materials/MaterialManager.h"
 #include "Render/Meshes/MeshManager.h"
+#include "Render/Textures/TextureManager.h"
 
 class Scene;
 class CViewportCanvas;
@@ -55,6 +56,7 @@ namespace SkyEngine
 		TPointer<CLogManager> LogManager;
 		CMeshManager MeshManager;
 		CMaterialManager MaterialManager;
+		CTextureManager TextureManager;
 		CAssetManager AssetManager;
 
 		// TODO: Weak pointer to not hold ref
@@ -88,5 +90,6 @@ ENGINE_API IPlatformInterface* GetPlatformInterface();
 ENGINE_API TPointer<CRenderer> GetRenderer();
 ENGINE_API CMeshManager* GetMeshManager();
 ENGINE_API CMaterialManager* GetMaterialManager();
+ENGINE_API CTextureManager* GetTextureManager();
 ENGINE_API CAssetManager* GetAssetManager();
 

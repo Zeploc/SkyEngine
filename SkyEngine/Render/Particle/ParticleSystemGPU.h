@@ -9,10 +9,11 @@
 // OpenGL Library Includes //
 
 // Local Includes //
-#include "Render/Texture.h"
 #include "Entity/Entity.h"
 
 #define NUM_PARTICLES 128 * 1000
+
+class CTexture;
 
 class ParticleSystemGPU : public Entity
 {

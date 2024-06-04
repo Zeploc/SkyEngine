@@ -6,17 +6,19 @@
 
 #include "Core/Application.h"
 #include "Core/SerializableVariable.h"
-#include "Render/Texture.h"
 // #include "Render/Materials/MaterialType.h"
 // #include "Render/Materials/Material.h"
 
 class CMaterialInterface;
 
-struct SShaderParameter : public SSerializableVariable
+struct ENGINE_API SShaderParameter : public SSerializableVariable
 {
 	using SSerializableVariable::SSerializableVariable;
 	
+	virtual void SetDeserializedVariable(std::istream& is) override;
+	
 	int32_t Location = -1;
+	TPointer<CTexture> LoadedTexture;
 };
 
 // TODO: STDL warnings with exporting class with vector

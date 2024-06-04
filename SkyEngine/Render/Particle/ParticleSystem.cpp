@@ -21,6 +21,7 @@
 #include "Entity/Camera.h"
 #include "Render/SceneRenderer.h"
 #include "Render/Shaders/Shader.h"
+#include "Render/Textures/Texture.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -76,7 +77,7 @@ void ParticleSystem::BindParticleSystem(const char* TexturePath)
 
 	program = ShaderManager::GetShader("ParticleShader")->GetShaderProgram();
 
-	Texture = GetGraphicsAPI()->GetTexture(TexturePath, true);
+	Texture = GetTextureManager()->FindTexture(TexturePath);
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);

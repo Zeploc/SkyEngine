@@ -5,7 +5,7 @@
 #include <sstream>
 
 #include "Application.h"
-#include "Render/Texture.h"
+#include "Asset/Asset.h"
 
 void SSerializableVariable::SerializeVariable(std::ostream& os) const
 {
@@ -44,13 +44,13 @@ std::string SSerializableVariable::GetSerializedVariable() const
 			ss << *Vector4;
 			return ss.str();
 		}
-	case EVariableType::Texture:
+	case EVariableType::Asset:
 		{
-			const TPointer<CTexture> TexturePointer = *Texture;
+			const TPointer<CAsset> AssetPointer = *Asset;
 			std::stringstream ss("None");
-			if (TexturePointer)
+			if (AssetPointer)
 			{
-				ss << TexturePointer;
+				ss << AssetPointer->FilePath;
 			}
 			return ss.str();
 		}
@@ -96,17 +96,18 @@ void SSerializableVariable::SetDeserializedVariable(std::istream& is)
 	case EVariableType::Vector4:
 		is >> *Vector4;
 		break;
-	case EVariableType::Texture:
+	case EVariableType::Asset:
 		{
-			std::string TexturePath;
-			is >> TexturePath;
-			if (TexturePath != "None")
+			std::string AssetPath;
+			is >> AssetPath;
+			if (AssetPath != "None")
 			{
-				*Texture = GetGraphicsAPI()->GetTexture(TexturePath);
+				// Not load to keep light
+				*Asset = GetAssetManager()->AddAsset(AssetPath);
 			}
 			else
 			{
-				*Texture = nullptr;
+				*Asset = nullptr;
 			}
 		}
 		break;

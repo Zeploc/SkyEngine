@@ -22,7 +22,6 @@
 #include <map>
 #include <vector>
 
-#include "Render/Texture.h"
 #include "Math/Matrix.h"
 #include "Math/Transform.h"
 #include "Render/Lighting.h"
@@ -37,6 +36,7 @@
 #define GLCheckError() (glGetError() == GL_NO_ERROR)
 
 class Terrain;
+class CTexture;
 
 class ssAnimatedModel
 {

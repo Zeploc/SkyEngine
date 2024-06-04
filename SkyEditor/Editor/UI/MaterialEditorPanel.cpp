@@ -4,6 +4,7 @@
 
 #include "ConfigSettingsPanel.h"
 #include "imgui_internal.h"
+#include "UIPresets.h"
 #include "Core/Asset/Asset.h"
 #include "Render/Materials/Material.h"
 
@@ -24,7 +25,7 @@ void CMaterialEditorPanel::OnRender()
 	TArray<SShaderParameter>& MaterialVariables = Material->GetMaterialVariables();
 	for (SShaderParameter& ShaderParameter : MaterialVariables)
 	{
-		CConfigSettingsPanel::RenderVariableField(ShaderParameter);
+		CUIPresets::RenderVariableField(ShaderParameter);
 	}
 	
 	ImGui::Spacing();

@@ -317,10 +317,10 @@ std::string CVulkanAPI::GetGraphicsDisplayName()
 	return "";
 }
 
-TPointer<CTexture> CVulkanAPI::GetTexture(const std::string& TextureSource, bool bAA)
+bool CVulkanAPI::GenerateTexture(TPointer<CTexture> Texture, bool bAA)
 {
 	//TODO: Implement
-	return nullptr;
+	return false;
 }
 
 bool CVulkanAPI::CreateShaderProgram(uint32_t& ProgramID, const char* VertexShaderFilename,

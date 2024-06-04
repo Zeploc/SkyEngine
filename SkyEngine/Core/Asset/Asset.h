@@ -10,13 +10,19 @@ class ENGINE_API CAsset : public std::enable_shared_from_this<CAsset>
 public:
 	CAsset(const std::string& AssetPath, const std::string& InClass = std::string());
 
+	/* Gets object if loaded, otherwise loads it first */
 	TPointer<CObject> Load();
+	/* Gets object if loaded, otherwise loads it first */
+	template<typename T>
+	TPointer<T> Load();
+
+	bool IsLoaded() const { return Object != nullptr; }
+	
 	void Unload();
 	/* Unloads the asset and reloads from disk, returning new object*/
 	TPointer<CObject> Reload();
 	bool Save();
 	void SetDefaultObject(TPointer<CObject> NewObject);
-	TPointer<CObject> GetDefaultObject() const { return Object; }
 	void Open();
 	/* Clears the object link for this asset (Will load from file when load called again) */
 	void DisconnectObject();
@@ -25,11 +31,9 @@ public:
 	std::string DisplayName;
 	std::string ClassName;
 	TArray<std::string> Metadata;
-
+	
 	// TODO: Unsaved
 	
-	template<typename T>
-	TPointer<T> Load();
 
 protected:
 	/* Creates the object for this asset when loading based on the class and meta data */

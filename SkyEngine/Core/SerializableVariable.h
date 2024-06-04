@@ -8,6 +8,7 @@
 #include "Math/Internal/Vector2.decl.h"
 
 class CTexture;
+class CAsset;
 
 enum class EVariableType : int
 {
@@ -18,10 +19,10 @@ enum class EVariableType : int
 	Integer,
 	Vector2,
 	Vector4,
-	Texture
+	Asset
 };
 
-struct SSerializableVariable
+struct ENGINE_API SSerializableVariable
 {
 	std::string VariableName;
 	EVariableType Type = EVariableType::None;
@@ -56,10 +57,10 @@ struct SSerializableVariable
 		Type = EVariableType::Vector4;
 		Vector4 = InVector4;
 	}
-	SSerializableVariable(const std::string& InName, TPointer<CTexture>* InTexture) : VariableName(InName)
+	SSerializableVariable(const std::string& InName, TPointer<CAsset>* InAsset) : VariableName(InName)
 	{
-		Type = EVariableType::Texture;
-		Texture = InTexture;
+		Type = EVariableType::Asset;
+		Asset = InAsset;
 	}
 
 	union
@@ -71,12 +72,12 @@ struct SSerializableVariable
 		int* Integer;
 		SVector2* Vector2;
 		SVector4* Vector4;
-		TPointer<CTexture>* Texture;
+		TPointer<CAsset>* Asset;
 	};
 	
 	void SerializeVariable(std::ostream& os) const;
 	void DeserializeVariable(std::istream& is);
 	
-	std::string GetSerializedVariable() const;
-	void SetDeserializedVariable(std::istream& is);
+	virtual std::string GetSerializedVariable() const;
+	virtual void SetDeserializedVariable(std::istream& is);
 };

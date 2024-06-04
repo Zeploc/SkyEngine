@@ -2,8 +2,14 @@
 #include "AssetManager.h"
 
 #include "Asset.h"
+#include "Core/Application.h"
 #include "Core/StringUtils.h"
 #include "Platform/File/FileManager.h"
+
+CAssetManager* CAssetManager::GetAssetManager()
+{
+	return GetAssetManager();
+}
 
 TPointer<CAsset> CAssetManager::AddAsset(const std::string& AssetPath, const std::string& NewClass)
 {	

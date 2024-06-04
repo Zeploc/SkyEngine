@@ -224,6 +224,11 @@ CMaterialManager* GetMaterialManager()
 	return &SkyEngine::Application::Get()->MaterialManager;
 }
 
+CTextureManager* GetTextureManager()
+{
+	return &SkyEngine::Application::Get()->TextureManager;
+}
+
 CAssetManager* GetAssetManager()
 {
 	return &SkyEngine::Application::Get()->AssetManager;

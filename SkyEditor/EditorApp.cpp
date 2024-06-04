@@ -44,6 +44,7 @@
 #include "Render/Shaders/PBRShader.h"
 #include "Render/Shaders/UndefinedShader.h"
 #include "Render/Shaders/UnlitShader.h"
+#include "Render/Textures/Texture.h"
 #include "Scene/SceneUtils.h"
 
 
@@ -70,7 +71,9 @@ bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 	
 	AssetManager.SetAssetPath(ContentPath);
 	AssetManager.ScanForAssets();
-
+	
+	// TPointer<CTexture> BrickTexture = TextureManager.AddNewTexture("Resources\\Images\\StoneWall_2x2.jpg");
+	// BrickTexture->Asset->Save();
 	//SetupPlaceholderMaterials();
 	
 	// TODO: Move to application base default scene
@@ -124,7 +127,7 @@ bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 
 void EditorApplication::SetupPlaceholderMaterials()
 {
-	TPointer<CTexture> BrickTexture = GetGraphicsAPI()->GetTexture("Resources/Images/StoneWall_2x2.jpg");
+	TPointer<CTexture> BrickTexture = GetTextureManager()->FindTexture("Resources/Images/StoneWall_2x2.jpg");
 	
 	TPointer<CMaterial_PBR> BrickMaterial;
 	
@@ -136,24 +139,24 @@ void EditorApplication::SetupPlaceholderMaterials()
 	// else
 	BrickMaterial = std::make_shared<CMaterial_PBR>("BrickMaterial");
 	// TPointer<TMaterial<CUndefinedShader>> BrickMaterial = std::make_shared<TMaterial<CUndefinedShader>>("BrickMaterial", ShaderManager::GetUndefinedShader("BaseProgram"));
-	BrickMaterial->Params.DiffuseTexture = BrickTexture;
+	BrickMaterial->Params.DiffuseTexture = BrickTexture->Asset;
 	GetMaterialManager()->AddMaterial(BrickMaterial);
 
 	// Would be nice to be able to copy an existing material as a template
 	TPointer<CMaterial_PBR> ColouredBrickMaterial = std::make_shared<CMaterial_PBR>("ColouredBrickMaterial");
-	ColouredBrickMaterial->Params.DiffuseTexture = BrickTexture;
+	ColouredBrickMaterial->Params.DiffuseTexture = BrickTexture->Asset;
 	ColouredBrickMaterial->Params.DiffuseColour = {0.5f, 0.3f, 0.3f, 1.0f};
 	GetMaterialManager()->AddMaterial(ColouredBrickMaterial);
 	
 	TPointer<CMaterial_PBR> ColouredBrickPlaneMaterial = std::make_shared<CMaterial_PBR>("ColouredBrickPlaneMaterial");
-	ColouredBrickPlaneMaterial->Params.DiffuseTexture = BrickTexture;
+	ColouredBrickPlaneMaterial->Params.DiffuseTexture = BrickTexture->Asset;
 	ColouredBrickPlaneMaterial->Params.DiffuseColour = {0.5f, 0.3f, 0.3f, 1.0f};
 	ColouredBrickPlaneMaterial->bTwoSided = true;
 	GetMaterialManager()->AddMaterial(ColouredBrickPlaneMaterial);
 	
 	TPointer<CMaterial_PBR> CliffMaterial = std::make_shared<CMaterial_PBR>("CliffMaterial");
-	TPointer<CTexture> CliffTexture = GetGraphicsAPI()->GetTexture("Resources/Images/SmoothCliff_1024.jpg");
-	CliffMaterial->Params.DiffuseTexture = BrickTexture;
+	TPointer<CTexture> CliffTexture = GetTextureManager()->FindTexture("Resources/Images/SmoothCliff_1024.jpg");
+	CliffMaterial->Params.DiffuseTexture = BrickTexture->Asset;
 	CliffMaterial->Params.DiffuseColour = {0.1f, 0.8f, 0.3f, 1.0f};	
 	GetMaterialManager()->AddMaterial(CliffMaterial);
 

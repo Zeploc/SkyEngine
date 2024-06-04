@@ -10,6 +10,7 @@
 #include "Render/Materials/Material.h"
 #include "Render/Materials/MaterialType.h"
 #include "Render/Shaders/PBRShader.h"
+#include "Render/Textures/Texture.h"
 #include "System/LogManager.h"
 
 CAsset::CAsset(const std::string& AssetPath, const std::string& InClass)
@@ -172,6 +173,10 @@ TPointer<CObject> CAsset::MakeObject() const
 	if (ClassName == Scene::GetStaticName())
 	{
 		return std::make_shared<Scene>("Untitled");
+	}
+	if (ClassName == CTexture::GetStaticName())
+	{
+		return std::make_shared<CTexture>();
 	}
 	if (ClassName == "MeshAsset")
 	{
