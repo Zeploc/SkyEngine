@@ -6,7 +6,7 @@
 #include "Core/Object.h"
 #include "Core/Asset/AssetInterface.h"
 
-class CTexture : public CObject, public IAssetObjectInterface
+class ENGINE_API CTexture : public CAssetObject
 {
 public:
 	std::string Path;

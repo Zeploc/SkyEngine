@@ -67,7 +67,7 @@ TPointer<T> ShaderManager::GetShader()
 	for (auto Element : CurrentShaders)
 	{
 		TPointer<CShader> Shader = Element.second;
-		if (TPointer<T> CheckedShader = std::dynamic_pointer_cast<T>(Shader))
+		if (TPointer<T> CheckedShader = Cast<T>(Shader))
 		{
 			return CheckedShader;
 		}				

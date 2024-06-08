@@ -65,8 +65,16 @@ std::istream& operator>>(std::istream& is, TPointer<CComponent>& InComponent)
 void CComponent::Serialize(std::ostream& os)
 {
 	os << " [" << GetComponentClassName() << "] ";
+	for (const SSerializableVariable& SerializableVariable : SerializeVariables)
+	{
+		os << " " << SerializableVariable.GetSerializedVariable();
+	}
 }
 
 void CComponent::Deserialize(std::istream& is)
 {
+	for (SSerializableVariable& SerializableVariable : SerializeVariables)
+	{
+		SerializableVariable.SetDeserializedVariable(is);
+	}
 }

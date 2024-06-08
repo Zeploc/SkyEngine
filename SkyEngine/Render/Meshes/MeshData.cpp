@@ -124,6 +124,31 @@ TArray<STriangle> CMeshData::GetTriangles() const
 	return Triangles;
 }
 
+void CMeshData::Serialize(std::ostream& os)
+{
+	// TODO:
+}
+
+void CMeshData::Deserialize(std::istream& is)
+{
+	// TODO:
+}
+
+std::string CMeshData::GetAssetClassName()
+{
+	return GetStaticName();
+}
+
+std::string CMeshData::GetStaticName()
+{
+	return "Mesh";
+}
+
+void CMeshData::Open()
+{
+	
+}
+
 void CMeshData::PushPositions(TArray<float>& OutVertices, int VertexIndex) const
 {
 	const int StartingPosition = VertexIndex * POSITION_ELEMENTS_COUNT;

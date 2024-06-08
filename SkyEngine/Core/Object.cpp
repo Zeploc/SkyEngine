@@ -18,3 +18,8 @@ void TObjectPtr<T>::Deserialize(std::istream& is)
 {
 	is >> FilePath;
 }
+
+std::shared_ptr<CAssetObject> CAssetObject::shared_from_this()
+{
+	return std::static_pointer_cast<CAssetObject>(CObject::shared_from_this());
+}

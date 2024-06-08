@@ -4,10 +4,9 @@
 
 #include "Shader.h"
 #include "Math/Vector4.h"
+#include "Render/Textures/Texture.h"
 
-class CTexture;
-template<class S>
-class TMaterial;
+#include "Render/Materials/Material.h"
 
 class ENGINE_API CPBRShader : public CShader
 {
@@ -23,7 +22,7 @@ public:
 		DefineShaderParameter(Shininess);
 	ListShaderVariables()
 		SVector4 DiffuseColour = SVector4(1.0f);
-		TPointer<CAsset> DiffuseTexture = nullptr;
+		TPointer<CTexture> DiffuseTexture = nullptr;
 		float SpecularStrength = 1.0f;
 		float Shininess = 32.0f;
 	EndShaderParams()

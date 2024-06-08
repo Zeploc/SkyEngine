@@ -30,6 +30,18 @@ T* GetInterface(TPointer<U> Base)
 template<typename T>
 using TArray = std::vector<T>;
 
+template<typename T,typename U>
+class TMap : public std::map<T, U>
+{
+public:
+	// void Add(T Key, U Value)
+	// {
+	// 	insert(std::pair<T, U>(Key, Value));
+	// }
+	// using Add insert
+	// inline std::pair<std::iterator, bool> Add(U& Val) { return insert(Val); }
+};
+
 template<typename T>
 using TScope = std::unique_ptr<T>;
 template<typename T, typename ... Args>

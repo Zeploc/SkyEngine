@@ -3,12 +3,13 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Math/Transform.h"
 
 #include "Math/Vector4.h"
 #include "Math/Internal/Vector2.decl.h"
 
 class CTexture;
-class CAsset;
+class CAssetObject;
 
 enum class EVariableType : int
 {
@@ -19,13 +20,19 @@ enum class EVariableType : int
 	Integer,
 	Vector2,
 	Vector4,
-	Asset
+	Transform,
+	Object
 };
+
+#define MetaTag_Class "Class"
+#define MetaTag_HideInEditor "HideInEditor"
+#define MetaTag_ReadOnlyEditor "ReadOnlyEditor"
 
 struct ENGINE_API SSerializableVariable
 {
 	std::string VariableName;
 	EVariableType Type = EVariableType::None;
+	TMap<std::string, std::string> MetaTags;
 
 	SSerializableVariable(const std::string& InName, bool* InBoolean) : VariableName(InName)
 	{
@@ -57,11 +64,24 @@ struct ENGINE_API SSerializableVariable
 		Type = EVariableType::Vector4;
 		Vector4 = InVector4;
 	}
-	SSerializableVariable(const std::string& InName, TPointer<CAsset>* InAsset) : VariableName(InName)
+	SSerializableVariable(const std::string& InName, STransform* InTransform) : VariableName(InName)
 	{
-		Type = EVariableType::Asset;
-		Asset = InAsset;
+		Type = EVariableType::Transform;
+		Transform = InTransform;
 	}
+
+	template<class T, std::enable_if_t<std::is_base_of_v<CAssetObject, T>, bool> = true>
+	SSerializableVariable(const std::string& InName, TPointer<T>* InObject) : VariableName(InName)
+	{		
+		Type = EVariableType::Object;
+		AssetObject = (TPointer<CAssetObject>*)(InObject);
+		// MetaTags.Add(MetaTag_Class, T::GetStaticName());
+		MetaTags.insert(std::pair(MetaTag_Class, T::GetStaticName()));
+		// MetaTags[MetaTag_Class] = T::GetStaticName();
+	}
+
+	std::string GetMetaTag(std::string Key);
+	bool HasMetaTag(std::string Key) const;
 
 	union
 	{
@@ -72,7 +92,8 @@ struct ENGINE_API SSerializableVariable
 		int* Integer;
 		SVector2* Vector2;
 		SVector4* Vector4;
-		TPointer<CAsset>* Asset;
+		STransform* Transform;
+		TPointer<CAssetObject>* AssetObject;
 	};
 	
 	void SerializeVariable(std::ostream& os) const;
@@ -81,3 +102,26 @@ struct ENGINE_API SSerializableVariable
 	virtual std::string GetSerializedVariable() const;
 	virtual void SetDeserializedVariable(std::istream& is);
 };
+
+#define SetSerializeVariable(VariableName) SerializeVariableWithTags(VariableName)
+
+#define SerializeVariableWithTags(VariableName, MetaTags) CustomSerializeVariable(SSerializableVariable, SerializeVariables, VariableName)
+
+#define CustomSerializeVariable(SerializeStructType, SerializeVariables, VariableName)\
+/*static_assert(!std::is_class<typeid(VariableName)>() || typeid(VariableName) == typeid(CAssetObject), "Can only serialize asset object classes");*/\
+SerializeStructType Serialize##VariableName = SerializeStructType(std::string(#VariableName), &VariableName);\
+SerializeVariables.push_back(Serialize##VariableName)
+
+#define AddMetaTag(VariableName, Tag) AddMetaTagValue(VariableName, Tag, "")
+	
+#define AddMetaTagValue(Name, Tag, Value)\
+for (SSerializableVariable& Serializable : SerializeVariables)\
+{\
+	if (Serializable.VariableName == std::string(#Name))\
+	{\
+		Serializable.MetaTags.insert(std::pair(Tag, Value));\
+	}\
+}
+
+// #define AddMetaTag(VariableName, Tag, Value)\
+// Serialize##VariableName.MetaTags.Add(Tag, Value)

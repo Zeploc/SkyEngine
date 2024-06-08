@@ -28,7 +28,7 @@ void CTexture::Bind(const uint32_t InTextureID)
 
 std::shared_ptr<CTexture> CTexture::shared_from_this()
 {
-	return std::static_pointer_cast<CTexture>(CObject::shared_from_this());
+	return std::static_pointer_cast<CTexture>(CAssetObject::shared_from_this());
 }
 
 void CTexture::OnLoaded()

@@ -12,6 +12,7 @@
 // Engine Includes //
 #include <vector>
 
+#include "Core/SerializableVariable.h"
 #include "Math/Transform.h"
 #include "Math/Matrix.h"
 #include "Math/Rotator.h"
@@ -96,6 +97,8 @@ public:
 	std::string GetEntityName() const { return Name; }
 	TPointer<Scene> GetOwningScene() const { return OwningScene; }
 	TArray<TPointer<CComponent>> GetComponents() const { return Components; }
+	
+	TArray<SSerializableVariable> GetSerializeVariables() const { return SerializeVariables; }
 
 	template<typename T>
 	TPointer<T> FindComponent();
@@ -116,6 +119,8 @@ protected:
 	TPointer<Scene> OwningScene;
 
 	int EntityID;
+	
+	TArray<SSerializableVariable> SerializeVariables;
 };
 
 template <typename T>

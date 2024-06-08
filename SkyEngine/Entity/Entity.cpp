@@ -21,14 +21,20 @@
 
 Entity::Entity(std::stringstream& ss)
 {
-	std::string Name;
-	ss >> Name;
-	if (Name != "[Entity]")
+	std::string ConstructName;
+	ss >> ConstructName;
+	if (ConstructName != "[Entity]")
 	{
 		return;
 	}
 	std::shared_ptr<Entity> Entity = shared_from_this();
 	ss >> Entity;
+	
+	SetSerializeVariable(Name);
+	SetSerializeVariable(EntityID);
+	// TODO: Read only (or hidden) meta data for ID
+	AddMetaTag(EntityID, MetaTag_ReadOnlyEditor)
+	SetSerializeVariable(Transform);
 }
 
 Entity::Entity(STransform InTransform, std::string EntityName)
@@ -40,6 +46,11 @@ Entity::Entity(STransform InTransform, std::string EntityName)
 		Name = std::format("Entity_{}", EntityID);
 	}
 	StringUtils::Replace(Name, " ", "_");
+	
+	SetSerializeVariable(Name);
+	SetSerializeVariable(EntityID);
+	AddMetaTag(EntityID, MetaTag_ReadOnlyEditor)
+	SetSerializeVariable(Transform);
 }
 
 Entity::~Entity()
@@ -223,9 +234,10 @@ void Entity::Serialize(std::ostream& os)
 {
 	// std::stringstream sEntity("");
 	os << "[" << GetEntityClassName() << "]";
-	os << " " << Name;
-	os << " " << EntityID;
-	os << " " << Transform;
+	for (const SSerializableVariable& SerializableVariable : SerializeVariables)
+	{
+		os << " " << SerializableVariable.GetSerializedVariable();
+	}
 }
 
 void Entity::SerializeComponents(std::ostream& os)
@@ -238,10 +250,10 @@ void Entity::SerializeComponents(std::ostream& os)
 
 void Entity::Deserialize(std::istream& is)
 {
-	is >> Name;
-	is >> EntityID;
-	// std::getline(is, Empty, ' ');
-	is >> Transform;
+	for (SSerializableVariable& SerializableVariable : SerializeVariables)
+	{
+		SerializableVariable.SetDeserializedVariable(is);
+	}
 }
 
 void Entity::DeserializeComponents(std::istream& is)

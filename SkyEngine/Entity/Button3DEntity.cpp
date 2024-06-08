@@ -38,7 +38,7 @@ Button3DEntity::Button3DEntity(STransform _Transform, float fWidth, float fHeigh
 	TPointer<CTexture> ButtonTexture = GetTextureManager()->FindTexture(Texturepath);
 	TPointer<CMaterial_Unlit> UIMaterial = std::make_shared<CMaterial_Unlit>("UIMaterial");
 	UIMaterial->Params.DiffuseColour = _Colour;
-	UIMaterial->Params.DiffuseTexture = ButtonTexture->Asset;
+	UIMaterial->Params.DiffuseTexture = ButtonTexture;
 	GetMaterialManager()->AddMaterial(UIMaterial);
 	TPointer<CMeshComponent> ButtonCubeMesh = std::make_shared<CMeshComponent>(shared_from_this(), MESH_CUBE, UIMaterial);
 	AddComponent(ButtonCubeMesh);

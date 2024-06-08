@@ -2,6 +2,7 @@
 
 #pragma once
 #include "Core/Core.h"
+#include "Core/Object.h"
 
 // TODO: Warnings with exporting class containing STDL
 #pragma warning (disable : 4251)
@@ -13,7 +14,7 @@ class ENGINE_API CAssetManager
 public:
 	static CAssetManager* GetAssetManager();
 	TPointer<CAsset> AddAsset(const std::string& AssetPath, const std::string& NewClass = std::string());
-	bool LoadAsset(const std::string& AssetPath);
+	TPointer<CAssetObject> LoadAsset(const std::string& AssetPath);
 	TPointer<CAsset> FindAsset(const std::string& AssetPath) const;
 	bool ContainsAsset(const std::string& AssetPath) const;
 

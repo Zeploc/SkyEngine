@@ -22,10 +22,10 @@ TPointer<CAsset> CAssetManager::AddAsset(const std::string& AssetPath, const std
 	return NewAsset;
 }
 
-bool CAssetManager::LoadAsset(const std::string& AssetPath)
+TPointer<CAssetObject> CAssetManager::LoadAsset(const std::string& AssetPath)
 {
 	const TPointer<CAsset> LoadedAsset = AddAsset(AssetPath);
-	return LoadedAsset->Load() != nullptr;
+	return LoadedAsset->Load();
 }
 
 TPointer<CAsset> CAssetManager::FindAsset(const std::string& AssetPath) const

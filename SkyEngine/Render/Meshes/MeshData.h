@@ -23,7 +23,7 @@ struct STriangle
 	bool TestHit(SVector RayStart, SVector RayDirection, SVector& HitPos) const;
 };
 
-class ENGINE_API CMeshData : public CObject
+class ENGINE_API CMeshData : public CAssetObject
 {
 public:
 	CMeshData();
@@ -44,6 +44,12 @@ public:
 	TArray<uint32_t> GetIndices() const { return Indices; }
 
 	TArray<STriangle> GetTriangles() const;
+
+	void Serialize(std::ostream& os) override;
+	void Deserialize(std::istream& is) override;
+	std::string GetAssetClassName() override;
+	static std::string GetStaticName(); 
+	void Open() override;
 	
 #define POSITION_ELEMENTS_COUNT 3
 #define NORMAL_ELEMENTS_COUNT 3
@@ -54,6 +60,7 @@ protected:
 	void PushPositions(TArray<float>& OutVertices, int VertexIndex) const;
 	void PushUVs(TArray<float>& OutVertices, int VertexIndex) const;
 	void PushNormals(TArray<float>& OutVertices, int VertexIndex) const;
+
 protected:
 	TArray<float> Positions;
 	TArray<uint32_t> Indices;

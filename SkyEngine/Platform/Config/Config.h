@@ -66,7 +66,7 @@ TPointer<T> CConfig::GetConfig()
 {
 	for (TPointer<CConfig> Config : Configs)
 	{
-		if (TPointer<T> CheckedConfig = std::dynamic_pointer_cast<T>(Config))
+		if (TPointer<T> CheckedConfig = Cast<T>(Config))
 		{
 			return CheckedConfig;
 		}	

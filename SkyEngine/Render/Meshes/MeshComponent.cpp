@@ -20,6 +20,10 @@ CMeshComponent::CMeshComponent(const TPointer<Entity>& InOwner)
 	: CComponent(InOwner)
 {
 	MeshMaterial = GetRenderer()->DefaultMaterial;
+	
+	SetSerializeVariable(MeshAsset);
+	SetSerializeVariable(MeshMaterial);
+	SetSerializeVariable(bVisible);
 }
 
 CMeshComponent::CMeshComponent(const TPointer<Entity>& InOwner, std::string InMeshAsset, const TPointer<CMaterialInterface>& InMaterial)
@@ -33,6 +37,10 @@ CMeshComponent::CMeshComponent(const TPointer<Entity>& InOwner, std::string InMe
 	{
 		MeshMaterial = GetRenderer()->DefaultMaterial;
 	}
+	
+	SetSerializeVariable(MeshAsset);
+	SetSerializeVariable(MeshMaterial);
+	SetSerializeVariable(bVisible);
 }
 
 CMeshComponent::~CMeshComponent()
@@ -128,36 +136,11 @@ CMeshData CMeshComponent::GetMeshData() const
 void CMeshComponent::Serialize(std::ostream& os)
 {
 	CComponent::Serialize(os);
-	
-	os << MeshAsset << " ";
-	os << MeshMaterial->Asset->FilePath << " ";
-	const std::string VisibilityString = bVisible ? "true" : "false";
-	os << VisibilityString;
 }
 
 void CMeshComponent::Deserialize(std::istream& is)
 {
 	CComponent::Deserialize(is);
-	
-	std::string Empty;
-	// TODO: Remove need for first space removal
-	// std::getline(is, Empty, ' ');
-	is >> MeshAsset;
-	// std::getline(is, Empty, ' ');
-	std::string MaterialPath;
-	is >> MaterialPath;
-	TPointer<CAsset> Asset = GetAssetManager()->FindAsset(MaterialPath);
-	if (Asset)
-	{
-		MeshMaterial = Asset->Load<CMaterialInterface>();
-	}
-	else
-	{
-		CLogManager::Get()->DisplayError(std::format("Failed to find material asset at {}", MaterialPath));
-	}
-	std::string VisibilityString;
-	is >> VisibilityString;
-	bVisible = VisibilityString == "true";
 }
 
 std::string CMeshComponent::GetComponentClassName()

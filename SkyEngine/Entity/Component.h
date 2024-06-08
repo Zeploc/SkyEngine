@@ -1,7 +1,9 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
+
 #include "Core/Core.h"
+#include "Core/SerializableVariable.h"
 
 class Entity;
 
@@ -22,6 +24,7 @@ public:
 
 	TPointer<Entity> GetOwner() const { return Owner; }
 	virtual std::string GetComponentClassName();
+	TArray<SSerializableVariable> GetSerializeVariables() const { return SerializeVariables; }
 
 	static TPointer<CComponent> MakeComponentFromClassName(const std::string& ClassName, TPointer<Entity> Owner);
 	
@@ -32,8 +35,10 @@ protected:
 	virtual void Serialize(std::ostream& os);
 	virtual void Deserialize(std::istream& is);
 	
+	TArray<SSerializableVariable> SerializeVariables;
 private:
 	TPointer<Entity> Owner;
 	// TODO: Parent component?
 	TPointer<CComponent> ParentComponent;
+	
 };

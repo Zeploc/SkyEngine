@@ -51,7 +51,7 @@ void CAsset::ApplyAssetData(std::string AssetData)
 	Metadata = Tokens;
 }
 
-TPointer<CObject> CAsset::Load()
+TPointer<CAssetObject> CAsset::Load()
 {
 	if (Object)
 	{
@@ -74,7 +74,7 @@ TPointer<CObject> CAsset::Load()
 	std::getline(FileStream, AssetData, ']');
 	ApplyAssetData(AssetData);
 
-	const TPointer<CObject> CreatedObject = MakeObject();
+	const TPointer<CAssetObject> CreatedObject = MakeObject();
 	ensure(CreatedObject != nullptr, "Failed to create class from name!");
 	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(CreatedObject.get());
 	FileStream >> AssetInterface;
@@ -97,7 +97,7 @@ void CAsset::Unload()
 	Object.reset();
 }
 
-TPointer<CObject> CAsset::Reload()
+TPointer<CAssetObject> CAsset::Reload()
 {
 	Unload();
 	return Load();
@@ -131,7 +131,7 @@ bool CAsset::Save()
 	return true;
 }
 
-void CAsset::SetDefaultObject(TPointer<CObject> NewObject)
+void CAsset::SetDefaultObject(TPointer<CAssetObject> NewObject)
 {
 	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(NewObject.get());
 	if (!AssetInterface)
@@ -159,7 +159,7 @@ void CAsset::DisconnectObject()
 	Object = nullptr;
 }
 
-TPointer<CObject> CAsset::MakeObject() const
+TPointer<CAssetObject> CAsset::MakeObject() const
 {
 	if (ClassName == CMaterialInterface::GetStaticName())
 	{

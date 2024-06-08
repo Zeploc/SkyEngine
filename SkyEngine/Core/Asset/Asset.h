@@ -3,7 +3,7 @@
 #pragma once
 #include "Core/Core.h"
 
-class CObject;
+class CAssetObject;
 
 class ENGINE_API CAsset : public std::enable_shared_from_this<CAsset>
 {
@@ -11,7 +11,7 @@ public:
 	CAsset(const std::string& AssetPath, const std::string& InClass = std::string());
 
 	/* Gets object if loaded, otherwise loads it first */
-	TPointer<CObject> Load();
+	TPointer<CAssetObject> Load();
 	/* Gets object if loaded, otherwise loads it first */
 	template<typename T>
 	TPointer<T> Load();
@@ -20,9 +20,9 @@ public:
 	
 	void Unload();
 	/* Unloads the asset and reloads from disk, returning new object*/
-	TPointer<CObject> Reload();
+	TPointer<CAssetObject> Reload();
 	bool Save();
-	void SetDefaultObject(TPointer<CObject> NewObject);
+	void SetDefaultObject(TPointer<CAssetObject> NewObject);
 	void Open();
 	/* Clears the object link for this asset (Will load from file when load called again) */
 	void DisconnectObject();
@@ -37,11 +37,11 @@ public:
 
 protected:
 	/* Creates the object for this asset when loading based on the class and meta data */
-	TPointer<CObject> MakeObject() const;
+	TPointer<CAssetObject> MakeObject() const;
 	void ApplyAssetData(std::string AssetData);
 	
 	// TODO: Only for editor
-	TPointer<CObject> Object = nullptr;
+	TPointer<CAssetObject> Object = nullptr;
 };
 
 template <typename T>

@@ -17,7 +17,7 @@
 class UIText;
 class Entity;
 
-class ENGINE_API Scene : public CObject, public IAssetObjectInterface
+class ENGINE_API Scene : public CAssetObject
 {
 public:
 	Scene(const std::string& InSceneName);

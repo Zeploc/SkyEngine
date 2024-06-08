@@ -190,7 +190,7 @@ void ParticleSystem2D::Update()
 		TPointer<CTexture> ParticleTexture = GetTextureManager()->FindTexture(m_vParticlePaths[iRandPath]);	
 		TPointer<CMaterial_Unlit> ParticleMaterial = std::make_shared<CMaterial_Unlit>("ParticleMaterial");
 		ParticleMaterial->Params.DiffuseColour = SVector4(1.0f, 1.0f, 1.0f, 1.0f);
-		ParticleMaterial->Params.DiffuseTexture = ParticleTexture->Asset;
+		ParticleMaterial->Params.DiffuseTexture = ParticleTexture;
 		
 		TPointer<Entity> NewParticleEntity = std::make_shared<Entity>(Transform, "Particle");
 		NewParticleEntity->Transform.Scale = fNewSize;

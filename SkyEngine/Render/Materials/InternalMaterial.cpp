@@ -41,7 +41,7 @@ TPointer<CMaterialInterface> CMaterialInterface::MakeMaterialFromShaderName(cons
 
 std::shared_ptr<CMaterialInterface> CMaterialInterface::shared_from_this()
 {
-	return std::static_pointer_cast<CMaterialInterface>(CObject::shared_from_this());
+	return std::static_pointer_cast<CMaterialInterface>(CAssetObject::shared_from_this());
 }
 
 void CMaterialInterface::Open()

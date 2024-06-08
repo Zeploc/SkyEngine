@@ -14,8 +14,5 @@ public:
 	virtual void OnRender() override;
 
 protected:
-	void DrawMeshComponent(const std::shared_ptr<CMeshComponent>& MeshComponent);
-
-	void MaterialsDropdown(const std::shared_ptr<CMeshComponent>& MeshComponent);
 	void MeshDropdown(const std::shared_ptr<CMeshComponent>& MeshComponent);
 };

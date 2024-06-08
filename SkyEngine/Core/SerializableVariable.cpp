@@ -6,6 +6,21 @@
 
 #include "Application.h"
 #include "Asset/Asset.h"
+#include "Core/Object.h"
+
+std::string SSerializableVariable::GetMetaTag(std::string Key)
+{
+	if (!HasMetaTag(Key))
+	{
+		return {};
+	}
+	return MetaTags[Key];
+}
+
+bool SSerializableVariable::HasMetaTag(std::string Key) const
+{
+	return MetaTags.contains(Key);
+}
 
 void SSerializableVariable::SerializeVariable(std::ostream& os) const
 {
@@ -44,13 +59,19 @@ std::string SSerializableVariable::GetSerializedVariable() const
 			ss << *Vector4;
 			return ss.str();
 		}
-	case EVariableType::Asset:
+	case EVariableType::Transform:
 		{
-			const TPointer<CAsset> AssetPointer = *Asset;
+			std::stringstream ss("");
+			ss << *Transform;
+			return ss.str();
+		}
+	case EVariableType::Object:
+		{
+			TPointer<CAssetObject> AssetPointer = *AssetObject;
 			std::stringstream ss("None");
 			if (AssetPointer)
 			{
-				ss << AssetPointer->FilePath;
+				ss << AssetPointer->Asset->FilePath;
 			}
 			return ss.str();
 		}
@@ -96,18 +117,20 @@ void SSerializableVariable::SetDeserializedVariable(std::istream& is)
 	case EVariableType::Vector4:
 		is >> *Vector4;
 		break;
-	case EVariableType::Asset:
+	case EVariableType::Transform:
+		is >> *Transform;
+		break;
+	case EVariableType::Object:
 		{
 			std::string AssetPath;
 			is >> AssetPath;
 			if (AssetPath != "None")
 			{
-				// Not load to keep light
-				*Asset = GetAssetManager()->AddAsset(AssetPath);
+				*AssetObject = GetAssetManager()->LoadAsset(AssetPath);
 			}
 			else
 			{
-				*Asset = nullptr;
+				*AssetObject = nullptr;
 			}
 		}
 		break;

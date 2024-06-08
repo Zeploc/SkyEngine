@@ -3,8 +3,8 @@
 #pragma once
 #include "Shader.h"
 #include "Math/Vector4.h"
+#include "Render/Textures/Texture.h"
 
-class CTexture;
 template<class S>
 class TMaterial;
 
@@ -19,7 +19,7 @@ public:
 		DefineShaderParameter(DiffuseTexture);
 	ListShaderVariables()	
 		SVector4 DiffuseColour = SVector4(1.0f);
-		TPointer<CAsset> DiffuseTexture = nullptr;
+		TPointer<CTexture> DiffuseTexture = nullptr;
 	EndShaderParams()
 
 	bool HasTexture(const ShaderParameters& InParams);

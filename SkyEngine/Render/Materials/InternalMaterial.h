@@ -4,14 +4,13 @@
 
 #include "Core/Core.h"
 #include "Core/Object.h"
-#include "Core/Asset/AssetInterface.h"
 
 class CShader;
 
 // TODO: STDL warnings with exporting class with vector
 #pragma warning (disable : 4251)
 
-class ENGINE_API CMaterialInterface : public CObject, public IAssetObjectInterface//, public std::enable_shared_from_this<CMaterialInterface>
+class ENGINE_API CMaterialInterface : public CAssetObject
 {
 public:
 	virtual ~CMaterialInterface() = default;

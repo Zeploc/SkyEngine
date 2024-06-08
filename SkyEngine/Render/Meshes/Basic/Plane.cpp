@@ -45,7 +45,7 @@ CPlane::CPlane(const TPointer<Entity>& InOwner, TPointer<CMaterialInterface> InM
 	m_fFrameCheck = 1.0f / AnimationInfo.iFPS;
 
 	const TPointer<TMaterial<CPBRShader>> Material = std::static_pointer_cast<CMaterial_PBR>(MeshMaterial);
-	const TPointer<CTexture> TextureData = Material->Params.DiffuseTexture->Load<CTexture>();
+	const TPointer<CTexture> TextureData = Material->Params.DiffuseTexture;
 
 	AnimationInfo.v2FrameCount = v2FrameCounts;
 	AnimationInfo.v2EndFrame = v2FrameCounts;
@@ -71,7 +71,7 @@ CPlane::CPlane(const TPointer<Entity>& InOwner, TPointer<CMaterialInterface> InM
 	CollisionBox.fWidth = LEGACY_Width;
 
 	const TPointer<TMaterial<CPBRShader>> Material = std::static_pointer_cast<CMaterial_PBR>(MeshMaterial);
-	const TPointer<CTexture> TextureData = Material->Params.DiffuseTexture->Load<CTexture>();
+	const TPointer<CTexture> TextureData = Material->Params.DiffuseTexture;
 	float fImageRatio = static_cast<float>(TextureData->Width) / static_cast<float>(TextureData->Height);
 	float fObjectRatio = LEGACY_Height / LEGACY_Width;
 	float hSize = static_cast<float>(iCount);

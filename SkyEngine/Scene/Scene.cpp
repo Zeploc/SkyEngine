@@ -50,7 +50,7 @@ Scene::~Scene()
 
 std::shared_ptr<Scene> Scene::shared_from_this()
 {
-	return std::static_pointer_cast<Scene>(CObject::shared_from_this());
+	return std::static_pointer_cast<Scene>(CAssetObject::shared_from_this());
 }
 
 void Scene::Serialize(std::ostream& os)

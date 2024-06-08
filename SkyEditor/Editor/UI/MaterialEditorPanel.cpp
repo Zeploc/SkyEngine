@@ -37,7 +37,7 @@ void CMaterialEditorPanel::OnRender()
 	// TODO: Reload doesn't update existing references to old asset
 	if (ImGui::Button("Reload from disk"))
 	{
-		Material = std::dynamic_pointer_cast<CMaterialInterface>(Material->Asset->Reload());
+		Material = Cast<CMaterialInterface>(Material->Asset->Reload());
 	}
 }
 
