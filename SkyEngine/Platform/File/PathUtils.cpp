@@ -51,6 +51,22 @@ void PathUtils::NormalizePath(std::string& Path)
 	StringUtils::Replace(Path, "/", "\\");
 }
 
+bool PathUtils::IsRelativeToPath(const std::string& Path, const std::string& RelativeTo)
+{
+	return StringUtils::Contains(Path, RelativeTo);
+}
+
+std::string PathUtils::GetRelativePath(const std::string& Path, const std::string& RelativeTo)
+{
+	const size_t FoundIndex = Path.find(RelativeTo);
+	if (FoundIndex == std::string::npos)
+	{
+		return {};
+	}
+	const size_t Start = FoundIndex + RelativeTo.length();
+	return Path.substr(Start, Path.length() - Start);
+}
+
 void PathUtils::SetExtension(std::string& Path, const std::string& Extension)
 {
 	if (HasExtension(Path))

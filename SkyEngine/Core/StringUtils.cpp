@@ -85,3 +85,8 @@ TArray<std::string> StringUtils::Split(std::string String, const std::string& De
 	
 	return Tokens;
 }
+
+bool StringUtils::Contains(const std::string& String, const std::string& InString)
+{
+	return String.find(InString) != String.npos;
+}

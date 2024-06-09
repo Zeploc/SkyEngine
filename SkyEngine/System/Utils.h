@@ -96,7 +96,18 @@ public:
 	
 	static TPointer<Entity> WorldCubeMap;
 
+	// TODO: Move to custom array once setups
+	/* Check if an element exists in a array */
+	template<typename T>
+	static bool ArrayContains(TArray<T> Array, T Element);
+	
 private:
 
 
 };
+
+template <typename T>
+bool Utils::ArrayContains(TArray<T> Array, T Element)
+{
+	return std::find(Array.begin(), Array.end(), Element) != Array.end();
+}

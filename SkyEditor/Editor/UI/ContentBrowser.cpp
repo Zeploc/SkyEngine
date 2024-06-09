@@ -4,7 +4,9 @@
 #include "imgui_internal.h"
 #include "MaterialEditorPanel.h"
 #include "Core/Application.h"
+#include "Core/StringUtils.h"
 #include "Core/Asset/Asset.h"
+#include "Platform/File/PathUtils.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Render/Materials/Material.h"
 
@@ -36,14 +38,66 @@ void CContentBrowser::OnRender()
 	// 	}
 	// 	ImGui::TreePop();
 	// }
+	
+	if (ImGui::Button("Back", {40,20}))
+	{
+		if (!Directory.empty())
+		{
+			Directory = Directory.substr(0, Directory.length() - 1);
+		}
+		Directory = PathUtils::GetDirectory(Directory);
+		return;
+	}
 
+	TArray<std::string> Folders;
+	std::string NewDirectory = Directory;
+
+	// TODO: Do better
+	bool bFirstInList = true;
 	TArray<TPointer<CAsset>> Assets = GetAssetManager()->GetAssets();
-	for (int i = 0; i < Assets.size(); ++i)
+	for (uint16 i = 0; i < Assets.size(); ++i)
 	{
 		TPointer<CAsset> Asset = Assets[i];
+
+		std::string AssetPath = StringUtils::NormalizePath(Asset->FilePath);
+		// Check asset is somewhere within this directory
+		if (!Directory.empty() && !PathUtils::IsRelativeToPath(AssetPath, Directory))
+		{
+			continue;
+		}		
+
+		const std::string AssetDirectory = PathUtils::GetDirectory(AssetPath);
+		const std::string RelativeAssetDirectory = Directory.empty() ? AssetDirectory : PathUtils::GetRelativePath(AssetDirectory, Directory);
+		// If asset is not in the current folder
+		if (!RelativeAssetDirectory.empty())
+		{
+			std::string FolderName = StringUtils::Split(RelativeAssetDirectory, "\\")[0];
+			if (Utils::ArrayContains(Folders, FolderName))
+			{
+				continue;
+			}
+			
+			// ImGui::PushID(i);
+			if ((i % NumberPerRow) != 0 && !bFirstInList)
+				ImGui::SameLine();
+			
+			bFirstInList = false;
+
+			Folders.push_back(FolderName);
+			
+			// Create Folder button
+			if (ImGui::Button(FolderName.c_str(), {65,65}))
+			{
+				NewDirectory = (Directory.empty() ? FolderName : PathUtils::CombinePath(Directory, FolderName)) + "\\";
+			}
+			continue;
+		}
+		
 		ImGui::PushID(i);
-		if ((i % NumberPerRow) != 0)
+		if ((i % NumberPerRow) != 0 && !bFirstInList)
 			ImGui::SameLine();
+
+		bFirstInList = false;
 
 		// ImGui::PushID(i+100);
 		// ImGui::ButtonEx(std::format("##%s", Asset->FilePath).c_str());
@@ -74,7 +128,7 @@ void CContentBrowser::OnRender()
 			{
 				ImGui::TextUnformatted(Data.c_str());
 			}
-			ImGui::TextUnformatted(Asset->FilePath.c_str());
+			ImGui::TextUnformatted(AssetPath.c_str());
 			ImGui::PopTextWrapPos();
 			ImGui::EndTooltip();
 		}
@@ -89,7 +143,7 @@ void CContentBrowser::OnRender()
 			// Display preview (could be anything, e.g. when dragging an image we could decide to display
 			// the filename and a small preview of the image, etc.)
 			// TODO: Change to asset name/path
-			ImGui::Text(Asset->FilePath.c_str());
+			ImGui::Text(AssetPath.c_str());
 			ImGui::EndDragDropSource();
 		}
 		// ImGui::EndChild();
@@ -98,4 +152,5 @@ void CContentBrowser::OnRender()
 		
 		ImGui::PopID();
 	}
+	Directory = NewDirectory;
 }

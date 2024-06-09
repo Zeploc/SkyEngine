@@ -18,4 +18,5 @@ public:
 	static std::string RTrim_Copy(std::string s);
 	static std::string Trim_Copy(std::string s);
 	static TArray<std::string> Split(std::string String, const std::string& Delimniator);
+	static bool Contains(const std::string& String, const std::string& InString);
 };
