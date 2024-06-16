@@ -36,24 +36,47 @@ void CLogManager::Render()
 	// LoadingMessage->DrawUIElement();
 }
 
+void CLogManager::LogInternal(ELogMessageType MessageType, const std::string& InMessage)
+{
+	switch (MessageType)
+	{
+	case ELogMessageType::Message:
+		std::cout << InMessage << std::endl;
+		break;
+	case ELogMessageType::Warning:
+	case ELogMessageType::Error:		
+		std::cerr << InMessage << std::endl;
+		break;
+	default: ;
+	}
+}
+
+void CLogManager::Log(ELogMessageType MessageType, const std::string& InMessage)
+{
+	std::string Prefix = "";
+	if (MessageType != ELogMessageType::Message)
+	{
+		Prefix = (MessageType == ELogMessageType::Error ? "[ERROR]" : "[WARN]");
+		Prefix +=  ": ";
+	}
+	
+	
+	LogInternal(MessageType, Prefix + InMessage);
+}
+
 void CLogManager::DisplayMessage(const std::string& InMessage)
 {
-	std::cout << InMessage << std::endl;
-	// TODO: Log
-	// if (LoadingMessage)
-	// {
-	// 	LoadingMessage->sText = InMessage;
-	// }
+	Log(ELogMessageType::Message, InMessage);
 }
 
 void CLogManager::DisplayWarning(const std::string& InMessage)
 {
-	std::cerr << InMessage << std::endl;
+	Log(ELogMessageType::Warning, InMessage);
 }
 
 void CLogManager::DisplayError(const std::string& InMessage)
 {
-	std::cerr << InMessage << std::endl;
+	Log(ELogMessageType::Error, InMessage);
 }
 
 TPointer<CLogManager> CLogManager::Get()

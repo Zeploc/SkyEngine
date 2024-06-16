@@ -17,8 +17,9 @@ void CConsoleLog::Clear()
 	LineOffsets.clear();
 }
 
-void CConsoleLog::AddLog(const char* fmt, ...) IM_FMTARGS(2)
+void CConsoleLog::AddLog(ELogMessageType MessageType, const char* fmt, ...) IM_FMTARGS(2)
 {
+	// TODO: Read line for error
 	int old_size = Buf.size();
 	va_list args;
 	va_start(args, fmt);

@@ -9,12 +9,18 @@
 #include "Platform/File/PathUtils.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Render/Materials/Material.h"
+#include "Render/Shaders/PBRShader.h"
+#include "Render/Shaders/UnlitShader.h"
 
 CContentBrowser::CContentBrowser(const TWeakPointer<CEngineWindow>& InOwningWindow): CUICanvas(InOwningWindow, "Content Browser")
 {
 	StartingSize = {800, 300};
 	// TODO: Make button to open and remove
 	bCanClose = false;
+}
+
+void CContentBrowser::DeletePopup(TPointer<CAsset> Asset)
+{
 }
 
 void CContentBrowser::OnRender()
@@ -39,6 +45,94 @@ void CContentBrowser::OnRender()
 	// 	ImGui::TreePop();
 	// }
 	
+	static char AssetName[128];
+	static std::string NewAssetClassName;
+	static TArray<std::string> MetaData;
+	
+	if (ImGui::BeginPopupContextWindow("EmptySpaceContextMenu"))
+	{
+		if (ImGui::BeginMenu("New"))
+		{
+			if (ImGui::BeginMenu("Material"))
+			{
+				// TODO: Additional option for shader base (could be later changed in material asset but would change properties - same as editing a shader and recompiling though)
+				if (ImGui::MenuItem("PBR"))
+				{
+					NewAssetClassName = CMaterial_PBR::GetStaticName();
+					MetaData.push_back(CPBRShader::GetStaticName());
+				}
+				else if (ImGui::MenuItem("Unlit"))
+				{
+					NewAssetClassName = CMaterial_Unlit::GetStaticName();
+					MetaData.push_back(CUnlitShader::GetStaticName());
+				}				
+					
+				ImGui::EndMenu();
+			}
+			if (ImGui::MenuItem("Texture"))
+			{
+				NewAssetClassName = CTexture::GetStaticName();
+			}
+			if (ImGui::MenuItem("Scene"))
+			{
+				NewAssetClassName = Scene::GetStaticName();
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::MenuItem("Reload"))
+		{
+				
+		}
+		ImGui::EndPopup();
+	}
+
+	TPointer<CAsset> CreatedAsset;
+	if (ImGui::BeginPopup("NamePopup"))
+	{			
+		ImGui::Text("Enter name");						
+		// ImGui::SetNextItemWidth(-FLT_MIN);
+		ImGui::InputText("##Name", AssetName, IM_ARRAYSIZE(AssetName));
+		if (ImGui::Button("Cancel"))
+		{
+			NewAssetClassName = {};
+			AssetName[0] = '\0';
+			MetaData.clear();
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Create"))
+		{
+			std::string Extension = ".sasset";
+			if (NewAssetClassName == Scene::GetStaticName())
+			{
+				Extension = ".slvl";
+			}
+			CreatedAsset = GetAssetManager()->AddAsset(Directory + std::string(AssetName) + Extension, NewAssetClassName);
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
+	if (CreatedAsset)
+	{
+		CreatedAsset->Metadata = MetaData;
+		CreatedAsset->SetDefaultObject(CreatedAsset->MakeObject());
+		CreatedAsset->Load()->OnLoaded();
+		CreatedAsset->Save();
+			
+		NewAssetClassName = {};
+		AssetName[0] = '\0';
+		MetaData.clear();
+	}
+	
+	if (!NewAssetClassName.empty())
+	{
+		ImGui::OpenPopup("NamePopup");
+		if (AssetName[0] == '\0')
+		{
+			sprintf_s(AssetName,"New%s", NewAssetClassName.c_str());
+		}
+	}
+	
 	if (ImGui::Button("Back", {40,20}))
 	{
 		if (!Directory.empty())
@@ -48,7 +142,7 @@ void CContentBrowser::OnRender()
 		Directory = PathUtils::GetDirectory(Directory);
 		return;
 	}
-
+	
 	TArray<std::string> Folders;
 	std::string NewDirectory = Directory;
 
@@ -90,6 +184,16 @@ void CContentBrowser::OnRender()
 			{
 				NewDirectory = (Directory.empty() ? FolderName : PathUtils::CombinePath(Directory, FolderName)) + "\\";
 			}
+			
+			if (ImGui::BeginPopupContextItem()) // <-- This is using IsItemHovered()
+				{
+				if (ImGui::MenuItem("Delete"))
+				{
+					// TODO:
+					//DeletePopup(Asset);
+				}
+				ImGui::EndPopup();
+				}
 			continue;
 		}
 		
@@ -101,7 +205,11 @@ void CContentBrowser::OnRender()
 
 		// ImGui::PushID(i+100);
 		// ImGui::ButtonEx(std::format("##%s", Asset->FilePath).c_str());
-		if (ImGui::Button(std::format("{}\n{}", Asset->DisplayName, Asset->ClassName).c_str(), {65,90}))
+
+		//if (ImGui::Selectable(names[n], selected == n))
+		
+		// TODO: Star if unsaved
+		if (ImGui::Button(std::format("{}\n\n[{}]", Asset->DisplayName, Asset->ClassName).c_str(), {65,90}))
 		{
 			Asset->Open();
 			// TODO: Determine structure for opening at a per asset basis without having editor code in engine...
@@ -110,6 +218,54 @@ void CContentBrowser::OnRender()
 				GetApplication()->GetApplicationWindow()->GetCanvas<CMaterialEditorPanel>()->SetMaterial(Material);
 			}
 		}
+
+		if (ImGui::BeginPopupContextItem()) // <-- This is using IsItemHovered()
+			{
+			static bool dont_ask_me_next_time = true;
+			if (ImGui::MenuItem("Save"))
+			{
+				Asset->Save();
+			}
+			if (ImGui::MenuItem("Reload"))
+			{
+				Asset->Reload();
+			}
+			if (ImGui::MenuItem("Delete"))
+			{
+				if (dont_ask_me_next_time)
+				{
+					Asset->Unload();
+					Asset->Delete();
+				}
+				// Later reference check
+				else if (ImGui::BeginPopupModal("Delete?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+				{
+					ImGui::Text("All those beautiful files will be deleted.\nThis operation cannot be undone!\n\n");
+					ImGui::Separator();
+
+					Asset->Load();
+					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+					ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
+					ImGui::PopStyleVar();
+
+					if (ImGui::Button("OK", ImVec2(120, 0)))
+					{
+						Asset->Unload();
+						Asset->Delete();
+						ImGui::CloseCurrentPopup();
+					}
+					ImGui::SetItemDefaultFocus();
+					ImGui::SameLine();
+					if (ImGui::Button("Cancel", ImVec2(120, 0)))
+					{
+						ImGui::CloseCurrentPopup();
+					}
+					ImGui::EndPopup();
+				}
+			}
+			ImGui::EndPopup();
+		}
+		
 		// ImGui::BeginChild(i + 100, ImVec2(65, 100), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 		//ImGui::ImageButton(Asset->DisplayName.c_str(), nullptr, ImVec2(60, 60));
 		// ImGui::BeginGroup();//std::format("##%s2", Asset->FilePath).c_str(), nullptr);

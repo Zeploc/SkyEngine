@@ -115,6 +115,9 @@ namespace SkyEngine
 		ProjectDirectory = ProjectDirectory.substr(0, DirectoryEndIndex);
 		DirectoryEndIndex = ProjectDirectory.find_last_of("\\");
 		ProjectDirectory = ProjectDirectory.substr(0, DirectoryEndIndex);
+		
+		// TODO: Should be moved out of editor
+		ContentPath = ProjectDirectory + "\\SkyEditor\\Assets\\";
 	}
 
 	void Application::SetupConfigs()

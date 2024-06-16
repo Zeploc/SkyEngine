@@ -26,15 +26,15 @@ std::string CMaterialInterface::GetStaticName()
 	return "Material";
 }
 
-TPointer<CMaterialInterface> CMaterialInterface::MakeMaterialFromShaderName(const std::string& ShaderName)
+TPointer<CMaterialInterface> CMaterialInterface::MakeMaterialFromShaderName(const std::string& ShaderName, const std::string& MaterialName)
 {
 	if (ShaderName == CPBRShader::GetStaticName())
 	{
-		return std::make_shared<CMaterial_PBR>("New Material");
+		return std::make_shared<CMaterial_PBR>(MaterialName);
 	}
 	if (ShaderName == CUnlitShader::GetStaticName())
 	{
-		return std::make_shared<CMaterial_Unlit>("New Material");
+		return std::make_shared<CMaterial_Unlit>(MaterialName);
 	}
 	return nullptr;
 }

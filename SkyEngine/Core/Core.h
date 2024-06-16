@@ -60,5 +60,12 @@ _ASSERTE(Expr)
 #   define M_Assert(Expr, Msg) ;
 #endif
 
+#define LOG_MESSAGE(Text, ...)\
+CLogManager::Get()->Log(ELogMessageType::Message, std::format(Text, __VA_ARGS__))
+#define LOG_WARNING(Text, ...)\
+CLogManager::Get()->Log(ELogMessageType::Warning, std::format(Text, __VA_ARGS__))
+#define LOG_ERROR(Text, ...)\
+CLogManager::Get()->Log(ELogMessageType::Error, std::format(Text, __VA_ARGS__))
+
 ENGINE_API bool __M_Ensure(const char* expr_str, bool expr, const char* file, int line, const char* msg);
 ENGINE_API void __M_Assert(const char* expr_str, bool expr, const char* file, int line, const char* msg);

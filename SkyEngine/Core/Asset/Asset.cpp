@@ -38,7 +38,7 @@ CAsset::CAsset(const std::string& AssetPath, const std::string& InClass)
 		}
 		else
 		{
-			CLogManager::Get()->DisplayWarning(std::format("Failed to find asset at path {}", AssetPath));
+			LOG_WARNING("Failed to find asset at path {}", AssetPath);
 		}
 	}	
 }
@@ -97,6 +97,16 @@ void CAsset::Unload()
 	Object.reset();
 }
 
+bool CAsset::Delete()
+{
+	if (IsLoaded())
+	{
+		LOG_WARNING("Attempted to delete asset {} while it was still loaded!", DisplayName);
+		return false;
+	}
+	return GetAssetManager()->DeleteAsset(shared_from_this());
+}
+
 TPointer<CAssetObject> CAsset::Reload()
 {
 	Unload();
@@ -133,13 +143,8 @@ bool CAsset::Save()
 
 void CAsset::SetDefaultObject(TPointer<CAssetObject> NewObject)
 {
-	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(NewObject.get());
-	if (!AssetInterface)
-	{
-		return;
-	}
-	AssetInterface->Asset = shared_from_this();
-	Metadata = AssetInterface->GetMetaData();
+	NewObject->Asset = shared_from_this();
+	Metadata = NewObject->GetMetaData();
 	Object = NewObject;
 }
 
@@ -159,6 +164,11 @@ void CAsset::DisconnectObject()
 	Object = nullptr;
 }
 
+std::string CAsset::GetAbsoluteFilePath() const
+{
+	return PathUtils::CombinePath(GetApplication()->GetContentDirectory(), FilePath);
+}
+
 TPointer<CAssetObject> CAsset::MakeObject() const
 {
 	if (ClassName == CMaterialInterface::GetStaticName())
@@ -168,11 +178,11 @@ TPointer<CAssetObject> CAsset::MakeObject() const
 		{
 			return nullptr;
 		}
-		return CMaterialInterface::MakeMaterialFromShaderName(Metadata[0]);
+		return CMaterialInterface::MakeMaterialFromShaderName(Metadata[0], DisplayName);
 	}
 	if (ClassName == Scene::GetStaticName())
 	{
-		return std::make_shared<Scene>("Untitled");
+		return std::make_shared<Scene>(DisplayName);
 	}
 	if (ClassName == CTexture::GetStaticName())
 	{

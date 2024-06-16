@@ -16,7 +16,9 @@ public:
 	TPointer<CAsset> AddAsset(const std::string& AssetPath, const std::string& NewClass = std::string());
 	TPointer<CAssetObject> LoadAsset(const std::string& AssetPath);
 	TPointer<CAsset> FindAsset(const std::string& AssetPath) const;
-	bool ContainsAsset(const std::string& AssetPath) const;
+	bool ContainsScannedAsset(const std::string& AssetPath) const;
+	bool DoesAssetExist(const std::string& AssetPath) const;
+	bool DeleteAsset(TPointer<CAsset> Asset);
 
 	void SetAssetPath(const std::string& DirectoryPath);
 	void ScanForAssets();

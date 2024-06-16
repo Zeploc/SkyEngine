@@ -113,6 +113,11 @@ bool CFileManager::OpenFile(std::string& OpenedFile, const std::string& Extensio
 	return true;
 }
 
+bool CFileManager::Delete_File(const std::string& FilePath)
+{
+	return DeleteFileA(FilePath.c_str());
+}
+
 bool CFileManager::FileExists(const std::string& FilePath)
 {
 	std::ifstream OpenedFileStream(FilePath);//szFile); //

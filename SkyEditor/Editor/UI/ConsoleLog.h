@@ -3,13 +3,14 @@
 #pragma once
 #include "Canvas/UICanvas.h"
 #include "Dependencies/ImGui/imgui.h"
+#include "System/LogManager.h"
 
 class CConsoleLog : public CUICanvas
 {
 public:
 	CConsoleLog(TWeakPointer<CEngineWindow> InOwningWindow);
 	void Clear();
-	void AddLog(const char* fmt, ...);
+	void AddLog(ELogMessageType MessageType, const char* fmt, ...);
 	virtual void OnRender() override;
 
 protected:

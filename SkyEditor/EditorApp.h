@@ -52,7 +52,6 @@ public:
 	CConfigSettingsPanel* EditorSettingsPanel = nullptr;
 
 	std::string ScenePath;
-	std::string ContentPath;
 	std::string WindowName;
 
 protected:

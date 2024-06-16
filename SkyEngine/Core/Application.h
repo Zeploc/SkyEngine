@@ -63,6 +63,7 @@ namespace SkyEngine
 		TPointer<CEngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
 		CViewportCanvas* GetViewportCanvas() const { return ViewportCanvas; }
 		std::string GetProjectDirectory() const { return ProjectDirectory; }
+		std::string GetContentDirectory() const { return ContentPath; }
 
 		/* Only called internally in the engine */
 		inline static Application* Get();
@@ -75,6 +76,7 @@ namespace SkyEngine
 		
 		TPointer<CEngineWindow> ApplicationWindow;
 		std::string ProjectDirectory;
+		std::string ContentPath;
 	private:
 		static Application* EngineApplication;
 

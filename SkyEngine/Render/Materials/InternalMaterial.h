@@ -17,7 +17,7 @@ public:
 	CMaterialInterface();
 	virtual void BindMaterial();
 	static std::string GetStaticName();
-	static TPointer<CMaterialInterface> MakeMaterialFromShaderName(const std::string& ShaderName);
+	static TPointer<CMaterialInterface> MakeMaterialFromShaderName(const std::string& ShaderName, const std::string& MaterialName);
 
 	// Override shared_from_this so manual downcast not needed
 	// ReSharper disable once CppHidingFunction

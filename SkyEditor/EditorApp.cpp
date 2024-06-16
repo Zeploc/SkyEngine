@@ -57,8 +57,6 @@ EditorApplication::EditorApplication() : Application()
 void EditorApplication::SetProjectDirectory(std::string ExecutablePath)
 {
 	Application::SetProjectDirectory(ExecutablePath);
-	// TODO: Should be moved out of editor
-	ContentPath = ProjectDirectory + "\\SkyEditor\\Assets\\";
 }
 
 bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
@@ -431,7 +429,6 @@ bool EditorApplication::OpenSceneByPath(std::string FilePath)
 	{
 		return false;	
 	}
-	ScenePath = FilePath;
 	return true;
 }
 
@@ -442,7 +439,12 @@ bool EditorApplication::OpenScene(TPointer<Scene> NewScene)
 		return false;
 	}
 	ApplicationWindow->SetWindowTitle(WindowName + " - " + NewScene->SceneName);
-	return Application::OpenScene(NewScene);
+	const bool bOpenSuccessful = Application::OpenScene(NewScene);
+	if (bOpenSuccessful)
+	{
+		ScenePath = NewScene->Asset->FilePath;		
+	}
+	return bOpenSuccessful;
 }
 
 void EditorApplication::SaveScene(bool bAsNew)

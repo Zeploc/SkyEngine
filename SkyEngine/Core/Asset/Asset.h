@@ -19,6 +19,7 @@ public:
 	bool IsLoaded() const { return Object != nullptr; }
 	
 	void Unload();
+	bool Delete();
 	/* Unloads the asset and reloads from disk, returning new object*/
 	TPointer<CAssetObject> Reload();
 	bool Save();
@@ -27,6 +28,8 @@ public:
 	/* Clears the object link for this asset (Will load from file when load called again) */
 	void DisconnectObject();
 
+	std::string GetAbsoluteFilePath() const;
+
 	std::string FilePath;
 	std::string DisplayName;
 	std::string ClassName;
@@ -34,13 +37,14 @@ public:
 	
 	// TODO: Unsaved
 	
-
-protected:
 	/* Creates the object for this asset when loading based on the class and meta data */
 	TPointer<CAssetObject> MakeObject() const;
+
+protected:
 	void ApplyAssetData(std::string AssetData);
 	
 	// TODO: Only for editor
+	/* If wanting to get this externally, use Load() */
 	TPointer<CAssetObject> Object = nullptr;
 };
 

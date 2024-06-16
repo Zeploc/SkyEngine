@@ -100,6 +100,12 @@ public:
 	/* Check if an element exists in a array */
 	template<typename T>
 	static bool ArrayContains(TArray<T> Array, T Element);
+	/* Check if an element exists in a array */
+	template<typename T>
+	static int FindInArray(TArray<T> Array, T Element);
+	/* Check if an element exists in a array */
+	template<typename T>
+	static bool RemoveFromArray(std::vector<T>& Array, T Element);
 	
 private:
 
@@ -110,4 +116,31 @@ template <typename T>
 bool Utils::ArrayContains(TArray<T> Array, T Element)
 {
 	return std::find(Array.begin(), Array.end(), Element) != Array.end();
+}
+
+template <typename T>
+int Utils::FindInArray(TArray<T> Array, T Element)
+{
+	for (auto it = Array.begin(); it != Array.end(); ++it)
+	{
+		if (*it == Element)
+		{
+			return it;
+		}
+	}
+	return -1;
+}
+
+template <typename T>
+bool Utils::RemoveFromArray(TArray<T>& Array, T Element)
+{
+	for (auto it = Array.begin(); it != Array.end(); ++it)
+	{
+		if (*it == Element)
+		{
+			Array.erase(it);
+			return true;
+		}
+	}
+	return false;
 }

@@ -7,6 +7,7 @@
 #include "Application.h"
 #include "Asset/Asset.h"
 #include "Core/Object.h"
+#include "System/LogManager.h"
 
 std::string SSerializableVariable::GetMetaTag(std::string Key)
 {
@@ -126,7 +127,14 @@ void SSerializableVariable::SetDeserializedVariable(std::istream& is)
 			is >> AssetPath;
 			if (AssetPath != "None")
 			{
-				*AssetObject = GetAssetManager()->LoadAsset(AssetPath);
+				if (GetAssetManager()->DoesAssetExist(AssetPath))
+				{
+					*AssetObject = GetAssetManager()->LoadAsset(AssetPath);
+				}
+				else
+				{
+					LOG_ERROR("Failed to load asset by path {}", AssetPath);
+				}
 			}
 			else
 			{
