@@ -1,4 +1,5 @@
-﻿#include "FileManager.h"
+﻿#include "SEPCH.h"
+#include "FileManager.h"
 
 #include <fstream>
 #include <windows.h>
