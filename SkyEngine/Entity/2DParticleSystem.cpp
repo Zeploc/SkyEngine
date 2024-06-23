@@ -1,5 +1,6 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
 #include <random>
 
 // OpenGL Library Includes //
@@ -10,10 +11,15 @@
 // This Includes //
 #include "2DParticleSystem.h"
 
-#include "Render/Plane.h"
-#include "Scene/Scene.h"
+#include "Core/Application.h"
+#include "Render/Materials/Material.h"
+#include "Render/Meshes/Basic/Plane.h"
+#include "Render/Shaders/PBRShader.h"
+#include "Render/Shaders/ShaderManager.h"
+#include "Render/Shaders/UnlitShader.h"
+#include "Render/Textures/Texture.h"
 #include "Scene/SceneManager.h"
-#include "System/Time.h"
+#include "System/TimeManager.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -21,7 +27,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-ParticleSystem2D::ParticleSystem2D(FTransform _Transform, const char* _CharName) : Entity(_Transform, EANCHOR::CENTER)
+ParticleSystem2D::ParticleSystem2D(STransform _Transform, const char* _CharName) : Entity(_Transform, "Particle System 2D")
 {
 	m_vParticlePaths.push_back(_CharName);
 }
@@ -161,8 +167,8 @@ float ParticleSystem2D::RandomBetweenRange(float _fMin, float _fMax)
 void ParticleSystem2D::Update()
 {
 	// Decrease timer
-	m_fCurrentDelay -= static_cast<float>(Time::dTimeDelta);
-	m_fCurrentLifeTime += static_cast<float>(Time::dTimeDelta);
+	m_fCurrentDelay -= CTimeManager::GetDeltaTime();
+	m_fCurrentLifeTime += CTimeManager::GetDeltaTime();
 	if (m_fCurrentDelay <= 0 && (m_fLifeTime == 0 || m_fCurrentLifeTime <= m_fLifeTime))
 	{
 		// Generate New Random Time
@@ -181,9 +187,15 @@ void ParticleSystem2D::Update()
 		// Random path from paths
 		int iRandPath = rand() % m_vParticlePaths.size();
 
-		std::shared_ptr<Entity> NewParticleEntity = std::make_shared<Entity>(Transform, EANCHOR::CENTER);
-		std::shared_ptr<Plane> NewParticlePlaneMesh = std::make_shared<Plane>(fNewSize, fNewSize, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), m_vParticlePaths[iRandPath]);
-		NewParticleEntity->AddMesh(NewParticlePlaneMesh);
+		TPointer<CTexture> ParticleTexture = GetTextureManager()->FindTexture(m_vParticlePaths[iRandPath]);	
+		TPointer<CMaterial_Unlit> ParticleMaterial = std::make_shared<CMaterial_Unlit>("ParticleMaterial");
+		ParticleMaterial->Params.DiffuseColour = SVector4(1.0f, 1.0f, 1.0f, 1.0f);
+		ParticleMaterial->Params.DiffuseTexture = ParticleTexture;
+		
+		TPointer<Entity> NewParticleEntity = std::make_shared<Entity>(Transform, "Particle");
+		NewParticleEntity->Transform.Scale = fNewSize;
+		TPointer<CPlane> NewParticlePlaneMesh = std::make_shared<CPlane>(NewParticleEntity, ParticleMaterial);
+		NewParticleEntity->AddComponent(NewParticlePlaneMesh);
 
 		Particle2D NewParticle = {NewParticleEntity, fNewSpeed, v2NewDirection, fNewFalloffDistance, fNewFalloffTime, 0.0f};
 		m_vParticles.push_back(NewParticle);
@@ -194,9 +206,9 @@ void ParticleSystem2D::Update()
 	{
 		for (auto iter = m_vParticles.begin(); iter != m_vParticles.end();)
 		{
-			(*iter).fTimeLength += static_cast<float>(Time::dTimeDelta);
-			(*iter).pEntity->Translate(Vector3(0, -m_fGravity * Time::dTimeDelta, 0));
-			(*iter).pEntity->Translate(Vector3((*iter).v2Direction * (*iter).fSpeed * static_cast<float>(Time::dTimeDelta), 0));
+			(*iter).fTimeLength += CTimeManager::GetDeltaTime();
+			(*iter).pEntity->Translate(SVector(0, -m_fGravity * CTimeManager::GetDeltaTime(), 0));
+			(*iter).pEntity->Translate(SVector((*iter).v2Direction * (*iter).fSpeed * CTimeManager::GetDeltaTime(), 0));
 
 			glm::vec2 v2Distance = Utils::GetDistance2D((*iter).pEntity, this->shared_from_this());
 			if (sqrt(pow(v2Distance.x, 2) + pow(v2Distance.y, 2)) >= (*iter).fFalloffDistance || (*iter).fTimeLength > (*iter).fFallOffTime)
@@ -212,9 +224,9 @@ void ParticleSystem2D::Update()
 	}
 	else if (!m_vParticles.empty())
 	{
-		m_vParticles[0].fTimeLength += static_cast<float>(Time::dTimeDelta);
-		m_vParticles[0].pEntity->Translate(Vector3(m_vParticles[0].v2Direction * m_vParticles[0].fSpeed * static_cast<float>(Time::dTimeDelta), 0));
-		m_vParticles[0].pEntity->Translate(Vector3(0, -m_fGravity * Time::dTimeDelta, 0));
+		m_vParticles[0].fTimeLength += CTimeManager::GetDeltaTime();
+		m_vParticles[0].pEntity->Translate(SVector(m_vParticles[0].v2Direction * m_vParticles[0].fSpeed * CTimeManager::GetDeltaTime(), 0));
+		m_vParticles[0].pEntity->Translate(SVector(0, -m_fGravity * CTimeManager::GetDeltaTime(), 0));
 		glm::vec2 v2Distance = Utils::GetDistance2D(m_vParticles[0].pEntity, this->shared_from_this());
 
 		if (sqrt(pow(v2Distance.x, 2) + pow(v2Distance.y, 2)) >= m_vParticles[0].fFalloffDistance || m_vParticles[0].fTimeLength > m_vParticles[0].fFallOffTime)
@@ -229,16 +241,12 @@ void ParticleSystem2D::Update()
 	}
 }
 
-/************************************************************
-#--Description--#:	Render to the screen
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
-void ParticleSystem2D::Render()
+std::vector<TPointer<Entity>> ParticleSystem2D::GetAdditionalEntitiesToRender()
 {
+	std::vector<TPointer<Entity>> ParticleEntities;
 	for (auto it : m_vParticles)
 	{
-		it.pEntity->DrawEntity();
+		ParticleEntities.push_back(it.pEntity);
 	}
+	return ParticleEntities;
 }

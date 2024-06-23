@@ -1,9 +1,11 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
 #include "Matrix.h"
 
 #include "Quaternion.h"
 #include "Vector.h"
+#include "Vector4.h"
 
 void Matrix4::InitScaleTransform(float ScaleX, float ScaleY, float ScaleZ)
 {
@@ -115,18 +117,18 @@ void Matrix4::InitRotateTransform(const Quaternion& quat)
 }
 
 // TODO: Complete
-void Matrix4::SetViewTranslation(const Vector3 Location)
+void Matrix4::SetViewTranslation(const SVector Location)
 {
-	Vector3 const Forward(0,0,1);// GetForward().GetNormalized());
-	Vector3 const Right(-1,0,0);//(Forward.Cross(GetUp())).GetNormalized());
-	Vector3 const NewUp(0,1,0);//Right.Cross(Forward));
+	SVector const Forward(0,0,1);// GetForward().GetNormalized());
+	SVector const Right(-1,0,0);//(Forward.Cross(GetUp())).GetNormalized());
+	SVector const NewUp(0,1,0);//Right.Cross(Forward));
 
 	M[3][0] = -Right.Dot(Location);
 	M[3][1] = -NewUp.Dot(Location);
 	M[3][2] = Forward.Dot(Location);
 }
 
-void Matrix4::SetTranslationTransform(const Vector3 Location)
+void Matrix4::SetTranslationTransform(const SVector Location)
 {
 	SetTranslationTransform(Location.X, Location.Y, Location.Z);
 }
@@ -139,12 +141,12 @@ void Matrix4::SetTranslationTransform(const float X, const float Y, const float 
 	M[3][3] = 1.0f;	
 }
 
-void Matrix4::SetCameraOrientation(Vector3 Forward, Vector3 Up)
+void Matrix4::SetCameraOrientation(SVector Forward, SVector Up)
 {
 	Forward.Normalize();
 	Up.Normalize();
-	const Vector3 Right = Forward.Cross(Up);
-	const Vector3 CorrectedUp = (Right.Cross(Forward)).GetNormalized();
+	const SVector Right = Forward.Cross(Up);
+	const SVector CorrectedUp = (Right.Cross(Forward)).GetNormalized();
 	
 	M[0][0] = Right.X;
 	M[1][0] = Right.Y;
@@ -161,11 +163,12 @@ void Matrix4::SetCameraOrientation(Vector3 Forward, Vector3 Up)
 	SetViewTranslation(GetViewLocation());	
 }
 
-void Matrix4::SetLookAt(Vector3 Location, Vector3 Target, Vector3 Up)
+void Matrix4::SetLookAt(SVector Location, SVector Target, SVector Up)
 {	
-	const Vector3 Forward((Target - Location).GetNormalized());
-	const Vector3 Right((Forward.Cross(Up)).GetNormalized());
-	const Vector3 NewUp(Right.Cross(Forward));
+	SVector Forward(Target - Location);
+	Forward.Normalize();
+	const SVector Right((Forward.Cross(Up)).GetNormalized());
+	const SVector NewUp(Right.Cross(Forward));
 
 	M[0][0] = Right.X;
 	M[1][0] = Right.Y;
@@ -239,13 +242,13 @@ void Matrix4::SetOrthographicProjection(const OrthoProjInfo& P)
 	M[2][3] = -(f + n) / (f - n);
 }
 
-Vector4 Matrix4::operator*(const Vector4& V) const
+SVector4 Matrix4::operator*(const SVector4& V) const
 {
-	glm::vec4 Vec4 = ToGLM() * V.ToGLM();
+	glm::vec4 Vec4 = ToGLM() * V;
 	return Vec4;
 
 	// TODO: Fix
-	Vector4 Result;
+	SVector4 Result;
 
 	Result.X = M[0][0] * V.X + M[0][1] * V.Y + M[0][2] * V.Z + M[0][3] * V.W;
 	Result.Y = M[1][0] * V.X + M[1][1] * V.Y + M[1][2] * V.Z + M[1][3] * V.W;
@@ -294,7 +297,7 @@ Matrix4 Matrix4::GetInverse()
 			nan,nan,nan,nan,
 			nan,nan,nan,nan,
 			nan,nan,nan,nan);*/
-		assert(0);
+		ensure(0, "Matrix function inverse doesn't exist");
 		return *this;
 	}
 
@@ -321,27 +324,27 @@ Matrix4 Matrix4::GetInverse()
 	return res;
 }
 
-Vector3 Matrix4::GetViewLocation() const
+SVector Matrix4::GetViewLocation() const
 {
-	return Vector3(M[3][0], M[3][1], M[3][2]);
+	return SVector(M[3][0], M[3][1], M[3][2]);
 }
 
-Vector3 Matrix4::GetLocation() const
+SVector Matrix4::GetLocation() const
 {
-	return Vector3(M[0][3], M[1][3], M[2][3]);
+	return SVector(M[0][3], M[1][3], M[2][3]);
 }
 
-Vector3 Matrix4::GetForward() const
+SVector Matrix4::GetForward() const
 {
-	return Vector3(-M[0][2], -M[1][2], -M[2][2]);
+	return SVector(-M[0][2], -M[1][2], -M[2][2]);
 }
 
-Vector3 Matrix4::GetRight() const
+SVector Matrix4::GetRight() const
 {
 	return {M[0][0], M[1][0], M[2][0]};
 }
 
- Vector3 Matrix4::GetUp() const
+ SVector Matrix4::GetUp() const
 {
 	return {M[0][1], M[1][1], M[2][1]};
 }

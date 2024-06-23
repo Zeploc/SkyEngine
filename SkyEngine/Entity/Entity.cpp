@@ -1,63 +1,105 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
 #include "Entity.h"
 
 // Library Includes //
 #include <iostream>
 #include <sstream>
 
-// OpenGL Library Includes //
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 // Engine Includes //
-#include "CollisionBounds.h"
-#include "Render/Mesh.h"
+#include <format>
+
+#include "Camera.h"
+#include "Component.h"
+#include "Core/StringUtils.h"
+#include "Render/Meshes/MeshComponent.h"
+#include "Scene/Scene.h"
+#include "Scene/SceneManager.h"
 #include "System/LogManager.h"
 #include "System/Utils.h"
 
-Entity::Entity(std::string _FromString)
+Entity::Entity(std::stringstream& ss)
 {
-	std::stringstream ss(_FromString);
-	std::string Name;
-	ss >> Name;
-	if (Name != "[Entity]")
+	std::string ConstructName;
+	ss >> ConstructName;
+	if (ConstructName != "[Entity]")
 	{
 		return;
 	}
-	ss >> iEntityID;
-	ss >> Transform;
-
-	EntityAnchor = EANCHOR::CENTER;
+	std::shared_ptr<Entity> Entity = shared_from_this();
+	ss >> Entity;
+	
+	SetSerializeVariable(Name);
+	SetSerializeVariable(EntityID);
+	// TODO: Read only (or hidden) meta data for ID
+	AddMetaTag(EntityID, MetaTag_ReadOnlyEditor)
+	SetSerializeVariable(Transform);
 }
 
-//************************************************************
-//#--Description--#:	Constructor function with base position
-//#--Author--#: 		Alex Coultas
-//#--Parameters--#:		Takes contructor values
-//#--Return--#: 		NA
-//************************************************************/
-Entity::Entity(FTransform _Transform, EANCHOR _Anchor) : Transform(_Transform), EntityAnchor(_Anchor)
+Entity::Entity(STransform InTransform, std::string EntityName)
+: Transform(InTransform), Name(EntityName)
 {
-	iEntityID = Utils::AddEntityID();
-	LogManager::GetInstance()->DisplayLogMessage("New Entity created with ID #" + std::to_string(iEntityID));
+	CLogManager::Get()->DisplayMessage("New Entity created with ID #" + std::to_string(EntityID));
+	if (Name.empty())
+	{
+		Name = std::format("Entity_{}", EntityID);
+	}
+	StringUtils::Replace(Name, " ", "_");
+	
+	SetSerializeVariable(Name);
+	SetSerializeVariable(EntityID);
+	AddMetaTag(EntityID, MetaTag_ReadOnlyEditor)
+	SetSerializeVariable(Transform);
 }
 
-/************************************************************
-#--Description--#:  Destructor function
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	NA
-#--Return--#: 		NA
-************************************************************/
 Entity::~Entity()
 {
-	EntityMesh = nullptr;
-	LogManager::GetInstance()->DisplayLogMessage("Entity " + std::to_string(iEntityID) + " destroyed!");	
+	CLogManager::Get()->DisplayMessage("Entity " + std::to_string(EntityID) + " destroyed!");	
 }
 
-void Entity::AddMesh(std::shared_ptr<Mesh> _NewMesh)
+void Entity::AddComponent(TPointer<CComponent> NewComponent)
 {
-	EntityMesh = _NewMesh;
+	Components.push_back(NewComponent);
+	NewComponent->OnAttached();
+}
+
+void Entity::AddToScene(TPointer<Scene> InScene)
+{
+	OwningScene = InScene;
+}
+
+void Entity::BeginPlay()
+{
+	for (const TPointer<CComponent>& Component : Components)
+	{
+		Component->BeginPlay();
+	}
+}
+
+void Entity::Unload()
+{
+	for (const TPointer<CComponent>& Component : Components)
+	{
+		Component->Unload();
+	}
+}
+
+bool Entity::CanRender()
+{
+	if (!bVisible)
+	{
+		return false;
+	}
+	for (const TPointer<CComponent>& Component : Components)
+	{
+		const ISceneVisual* SceneVisual = GetInterface<ISceneVisual>(Component);
+		if (SceneVisual && SceneVisual->ShouldRender())
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 //void Entity::AddMesh(Utils::ESHAPE _NewShape)
@@ -81,36 +123,27 @@ void Entity::AddMesh(std::shared_ptr<Mesh> _NewMesh)
 //	EntityMesh->EntityRef = this->shared_from_this();
 //}
 
-/************************************************************
-#--Description--#: 	Draws the entity on the screen at the using the Transform
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
-void Entity::DrawEntity()
+SVector Entity::GetForwardVector() const
 {
-	if (!EntityMesh || !bVisible)
-	{
-		return;
-	}
-	FTransform AnchoredTransform = Transform;
-	if (EntityMesh->GetCollisionBounds())
-	{
-		AnchoredTransform.Position = Utils::GetAncoredPosition(Transform.Position, EntityMesh->GetCollisionBounds()->GetDimensions(), EntityAnchor);
-	}
-	else
-	{
-		AnchoredTransform.Position = Utils::GetAncoredPosition(Transform.Position, glm::vec3(EntityMesh->m_fWidth, EntityMesh->m_fHeight, EntityMesh->m_fDepth), EntityAnchor);
-	}
-	EntityMesh->Render(AnchoredTransform);
+	return Transform.Rotation.ToVector();
 }
 
-/************************************************************
-#--Description--#: 	Base Update called every frame to check before called derived Update
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
+SVector Entity::GetUpVector() const
+{
+	// TODO: Use rotation instead for camera roll
+	return {0.0f, 1.0f, 0.0f};
+}
+
+SVector Entity::GetRightVector() const
+{
+	return GetForwardVector().Cross(GetUpVector()).GetNormalized();
+}
+
+void Entity::SetForwardVector(SVector Forward)
+{
+	Transform.Rotation = Forward.ToRotator();
+}
+
 void Entity::BaseUpdate()
 {
 	if (!bActive)
@@ -118,68 +151,37 @@ void Entity::BaseUpdate()
 		return;
 	}
 	Update();
-	if (EntityMesh)
+	for (const TPointer<CComponent>& Component : Components)
 	{
-		EntityMesh->Update();
+		Component->Update();
 	}
 }
 
-/************************************************************
-#--Description--#: 	Updated every frame
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
 void Entity::Update()
 {
-	if (body)
-	{
-		b2Vec2 BodyPosition = body->GetPosition();
-		Transform.Position = glm::vec3(BodyPosition.x, BodyPosition.y, 0.0f);
-		Transform.Rotation.Roll = (body->GetAngle() / b2_pi) * 180;
-	}
+	
 }
 
-bool Entity::CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos)
+bool Entity::CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos)
 {
-	if (!EntityMesh)
+	for (TPointer<CComponent> Element : Components)
 	{
-		return false;
+		const TPointer<CMeshComponent> MeshComponent = Cast<CMeshComponent>(Element);
+		if (MeshComponent && MeshComponent->CheckHit(RayStart, RayDirection, HitPos))
+		{
+			return true;
+		}
 	}
 
-	return EntityMesh->CheckHit(RayStart, RayDirection, HitPos, shared_from_this());
+	return false;
 }
 
-/************************************************************
-#--Description--#: 	Virtual function ran when the entity is destroyed
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	NA
-#--Return--#: 		NA
-************************************************************/
 void Entity::OnDestroy()
 {
-	LogManager::GetInstance()->DisplayLogMessage("Entity with ID #" + std::to_string(iEntityID) + " destroyed!");
-	if (body)
+	CLogManager::Get()->DisplayMessage("Entity with ID #" + std::to_string(EntityID) + " destroyed!");
+	for (TPointer<CComponent> Component : Components)
 	{
-		body->SetEnabled(false);
-	}
-}
-
-void Entity::Reset()
-{
-	// Reset all entity variables
-	if (body)
-	{
-		body->SetTransform(b2Vec2(Transform.Position.X, Transform.Position.Y), (Transform.Rotation.Roll / 180) * b2_pi);
-		body->SetAwake(true);
-		body->SetEnabled(bActive);
-		body->SetLinearVelocity(b2Vec2_zero);
-		body->SetAngularVelocity(0.0f);
-	}
-	// Reset Entity Mesh
-	if (EntityMesh)
-	{
-		EntityMesh->Reset();
+		Component->OnDestroy();
 	}
 }
 
@@ -196,165 +198,121 @@ void Entity::SetVisible(bool _bIsVisible)
 std::string Entity::EntityToString()
 {
 	std::stringstream sEntity("");
-	sEntity << "[Entity] ";
-	sEntity << iEntityID << " ";
-	sEntity << Transform.ToString();
+	sEntity << this;
 	return sEntity.str();
 }
 
-std::ostream& operator<<(std::ostream& os, const std::shared_ptr<Entity>& InEntity)
+std::string Entity::GetEntityClassName()
+{
+	return "Entity";
+}
+
+TPointer<Entity> Entity::MakeEntityFromClassName(const std::string& ClassName)
+{
+	if (ClassName == Camera::GetStaticName())
+	{
+		TPointer<Camera> NewCameraEntity = std::make_shared<Camera>(STransform());
+		return NewCameraEntity;
+	}
+	
+	TPointer<Entity> NewEntity = std::make_shared<Entity>(STransform());
+	return NewEntity;
+}
+
+TPointer<Entity> Entity::GetEntityFromStringStream(std::istream& is)
+{	
+	std::string _;
+	std::string EntityClass;
+	std::getline(is, _, '[');
+	std::getline(is, EntityClass, ']');
+	TPointer<Entity> NewEntity = MakeEntityFromClassName(EntityClass);
+	is >> NewEntity;
+	return NewEntity;
+}
+
+void Entity::Serialize(std::ostream& os)
 {
 	// std::stringstream sEntity("");
-	os << "[Entity] ";
-	os << InEntity->iEntityID << " ";
-	os << InEntity->Transform;
+	os << "[" << GetEntityClassName() << "]";
+	for (const SSerializableVariable& SerializableVariable : SerializeVariables)
+	{
+		os << " " << SerializableVariable.GetSerializedVariable();
+	}
+}
+
+void Entity::SerializeComponents(std::ostream& os)
+{
+	for (const TPointer<CComponent>& Component : Components)
+	{
+		os << Component;
+	}
+}
+
+void Entity::Deserialize(std::istream& is)
+{
+	for (SSerializableVariable& SerializableVariable : SerializeVariables)
+	{
+		SerializableVariable.SetDeserializedVariable(is);
+	}
+}
+
+void Entity::DeserializeComponents(std::istream& is)
+{
+	while (is.peek() != EOF)
+	{
+		const std::istream::pos_type OriginalPosition = is.tellg();	
+		std::string ComponentType;
+		std::string _;
+		std::getline(is, _, '[');
+		std::getline(is, ComponentType, ']');
+		// is >> ComponentType;
+		TPointer<CComponent> NewComponent = CComponent::MakeComponentFromClassName(ComponentType, shared_from_this());
+		if (NewComponent)
+		{
+			is >> NewComponent;
+			AddComponent(NewComponent);
+			continue;
+		}
+		is.seekg(OriginalPosition);
+		break;
+	}
+}
+
+std::ostream& operator<<(std::ostream& os, const TPointer<Entity>& InEntity)
+{
+	InEntity->Serialize(os);
+	InEntity->SerializeComponents(os);
 	return os;
 }
 
-std::istream& operator>>(std::istream& is, std::shared_ptr<Entity>& InEntity)
+std::istream& operator>>(std::istream& is, TPointer<Entity>& InEntity)
 {
-	std::string Empty;
-	// TODO: Remove need for first space removal
-	std::getline(is, Empty, ' ');
-	is >> InEntity->iEntityID;
-	// std::getline(is, Empty, ' ');
-	is >> InEntity->Transform;
+	InEntity->Deserialize(is);
+	InEntity->DeserializeComponents(is);
 	return is;
 }
 
-/************************************************************
-#--Description--#: 	Moves the position by adding on the movement
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	Takes in the movement to move the entity by
-#--Return--#: 		NA
-************************************************************/
-void Entity::Translate(Vector3 _Movement)
+void Entity::Translate(SVector _Movement)
 {
 	Transform.Position += _Movement;
 }
 
-/************************************************************
-#--Description--#: 	Rotates the entity by a certain amount
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	Takes in the rotation to add
-#--Return--#: 		NA
-************************************************************/
-void Entity::Rotate(Rotator Rotate)
+void Entity::Rotate(SRotator Rotate)
 {
 	Transform.Rotation += Rotate;
 }
 
-/************************************************************
-#--Description--#: 	Sets the entity scale
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	Takes in the new scale
-#--Return--#: 		NA
-************************************************************/
-void Entity::SetScale(Vector3 _NewScale)
+void Entity::SetScale(SVector _NewScale)
 {
 	Transform.Scale = _NewScale;
 }
 
 Matrix4 Entity::GetModel()
 {
-	glm::mat4 translate = glm::translate(glm::mat4(), Transform.Position.ToGLM());
-	glm::mat4 scale = glm::scale(glm::mat4(), Transform.Scale.ToGLM());
-	glm::mat4 rotation = glm::mat4();
-	rotation = rotate(rotation, glm::radians(Transform.Rotation.Yaw), glm::vec3(0, 1, 0));
-	rotation = rotate(rotation, glm::radians(Transform.Rotation.Pitch), glm::vec3(1, 0, 0));
-	rotation = rotate(rotation, glm::radians(Transform.Rotation.Roll), glm::vec3(0, 0, 1));
-
-	return translate * rotation * scale;
+	return Transform.GetModelMatrix();
 }
 
-void Entity::SetupB2BoxBody(b2World& Box2DWorld, b2BodyType BodyType, bool bCanRotate, bool bHasFixture, float Density, float Friction, bool IsBullet)
+void Entity::AssignEntityID(int ID)
 {
-	if (EntityMesh)
-	{
-		// Define the dynamic body. We set its position and call the body factory.
-		b2BodyDef bodyDef;
-		bodyDef.type = BodyType;
-		bodyDef.position.Set(Transform.Position.X, Transform.Position.Y);
-		// TODO:
-		bodyDef.userData.pointer = uintptr_t(&*this);
-		body = Box2DWorld.CreateBody(&bodyDef);
-		body->SetTransform(bodyDef.position, (Transform.Rotation.Roll / 180) * b2_pi);
-		body->SetFixedRotation(!bCanRotate);
-		bodyDef.bullet = true;
-
-		// Define another box shape for our dynamic body.
-		b2PolygonShape dynamicBox;
-		dynamicBox.SetAsBox(EntityMesh->m_fWidth / 2.0f, EntityMesh->m_fHeight / 2.0f);
-		if (bHasFixture)
-		{
-			// Define the dynamic body fixture.
-			b2FixtureDef fixtureDef;
-			fixtureDef.shape = &dynamicBox;
-			// Set the box density to be non-zero, so it will be dynamic.
-			fixtureDef.density = Density;
-			// Override the default friction.
-			fixtureDef.friction = Friction;
-
-			// Add the shape to the body.
-			body->CreateFixture(&fixtureDef);
-		}
-		else
-		{
-			body->CreateFixture(&dynamicBox, 0.0f);
-		}
-	}
-	else
-	{
-		LogManager::GetInstance()->DisplayLogMessage("Failed to add Box2D body to Entity #" + std::to_string(iEntityID) + ", Entity has no Mesh");
-	}
-}
-
-void Entity::SetupB2CircleBody(b2World& Box2DWorld, b2BodyType BodyType, bool bCanRotate, bool bHasFixture, float Density, float Friction)
-{
-	if (EntityMesh)
-	{
-		// Define the dynamic body. We set its position and call the body factory.
-		b2BodyDef bodyDef;
-		bodyDef.type = BodyType;
-		bodyDef.position.Set(Transform.Position.X, Transform.Position.Y);
-		bodyDef.userData.pointer = uintptr_t(&*this);
-		body = Box2DWorld.CreateBody(&bodyDef);
-		body->SetTransform(bodyDef.position, (Transform.Rotation.Roll / 180) * b2_pi);
-		body->SetFixedRotation(!bCanRotate);
-
-		// Define another Circle shape for our dynamic body.
-		b2CircleShape circleShape;
-		circleShape.m_radius = EntityMesh->m_fHeight / 2.0f;
-		circleShape.m_p = b2Vec2(0.0f, 0.0f);
-
-		if (bHasFixture)
-		{
-			// Define the dynamic body fixture.
-			b2FixtureDef fixtureDef;
-			fixtureDef.shape = &circleShape;
-			// Set the box density to be non-zero, so it will be dynamic.
-			fixtureDef.density = Density;
-			// Override the default friction.
-			fixtureDef.friction = Friction;
-
-			// Add the shape to the body.
-			body->CreateFixture(&fixtureDef);
-		}
-		else
-		{
-			body->CreateFixture(&circleShape, 0.0f);
-		}
-	}
-	else
-	{
-		LogManager::GetInstance()->DisplayLogMessage("Failed to add Box2D body to Entity #" + std::to_string(iEntityID) + ", Entity has no Mesh");
-	}
-}
-
-void Entity::SetBox2DTransform(Vector3 _Position, float _Rotation)
-{
-	if (body)
-	{
-		body->SetTransform(b2Vec2(_Position.X, _Position.Y), (_Rotation / 180) * b2_pi);
-	}
+	EntityID = ID;
 }

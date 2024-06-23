@@ -6,46 +6,62 @@
 
 // Library Includes //
 #include <Box2D/Box2D.h>
-#include <memory>
 
 // OpenGL Library Includes //
 
 // Engine Includes //
-#include "Math/FTransform.h"
+#include <vector>
+
+#include "Core/SerializableVariable.h"
+#include "Math/Transform.h"
 #include "Math/Matrix.h"
 #include "Math/Rotator.h"
-#include "Render/Mesh.h"
 #include "System/EnumTypes.h"
+
+// TODO: Warnings with exporting class containing STDL
+#pragma warning (disable : 4251)
+
+class Scene;
+class CComponent;
 
 class ENGINE_API Entity : public std::enable_shared_from_this<Entity>
 {
 public:
-	Entity(std::string _FromString);
+	Entity(std::stringstream& ss);
 
-	Entity(FTransform _Transform, EANCHOR _Anchor);
+	Entity(STransform InTransform, std::string EntityName = {});
 
 	//Entity() {};
 	/*Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, Utils::ESHAPE _eShape);
 	Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, Utils::ESHAPE _eShape, glm::vec4 UVCoords = glm::vec4(0, 1, 0, 1));
 	Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, int iCount, bool bHorizontal);
 	Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, glm::vec2 v2FrameCounts, int _iFPS);*/
-	~Entity();
+	virtual ~Entity();
 
-	void AddMesh(std::shared_ptr<Mesh> _NewMesh);
+	void AddComponent(TPointer<CComponent> NewComponent);
+	void AddToScene(TPointer<Scene> InScene);
+	virtual void BeginPlay();
+	virtual void Unload();
 
 	//void AddMesh(Utils::ESHAPE _NewShape);
 
-	virtual void DrawEntity();
+	virtual bool CanRender();
+	virtual std::vector<TPointer<Entity>> GetAdditionalEntitiesToRender() { return {}; }
+	
+	SVector GetForwardVector() const;
+	SVector GetUpVector() const;
+	SVector GetRightVector() const;
 
+	void SetForwardVector(SVector Forward);
+
+	/* Base Update called every frame to check before called derived Update */
 	void BaseUpdate();
 
 	virtual void Update();
 
-	virtual bool CheckHit(Vector3 RayStart, Vector3 RayDirection, Vector3& HitPos);
+	virtual bool CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos);
 
 	virtual void OnDestroy();
-
-	virtual void Reset();
 
 	virtual void SetActive(bool _bIsActive);
 
@@ -56,43 +72,66 @@ public:
 	bool IsVisible() const { return bVisible; }
 
 	std::string EntityToString();
+	virtual std::string GetEntityClassName();
+	static TPointer<Entity> MakeEntityFromClassName(const std::string& ClassName);
+	static TPointer<Entity> GetEntityFromStringStream(std::istream& is);
 
-	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const std::shared_ptr<Entity>& InEntity);
-	ENGINE_API friend std::istream& operator>>(std::istream& is, std::shared_ptr<Entity>& InEntity);
+	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const TPointer<Entity>& InEntity);
+	ENGINE_API friend std::istream& operator>>(std::istream& is, TPointer<Entity>& InEntity);
 
-	void Translate(Vector3 _Movement);
+	/* Moves the position by adding on the movement*/
+	void Translate(SVector _Movement);
 
-	void Rotate(Rotator Rotate);
+	/* Rotates the entity by a certain amount */
+	void Rotate(SRotator Rotate);
 
-	void SetScale(Vector3 _NewScale);
+	/* Sets the entity scale */
+	void SetScale(SVector _NewScale);
 
 	Matrix4 GetModel();
 
-	FTransform Transform;
-	EANCHOR EntityAnchor;
-	std::shared_ptr<Mesh> EntityMesh;
+	STransform Transform;
 
-	int GetEntityValue() const { return iEntityID; }
+	void AssignEntityID(int ID);
+	int GetEntityID() const { return EntityID; }
+	std::string GetEntityName() const { return Name; }
+	TPointer<Scene> GetOwningScene() const { return OwningScene; }
+	TArray<TPointer<CComponent>> GetComponents() const { return Components; }
+	
+	TArray<SSerializableVariable> GetSerializeVariables() const { return SerializeVariables; }
 
-	// TODO: Remove?
-	void SetInitialEntity(bool IsInitial) { bIsInitialEntity = IsInitial; }
-	bool IsInitialEntity() const { return bIsInitialEntity; }
-
-	// Box2D Physics
-	b2Body* body = nullptr;
-
-	void SetupB2BoxBody(b2World& Box2DWorld, b2BodyType BodyType, bool bCanRotate = true, bool bHasFixture = true, float Density = 1.0f, float Friction = 0.3f, bool IsBullet = false);
-
-	void SetupB2CircleBody(b2World& Box2DWorld, b2BodyType BodyType, bool bCanRotate = true, bool bHasFixture = true, float Density = 1.0f, float Friction = 0.3f);
-
-	void SetBox2DTransform(Vector3 _Position, float _Rotation);
+	template<typename T>
+	TPointer<T> FindComponent();
 
 	bool bRayCast = true;
 
-protected:
+protected:	
+	virtual void Serialize(std::ostream& os);
+	void SerializeComponents(std::ostream& os);
+	virtual void Deserialize(std::istream& is);
+	void DeserializeComponents(std::istream& is);
+	
 	bool bActive = true;
 	bool bVisible = true;
-	bool bIsInitialEntity = false;
+	std::string Name;
 
-	int iEntityID;
+	TArray<TPointer<CComponent>> Components;
+	TPointer<Scene> OwningScene;
+
+	int EntityID;
+	
+	TArray<SSerializableVariable> SerializeVariables;
 };
+
+template <typename T>
+TPointer<T> Entity::FindComponent()
+{
+	for (TPointer<CComponent> Component : Components)
+	{
+		if (TPointer<T> TestComponent = Cast<T>(Component))
+		{
+			return TestComponent;
+		}
+	}
+	return nullptr;
+}

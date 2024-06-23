@@ -1,22 +1,23 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
 #include "Lighting.h"
 
 #include "Math/Vector.h"
 
-// OpenGL Includes //
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 // Local Includes //
-#include "Camera/CameraManager.h"
+#include "Core/Application.h"
+#include "Render/Renderer.h"
+#include "Shaders/Shader.h"
 
 // Static variables //
-Vector3 Lighting::LightPosition = {5, 10, 5};
-Vector3 Lighting::SunDirection = {15, 2, 25};
-glm::vec4 Lighting::FogColour = {0.5f, 0.5f, 0.5f, 1.0f};
+SVector Lighting::LightPosition = {5, 10, 5};
+SVector Lighting::LightColour = SVector(1.0f, 1.0f, 1.0f);
+SVector Lighting::SunDirection = {15, 2, 25};
+SVector4 Lighting::FogColour = {0.5f, 0.5f, 0.5f, 1.0f};
 float Lighting::StartFogDistance = 30.0f;
 float Lighting::EndFogDistance = 45.0f;
+float Lighting::AmbientStrength = 0.1f;
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -38,30 +39,28 @@ Lighting::~Lighting()
 {
 }
 
-void Lighting::PassLightingToShader(GLuint program, LightInfo _LightInfo, FTransform ModelTransform)
+void Lighting::PassLightingToShader()
 {
-	glm::mat4 translate = glm::translate(glm::mat4(), ModelTransform.Position.ToGLM());
-	glm::mat4 scale = glm::scale(glm::mat4(), ModelTransform.Scale.ToGLM());
-	glm::mat4 rotation = rotate(glm::mat4(), glm::radians(ModelTransform.Rotation.Pitch), glm::vec3(1, 0, 0));
-	rotation = rotate(rotation, glm::radians(ModelTransform.Rotation.Yaw), glm::vec3(0, 1, 0));
-	rotation = rotate(rotation, glm::radians(ModelTransform.Rotation.Roll), glm::vec3(0, 0, 1));
-	glm::mat4 model = translate * rotation * scale;
-
-	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, value_ptr(model));
-	glUniform3fv(glGetUniformLocation(program, "lightPos"), 1, value_ptr(LightPosition.ToGLM()));
-	glUniform3fv(glGetUniformLocation(program, "camPos"), 1, value_ptr(CameraManager::GetInstance()->GetCameraPosition().ToGLM()));
-	glUniform3fv(glGetUniformLocation(program, "lightColor"), 1, value_ptr(_LightInfo.LightColour.ToGLM()));
-	glUniform1f(glGetUniformLocation(program, "ambientStr"), _LightInfo.fAmbientStrength);
-	glUniform1f(glGetUniformLocation(program, "lightSpecStr"), _LightInfo.fLightSpecStrength);
-	glUniform1f(glGetUniformLocation(program, "shininess"), _LightInfo.fShininess);
+	TPointer<CShader> Shader = GetRenderer()->ActiveShader;
+	// TODO: Store uniform locations at beginning for shader
+	const uint32_t ShaderProgram = Shader->GetShaderProgram();
+	TPointer<IGraphicsAPI> Api = GetGraphicsAPI();
+	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "LightPosition"), LightPosition);
+	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "LightPosition"), LightPosition);
+	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "LightColour"), LightColour);
+	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "LightDirection"), SunDirection);
+	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "FogColor"), FogColour);
+	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "StartFog"), StartFogDistance);
+	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "EndFog"), EndFogDistance);
+	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "AmbientStrength"), AmbientStrength);
 }
 
-Vector3 Lighting::GetLightPosition()
+SVector Lighting::GetLightPosition()
 {
 	return LightPosition;
 }
 
-Vector3 Lighting::GetSunDirection()
+SVector Lighting::GetSunDirection()
 {
 	return SunDirection;
 }
@@ -81,12 +80,12 @@ float Lighting::GetEndFogDistance()
 	return EndFogDistance;
 }
 
-void Lighting::SetLightPosition(Vector3 InLightPosition)
+void Lighting::SetLightPosition(SVector InLightPosition)
 {
 	LightPosition = InLightPosition;
 }
 
-void Lighting::SetSunDirection(Vector3 InSunDirection)
+void Lighting::SetSunDirection(SVector InSunDirection)
 {
 	SunDirection = InSunDirection;
 }

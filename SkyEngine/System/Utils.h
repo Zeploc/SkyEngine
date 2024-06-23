@@ -6,17 +6,19 @@
 #include "Math/Vector.h"
 
 // Library Includes //
-#include <memory>
-#include <string>
-#include <vector>
 
 // OpenGL Library Includes //
 #include <glm/gtx/string_cast.hpp>
 
 #include "EnumTypes.h"
+#include "Render/Meshes/MeshData.h"
 
+struct STransform;
 // Forward Declarations //
 class Entity;
+
+// TODO: Warnings with exporting class containing STDL
+#pragma warning (disable : 4251)
 
 class ENGINE_API Utils
 {
@@ -53,49 +55,92 @@ public:
 		glm::vec2 v2Offset = glm::vec2();
 	};
 
-	static Vector3 LinePlaneIntersect(Vector3 RayStart, Vector3 RayDirection, Vector3 PlanePos, Vector3 PlaneNormal);
+	static SVector LinePlaneIntersect(SVector RayStart, SVector RayDirection, SVector PlanePos, SVector PlaneNormal);
 
-	static glm::vec3 GetAncoredPosition(Vector3 position, Vector3 Dimensions, EANCHOR _AnchorType);
+	static glm::vec3 GetAncoredPosition(SVector position, SVector Dimensions, EANCHOR _AnchorType);
 
 	static glm::vec3 GetAncoredPosition2D(glm::vec2 position, glm::vec2 Dimensions, EANCHOR _AnchorType);
 
 	static glm::vec3 GetTextAncoredPosition(glm::vec2 position, glm::vec2 Dimensions, EANCHOR _AnchorType);
 
-	static bool isColliding2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2);
+	static bool isColliding2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2);
 
-	//static bool isColliding2D(Entity* Entity1, std::shared_ptr<Entity> Entity2);
+	//static bool isColliding2D(Entity* Entity1, Pointer<Entity> Entity2);
 
-	static bool CheckCollision2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2, glm::vec2 Movement);
+	static bool CheckCollision2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2, glm::vec2 Movement);
 
-	//static bool CheckCollision2D(Entity* Entity1, std::shared_ptr<Entity> Entity2, glm::vec2 Movement);
+	//static bool CheckCollision2D(Entity* Entity1, Pointer<Entity> Entity2, glm::vec2 Movement);
 
-	static glm::vec2 GetDistance2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2);
+	static glm::vec2 GetDistance2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2);
 
-	//static glm::vec2 GetDistance2D(Entity* Entity1, std::shared_ptr<Entity> Entity2);
+	//static glm::vec2 GetDistance2D(Entity* Entity1, Pointer<Entity> Entity2);
 	//static glm::vec2 FindTextDimenions(std::string text);
 
-	static glm::vec2 GetDifference2D(std::shared_ptr<Entity> Entity1, std::shared_ptr<Entity> Entity2);
-
-	static int AddEntityID();
+	static glm::vec2 GetDifference2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2);
 
 	static std::vector<std::string> SeparateString(std::string _string, char _seperator);
 
 	// TODO: Convert to type from string
-	static Vector3 StringToVec3(std::string _string);
-	static Rotator StringToRotator(std::string _string);
+	static SVector StringToVec3(std::string _string);
+	static SRotator StringToRotator(std::string _string);
 
-	static bool CheckFaceHit(Vector3 BottomLeftOffset, Vector3 TopRightOffset, Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
-
-	static bool CheckSphereHit(Vector3 RayStart, Vector3 RayDirection, Vector3 SphereCenter, float SphereRadius, Vector3& HitPos);
-
-	static bool CheckCubeHit(Vector3 RayStart, Vector3 RayDirection, Vector3 CubeDimensions, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
-
-	static bool CheckPlaneEntityHit(Vector3 RayStart, Vector3 RayDirection, std::shared_ptr<Entity> EntityCheck, Vector3& HitPos);
+	static bool CheckMeshHit(STransform MeshTransform, const CMeshData& MeshData, SVector RayStart, SVector RayDirection, SVector& HitPos);
 	
-	static std::shared_ptr<Entity> WorldCubeMap;
+	static bool CheckFaceHit(SVector BottomLeftOffset, SVector TopRightOffset, SVector RayStart, SVector RayDirection, TPointer<Entity> EntityCheck, SVector& HitPos);
 
+	static bool CheckSphereHit(SVector RayStart, SVector RayDirection, SVector SphereCenter, float SphereRadius, SVector& HitPos);
+
+	static bool CheckCubeHit(SVector RayStart, SVector RayDirection, SVector CubeDimensions, TPointer<Entity> EntityCheck, SVector& HitPos);
+
+	static bool CheckPlaneEntityHit(SVector RayStart, SVector RayDirection, TPointer<Entity> EntityCheck, SVector& HitPos);
+	
+	static TPointer<Entity> WorldCubeMap;
+
+	// TODO: Move to custom array once setups
+	/* Check if an element exists in a array */
+	template<typename T>
+	static bool ArrayContains(TArray<T> Array, T Element);
+	/* Check if an element exists in a array */
+	template<typename T>
+	static int FindInArray(TArray<T> Array, T Element);
+	/* Check if an element exists in a array */
+	template<typename T>
+	static bool RemoveFromArray(std::vector<T>& Array, T Element);
+	
 private:
-	static int iEntityNumber;
 
 
 };
+
+template <typename T>
+bool Utils::ArrayContains(TArray<T> Array, T Element)
+{
+	return std::find(Array.begin(), Array.end(), Element) != Array.end();
+}
+
+template <typename T>
+int Utils::FindInArray(TArray<T> Array, T Element)
+{
+	for (auto it = Array.begin(); it != Array.end(); ++it)
+	{
+		if (*it == Element)
+		{
+			return it;
+		}
+	}
+	return -1;
+}
+
+template <typename T>
+bool Utils::RemoveFromArray(TArray<T>& Array, T Element)
+{
+	for (auto it = Array.begin(); it != Array.end(); ++it)
+	{
+		if (*it == Element)
+		{
+			Array.erase(it);
+			return true;
+		}
+	}
+	return false;
+}

@@ -5,45 +5,57 @@
 #include "Core/Core.h"
 
 // Library Includes //
-#include <memory>
-#include <string>
-#include <vector>
-#include <glm/detail/type_vec.hpp>
 
+#include <Box2D/b2_world.h>
+
+#include "Core/Asset/AssetInterface.h"
+#include "Events/Event.h"
+#include "Events/KeyEvent.h"
+#include "Events/MouseEvent.h"
 #include "System/Utils.h"
 
-// OpenGL Library Includes //
-
 class UIText;
-class UIElement;
 class Entity;
 
-class ENGINE_API Scene : public std::enable_shared_from_this<Scene>
+class ENGINE_API Scene : public CAssetObject
 {
 public:
-	Scene(std::string sSceneName);
-
-	virtual ~Scene();
+	Scene(const std::string& InSceneName);
+	~Scene() override;
+	// Override shared_from_this so manual downcast not needed
+	// ReSharper disable once CppHidingFunction
+	std::shared_ptr<Scene> shared_from_this();
+	
+	void Serialize(std::ostream& os) override;
+	void Deserialize(std::istream& is) override;
+	static std::string GetStaticName();
+	std::string GetAssetClassName() override;
+	void Open() override;
 
 	void DeleteScene();
 
 	virtual void RenderScene();
 
-	void AddEntity(std::shared_ptr<Entity> _Entity, bool IsInitial = false);
+	void AddEntity(TPointer<Entity> _Entity);
 
-	void DestroyEntity(std::shared_ptr<Entity> _Entity);
+	void DestroyEntity(TPointer<Entity> _Entity);
 
-	void AddUIElement(std::shared_ptr<UIElement> Element);
-
-	void AddUITextElement(std::shared_ptr<UIText> Element);
-
-	void AddUITextElement(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string font, int iPSize, EANCHOR _Anchor);
-
-	void DestroyUIElement(std::shared_ptr<UIElement> _Element);
+	int AddEntityID();
+	void VerifyEntityID(TPointer<Entity> EntityToVerify);
 
 	virtual void Update();
+	virtual bool OnMouseButtonPressed(int Button, int Mods);
+	virtual bool OnMouseButtonReleased(int Button, int Mods);
+	virtual bool OnMouseMoved(SVector2i MousePos);
+	virtual bool OnMouseScrolled(float XOffset, float YOffset);
+	virtual bool OnKeyPressed(int KeyCode, int Mods, int RepeatCount);
+	virtual bool OnKeyReleased(int KeyCode, int Mods);
 
-	virtual void OnLoadScene();
+	void OnLoaded() override;
+	void OnUnloaded() override;
+	virtual void BeginPlay();
+
+	b2World& GetWorld2D() { return World2D; }
 
 	void SetPersistantOnLoad(bool _bIsPersistant)
 	{
@@ -53,13 +65,14 @@ public:
 	bool operator==(const Scene& rhs) const;
 
 	std::string SceneName;
-	std::vector<std::shared_ptr<Entity>> Entities;
-	std::vector<std::shared_ptr<UIElement>> UIElements;
+	std::vector<TPointer<Entity>> Entities;
+	
 protected:
-	std::vector<std::shared_ptr<Entity>> DestroyedEntities;
-	std::vector<std::shared_ptr<UIElement>> UIElementsToBeDestroyed;
+	
+	std::vector<TPointer<Entity>> DestroyedEntities;
 	bool bIsPersistant = false;
+	b2World World2D;
 
 private:
-	void DestroyAllNonInitialEntities();
+	int LastEntityID = -1;
 };

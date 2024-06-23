@@ -1,0 +1,16 @@
+﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
+
+#pragma once
+
+#include "Canvas/UICanvas.h"
+
+class Scene;
+
+class CSceneOutliner : public CUICanvas
+{
+public:
+	CSceneOutliner(TWeakPointer<CEngineWindow> InOwningWindow);
+	virtual void OnRender() override;
+	
+	TPointer<Scene> EditorScene;
+};

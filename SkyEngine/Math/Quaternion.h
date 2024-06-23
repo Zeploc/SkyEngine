@@ -3,7 +3,9 @@
 #pragma once
 
 #include "Core/Core.h"
-#include "Vector.h"
+
+template <typename T>
+struct TVector3;
 
 struct ENGINE_API Quaternion
 {
@@ -15,9 +17,9 @@ struct ENGINE_API Quaternion
 
 	Quaternion Conjugate();
 
-	Vector3 ToDegrees();
+	TVector3<float> ToDegrees();
 };
 
 Quaternion operator*(const Quaternion& l, const Quaternion& r);
 
-Quaternion operator*(const Quaternion& q, const Vector3& v);
+Quaternion operator*(const Quaternion& q, const TVector3<float>& v);

@@ -1,24 +1,30 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
+#include "Scene.h"
+
+// Only used for key inputs, swap out later
 #include <glew/glew.h>
 
 // Engine Includes //
 #include "Entity/Entity.h"
-#include "UI/UIElement.h"
-#include "UI/UIText.h"
 
 // Local Includes //
 
 // This Includes //
-#include "Scene.h"
 
-#include <GLFW/glfw3.h>
+#include <fstream>
 
-#include "Camera/CameraManager.h"
 #include "Core/Application.h"
+#include "Core/StringUtils.h"
 #include "Entity/Button3DEntity.h"
-#include "Graphics/GraphicsWindow.h"
+#include "Render/Renderer.h"
 #include "Input/Input.h"
+#include "Platform/Window/GLFW/GLFWIncludes.h"
+#include "Render/Materials/Material.h"
+#include "Render/Meshes/MeshComponent.h"
+#include "Render/Shaders/PBRShader.h"
+#include "System/LogManager.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -26,7 +32,8 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Scene::Scene(std::string sSceneName) : SceneName(sSceneName)
+Scene::Scene(const std::string& InSceneName)
+: SceneName(InSceneName), World2D({0.0f, 1.0f})
 {
 }
 
@@ -41,6 +48,58 @@ Scene::~Scene()
 	DeleteScene();
 }
 
+std::shared_ptr<Scene> Scene::shared_from_this()
+{
+	return std::static_pointer_cast<Scene>(CAssetObject::shared_from_this());
+}
+
+void Scene::Serialize(std::ostream& os)
+{	
+	os << "[" + SceneName + "]\n";
+	for (TPointer<Entity> Entity : Entities)
+	{	 	
+		os << Entity << "\n";
+	}
+}
+
+void Scene::Deserialize(std::istream& is)
+{
+	std::vector< TPointer<Entity>> EntitiesCopy = Entities;
+	for (TPointer<Entity> CurrentEnt : EntitiesCopy)
+	{		
+		DestroyEntity(CurrentEnt);
+	}
+	LastEntityID = -1;
+	
+	std::string Empty;
+	std::getline(is, Empty, '[');
+	std::getline(is, SceneName, ']');
+	std::getline(is, Empty, '\n');
+	
+	while(is.peek() != EOF )
+	{
+		TPointer<Entity> NewEntity = Entity::GetEntityFromStringStream(is);
+		AddEntity(NewEntity);
+		// New line
+		std::getline(is, Empty, '\n');
+	}	
+}
+
+std::string Scene::GetStaticName()
+{
+	return "Scene";
+}
+
+std::string Scene::GetAssetClassName()
+{
+	return GetStaticName();
+}
+
+void Scene::Open()
+{
+	GetApplication()->OpenScene(shared_from_this());
+}
+
 /************************************************************
 #--Description--#:	Delete all entities in scene
 #--Author--#: 		Alex Coultas
@@ -50,10 +109,6 @@ Scene::~Scene()
 void Scene::DeleteScene()
 {
 	for (auto it : Entities)
-	{
-		it = nullptr;
-	}
-	for (auto it : UIElements)
 	{
 		it = nullptr;
 	}
@@ -67,8 +122,7 @@ void Scene::DeleteScene()
 ************************************************************/
 void Scene::RenderScene()
 {
-	// TODO: Properly link to graphics interface
-	GetApplication()->GetApplicationWindow()->GetGraphicsWindow()->Render(Entities, UIElements);
+	GetRenderer()->Render(Entities);
 }
 
 /************************************************************
@@ -77,10 +131,11 @@ void Scene::RenderScene()
 #--Parameters--#: 	Entity to add
 #--Return--#: 		NA
 ************************************************************/
-void Scene::AddEntity(std::shared_ptr<Entity> _Entity, bool IsInitial)
+void Scene::AddEntity(TPointer<Entity> _Entity)
 {
+	VerifyEntityID(_Entity);
 	Entities.push_back(_Entity);
-	_Entity->SetInitialEntity(IsInitial);
+	_Entity->AddToScene(shared_from_this());
 }
 
 /************************************************************
@@ -89,13 +144,9 @@ void Scene::AddEntity(std::shared_ptr<Entity> _Entity, bool IsInitial)
 #--Parameters--#: 	Entity to destroy
 #--Return--#: 		NA
 ************************************************************/
-void Scene::DestroyEntity(std::shared_ptr<Entity> _Entity)
+void Scene::DestroyEntity(TPointer<Entity> _Entity)
 {
-	if (_Entity->IsInitialEntity())
-	{
-		DestroyedEntities.push_back(_Entity);
-		_Entity->SetActive(false);
-	}
+	DestroyedEntities.push_back(_Entity);
 	_Entity->OnDestroy();
 
 	// Find entity in entities
@@ -112,50 +163,22 @@ void Scene::DestroyEntity(std::shared_ptr<Entity> _Entity)
 	//EntDetroy.reset();
 }
 
-/************************************************************
-#--Description--#:	Adds UI element
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	UI Element to add
-#--Return--#: 		NA
-************************************************************/
-void Scene::AddUIElement(std::shared_ptr<UIElement> Element)
+void Scene::VerifyEntityID(TPointer<Entity> EntityToVerify)
 {
-	UIElements.push_back(Element);
+	for (const TPointer<Entity>& Entity : Entities)
+	{
+		if (EntityToVerify->GetEntityID() == Entity->GetEntityID())
+		{			
+			EntityToVerify->AssignEntityID(AddEntityID());
+			return;
+		}
+	}
 }
 
-/************************************************************
-#--Description--#:	Adds UI Text element
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	UI Text Element to add
-#--Return--#: 		NA
-************************************************************/
-void Scene::AddUITextElement(std::shared_ptr<UIText> Element)
+int Scene::AddEntityID()
 {
-	UIElements.push_back(Element);
-}
-
-/************************************************************
-#--Description--#:	Adds UI Text element
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	UI Text Element paramters to add
-#--Return--#: 		NA
-************************************************************/
-void Scene::AddUITextElement(glm::vec2 _Position, float _fRotation, glm::vec4 _Colour, std::string _sText, std::string font, int iPSize, EANCHOR _Anchor)
-{
-	std::shared_ptr<UIText> NewElement(new UIText(_Position, _fRotation, _Colour, _sText, font, iPSize, _Anchor));
-	UIElements.push_back(NewElement);
-}
-
-/************************************************************
-#--Description--#:	Destroys UI Text element
-#--Author--#: 		Alex Coultas
-#--Parameters--#: 	UI Text Element paramters to destroy
-#--Return--#: 		NA
-************************************************************/
-void Scene::DestroyUIElement(std::shared_ptr<UIElement> _Element)
-{
-	UIElementsToBeDestroyed.push_back(_Element);
-	_Element->SetActive(false);
+	LastEntityID++;
+	return LastEntityID;
 }
 
 /************************************************************
@@ -165,71 +188,41 @@ void Scene::DestroyUIElement(std::shared_ptr<UIElement> _Element)
 #--Return--#: 		NA
 ************************************************************/
 void Scene::Update()
-{
-	// TODO: Move to better location?
-	CameraManager* CameraInstance = CameraManager::GetInstance();
-	CameraInstance->SpectatorUpdate();
-	
-	for (int i = 0; i < Entities.size(); i++)
+{		
+	for (const TPointer<Entity>& Entity : Entities)
 	{
-		if (Entities[i])
-		{
-			Entities[i]->BaseUpdate();
-		}
+		Entity->BaseUpdate();
 	}
 
-	for (int i = 0; i < UIElements.size(); i++)
-	{
-		if (UIElements[i])
-		{
-			UIElements[i]->BaseUpdate();
-		}
-	}
-
-	for (auto& UIDestroy : UIElementsToBeDestroyed)
-	{
-		for (auto it = UIElements.begin(); it != UIElements.end(); ++it)
-		{
-			if (*it == UIDestroy)
-			{
-				UIElements.erase(it);
-				break;
-			}
-		}
-		UIDestroy.reset();
-	}
-	if (!UIElementsToBeDestroyed.empty())
-	{
-		UIElementsToBeDestroyed.clear();
-	}
-
-	Button3DEntity::bButtonPressedThisFrame = false;
-
-	// TODO: If not build check (editor only)
-	if (Input::GetInstance()->KeyState[GLFW_KEY_ESCAPE] == Input::INPUT_FIRST_PRESS) // Escape
-	{
-		if (Input::GetInstance()->KeyState[GLFW_KEY_LEFT_SHIFT] == Input::InputState::INPUT_HOLD)
-		{
-			GetApplication()->Quit();
-			return;
-		}
-	}
+	Button3DEntity::bButtonPressedThisFrame = false;	
 }
 
-void Scene::OnLoadScene()
+void Scene::OnLoaded()
 {
 	if (!bIsPersistant)
 	{
+		// TODO: Would load from serialization - ie not needed
 		for (auto& EntDestroy : DestroyedEntities)
 		{
 			Entities.push_back(EntDestroy);
 		}
 		DestroyedEntities.clear();
-		DestroyAllNonInitialEntities();
-		for (auto& Ent : Entities)
-		{
-			Ent->Reset();
-		}
+	}
+}
+
+void Scene::OnUnloaded()
+{
+	for (const TPointer<Entity>& Entity : Entities)
+	{
+		Entity->Unload();
+	}
+}
+
+void Scene::BeginPlay()
+{
+	for (const TPointer<Entity>& Entity : Entities)
+	{
+		Entity->BeginPlay();
 	}
 }
 
@@ -248,21 +241,43 @@ bool Scene::operator==(const Scene& rhs) const
 	return false;
 }
 
-void Scene::DestroyAllNonInitialEntities()
+bool Scene::OnMouseButtonPressed(int Button, int Mods)
 {
-	auto EndIt = Entities.end();
-	for (auto it = Entities.begin(); it != EndIt; ++it)
+	return false;
+}
+
+bool Scene::OnMouseButtonReleased(int Button, int Mods)
+{
+	return false;
+}
+
+bool Scene::OnMouseMoved(SVector2i MousePos)
+{
+	return false;
+}
+
+bool Scene::OnMouseScrolled(float XOffset, float YOffset)
+{
+	return false;
+}
+
+bool Scene::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
+{
+	// TODO: If not build check (editor only)
+	if (KeyCode == GLFW_KEY_ESCAPE) 
 	{
-		if (!(*it)->IsInitialEntity())
+		if (KeyCode & CWindowInput::ModiferType::Shift)
 		{
-			b2Body* EntBody = (*it)->body;
-			if (EntBody)
-			{
-				EntBody->GetWorld()->DestroyBody(EntBody);
-			}
-			it = Entities.erase(it);
-			--it;
-			EndIt = Entities.end();
+			GetApplication()->Quit();
+			return true;
 		}
 	}
+	return false;
 }
+
+bool Scene::OnKeyReleased(int KeyCode, int Mods)
+{
+	return false;
+}
+
+

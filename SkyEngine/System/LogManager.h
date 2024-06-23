@@ -3,37 +3,35 @@
 #pragma once
 
 // Library Includes //
-#include <memory>
-#include <string>
 
 // Engine Includes //
+#include "Core/Core.h"
 
-class UIText;
+enum class ELogMessageType
+{
+	Message,
+	Warning,
+	Error
+};
 
-class LogManager
+class ENGINE_API CLogManager
 {
 public:
 	void Init();
 
 	void Render();
+	virtual void LogInternal(ELogMessageType MessageType, const std::string& InMessage);
 
-	void DisplayLogMessage(std::string _Message);
-
-	std::shared_ptr<UIText> LoadingMessage;
+	void Log(ELogMessageType MessageType, const std::string& InMessage);
+	
+	virtual void DisplayMessage(const std::string& InMessage);
+	virtual void DisplayWarning(const std::string& InMessage);
+	virtual void DisplayError(const std::string& InMessage);
 
 	// Singleton
 public:
-	static std::shared_ptr<LogManager> GetInstance();
+	static TPointer<CLogManager> Get();
 
-	static void DestoryInstance();
-
-	~LogManager(); // Shared pointer has to be able to call destructor so can't be private
-
-private:
-	static std::shared_ptr<LogManager> m_pLogManager;
-
-	LogManager();
-
-	LogManager(const LogManager&); // Don't Implement
-	void operator=(const LogManager&); // Don't implement
+	CLogManager();
+	~CLogManager(); // Shared pointer has to be able to call destructor so can't be private
 };

@@ -4,11 +4,18 @@
 
 extern SkyEngine::Application* SkyEngine::CreateApplication();
 
-void main(int argc, char** argv)
+int main(int argc, char** argv)
 {
-	auto App = SkyEngine::CreateApplication();
-	App->Run();
+	const auto App = SkyEngine::CreateApplication();
+	// TPointer<SkyEngine::Application> ApplicationLifetimePointer(App);
+	std::string ExecutablePath;
+	if (argv)
+	{
+		ExecutablePath = std::string(*argv);
+	}
+	int AppExitState = App->Run(ExecutablePath);
 	delete App;
+	return AppExitState;
 }
 #else
 	#error SkyEngine only supports Windows!

@@ -2,36 +2,22 @@
 
 #pragma once
 
-#include <string>
 #include <Scene/Scene.h>
 
+#include "Math/Vector2.h"
+
 class UIText;
-class TransformationWidget;
+class CTransformationWidget;
 
 class EditorScene : public Scene
 {
 public:
-	EditorScene(std::string sSceneName);
+	EditorScene(const std::string& InSceneName);
+	void OnLoaded() override;
 	void AddSampleEntities();
-
-	void UpdateSelectedEntity();
 
 	void Update() override;
 	void RenderScene() override;
-	
-	void OpenFile();
 
-	void LoadLevel(std::ifstream& OpenedLevelFile);
-
-	void SaveAsNew();
-	void SaveCurrentLevel();
-	
-	bool Wireframe = false;
-	
-	std::shared_ptr<UIText> LevelNameText;
-
-	std::shared_ptr<TransformationWidget> LocationBox;
-	
-	float CurrentFocusDistance = 7.0f;
-	Vector2 PreviousMousePosition;
+protected:
 };

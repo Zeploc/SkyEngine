@@ -1,202 +1,238 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
 #include "Application.h"
 
 // Library Includes //
-#include <iostream>
-#include <time.h>
-#include <windows.h>
-#include <Box2D/Box2D.h>
 //#include <vld.h>
 
-// OpenGL Library Includes //
-
 // Engine Includes //
+#include "Events/MouseEvent.h"
 #include "Input/Input.h"
-#include "Scene/SceneManager.h"
 #include "Sound/SoundManager.h"
-#include "System/Time.h"
 #include "System/LogManager.h"
-#include "Camera/CameraManager.h"
-#include "Graphics/GraphicsInstance.h"
-#include "Graphics/GraphicsWindow.h"
-#include "Graphics/GLFW/GLFWInterface.h"
-#include "Render/FrameBuffer.h"
-#include "Render/Shader.h"
-#include "Render/Lighting.h"
-// #include "Game/Scenes/Level.h"
+#include "Canvas/Canvas.h"
+#include "Canvas/UICanvas.h"
+#include "Canvas/ViewportCanvas.h"
+#include "Platform/Window/EngineWindow.h"
+#include "Platform/Windows/WindowsPlatform.h"
+#include "Render/Shaders/ShaderManager.h"
+#include "Scene/SceneManager.h"
+#include "System/TimeManager.h"
+#include "Render/Renderer.h"
+#include "Render/SceneRenderer.h"
+#include "Render/Meshes/MeshManager.h"
+#include "Scene/SceneUtils.h"
+#include "Entity/Camera.h"
+#include "Platform/Config/Config.h"
+#include "Platform/Config/ProjectSettingsConfig.h"
 
 // make sure the winsock lib is included...
 #pragma comment(lib,"ws2_32.lib")
 
 namespace SkyEngine
 {
-	// TODO: Fix so not needed in derived projects
 	Application* Application::EngineApplication = nullptr;
+
+#define BIND_EVENT_FN(x) std::bind(&(x), this, std::placeholders::_1)
 	
 	Application::Application()
 	{
+		ensure(!EngineApplication, "Application already exist!");
 		EngineApplication = this;
+		MainWindowSize = SVector2i(1920, 1080);
+		GraphicsApiType = EGraphicsAPI::OPENGL;
 	}
 
 	Application::~Application()
 	{
 	}
 
+	bool Application::OpenScene(TPointer<Scene> NewScene)
+	{
+		TPointer<Scene> PreviousScene = SceneManager::GetInstance()->GetCurrentScene();
+		SceneManager::GetInstance()->AddScene(NewScene);
+		SceneManager::GetInstance()->SwitchScene(NewScene->SceneName, true);
+		const TPointer<Camera> FoundCamera = SceneUtils::FindEntityOfClass<Camera>();
+		ViewportCanvas->GetSceneRenderer()->SetSceneTarget(NewScene);
+		if (FoundCamera)
+		{
+			ViewportCanvas->SetCamera(FoundCamera);
+		}
+		else
+		{
+			ViewportCanvas->SetupCamera();
+			NewScene->AddEntity(ViewportCanvas->GetViewportCamera());
+		}
+		SceneManager::GetInstance()->RemoveScene(PreviousScene);
+		return true;
+	}
+
 	// Types //
 	using namespace std;
 
-	#define SI Input::GetInstance()
-	#define CAM CameraManager::GetInstance() 
-	#define SM SceneManager::GetInstance()
-
-	// void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
-
-	void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+	bool Application::ApplicationSetup(std::string ExecutablePath)
 	{
-		std::string sourceStr, typeStr, severityStr;
-		// Convert GLenum parameters to strings
+		PlatformInterface = new WindowsPlatform();
+		SetProjectDirectory(ExecutablePath);
+		SetupLogManager();
+		ENSURE(LogManager != nullptr, "Log manager not created!");
+		LogManager->Init();
 
-		// printf("%s:%s[%s](%d): %s\n", sourceStr, typeStr, severityStr, id, message);
+		SetupConfigs();
 
-		fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-			   ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-				type, severity, message );
-	}
-
-	void Application::ApplicationSetup()
-	{
-		// TODO: Temp setup as GLFW
-		GraphicsInterface = make_shared<GLFWInterface>();
-		
-		srand(unsigned int(time(NULL)));
-
-		Lighting::SetFogColour(Vector4(SkyColour, 1.0f).ToGLM());
-
-		ApplicationWindow = EngineWindow::CreateEngineWindow("Application Window", MainWindowSize, false);
-		if (!ApplicationWindow)
+		const std::string WindowName = CProjectSettingsConfig::Get()->ProjectName;
+		ApplicationWindow = CEngineWindow::CreateEngineWindow(WindowName, MainWindowSize, false);
+		if (!ENSURE(ApplicationWindow != NULL, "Failed to setup application window"))
 		{
-			// TODO: Error management
-			OnExit();
+			return false;
 		}
-		ApplicationWindow->GetGraphicsWindow()->FocusWindow();
-		ApplicationWindow->GetGraphicsWindow()->GetGraphicsInstance()->ClearColour = SkyColour;
-
-		CAM->Init(MainWindowSize.X, MainWindowSize.Y, glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1.0f, 0.0f));
-		// CAM->SwitchProjection(EProjectionMode::Perspective);
-		CAM->MainWindow = ApplicationWindow;
+		ApplicationWindow->FocusWindow();
+		ApplicationWindow->SubscribeEventListener(this);
 		
-		// Settings Initialised
-		Init();
+		GraphicsApi = IGraphicsAPI::CreateGraphicsAPI(GraphicsApiType);
+		ApplicationWindow->SetupWindow();
+		ShaderManager::LoadAllDefaultShaders();
+		Renderer = CreatePointer<CRenderer>();
 
-		// TODO: Move to window?
-		// The input function registration
-		SI->Init(ApplicationWindow);
+		CTimeManager::Start();
+		MeshManager.Init();
+		SoundManager::GetInstance()->InitFMod();
+
+		SetupViewportLayer();
+		ApplicationWindow->PushLayer(ViewportCanvas);
+		
+		return true;
+	}
+	
+	void Application::SetProjectDirectory(const std::string ExecutablePath)
+	{	
+		uint64_t DirectoryEndIndex = ExecutablePath.find_last_of("\\");
+		ProjectDirectory = ExecutablePath.substr(0, DirectoryEndIndex);
+		DirectoryEndIndex = ProjectDirectory.find_last_of("\\");
+		ProjectDirectory = ProjectDirectory.substr(0, DirectoryEndIndex);
+		DirectoryEndIndex = ProjectDirectory.find_last_of("\\");
+		ProjectDirectory = ProjectDirectory.substr(0, DirectoryEndIndex);
+		DirectoryEndIndex = ProjectDirectory.find_last_of("\\");
+		ProjectDirectory = ProjectDirectory.substr(0, DirectoryEndIndex);
+		
+		// TODO: Should be moved out of editor
+		ContentPath = ProjectDirectory + "\\SkyEditor\\Assets\\";
 	}
 
-	void Application::Run()
+	void Application::SetupConfigs()
 	{
-		ApplicationSetup();
+		CConfig::RegisterConfig<CProjectSettingsConfig>();
+		LogManager->DisplayMessage("Project Name: " + CProjectSettingsConfig::Get()->ProjectName); 
 
-		while (!ApplicationWindow->ShouldWindowClose())
+		MainWindowSize = TVector2<int>(CProjectSettingsConfig::Get()->DefaultResolution);
+		GraphicsApiType = (EGraphicsAPI)CProjectSettingsConfig::Get()->GraphicsMode;
+	}
+
+	void Application::SetupLogManager()
+	{
+		LogManager = std::make_shared<CLogManager>();
+	}
+	void Application::SetupViewportLayer()
+	{
+		ViewportCanvas = new CViewportCanvas(ApplicationWindow);
+	}
+
+	int Application::Run(std::string ExecutablePath)
+	{
+		if (ApplicationSetup(ExecutablePath))
 		{
-			CAM->SCR_WIDTH = MainWindowSize.X;
-			CAM->SCR_HEIGHT = MainWindowSize.Y;
-			CAM->VIEWPORT_X = 0;
-			CAM->VIEWPORT_Y = 0;
-
-			Update();
-			CAM->SCR_WIDTH = MainWindowSize.X;
-			CAM->SCR_HEIGHT = MainWindowSize.Y;
-			CAM->VIEWPORT_X = 0;
-			CAM->VIEWPORT_Y = 0;
-
-			RenderScene();
+			while (!ApplicationWindow->ShouldWindowClose())
+			{				
+				Update();
+				Render();
+			}
+		}
+		else
+		{
+			CLogManager::Get()->DisplayError("Application failed to setup, could not start run loop!");
 		}
 		
 		OnExit();
+		return 0;
 	}
 
 	void Application::Quit()
 	{
-		ApplicationWindow->GetGraphicsWindow()->CloseWindow();
+		ApplicationWindow->CloseWindow();
 	}
 
 	void Application::Update()
 	{
-		if (bLoading)
-		{
-			SoundManager::GetInstance()->InitFMod();
-
-			// TODO: Default scene defined elsewhere and loaded
-			
-			// std::shared_ptr<Level> LevelScene = std::shared_ptr<Level>(new Level("Demo Environment"));			
-			// SceneManager::GetInstance()->AddScene(LevelScene);
-		}
-		else
-		{
-			double dCurrentTime = glfwGetTime();//glutGet(GLUT_ELAPSED_TIME);
-			double TimeDelta = (dCurrentTime - dPrevTime);// / 1000;
-			dPrevTime = glfwGetTime();//glutGet(GLUT_ELAPSED_TIME);
-			CurrentTimer += TimeDelta;
-			if (CurrentTimer > 1.0f / TickRate)
-			{
-				SceneManager::GetInstance()->UpdateCurrentScene();
-				CameraManager::GetInstance()->UpdateViewMatrix();
-				Time::Update();
-				SI->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
-				CurrentTimer = 0.0f;
-			}
-		}
+		CTimeManager::Update();
+		SceneManager::GetInstance()->UpdateCurrentScene();
+		ApplicationWindow->Update();
 	}
 
-	void Application::RenderScene()
+	void Application::OnEvent(CEvent& Event)
 	{
-		ApplicationWindow->GetGraphicsWindow()->PreRender();		
-		if (bLoading)
-		{
-			// TODO: Change to graphics instance
-			glClearColor(0.8f, 0.8f, 0.8f, 1.0); // clear grey
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			LogManager::GetInstance()->Render();
-		}
-		else
-		{
-			SM->RenderCurrentScene();
-		}
-		ApplicationWindow->GetGraphicsWindow()->PostRender();		
 	}
 
-	void Application::ChangeSize(int w, int h)
+	void Application::Render()
 	{
-		CAM->SCR_HEIGHT = h;
-		CAM->SCR_WIDTH = w;
-	}
-	
-	void Application::Init()
-	{
-		LogManager::GetInstance()->Init();
+		ApplicationWindow->Render();
 	}
 
 	void Application::OnExit()
 	{
 		ApplicationWindow.reset();
-		GraphicsInterface.reset();
-		Shader::CleanUp();
+		GraphicsApi.reset();
+		ShaderManager::CleanUp();
+		// TODO: Placeholders until layer/windows properly get cleaned up
 		SceneManager::DestoryInstance();
-		CameraManager::DestoryInstance();
-		//Input::DestoryInstance();
+		
 		SoundManager::DestoryInstance();
 		Text::Fonts.~vector();
+		LogManager.reset();
 	}
 }
 
-SkyEngine::Application* SkyEngine::Application::GetApplication()
+SkyEngine::Application* SkyEngine::Application::Get()
 {
 	return EngineApplication;
 }
 
 SkyEngine::Application* GetApplication()
 {
-	return SkyEngine::Application::GetApplication();
+	return SkyEngine::Application::Get();
+}
+
+TPointer<IGraphicsAPI> GetGraphicsAPI()
+{
+	return SkyEngine::Application::Get()->GraphicsApi;
+}
+
+IPlatformInterface* GetPlatformInterface()
+{
+	return SkyEngine::Application::Get()->PlatformInterface;
+}
+
+TPointer<CRenderer> GetRenderer()
+{
+	return SkyEngine::Application::Get()->Renderer;
+}
+
+CMeshManager* GetMeshManager()
+{
+	return &SkyEngine::Application::Get()->MeshManager;
+}
+
+CMaterialManager* GetMaterialManager()
+{
+	return &SkyEngine::Application::Get()->MaterialManager;
+}
+
+CTextureManager* GetTextureManager()
+{
+	return &SkyEngine::Application::Get()->TextureManager;
+}
+
+CAssetManager* GetAssetManager()
+{
+	return &SkyEngine::Application::Get()->AssetManager;
 }

@@ -4,16 +4,11 @@
 
 #include "EditorWindow.h"
 
-#include <glew/glew.h>
-#include <GLFW/glfw3.h>
-//#include <freeglut.h>
-#include <iostream>
-
 #include "Core/Application.h"
 
 std::vector<EditorWindow*> EditorWindowManager::EditorWindows;
 std::vector<EditorWindow*> EditorWindowManager::EditorWindowsToRemove;
-std::shared_ptr<EngineWindow> EditorWindowManager::CurrentFocused = nullptr;
+TWeakPointer<CEngineWindow> EditorWindowManager::CurrentFocused;
 
 EditorWindowManager::EditorWindowManager()
 {
@@ -23,7 +18,13 @@ EditorWindowManager::~EditorWindowManager()
 {
 }
 
-std::shared_ptr<EngineWindow> EditorWindowManager::GetMainWindow()
+void EditorWindowManager::CleanupWindows()
+{
+	EditorWindows.clear();
+	EditorWindowsToRemove.clear();
+}
+
+TPointer<CEngineWindow> EditorWindowManager::GetMainWindow()
 {
 	return GetApplication()->GetApplicationWindow();
 }

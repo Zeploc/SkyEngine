@@ -1,0 +1,10 @@
+[Scene]
+[New]
+[Entity] Sphere 1 ((18.000000 2.000000 0.000000) (0.000000 0.000000 0.000000) (2.000000 2.000000 2.000000)) [MeshComponent] Sphere Materials\CliffMaterial.sasset true
+[Entity] Floor_Plane 2 ((0.000000 0.000000 0.000000) (-90.000000 0.000000 0.000000) (50.000000 50.000000 50.000000)) [MeshComponent] Plane Materials\PlaneMaterial.sasset true
+[Entity] Cube 3 ((10.000000 4.000000 4.000000) (0.000000 0.000000 0.000000) (3.000000 3.000000 3.000000)) [MeshComponent] Cube Materials\ColouredBrickMaterial.sasset true
+[Entity] Pyramid 4 ((10.000000 4.000000 8.000000) (0.000000 0.000000 0.000000) (3.000000 3.000000 3.000000)) [MeshComponent] Pyramid Materials\ColouredBrickMaterial.sasset true
+[Entity] Sphere_2 5 ((10.000000 4.000000 12.000000) (0.000000 0.000000 0.000000) (2.000000 2.000000 2.000000)) [MeshComponent] Sphere Materials\ColouredBrickMaterial.sasset true
+[Entity] Plane 6 ((10.000000 4.000000 16.000000) (-90.000000 0.000000 0.000000) (2.000000 2.000000 2.000000)) [MeshComponent] Plane Materials\ColouredBrickPlaneMaterial.sasset true
+[Entity] Box 7 ((5.000000 5.000000 10.000000) (0.000000 0.000000 0.000000) (2.000000 2.000000 2.000000))
+[Entity] Camera 8 ((-7.138371 11.355030 6.731391) (-19.498581 -3.733940 0.000000) (0.000000 0.000000 0.000000))

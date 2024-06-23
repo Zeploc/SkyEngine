@@ -1,14 +1,9 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
 #include "LogManager.h"
 
-#include "UI/UIText.h"
-
-// Library Includes //
-#include <iostream>
-
-// Static Variables //
-std::shared_ptr<LogManager> LogManager::m_pLogManager;
+#include "Core/Application.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -16,7 +11,7 @@ std::shared_ptr<LogManager> LogManager::m_pLogManager;
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-LogManager::LogManager()
+CLogManager::CLogManager()
 {
 	//LoadingMessage = std::make_shared<UIText>(UIText({ Camera::GetInstance()->SCR_WIDTH / 2, Camera::GetInstance()->SCR_HEIGHT / 2 }, 0, { 0.7f, 0.7f, 0.7f, 1.0f }, "Log Message", "Resources/Fonts/Roboto-Medium.ttf", 30, Utils::CENTER));;
 }
@@ -27,52 +22,64 @@ LogManager::LogManager()
 #--Parameters--#:	NA
 #--Return--#: 		NA
 ************************************************************/
-LogManager::~LogManager()
+CLogManager::~CLogManager()
 {
 }
 
-void LogManager::Init()
+void CLogManager::Init()
 {
-	DisplayLogMessage("Loading Game");
+	DisplayMessage("Loading Game");
 }
 
-void LogManager::Render()
+void CLogManager::Render()
 {
-	LoadingMessage->DrawUIElement();
+	// LoadingMessage->DrawUIElement();
 }
 
-void LogManager::DisplayLogMessage(std::string _Message)
+void CLogManager::LogInternal(ELogMessageType MessageType, const std::string& InMessage)
 {
-	std::cout << _Message << std::endl;
-	if (LoadingMessage)
+	switch (MessageType)
 	{
-		LoadingMessage->sText = _Message;
+	case ELogMessageType::Message:
+		std::cout << InMessage << std::endl;
+		break;
+	case ELogMessageType::Warning:
+	case ELogMessageType::Error:		
+		std::cerr << InMessage << std::endl;
+		break;
+	default: ;
 	}
-	//glutPostRedisplay();
 }
 
-/************************************************************
-#--Description--#:  Retrieves static instance pointer to this class
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	NA
-#--Return--#: 		Returns static pointer to self
-************************************************************/
-std::shared_ptr<LogManager> LogManager::GetInstance()
+void CLogManager::Log(ELogMessageType MessageType, const std::string& InMessage)
 {
-	if (!m_pLogManager) // null or doesn't exist
+	std::string Prefix = "";
+	if (MessageType != ELogMessageType::Message)
 	{
-		m_pLogManager = std::shared_ptr<LogManager>(new LogManager());
+		Prefix = (MessageType == ELogMessageType::Error ? "[ERROR]" : "[WARN]");
+		Prefix +=  ": ";
 	}
-	return m_pLogManager;
+	
+	
+	LogInternal(MessageType, Prefix + InMessage);
 }
 
-/************************************************************
-#--Description--#:  Destroys static instance pointer to this class
-#--Author--#: 		Alex Coultas
-#--Parameters--#:	NA
-#--Return--#: 		NA
-************************************************************/
-void LogManager::DestoryInstance()
+void CLogManager::DisplayMessage(const std::string& InMessage)
 {
-	m_pLogManager = nullptr;
+	Log(ELogMessageType::Message, InMessage);
+}
+
+void CLogManager::DisplayWarning(const std::string& InMessage)
+{
+	Log(ELogMessageType::Warning, InMessage);
+}
+
+void CLogManager::DisplayError(const std::string& InMessage)
+{
+	Log(ELogMessageType::Error, InMessage);
+}
+
+TPointer<CLogManager> CLogManager::Get()
+{
+	return GetApplication()->LogManager;
 }

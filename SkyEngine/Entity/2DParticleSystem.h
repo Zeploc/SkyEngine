@@ -3,19 +3,18 @@
 #pragma once
 
 // Library Includes //
-#include <memory>
-#include <vector>
 
 // OpenGL Library Includes //
 
 // Local Includes //
 #include "Entity.h"
+#include "Math/Vector2.h"
 #include "System/Utils.h"
 
 class ParticleSystem2D : public Entity
 {
 public:
-	ParticleSystem2D(FTransform _Transform, const char* _CharName);
+	ParticleSystem2D(STransform _Transform, const char* _CharName);
 
 	~ParticleSystem2D();
 
@@ -41,13 +40,13 @@ public:
 
 	void Update() override;
 
-	void Render();
+	std::vector<TPointer<Entity>> GetAdditionalEntitiesToRender() override;
 
 	struct Particle2D
 	{
-		std::shared_ptr<Entity> pEntity;
+		TPointer<Entity> pEntity;
 		float fSpeed;
-		Vector2 v2Direction;
+		SVector2 v2Direction;
 		float fFalloffDistance;
 		float fFallOffTime;
 		float fTimeLength;

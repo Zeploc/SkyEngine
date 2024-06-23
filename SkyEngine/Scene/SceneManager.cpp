@@ -1,20 +1,20 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
 #include "SceneManager.h"
 
 // Library Includes //
-#include <iostream>
 
-// OpenGL Library Includes //
 
 // Engine Includes //
 #include "Scene.h"
+#include "Core/Asset/Asset.h"
 #include "System/LogManager.h"
 
 // Local Includes //
 
 // Static Variables //
-std::shared_ptr<SceneManager> SceneManager::m_pSceneManager;
+TPointer<SceneManager> SceneManager::m_pSceneManager;
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -47,18 +47,23 @@ SceneManager::~SceneManager()
 #--Parameters--#: 	Scene to add
 #--Return--#: 		NA
 ************************************************************/
-void SceneManager::AddScene(std::shared_ptr<Scene> _Scene)
+void SceneManager::AddScene(TPointer<Scene> _Scene)
 {
+	if (Scenes.contains(_Scene->SceneName))
+	{
+		ensure(false, "Attempted to add scene with same name as existing!");
+		return;
+	}
 	if (Scenes.empty())
 	{
-		Scenes.insert(std::pair<std::string, std::shared_ptr<Scene>>(_Scene->SceneName, _Scene));
-		CurrentScene = _Scene->SceneName;
-		SceneToSwitch = CurrentScene;
-		_Scene->OnLoadScene();
+		Scenes.insert(std::pair<std::string, TPointer<Scene>>(_Scene->SceneName, _Scene));
+
+		SceneToSwitch = _Scene->SceneName;
+		SwitchScene(SceneToSwitch, true);
 	}
 	else
 	{
-		Scenes.insert(std::pair<std::string, std::shared_ptr<Scene>>(_Scene->SceneName, _Scene));
+		Scenes.insert(std::pair<std::string, TPointer<Scene>>(_Scene->SceneName, _Scene));
 	}
 }
 
@@ -73,7 +78,7 @@ void SceneManager::RemoveScene(std::string SceneName)
 	if (Scenes.count(SceneName) == 0)
 	{
 		// Scene Doesn't exist
-		LogManager::GetInstance()->DisplayLogMessage("Could not find scene " + SceneName);
+		CLogManager::Get()->DisplayMessage("Could not find scene " + SceneName);
 		return;
 	}
 	Scenes[SceneName]->DeleteScene();
@@ -86,7 +91,7 @@ void SceneManager::RemoveScene(std::string SceneName)
 #--Parameters--#: 	Scene to remove
 #--Return--#: 		NA
 ************************************************************/
-void SceneManager::RemoveScene(std::shared_ptr<Scene> _Scene)
+void SceneManager::RemoveScene(TPointer<Scene> _Scene)
 {
 	for (auto it = Scenes.begin(); it != Scenes.end(); ++it)
 	{
@@ -107,18 +112,29 @@ void SceneManager::RemoveScene(std::shared_ptr<Scene> _Scene)
 ************************************************************/
 void SceneManager::SwitchScene(std::string SceneName, bool _bInstant)
 {
-	if (Scenes.count(SceneName) == 0)
+	if (Scenes.empty())
 	{
 		// Scene Doesn't exist
-		LogManager::GetInstance()->DisplayLogMessage("Could not find scene " + SceneName);
+		CLogManager::Get()->DisplayMessage("Could not find scene " + SceneName);
 		return;
 	}
 
 	if (_bInstant)
 	{
+		// TODO: Switch to storing scene assets and using load operations
+		if (!CurrentScene.empty())
+		{
+			const TPointer<Scene> ExistingScene = GetCurrentScene();
+			ExistingScene->Asset->Unload();
+		}
+		
 		CurrentScene = SceneName;
-		LogManager::GetInstance()->DisplayLogMessage("Switching to Scene \"" + Scenes[CurrentScene]->SceneName + "\"");
-		Scenes[CurrentScene]->OnLoadScene();
+		SceneToSwitch = CurrentScene;
+		CLogManager::Get()->DisplayMessage("Switching to Scene \"" + GetCurrentScene()->SceneName + "\"");
+		// TODO: Switch to just load once storing assets in scene manager?
+		GetCurrentScene()->Asset->Reload();
+		// TODO: Move elsewhere
+		GetCurrentScene()->BeginPlay();
 	}
 	else
 	{
@@ -134,13 +150,11 @@ void SceneManager::SwitchScene(std::string SceneName, bool _bInstant)
 ************************************************************/
 void SceneManager::UpdateCurrentScene()
 {
-	Scenes[CurrentScene]->Update();
+	GetCurrentScene()->Update();
 	// Switch to scene flag has been set
 	if (SceneToSwitch != CurrentScene)
 	{
-		CurrentScene = SceneToSwitch;
-		LogManager::GetInstance()->DisplayLogMessage("Switching to Scene \"" + Scenes[SceneToSwitch]->SceneName + "\"");
-		Scenes[SceneToSwitch]->OnLoadScene();
+		SwitchScene(SceneToSwitch, true);
 	}
 }
 
@@ -152,10 +166,10 @@ void SceneManager::UpdateCurrentScene()
 ************************************************************/
 void SceneManager::RenderCurrentScene()
 {
-	Scenes[CurrentScene]->RenderScene();
+	GetCurrentScene()->RenderScene();
 }
 
-std::shared_ptr<Scene> SceneManager::GetCurrentScene()
+TPointer<Scene> SceneManager::GetCurrentScene()
 {
 	if (Scenes.empty())
 	{
@@ -170,11 +184,11 @@ std::shared_ptr<Scene> SceneManager::GetCurrentScene()
 #--Parameters--#:	NA
 #--Return--#: 		Returns static pointer to self
 ************************************************************/
-std::shared_ptr<SceneManager> SceneManager::GetInstance()
+TPointer<SceneManager> SceneManager::GetInstance()
 {
 	if (!m_pSceneManager) // null or doesn't exist
 	{
-		m_pSceneManager = std::shared_ptr<SceneManager>(new SceneManager());
+		m_pSceneManager = TPointer<SceneManager>(new SceneManager());
 	}
 	return m_pSceneManager;
 }

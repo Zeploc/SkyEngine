@@ -2,10 +2,9 @@
 
 #pragma once
 
+#include "Core/Core.h"
+
 // Library Includes //
-#include <memory>
-#include <string>
-#include <vector>
 
 // OpenGL Library Includes //
 #include <fmod/fmod.hpp>
@@ -53,14 +52,14 @@ private:
 
 	// Singleton
 public:
-	static std::shared_ptr<SoundManager> GetInstance();
+	static TPointer<SoundManager> GetInstance();
 
 	static void DestoryInstance();
 
 	~SoundManager(); // Shared pointer has to be able to call destructor so can't be private
 
 private:
-	static std::shared_ptr<SoundManager> m_pSoundManager;
+	static TPointer<SoundManager> m_pSoundManager;
 
 	SoundManager();
 

@@ -1,32 +1,25 @@
 // Copyright Skyward Studios, Inc. All Rights Reserved.
 
+#include "SEPCH.h"
 #include "EditorWindow.h"
 
 #include "EditorWindowManager.h"
-
-#include <glew/glew.h>
-#include <GLFW/glfw3.h>
 #include <iostream>
 
-#include <Camera/CameraManager.h>
 #include <Input/Input.h>
-#include <Render/Shader.h>
 #include <System/Utils.h>
-#include <UI/UIButton.h>
 
-#include "Graphics/GraphicsInstance.h"
-#include "Graphics/GraphicsWindow.h"
+#include "Core/Application.h"
+#include "Render/Renderer.h"
+#include "Platform/Window/EngineWindow.h"
 
 void EditorWindow::CreateExternalWindow()
 {
-	LinkedWindow = EngineWindow::CreateEngineWindow(WindowName, Size, false);
+	LinkedWindow = CEngineWindow::CreateEngineWindow(WindowName, Size, false);
 	LinkedWindow->SetWindowPosition(Position);
-	
-	// The input function registration
-	Input::GetInstance()->Init(LinkedWindow);
 }
 
-EditorWindow::EditorWindow(std::string InWindowName, std::shared_ptr<EngineWindow> InLinkedWindow, Vector2 InSize, Vector2 InPosition)
+EditorWindow::EditorWindow(std::string InWindowName, TPointer<CEngineWindow> InLinkedWindow, SVector2 InSize, SVector2 InPosition)
 : WindowName(InWindowName), LinkedWindow(InLinkedWindow), Size(InSize), Position(InPosition)
 {
 	if (!LinkedWindow)
@@ -48,23 +41,23 @@ void EditorWindow::SetupUI()
 {
 	if (LinkedWindow == EditorWindowManager::GetMainWindow())
 	{
-		BackImage = std::make_shared<UIImage>(UIImage(glm::vec2(Size.X / 2.0f, Size.Y / 2.0f), EANCHOR::CENTER, 0.0f, glm::vec4(0.5f, 0.5f, 0.5f, 1.0f), Size.X, Size.Y));
-		//TestBtn->AddText("Test", "Resources/Fonts/Roboto-Thin.ttf", 30, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
-		UIElements.push_back(BackImage);
-
-		//20, Size.y - 20.0f
-		std::shared_ptr<UIButton> TestBtn(new UIButton(glm::vec2(0.0f, 0.0f), EANCHOR::TOP_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), Size.X - 35, 30, nullptr));
-
-		TestBtn->BindPress(this, &EditorWindow::StartDrag);
-		TestBtn->BindRelease(this, &EditorWindow::StopDrag);
-
-		TestBtn->AddText(WindowName, "Resources/Fonts/Roboto-Thin.ttf", 20, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
-		UIElements.push_back(TestBtn);
-
-		std::shared_ptr<UIButton> PopoutButton(new UIButton(glm::vec2(Size.X, 0.0f), EANCHOR::TOP_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 30, 30, nullptr));
-
-		PopoutButton->BindPress(this, &EditorWindow::PopOut);
-		UIElements.push_back(PopoutButton);
+		// BackImage = std::make_shared<UIImage>(UIImage(glm::vec2(Size.X / 2.0f, Size.Y / 2.0f), EANCHOR::CENTER, 0.0f, glm::vec4(0.5f, 0.5f, 0.5f, 1.0f), Size.X, Size.Y));
+		// //TestBtn->AddText("Test", "Resources/Fonts/Roboto-Thin.ttf", 30, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), Utils::CENTER, { 0, 0 });
+		// UIElements.push_back(BackImage);
+		//
+		// //20, Size.y - 20.0f
+		// TPointer<UIButton> TestBtn(new UIButton(glm::vec2(0.0f, 0.0f), EANCHOR::TOP_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), Size.X - 35, 30, nullptr));
+		//
+		// TestBtn->BindPress(this, &EditorWindow::StartDrag);
+		// TestBtn->BindRelease(this, &EditorWindow::StopDrag);
+		//
+		// TestBtn->AddText(WindowName, "Resources/Fonts/Roboto-Thin.ttf", 20, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
+		// UIElements.push_back(TestBtn);
+		//
+		// TPointer<UIButton> PopoutButton(new UIButton(glm::vec2(Size.X, 0.0f), EANCHOR::TOP_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 30, 30, nullptr));
+		//
+		// PopoutButton->BindPress(this, &EditorWindow::PopOut);
+		// UIElements.push_back(PopoutButton);
 	}
 }
 
@@ -76,27 +69,23 @@ void EditorWindow::RenderWindow()
 {	
 	if (LinkedWindow != EditorWindowManager::GetMainWindow()) // Separate window
 	{
-		LinkedWindow->GetGraphicsWindow()->GetGraphicsInstance()->ClearColour = BackColour;
-		LinkedWindow->GetGraphicsWindow()->PreRender();
+		//GetRenderer()->ClearColour = BackColour;
+		// LinkedWindow->PreRender();
+		LinkedWindow->Render();
 	}
 	else
 	{
 		// Position viewport within existing main window
-		const Vector2 MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
-		glViewport(Position.X, MainWindowSize.Y - Position.Y - Size.Y, Size.X, Size.Y);
+		const SVector2i MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
+		//GetRenderer()->SetRenderViewport({Position.X, MainWindowSize.Y - Position.Y - Size.Y}, {Size.X, Size.Y});
 	}
 
-	CameraManager::GetInstance()->SCR_WIDTH = Size.X;
-	CameraManager::GetInstance()->SCR_HEIGHT = Size.Y;
-	CameraManager::GetInstance()->VIEWPORT_X = Position.X;
-	CameraManager::GetInstance()->VIEWPORT_Y = Position.Y;
-
-	LinkedWindow->GetGraphicsWindow()->Render({}, UIElements);
+	// LinkedWindow->Render({}, UIElements);
 	
-	if (LinkedWindow != EditorWindowManager::GetMainWindow()) // Separate window
-	{
-		LinkedWindow->GetGraphicsWindow()->PostRender();
-	}
+	// if (LinkedWindow != EditorWindowManager::GetMainWindow()) // Separate window
+	// {
+	// 	LinkedWindow->PostRender();
+	// }
 }
 
 void EditorWindow::PopOut()
@@ -111,7 +100,7 @@ void EditorWindow::PopOut()
 		return;
 	}
 
-	const Vector2 MainWindowPosition = EditorWindowManager::GetMainWindow()->GetPosition();
+	const SVector2i MainWindowPosition = EditorWindowManager::GetMainWindow()->GetPosition();
 	Position.Y += 30;
 	LinkedWindow->SetWindowPosition(MainWindowPosition + Position);	
 
@@ -156,7 +145,7 @@ void EditorWindow::PopIn()
 	LinkedWindow.reset();
 	LinkedWindow = EditorWindowManager::GetMainWindow();
 
-	const Vector2 MainWindowPosition = LinkedWindow->GetPosition();
+	const SVector2i MainWindowPosition = LinkedWindow->GetPosition();
 	Position -= MainWindowPosition;
 	Position.Y -= 30;
 
@@ -166,7 +155,7 @@ void EditorWindow::PopIn()
 
 void EditorWindow::StartDrag()
 {
-	DragOffset = Input::GetInstance()->MousePos - Position;
+	// DragOffset = CWindowInput::GetInstance()->MousePos - Position;
 	DraggingWindow = true;
 }
 
@@ -174,21 +163,21 @@ void EditorWindow::StopDrag()
 {
 	if (DraggingWindow)
 	{
-		Vector2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
-		SetWindowPosition(NewPosition);
+		// SVector2i NewPosition = CWindowInput::GetInstance()->MousePos - DragOffset;
+		// SetWindowPosition(NewPosition);
 
 		DraggingWindow = false;
 	}
 }
 
-bool EditorWindow::IsPointInWindow(Vector2 _point)
+bool EditorWindow::IsPointInWindow(SVector2i _point)
 {
 	if (_point.X < Position.X || _point.Y < Position.Y)
 	{
 		return false;
 	}
 
-	Vector2 EndPos = Position + Size;
+	const SVector2i EndPos = Position + Size;
 
 	if (_point.X > EndPos.X || _point.Y > EndPos.Y)
 	{
@@ -200,18 +189,18 @@ bool EditorWindow::IsPointInWindow(Vector2 _point)
 void EditorWindow::SetBackColour(glm::vec3 _Colour)
 {
 	BackColour = _Colour;
-	if (BackImage)
-	{
-		BackImage->Colour = glm::vec4(BackColour, 1.0f);
-	}
+	// if (BackImage)
+	// {
+	// 	BackImage->Colour = glm::vec4(BackColour, 1.0f);
+	// }
 }
 
 void EditorWindow::UpdateWindow()
 {
 	if (LinkedWindow != EditorWindowManager::GetMainWindow()) //seperate window
 	{		
-		const Vector2 MainWindowPosition = EditorWindowManager::GetMainWindow()->GetPosition();
-		const Vector2 MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
+		const SVector2i MainWindowPosition = EditorWindowManager::GetMainWindow()->GetPosition();
+		const SVector2i MainWindowSize = EditorWindowManager::GetMainWindow()->GetSize();
 		
 		// Update position
 		GetPosition();
@@ -228,41 +217,36 @@ void EditorWindow::UpdateWindow()
 		}
 	}
 
-	LinkedWindow->GetGraphicsWindow()->FocusWindow();
-
-	CameraManager::GetInstance()->SCR_WIDTH = Size.X;
-	CameraManager::GetInstance()->SCR_HEIGHT = Size.Y;
-	CameraManager::GetInstance()->VIEWPORT_X = Position.X;
-	CameraManager::GetInstance()->VIEWPORT_Y = Position.Y;
+	// LinkedWindow->FocusWindow();
 
 	if (DraggingWindow)
 	{
-		Vector2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
-		SetWindowPosition(NewPosition);
+		// SVector2i NewPosition = CWindowInput::GetInstance()->MousePos - DragOffset;
+		// SetWindowPosition(NewPosition);
 	}
 
-	//glm::vec2 MousePosViewport = Input::GetInstance()->MousePos;
+	//glm::vec2 MousePosViewport = CWindowInput::GetInstance()->MousePos;
 	////MousePosViewport += ViewportOffset;
 	//glm::vec2 TopLeft = Position;
 	//glm::vec2 BottomRight = Position + Size;
 	//bool InWindow = (MousePosViewport.x > TopLeft.x && MousePosViewport.x < BottomRight.x && MousePosViewport.y < BottomRight.y && MousePosViewport.y > TopLeft.y);
 	//
-	//if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_PRESS && InWindow)
+	//if (CWindowInput::GetInstance()->MouseState[CWindowInput::MOUSE_LEFT] == CWindowInput::InputState::INPUT_FIRST_PRESS && InWindow)
 	//{
-	//	DragOffset = Input::GetInstance()->MousePos - Position;
+	//	DragOffset = CWindowInput::GetInstance()->MousePos - Position;
 	//	DraggingWindow = true;
 	//	//PopOut();
 	//}
-	//else if (Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_HOLD && DraggingWindow)
+	//else if (CWindowInput::GetInstance()->MouseState[CWindowInput::MOUSE_LEFT] == CWindowInput::InputState::INPUT_HOLD && DraggingWindow)
 	//{
-	//	glm::vec2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
+	//	glm::vec2 NewPosition = CWindowInput::GetInstance()->MousePos - DragOffset;
 	//	SetWindowPosition(NewPosition);
 	//}
-	//else if(Input::GetInstance()->MouseState[Input::MOUSE_LEFT] == Input::InputState::INPUT_FIRST_RELEASE)
+	//else if(CWindowInput::GetInstance()->MouseState[CWindowInput::MOUSE_LEFT] == CWindowInput::InputState::INPUT_FIRST_RELEASE)
 	//{
 	//	if (DraggingWindow)
 	//	{
-	//		glm::vec2 NewPosition = Input::GetInstance()->MousePos - DragOffset;
+	//		glm::vec2 NewPosition = CWindowInput::GetInstance()->MousePos - DragOffset;
 	//		SetWindowPosition(NewPosition);
 
 	//		DraggingWindow = false;
@@ -270,15 +254,15 @@ void EditorWindow::UpdateWindow()
 	//	
 	//}
 
-	for (std::shared_ptr<UIElement> UIElement : UIElements)
-	{
-		UIElement->BaseUpdate();
-	}
+	// for (TPointer<UIElement> UIElement : UIElements)
+	// {
+	// 	UIElement->BaseUpdate();
+	// }
 
-	//Input::GetInstance()->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
+	//CWindowInput::GetInstance()->Update(); // HAS TO BE LAST TO HAVE FIRST PRESS AND RELEASE
 }
 
-Vector2 EditorWindow::GetPosition()
+SVector2i EditorWindow::GetPosition()
 {
 	if (LinkedWindow != EditorWindowManager::GetMainWindow())
 	{
@@ -287,7 +271,7 @@ Vector2 EditorWindow::GetPosition()
 	return Position;
 }
 
-void EditorWindow::SetWindowPosition(Vector2 _position)
+void EditorWindow::SetWindowPosition(SVector2i _position)
 {
 	if (LinkedWindow != EditorWindowManager::GetMainWindow())
 	{
@@ -300,7 +284,7 @@ void EditorWindow::MainWindowSizeChanged(int _w, int _h)
 {
 	if (LinkedWindow != EditorWindowManager::GetMainWindow()) //seperate window
 	{
-		Size = glm::vec2(_w, _h);
+		Size = glm::tvec2<int>(_w, _h);
 	}
 	//glutSetWindow(WindowID);
 

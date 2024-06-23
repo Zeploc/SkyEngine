@@ -2,19 +2,25 @@
 
 #pragma once
 #include <list>
+#include <functional>
 
-class DelegateBase
+#include "Core.h"
+
+// TODO: STDL warnings with exporting class with vector
+#pragma warning (disable : 4251)
+
+class CDelegateBase
 {
 public:
-	DelegateBase()
+	CDelegateBase()
 	{
 		
 	}	
 
-	virtual ~DelegateBase()
+	virtual ~CDelegateBase()
 	{
 	}
-	//virtual DelegateBase* copy() {};
+	//virtual CDelegateBase* copy() {};
 	virtual void operator()() = 0;
 
 	// virtual bool EqualTo(void* Object, void(*Function)())
@@ -22,37 +28,39 @@ public:
 	// 	return false;
 	// }
 
-	DelegateBase(const DelegateBase& other)
+	CDelegateBase(const CDelegateBase& other)
 	{
 	}
 
 };
 
+// using VoidFunc = std::function<void()>;
+
 template <class T>
-class VoidDelegate : public DelegateBase
+class TVoidDelegate : public CDelegateBase
 {
 public:
-	using fn = void(T::*)();
-
-	VoidDelegate()
+	using VoidFunc = void(T::*)();//std::function<void(T*)>;
+	
+	TVoidDelegate()
 	{
 		
 	}
 
-	VoidDelegate(const VoidDelegate& other)
+	TVoidDelegate(const TVoidDelegate& other)
 	{
 		// TODO:
 	}
 	
-	VoidDelegate(T* trg, fn op) : m_rTarget(trg)
+	TVoidDelegate(T* trg, VoidFunc op) : m_rTarget(trg)
 							   , m_Operation(op)
 	{
 	}
 
-	virtual ~VoidDelegate()
+	virtual ~TVoidDelegate()
 	{
 	}
-	//virtual DelegateBase* copy() {};
+	//virtual CDelegateBase* copy() {};
 	void operator()()
 	{
 		(m_rTarget->*m_Operation)();
@@ -66,7 +74,7 @@ public:
 	//private:
 
 	T* m_rTarget;
-	fn m_Operation;
+	VoidFunc m_Operation;
 };
 
 class FDelegate
@@ -87,7 +95,7 @@ public:
 	void Bind(T* Object, void(T::*Function)())
 	{
 		Clear();
-		Delegate = new VoidDelegate<T>(Object, Function);
+		Delegate = new TVoidDelegate<T>(Object, Function);
 	}
 
 	void Clear()
@@ -110,12 +118,12 @@ public:
 	}
 
 private:
-	DelegateBase* Delegate = nullptr;
+	CDelegateBase* Delegate = nullptr;
 
 };
 
 
-class FMulticastDelegate
+class ENGINE_API FMulticastDelegate
 {
 public:	
 	FMulticastDelegate()
@@ -129,16 +137,19 @@ public:
 	}
 	
 	template <class T>
+	// void Bind(std::function<void(T*)> Function)
 	void Bind(T* Object, void(T::*Function)())
 	{
-		Delegates.push_back(new VoidDelegate<T>(Object, Function));
+		// using VoidFunc = std::function<void(T*)>;
+		// Delegates.push_back(Function);
+		Delegates.push_back(new TVoidDelegate<T>(Object, Function));
 	}
 	
 	template <class T>
 	bool Unbind(T* Object, void(T::*Function)())
 	{
-		using void_delegate = VoidDelegate<T>;
-		for (DelegateBase* Delegate : Delegates)
+		using void_delegate = TVoidDelegate<T>;
+		for (CDelegateBase* Delegate : Delegates)
 		{
 			// TODO: Improve from static cast
 			void_delegate* VoidDelegate = static_cast<void_delegate*>(Delegate);
@@ -154,7 +165,7 @@ public:
 
 	void Clear()
 	{
-		for (const DelegateBase* Delegate : Delegates)
+		for (const CDelegateBase* Delegate : Delegates)
 		{
 			delete Delegate;
 		}
@@ -163,8 +174,8 @@ public:
 
 	void Broadcast() const
 	{
-		const std::list<DelegateBase*> DelegatesCopy = Delegates;
-		for (DelegateBase* Delegate : DelegatesCopy)
+		const std::list<CDelegateBase*> DelegatesCopy = Delegates;
+		for (CDelegateBase* Delegate : DelegatesCopy)
 		{
 			// TODO: Need to account for being unbound from another delegate
 			if (Delegate)
@@ -184,8 +195,7 @@ public:
 	}
 
 private:
-	std::list<DelegateBase*> Delegates;
-
+	std::list<CDelegateBase*> Delegates;
 };
 
 
