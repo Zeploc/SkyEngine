@@ -26,8 +26,8 @@ class CMaterialInterface;
 class ENGINE_API CMeshComponent : public CComponent, public ISceneVisual
 {
 public:
-	CMeshComponent(const TPointer<Entity>& InOwner);
-	CMeshComponent(const TPointer<Entity>& InOwner, std::string InMeshAsset, const TPointer<CMaterialInterface>& InMaterial = nullptr);
+	CMeshComponent(const THardPointer<Entity>& InOwner);
+	CMeshComponent(const THardPointer<Entity>& InOwner, std::string InMeshAsset, const TAssetObjectPointer<CMaterialInterface>& InMaterial = nullptr);
 	virtual ~CMeshComponent();
 
 	void OnAttached() override;
@@ -42,8 +42,8 @@ public:
 	std::string GetMeshAsset() const { return MeshAsset; }
 	virtual bool SetMeshAsset(std::string NewMeshAssetName);
 	
-	TPointer<CMaterialInterface> GetMaterial() const override;
-	virtual void SetMaterial(TPointer<CMaterialInterface> NewMaterial);
+	TAssetObjectPointer<CMaterialInterface> GetMaterial() const override;
+	virtual void SetMaterial(TAssetObjectPointer<CMaterialInterface> NewMaterial);
 	
 	uint32_t GetVao() const override;
 	int GetIndicesCount() const override;
@@ -53,11 +53,11 @@ public:
 
 	virtual void OnDestroy() {}
 
-	void AddCollisionBounds(float fHeight, float fWidth, float fDepth, TPointer<Entity> _EntityRef);
+	void AddCollisionBounds(float fHeight, float fWidth, float fDepth, THardPointer<Entity> _EntityRef);
 
-	void AddCollisionBounds(TPointer<CCollisionBounds> NewCollision);
+	void AddCollisionBounds(THardPointer<CCollisionBounds> NewCollision);
 
-	TPointer<CCollisionBounds> GetCollisionBounds()
+	THardPointer<CCollisionBounds> GetCollisionBounds()
 	{
 		return MeshCollisionBounds;
 	}
@@ -65,7 +65,7 @@ public:
 	std::string GetComponentClassName() override;
 	static std::string GetStaticName();
 
-	TPointer<CMaterialInterface> MeshMaterial;
+	TAssetObjectPointer<CMaterialInterface> MeshMaterial;
 	float LEGACY_Width;
 	float LEGACY_Height;
 	float LEGACY_Depth = 0;
@@ -74,7 +74,7 @@ protected:
 	virtual CMeshData GetMeshData() const;
 	void Serialize(std::ostream& os) override;
 	void Deserialize(std::istream& is) override;
-	TPointer<CCollisionBounds> MeshCollisionBounds;
+	THardPointer<CCollisionBounds> MeshCollisionBounds;
 	std::string MeshAsset;
 
 	bool bVisible = true;

@@ -3,17 +3,18 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/Object.h"
 
 class CTexture;
 
 class ENGINE_API CTextureManager
 {
 public:
-	void AddLoadedTexture(TPointer<CTexture> NewTexture);
-	TPointer<CTexture> AddNewTexture(const std::string& TexturePath);
-	TPointer<CTexture> FindTexture(const std::string& TextureSource) const;
-	TArray<TPointer<CTexture>> GetAllLoadedTextures() const { return Textures; }
+	void AddLoadedTexture(TAssetObjectPointer<CTexture> NewTexture);
+	TAssetObjectPointer<CTexture> AddNewTexture(const std::string& TexturePath);
+	TAssetObjectPointer<CTexture> FindTexture(const std::string& TextureSource) const;
+	TArray<TAssetObjectPointer<CTexture>> GetAllLoadedTextures() const { return Textures; }
 	
 protected:
-	TArray<TPointer<CTexture>> Textures;
+	TArray<TAssetObjectPointer<CTexture>> Textures;
 };

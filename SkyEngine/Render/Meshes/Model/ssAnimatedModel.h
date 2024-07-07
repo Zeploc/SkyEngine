@@ -22,6 +22,7 @@
 #include <map>
 #include <vector>
 
+#include "Core/Object.h"
 #include "Math/Matrix.h"
 #include "Math/Transform.h"
 #include "Render/Lighting.h"
@@ -48,7 +49,7 @@ public:
 
 	bool loadMesh(std::string fileName);
 
-	void render(TPointer<Terrain> terrain);
+	void render(THardPointer<Terrain> terrain);
 
 	GLuint numBones()
 	{
@@ -152,7 +153,7 @@ private:
 
 	void ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const Matrix4& ParentTransform);
 
-	void setShaderEffectVariables(TPointer<Terrain> terrain);
+	void setShaderEffectVariables(THardPointer<Terrain> terrain);
 
 	//rendering
 
@@ -188,7 +189,7 @@ private:
 	GLuint m_Buffers[NUM_VBs];
 
 	std::vector<MeshEntry> m_Entries;
-	std::vector<TPointer<CTexture>> m_Textures;
+	std::vector<TAssetObjectPointer<CTexture>> m_Textures;
 
 	std::map<std::string, uint32_t> m_BoneMapping;
 	std::map<std::string, aiNodeAnim*> boneHierarchy;

@@ -10,7 +10,7 @@
 #include "Entity/Entity.h"
 #include "Render/Materials/InternalMaterial.h"
 
-CSphere::CSphere(const TPointer<Entity>& InOwner, const TPointer<CMaterialInterface>& InMaterial)
+CSphere::CSphere(const THardPointer<Entity>& InOwner, const THardPointer<CMaterialInterface>& InMaterial)
 : CMeshComponent(InOwner, MESH_SPHERE, InMaterial)
 {
 }

@@ -8,7 +8,7 @@
 class ENGINE_API GeometryObject : public CMeshComponent
 {
 public:
-	GeometryObject(const TPointer<Entity>& InOwner, glm::vec4 Colour);
+	GeometryObject(const THardPointer<Entity>& InOwner, glm::vec4 Colour);
 
 	~GeometryObject();
 

@@ -6,7 +6,7 @@
 #include "Entity/Entity.h"
 #include "System/LogManager.h"
 
-CBoxComponent::CBoxComponent(const TPointer<Entity>& InOwner, const TPointer<CMaterialInterface>& InMaterial)
+CBoxComponent::CBoxComponent(const THardPointer<Entity>& InOwner, const TAssetObjectPointer<CMaterialInterface>& InMaterial)
 	: CComponent(InOwner), BoxMaterial(InMaterial)
 {
 	BoxMeshName = "Box";
@@ -55,7 +55,7 @@ void CBoxComponent::SetVisible(bool bNewVisible)
 {
 }
 
-TPointer<CMaterialInterface> CBoxComponent::GetMaterial() const
+TAssetObjectPointer<CMaterialInterface> CBoxComponent::GetMaterial() const
 {
 	return BoxMaterial;
 }

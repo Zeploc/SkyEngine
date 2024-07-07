@@ -20,7 +20,7 @@ CEntityPropertiesPanel::CEntityPropertiesPanel(TWeakPointer<CEngineWindow> InOwn
 void CEntityPropertiesPanel::OnRender()
 {
 	// TODO: Convert to widget and use base render
-	const TPointer<Entity> SelectedEntity = EditorApp->EditorViewportLayer->GetSelectedEntity();
+	const THardPointer<Entity> SelectedEntity = EditorApp->EditorViewportLayer->GetSelectedEntity();
     
 	if (SelectedEntity)
 	{
@@ -36,7 +36,7 @@ void CEntityPropertiesPanel::OnRender()
 		ImGui::Separator();
 
 		// TODO: Switch to use serialize variables on components
-		for (const TPointer<CComponent>& Component : SelectedEntity->GetComponents())
+		for (const THardPointer<CComponent>& Component : SelectedEntity->GetComponents())
 		{			
 			ImGui::Text(Component->GetComponentClassName().c_str());
 			ImGui::Separator();

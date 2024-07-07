@@ -14,7 +14,7 @@ class ENGINE_API CComponent : public std::enable_shared_from_this<CComponent>
 {
 public:
 	virtual ~CComponent() = default;
-	CComponent(const TPointer<Entity>& InOwner);
+	CComponent(const THardPointer<Entity>& InOwner);
 	virtual void OnAttached();
 	virtual void BeginPlay();
 	virtual void Unload();
@@ -22,14 +22,14 @@ public:
 	virtual void Update();
 	virtual void OnDestroy();
 
-	TPointer<Entity> GetOwner() const { return Owner; }
+	THardPointer<Entity> GetOwner() const { return Owner; }
 	virtual std::string GetComponentClassName();
 	TArray<SSerializableVariable> GetSerializeVariables() const { return SerializeVariables; }
 
-	static TPointer<CComponent> MakeComponentFromClassName(const std::string& ClassName, TPointer<Entity> Owner);
+	static THardPointer<CComponent> MakeComponentFromClassName(const std::string& ClassName, THardPointer<Entity> Owner);
 	
-	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const TPointer<CComponent>& InComponent);
-	ENGINE_API friend std::istream& operator>>(std::istream& is, TPointer<CComponent>& InComponent);
+	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const THardPointer<CComponent>& InComponent);
+	ENGINE_API friend std::istream& operator>>(std::istream& is, THardPointer<CComponent>& InComponent);
 
 protected:
 	virtual void Serialize(std::ostream& os);
@@ -37,8 +37,8 @@ protected:
 	
 	TArray<SSerializableVariable> SerializeVariables;
 private:
-	TPointer<Entity> Owner;
+	THardPointer<Entity> Owner;
 	// TODO: Parent component?
-	TPointer<CComponent> ParentComponent;
+	THardPointer<CComponent> ParentComponent;
 	
 };

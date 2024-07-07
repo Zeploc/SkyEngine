@@ -51,7 +51,7 @@ void CAsset::ApplyAssetData(std::string AssetData)
 	Metadata = Tokens;
 }
 
-TPointer<CAssetObject> CAsset::Load()
+TAssetObjectPointer<CAssetObject> CAsset::Load()
 {
 	if (Object)
 	{
@@ -74,7 +74,7 @@ TPointer<CAssetObject> CAsset::Load()
 	std::getline(FileStream, AssetData, ']');
 	ApplyAssetData(AssetData);
 
-	const TPointer<CAssetObject> CreatedObject = MakeObject();
+	const THardPointer<CAssetObject> CreatedObject = MakeObject();
 	ensure(CreatedObject != nullptr, "Failed to create class from name!");
 	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(CreatedObject.get());
 	FileStream >> AssetInterface;
@@ -92,9 +92,15 @@ void CAsset::Unload()
 	{
 		return;
 	}
-	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(Object.get());
+	GetAssetManager()->UnloadAsset(Object);
+}
+
+void CAsset::Unloaded()
+{
+	THardPointer<CAssetObject> AssetObject = Object.GetWeak().lock();	
+	IAssetObjectInterface* AssetInterface = GetInterface<IAssetObjectInterface>(AssetObject);
 	AssetInterface->OnUnloaded();
-	Object.reset();
+	AssetInterface->Asset = nullptr;
 }
 
 bool CAsset::Delete()
@@ -107,7 +113,7 @@ bool CAsset::Delete()
 	return GetAssetManager()->DeleteAsset(shared_from_this());
 }
 
-TPointer<CAssetObject> CAsset::Reload()
+TAssetObjectPointer<CAssetObject> CAsset::Reload()
 {
 	Unload();
 	return Load();
@@ -119,7 +125,8 @@ bool CAsset::Save()
 	{
 		return false;
 	}
-	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(Object.get());
+	THardPointer<CAssetObject> AssetObject = Object.GetWeak().lock();	
+	IAssetObjectInterface* AssetInterface = GetInterface<IAssetObjectInterface>(AssetObject);
 	// Update meta data
 	Metadata = AssetInterface->GetMetaData();
 	
@@ -141,7 +148,7 @@ bool CAsset::Save()
 	return true;
 }
 
-void CAsset::SetDefaultObject(TPointer<CAssetObject> NewObject)
+void CAsset::SetDefaultObject(TAssetObjectPointer<CAssetObject> NewObject)
 {
 	NewObject->Asset = shared_from_this();
 	Metadata = NewObject->GetMetaData();
@@ -152,7 +159,8 @@ void CAsset::Open()
 {
 	// Confirm loaded first
 	Load();
-	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(Object.get());
+	THardPointer<CAssetObject> AssetObject = Object.GetWeak().lock();	
+	IAssetObjectInterface* AssetInterface = GetInterface<IAssetObjectInterface>(AssetObject);
 	if (AssetInterface)
 	{
 		AssetInterface->Open();
@@ -169,7 +177,7 @@ std::string CAsset::GetAbsoluteFilePath() const
 	return PathUtils::CombinePath(GetApplication()->GetContentDirectory(), FilePath);
 }
 
-TPointer<CAssetObject> CAsset::MakeObject() const
+THardPointer<CAssetObject> CAsset::MakeObject() const
 {
 	if (ClassName == CMaterialInterface::GetStaticName())
 	{

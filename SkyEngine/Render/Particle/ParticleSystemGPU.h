@@ -79,7 +79,7 @@ private:
 	uint32_t program;
 	uint32_t vao;
 	uint32_t vbo;
-	TPointer<CTexture> Texture;
+	TAssetObjectPointer<CTexture> Texture;
 
 	uint32_t posVbo;
 	uint32_t velVbo;

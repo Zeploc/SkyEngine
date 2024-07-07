@@ -34,14 +34,14 @@ public:
 	TMaterial(std::string InMaterialName);
 	
 	// TODO: Remove once from file system setup
-	TMaterial(std::string InMaterialName, const TPointer<S> InShader);
+	TMaterial(std::string InMaterialName, const THardPointer<S> InShader);
 
 	// TODO: Make redundant
-	TPointer<S> GetShader() const;
+	THardPointer<S> GetShader() const;
 	
 	typename S::ShaderParameters Params;
 	
-	TPointer<CShader> GetBaseShader() override;
+	THardPointer<CShader> GetBaseShader() override;
 	void BindMaterial() override;
 	bool HasTexture() override;
 	virtual std::string GetMaterialName() const override { return MaterialName; }
@@ -53,7 +53,7 @@ public:
 	void OnLoaded() override;
 	virtual TArray<SShaderParameter>& GetMaterialVariables() override;
 
-	TPointer<S> Shader;
+	THardPointer<S> Shader;
 protected:
 	// CMaterial(std::string ShaderName);
 	std::string MaterialName;
@@ -70,7 +70,7 @@ protected:
 };
 
 template <class S>
-TPointer<CShader> TMaterial<S>::GetBaseShader()
+THardPointer<CShader> TMaterial<S>::GetBaseShader()
 {
 	return Shader;
 }
@@ -79,7 +79,7 @@ template <class S>
 void TMaterial<S>::BindMaterial()
 {
 	CMaterialInterface::BindMaterial();
-	TPointer<S> TypedShader = std::static_pointer_cast<S>(GetRenderer()->ActiveShader);
+	THardPointer<S> TypedShader = std::static_pointer_cast<S>(GetRenderer()->ActiveShader);
 	Params.UploadMaterialParameters();
 }
 
@@ -148,7 +148,7 @@ TMaterial<S>::TMaterial(std::string InMaterialName)
 // }
 
 template <class S>
-TMaterial<S>::TMaterial(std::string InMaterialName, const TPointer<S> InShader)
+TMaterial<S>::TMaterial(std::string InMaterialName, const THardPointer<S> InShader)
 {
 	MaterialName = InMaterialName;
 	Shader = InShader;
@@ -157,7 +157,7 @@ TMaterial<S>::TMaterial(std::string InMaterialName, const TPointer<S> InShader)
 }
 
 template <class S>
-TPointer<S> TMaterial<S>::GetShader() const
+THardPointer<S> TMaterial<S>::GetShader() const
 { return Shader; }
 
 // template <typename T>
@@ -196,7 +196,7 @@ TPointer<S> TMaterial<S>::GetShader() const
 // 		Vector4 = InVector4;
 // 		Type = EAttributeType::Vector4;
 // 	}
-// 	MaterialAttribute(TPointer<CTexture> InTexture)
+// 	MaterialAttribute(THardPointer<CTexture> InTexture)
 // 	{
 // 		Texture = InTexture;
 // 		Type = EAttributeType::Texture;
@@ -227,7 +227,7 @@ TPointer<S> TMaterial<S>::GetShader() const
 // 	float GetNumber() const { return Number; }
 // 	SVector3 GetVector3() const { return Vector3; }
 // 	SVector4 GetVector4() const { return Vector4; }
-// 	TPointer<CTexture> GetTexture() const { return Texture; }
+// 	THardPointer<CTexture> GetTexture() const { return Texture; }
 // 	~MaterialAttribute()
 // 	{
 // 		Texture.reset();
@@ -258,6 +258,6 @@ TPointer<S> TMaterial<S>::GetShader() const
 // 		float Number;
 // 		SVector Vector3;
 // 		SVector4 Vector4;
-// 		TPointer<CTexture> Texture;
+// 		THardPointer<CTexture> Texture;
 // 	};
 // };

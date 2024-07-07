@@ -80,7 +80,7 @@ private:
 	GLuint program;
 	GLuint vao;
 	GLuint vbo;
-	TPointer<CTexture> Texture;
+	TAssetObjectPointer<CTexture> Texture;
 
 	bool bHasTexture = false;
 };

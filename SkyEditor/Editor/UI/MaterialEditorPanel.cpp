@@ -41,7 +41,7 @@ void CMaterialEditorPanel::OnRender()
 	}
 }
 
-void CMaterialEditorPanel::SetMaterial(TPointer<CMaterialInterface> InMaterial)
+void CMaterialEditorPanel::SetMaterial(TAssetObjectPointer<CMaterialInterface> InMaterial)
 {
 	Material = InMaterial;
 }

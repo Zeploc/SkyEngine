@@ -137,11 +137,11 @@ void CUIPresets::RenderVariableField(SSerializableVariable Variable)
 	}
 }
 
-bool CUIPresets::RenderAssetObjectField(TPointer<CAssetObject>& AssetObject, std::string ClassFilter)
+bool CUIPresets::RenderAssetObjectField(TAssetObjectPointer<>& AssetObject, std::string ClassFilter)
 {
     ImGuiContext& g = *GImGui;
 
-	TPointer<CAsset> Asset = nullptr;
+	TObjectPointer<CAsset> Asset = nullptr;
 	static std::string AssetName;
 	AssetName.reserve(50);
 	if (AssetObject)
@@ -170,12 +170,12 @@ bool CUIPresets::RenderAssetObjectField(TPointer<CAssetObject>& AssetObject, std
 	    // Display items
 		// FIXME-OPT: Use clipper (but we need to disable it on the appearing frame to make sure our call to SetItemDefaultFocus() is processed)
 
-	    TArray<TPointer<CAsset>> Assets = ClassFilter.empty() ? GetAssetManager()->GetAssets() : GetAssetManager()->GetAssetsOfClass(ClassFilter);
+	    TArray<TObjectPointer<CAsset>> Assets = ClassFilter.empty() ? GetAssetManager()->GetAssets() : GetAssetManager()->GetAssetsOfClass(ClassFilter);
 		Assets.insert(Assets.begin(), nullptr);
-		for (int i = 0; i < Assets.size(); i++)
+		for (uint32_t i = 0; i < Assets.size(); i++)
 		{
-			TPointer<CAsset> CurrentAsset = Assets[i];
-			ImGui::PushID(i);
+			const TObjectPointer<CAsset> CurrentAsset = Assets[i];
+			ImGui::PushID((int)i);
 			ImGui::BeginGroup();
 
 			const bool bItemSelected = (CurrentAsset == Asset);
@@ -220,8 +220,8 @@ bool CUIPresets::RenderAssetObjectField(TPointer<CAssetObject>& AssetObject, std
 	{
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(std::format("ASSET:{}", ClassFilter).c_str()))
 		{
-			IM_ASSERT(payload->DataSize == sizeof(TPointer<CAsset>));
-			Asset = *(const TPointer<CAsset>*)payload->Data;
+			IM_ASSERT(payload->DataSize == sizeof(THardPointer<CAsset>));
+			Asset = *(const THardPointer<CAsset>*)payload->Data;
 			bValueChanged = true;
 		}
 		ImGui::EndDragDropTarget();

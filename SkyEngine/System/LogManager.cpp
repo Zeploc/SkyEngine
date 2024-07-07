@@ -79,7 +79,7 @@ void CLogManager::DisplayError(const std::string& InMessage)
 	Log(ELogMessageType::Error, InMessage);
 }
 
-TPointer<CLogManager> CLogManager::Get()
+THardPointer<CLogManager> CLogManager::Get()
 {
 	return GetApplication()->LogManager;
 }

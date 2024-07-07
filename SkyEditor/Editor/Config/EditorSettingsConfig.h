@@ -10,7 +10,7 @@ class CEditorSettingsConfig final : public CConfig
 public:
 	CEditorSettingsConfig();
 
-	static TPointer<CEditorSettingsConfig> Get();
+	static THardPointer<CEditorSettingsConfig> Get();
 
 	int GraphicsMode = 0;
 	SVector2 Resolution = SVector2(1920, 1080);

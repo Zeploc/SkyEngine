@@ -29,12 +29,12 @@ public:
 
 	// TODO: Resolve to not be needed
 	void SetupCamera();
-	void SetCamera(TPointer<Camera> NewCamera);
+	void SetCamera(THardPointer<Camera> NewCamera);
 
 	virtual SVector2i GetViewportSize();
 	virtual SVector2i GetViewportPosition();
-	TPointer<Camera> GetViewportCamera() const { return ViewportCamera;	}
-	TPointer<CSceneRenderer> GetSceneRenderer() const { return SceneRenderer; }
+	THardPointer<Camera> GetViewportCamera() const { return ViewportCamera;	}
+	THardPointer<CSceneRenderer> GetSceneRenderer() const { return SceneRenderer; }
 	SVector ScreenToWorldDirection(SVector2i InScreenPosition);
 	SVector ScreenToWorldPosition2D(SVector2i InScreenPosition);
 	
@@ -49,8 +49,8 @@ protected:
 	bool OnWindowResize(unsigned int Width, unsigned int Height) override;
 	
 	SVector SkyColour;
-	TPointer<CWorldManager> WorldManager; 
+	THardPointer<CWorldManager> WorldManager; 
 	SVector2i ViewportSize;
-	TPointer<CSceneRenderer> SceneRenderer;
-	TPointer<Camera> ViewportCamera;
+	THardPointer<CSceneRenderer> SceneRenderer;
+	THardPointer<Camera> ViewportCamera;
 };

@@ -8,8 +8,8 @@
 class CTriangle : public CMeshComponent
 {
 public:
-	CTriangle(const TPointer<Entity>& InOwner, glm::vec3 _Point1, glm::vec3 _Point2, glm::vec3 _Point3, TPointer<CMaterialInterface> InMaterial = nullptr);
-	CTriangle(const TPointer<Entity>& InOwner, glm::vec3 CenterPoint, float Width, TPointer<CMaterialInterface> InMaterial = nullptr);
+	CTriangle(const THardPointer<Entity>& InOwner, glm::vec3 _Point1, glm::vec3 _Point2, glm::vec3 _Point3, THardPointer<CMaterialInterface> InMaterial = nullptr);
+	CTriangle(const THardPointer<Entity>& InOwner, glm::vec3 CenterPoint, float Width, THardPointer<CMaterialInterface> InMaterial = nullptr);
 
 	~CTriangle();
 	

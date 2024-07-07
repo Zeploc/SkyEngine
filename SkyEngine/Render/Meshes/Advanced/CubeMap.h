@@ -8,7 +8,7 @@
 class CubeMap : public CMeshComponent
 {
 public:
-	CubeMap(const TPointer<Entity>& InOwner, float fWidth, float fHeight, float fDepth, char* TextureSources[6]);
+	CubeMap(const THardPointer<Entity>& InOwner, float fWidth, float fHeight, float fDepth, char* TextureSources[6]);
 
 	~CubeMap();
 

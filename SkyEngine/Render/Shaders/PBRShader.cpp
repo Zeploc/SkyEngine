@@ -32,6 +32,6 @@ void CPBRShader::BindShader()
 
 bool CPBRShader::HasTexture(const ShaderParameters& InMaterialParams)
 {
-	return InMaterialParams.DiffuseTexture != nullptr;
+	return InMaterialParams.DiffuseTexture.IsValid();// todo: // != nullptr;
 }
 

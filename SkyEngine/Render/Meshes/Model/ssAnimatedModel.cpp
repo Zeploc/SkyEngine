@@ -309,7 +309,7 @@ bool ssAnimatedModel::initMaterials(const aiScene* pScene, const std::string fil
 
 				std::string FullPath = Dir + "/" + p;
 
-				TPointer<CTexture> Texture = GetTextureManager()->FindTexture(FullPath.c_str());
+				TAssetObjectPointer<CTexture> Texture = GetTextureManager()->FindTexture(FullPath.c_str());
 				m_Textures[i] = Texture;
 
 				if (!m_Textures[i]->IsValid())
@@ -367,7 +367,7 @@ void ssAnimatedModel::rotate(float rotSpeed)
 	currentRotationSpeed = rotSpeed;
 }
 
-void ssAnimatedModel::setShaderEffectVariables(TPointer<Terrain> terrain)
+void ssAnimatedModel::setShaderEffectVariables(THardPointer<Terrain> terrain)
 {
 	glUseProgram(this->program);
 
@@ -413,7 +413,7 @@ void ssAnimatedModel::setShaderEffectVariables(TPointer<Terrain> terrain)
 	// Lighting::PassLightingToShader(program);
 }
 
-void ssAnimatedModel::render(TPointer<Terrain> terrain)
+void ssAnimatedModel::render(THardPointer<Terrain> terrain)
 {
 	setShaderEffectVariables(terrain);
 

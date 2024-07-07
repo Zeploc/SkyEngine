@@ -16,6 +16,7 @@
 #include "Core/Application.h"
 #include "Render/SceneRenderer.h"
 #include "Render/Shaders/Shader.h"
+#include "Render/Textures/Texture.h"
 
 /************************************************************
 #--Description--#:  Constructor function

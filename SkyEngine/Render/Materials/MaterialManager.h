@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/Object.h"
 
 // TODO: STDL warnings with exporting class with vector
 #pragma warning (disable : 4251)
@@ -12,10 +13,10 @@ class CMaterialInterface;
 class ENGINE_API CMaterialManager
 {
 public:
-	void AddMaterial(TPointer<CMaterialInterface> NewMaterial);
-	TPointer<CMaterialInterface> FindMaterial(const std::string& MaterialName) const;
-	TArray<TPointer<CMaterialInterface>> GetAllLoadedMaterials() const { return Materials; }
+	void AddMaterial(TAssetObjectPointer<CMaterialInterface> NewMaterial);
+	TAssetObjectPointer<CMaterialInterface> FindMaterial(const std::string& MaterialName) const;
+	TArray<TAssetObjectPointer<CMaterialInterface>> GetAllLoadedMaterials() const;
 	
 private:
-	TArray<TPointer<CMaterialInterface>> Materials;
+	TArray<THardPointer<CMaterialInterface>> Materials;
 };

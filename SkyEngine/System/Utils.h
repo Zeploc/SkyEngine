@@ -63,20 +63,20 @@ public:
 
 	static glm::vec3 GetTextAncoredPosition(glm::vec2 position, glm::vec2 Dimensions, EANCHOR _AnchorType);
 
-	static bool isColliding2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2);
+	static bool isColliding2D(THardPointer<Entity> Entity1, THardPointer<Entity> Entity2);
 
 	//static bool isColliding2D(Entity* Entity1, Pointer<Entity> Entity2);
 
-	static bool CheckCollision2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2, glm::vec2 Movement);
+	static bool CheckCollision2D(THardPointer<Entity> Entity1, THardPointer<Entity> Entity2, glm::vec2 Movement);
 
 	//static bool CheckCollision2D(Entity* Entity1, Pointer<Entity> Entity2, glm::vec2 Movement);
 
-	static glm::vec2 GetDistance2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2);
+	static glm::vec2 GetDistance2D(THardPointer<Entity> Entity1, THardPointer<Entity> Entity2);
 
 	//static glm::vec2 GetDistance2D(Entity* Entity1, Pointer<Entity> Entity2);
 	//static glm::vec2 FindTextDimenions(std::string text);
 
-	static glm::vec2 GetDifference2D(TPointer<Entity> Entity1, TPointer<Entity> Entity2);
+	static glm::vec2 GetDifference2D(THardPointer<Entity> Entity1, THardPointer<Entity> Entity2);
 
 	static std::vector<std::string> SeparateString(std::string _string, char _seperator);
 
@@ -86,15 +86,15 @@ public:
 
 	static bool CheckMeshHit(STransform MeshTransform, const CMeshData& MeshData, SVector RayStart, SVector RayDirection, SVector& HitPos);
 	
-	static bool CheckFaceHit(SVector BottomLeftOffset, SVector TopRightOffset, SVector RayStart, SVector RayDirection, TPointer<Entity> EntityCheck, SVector& HitPos);
+	static bool CheckFaceHit(SVector BottomLeftOffset, SVector TopRightOffset, SVector RayStart, SVector RayDirection, THardPointer<Entity> EntityCheck, SVector& HitPos);
 
 	static bool CheckSphereHit(SVector RayStart, SVector RayDirection, SVector SphereCenter, float SphereRadius, SVector& HitPos);
 
-	static bool CheckCubeHit(SVector RayStart, SVector RayDirection, SVector CubeDimensions, TPointer<Entity> EntityCheck, SVector& HitPos);
+	static bool CheckCubeHit(SVector RayStart, SVector RayDirection, SVector CubeDimensions, THardPointer<Entity> EntityCheck, SVector& HitPos);
 
-	static bool CheckPlaneEntityHit(SVector RayStart, SVector RayDirection, TPointer<Entity> EntityCheck, SVector& HitPos);
+	static bool CheckPlaneEntityHit(SVector RayStart, SVector RayDirection, THardPointer<Entity> EntityCheck, SVector& HitPos);
 	
-	static TPointer<Entity> WorldCubeMap;
+	static THardPointer<Entity> WorldCubeMap;
 
 	// TODO: Move to custom array once setups
 	/* Check if an element exists in a array */
@@ -106,6 +106,10 @@ public:
 	/* Check if an element exists in a array */
 	template<typename T>
 	static bool RemoveFromArray(std::vector<T>& Array, T Element);
+
+	/* Implicit convert the type of the array to a given type */
+	template<typename T, typename U>
+	static TArray<T> ArrayConvert(const TArray<U>& Array);
 	
 private:
 
@@ -144,3 +148,15 @@ bool Utils::RemoveFromArray(TArray<T>& Array, T Element)
 	}
 	return false;
 }
+
+template <typename T, typename U>
+TArray<T> Utils::ArrayConvert(const TArray<U>& Array)
+{
+	TArray<T> NewArray;
+	for (const U& CurrentAsset : Array)
+	{
+		NewArray.push_back(CurrentAsset);
+	}
+	return NewArray;
+}
+

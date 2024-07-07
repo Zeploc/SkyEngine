@@ -8,7 +8,7 @@
 #include "Core/Application.h"
 #include "Render/Materials/InternalMaterial.h"
 
-CTriangle::CTriangle(const TPointer<Entity>& InOwner, glm::vec3 _Point1, glm::vec3 _Point2, glm::vec3 _Point3, TPointer<CMaterialInterface> InMaterial)
+CTriangle::CTriangle(const THardPointer<Entity>& InOwner, glm::vec3 _Point1, glm::vec3 _Point2, glm::vec3 _Point3, THardPointer<CMaterialInterface> InMaterial)
 : CMeshComponent(InOwner,"Triangle", InMaterial)
 {
 	Point1 = _Point1;
@@ -22,7 +22,7 @@ CTriangle::CTriangle(const TPointer<Entity>& InOwner, glm::vec3 _Point1, glm::ve
 	LEGACY_Height = LEGACY_Width;
 }
 
-CTriangle::CTriangle(const TPointer<Entity>& InOwner, glm::vec3 CenterPoint, float Width, TPointer<CMaterialInterface> InMaterial)
+CTriangle::CTriangle(const THardPointer<Entity>& InOwner, glm::vec3 CenterPoint, float Width, THardPointer<CMaterialInterface> InMaterial)
 : CMeshComponent(InOwner, "Triangle", InMaterial)
 {
 	Point1 = CenterPoint + glm::vec3(0, Width, 0);

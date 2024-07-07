@@ -114,7 +114,7 @@ unsigned CGLAPI::CreateVertexBuffer(const CMeshData& MeshData)
 	return vao;
 }
 
-bool CGLAPI::GenerateTexture(TPointer<CTexture> Texture, bool bAA)
+bool CGLAPI::GenerateTexture(TAssetObjectPointer<CTexture> Texture, bool bAA)
 {
 	if (!Texture)
 	{
@@ -337,7 +337,7 @@ bool CGLAPI::CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShader
 	return true;
 }
 
-TPointer<IFramebuffer> CGLAPI::CreateFramebuffer(const SFramebufferSpecification& Specification)
+THardPointer<IFramebuffer> CGLAPI::CreateFramebuffer(const SFramebufferSpecification& Specification)
 {
 	return CreatePointer<GLFramebuffer>(Specification);
 }
@@ -449,7 +449,7 @@ void CGLAPI::PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute)
 	glUniformMatrix4fv(ShaderLocation, 1, GL_FALSE, value_ptr(Attribute.ToGLM()));
 }
 
-void CGLAPI::PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture> Attribute)
+void CGLAPI::PassAttributeToShader(int32_t ShaderLocation, TAssetObjectPointer<CTexture> Attribute)
 {
 	if (!Attribute || !Attribute->IsValid())
 	{
@@ -483,7 +483,7 @@ void CGLAPI::SetWireframeMode(bool bInWireframeEnabled)
 	glPolygonMode(GL_FRONT_AND_BACK, bInWireframeEnabled ? GL_LINE : GL_FILL);
 }
 
-void CGLAPI::ApplyMaterialFlags(TPointer<CMaterialInterface>InMaterial)
+void CGLAPI::ApplyMaterialFlags(THardPointer<CMaterialInterface>InMaterial)
 {
 	if (!InMaterial->bTwoSided)
 	{

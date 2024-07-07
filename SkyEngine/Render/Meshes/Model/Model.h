@@ -14,7 +14,7 @@ class ModelObject;
 class Model : public CMeshComponent
 {
 public:
-	Model(const TPointer<Entity>& InOwner, glm::vec4 Colour, const char* ModelSource);
+	Model(const THardPointer<Entity>& InOwner, glm::vec4 Colour, const char* ModelSource);
 
 	~Model();
 
@@ -25,7 +25,7 @@ public:
 
 	void Update() override;
 
-	TPointer<ModelObject> pModelObject;
+	THardPointer<ModelObject> pModelObject;
 
 	std::string ModelPath;
 };

@@ -30,7 +30,7 @@ public:
 
 	// Singleton
 public:
-	static TPointer<CLogManager> Get();
+	static THardPointer<CLogManager> Get();
 
 	CLogManager();
 	~CLogManager(); // Shared pointer has to be able to call destructor so can't be private

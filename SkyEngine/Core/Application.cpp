@@ -26,6 +26,7 @@
 #include "Entity/Camera.h"
 #include "Platform/Config/Config.h"
 #include "Platform/Config/ProjectSettingsConfig.h"
+#include "Render/Textures/Texture.h"
 
 // make sure the winsock lib is included...
 #pragma comment(lib,"ws2_32.lib")
@@ -48,12 +49,12 @@ namespace SkyEngine
 	{
 	}
 
-	bool Application::OpenScene(TPointer<Scene> NewScene)
+	bool Application::OpenScene(TAssetObjectPointer<Scene> NewScene)
 	{
-		TPointer<Scene> PreviousScene = SceneManager::GetInstance()->GetCurrentScene();
+		TAssetObjectPointer<Scene> PreviousScene = SceneManager::GetInstance()->GetCurrentScene();
 		SceneManager::GetInstance()->AddScene(NewScene);
 		SceneManager::GetInstance()->SwitchScene(NewScene->SceneName, true);
-		const TPointer<Camera> FoundCamera = SceneUtils::FindEntityOfClass<Camera>();
+		const THardPointer<Camera> FoundCamera = SceneUtils::FindEntityOfClass<Camera>();
 		ViewportCanvas->GetSceneRenderer()->SetSceneTarget(NewScene);
 		if (FoundCamera)
 		{
@@ -190,6 +191,40 @@ namespace SkyEngine
 		Text::Fonts.~vector();
 		LogManager.reset();
 	}
+	
+	void Application::ConversionTests() const
+	{	
+		TWeakPointer<CTexture> WeakTexture = std::make_shared<CTexture>();
+		TWeakPointer<CObject> Weak = WeakTexture;	
+
+		// Construction from weak pointers
+		TObjectPointer<CObject> ObjectPointer(Weak);
+		TObjectPointer<CTexture> TextureObjectPointer(WeakTexture);
+
+		// Construction from object pointers with matching types
+		TObjectPointer<CObject> OtherObjectPointer(ObjectPointer);		
+		TObjectPointer<CTexture> OtherTextureObjectPointer(TextureObjectPointer);
+
+		// Conversion from derived to base
+		TObjectPointer<CObject> ConversionObjectPointer(TextureObjectPointer);		
+		TObjectPointer<CObject> DerivedWeakConversionObjectPointer(WeakTexture);
+
+		// Raw/smart pointer construction
+		TObjectPointer<CTexture> TextureFromRawPointer(WeakTexture.lock());
+		
+		// Conversion of asset pointer to direct object pointer
+		TAssetObjectPointer<CTexture> AssetObjectPointer(WeakTexture);
+		TObjectPointer<CTexture> TextureFromAssetObjectPointer(AssetObjectPointer);
+
+		// Weak from asset ptr
+		TWeakPointer<CTexture> Weak_Ptr = AssetObjectPointer.GetWeak();
+		
+		// Conversion of asset pointer to base object pointer
+		TObjectPointer<CObject> BaseFromTextureObjectPointer(AssetObjectPointer);
+		
+		TAssetObjectPointer<CTexture> Texture = TAssetObjectPointer(WeakTexture);
+		// TObjectPointer<CTexture> ObjectPointer(Weak);
+	}
 }
 
 SkyEngine::Application* SkyEngine::Application::Get()
@@ -202,7 +237,7 @@ SkyEngine::Application* GetApplication()
 	return SkyEngine::Application::Get();
 }
 
-TPointer<IGraphicsAPI> GetGraphicsAPI()
+THardPointer<IGraphicsAPI> GetGraphicsAPI()
 {
 	return SkyEngine::Application::Get()->GraphicsApi;
 }
@@ -212,7 +247,7 @@ IPlatformInterface* GetPlatformInterface()
 	return SkyEngine::Application::Get()->PlatformInterface;
 }
 
-TPointer<CRenderer> GetRenderer()
+THardPointer<CRenderer> GetRenderer()
 {
 	return SkyEngine::Application::Get()->Renderer;
 }

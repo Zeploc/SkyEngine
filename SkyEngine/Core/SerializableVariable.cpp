@@ -68,7 +68,7 @@ std::string SSerializableVariable::GetSerializedVariable() const
 		}
 	case EVariableType::Object:
 		{
-			TPointer<CAssetObject> AssetPointer = *AssetObject;
+			TAssetObjectPointer<CAssetObject> AssetPointer = *AssetObject;
 			std::stringstream ss("None");
 			if (AssetPointer)
 			{

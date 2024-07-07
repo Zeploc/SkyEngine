@@ -7,27 +7,32 @@
 #include "Core/Application.h"
 #include "Core/Asset/Asset.h"
 
-void CMaterialManager::AddMaterial(TPointer<CMaterialInterface> NewMaterial)
+void CMaterialManager::AddMaterial(TAssetObjectPointer<CMaterialInterface> NewMaterial)
 {
-	Materials.push_back(NewMaterial);
+	Materials.push_back(NewMaterial.GetWeak().lock());
 }
 
-TPointer<CMaterialInterface> CMaterialManager::FindMaterial(const std::string& MaterialName) const
+TAssetObjectPointer<CMaterialInterface> CMaterialManager::FindMaterial(const std::string& MaterialName) const
 {
-	for (TPointer<CMaterialInterface> Material : Materials)
+	for (THardPointer<CMaterialInterface> Material : Materials)
 	{
 		if (Material->GetMaterialName() == MaterialName)
 		{
 			return Material;
 		}
 	}
-	if (const TPointer<CAsset> Asset = GetAssetManager()->GetAssetByName(MaterialName))
+	if (const TAssetObjectPointer<CAsset> Asset = GetAssetManager()->GetAssetByName(MaterialName))
 	{
-		if (TPointer<CMaterialInterface> LoadedMaterial = Asset->Load<CMaterialInterface>())
+		if (TAssetObjectPointer<CMaterialInterface> LoadedMaterial = Asset->Load<CMaterialInterface>())
 		{
 			return LoadedMaterial;
 		}
 	}
 
 	return nullptr;
+}
+
+TArray<TAssetObjectPointer<CMaterialInterface>> CMaterialManager::GetAllLoadedMaterials() const
+{
+	return Utils::ArrayConvert<TAssetObjectPointer<CMaterialInterface>>(Materials);
 }

@@ -13,13 +13,13 @@ public:
 	void OnUpdate() override;
 	void OnRender() override;
 	
-	void AddViewportWidget(TPointer<CUIWidget> InWidget);
+	void AddViewportWidget(THardPointer<CUIWidget> InWidget);
 	SVector2i GetViewportSize() override;
 	SVector2i GetViewportPosition() override;
 	void StartGizmoViewDrag();
 
-	TPointer<Entity> GetSelectedEntity() const { return SelectedEntity; }
-	void SelectEntity(TPointer<Entity> HitEntity, bool bFocusCamera = false);
+	THardPointer<Entity> GetSelectedEntity() const { return SelectedEntity; }
+	void SelectEntity(THardPointer<Entity> HitEntity, bool bFocusCamera = false);
 	bool DeleteSelected();
 	void CreateEntity(const std::string& MeshAsset = {});
 
@@ -41,9 +41,9 @@ protected:
 	bool UsingSpectatorControls() const { return bUseSpectatorControls; }	
 	void SpectatorUpdate();
 
-	std::vector<TPointer<CUIWidget>> Widgets;
+	std::vector<THardPointer<CUIWidget>> Widgets;
 
-	TPointer<Entity> SelectedEntity;
+	THardPointer<Entity> SelectedEntity;
 	int GizmoMode = 7;
 	int GizmoTransformSpace = 0;
 	float CameraSpeed = 12.0f;

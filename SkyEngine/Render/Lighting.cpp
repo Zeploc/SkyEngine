@@ -41,10 +41,10 @@ Lighting::~Lighting()
 
 void Lighting::PassLightingToShader()
 {
-	TPointer<CShader> Shader = GetRenderer()->ActiveShader;
+	THardPointer<CShader> Shader = GetRenderer()->ActiveShader;
 	// TODO: Store uniform locations at beginning for shader
 	const uint32_t ShaderProgram = Shader->GetShaderProgram();
-	TPointer<IGraphicsAPI> Api = GetGraphicsAPI();
+	THardPointer<IGraphicsAPI> Api = GetGraphicsAPI();
 	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "LightPosition"), LightPosition);
 	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "LightPosition"), LightPosition);
 	Api->PassAttributeToShader(Api->GetAttributeLocation(ShaderProgram, "LightColour"), LightColour);

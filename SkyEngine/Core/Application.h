@@ -32,7 +32,7 @@ namespace SkyEngine
 		Application();
 		virtual ~Application();
 
-		virtual bool OpenScene(TPointer<Scene> NewScene);
+		virtual bool OpenScene(TAssetObjectPointer<Scene> NewScene);
 		virtual bool ApplicationSetup(std::string ExecutablePath);
 		virtual void SetupConfigs();
 		virtual void SetupLogManager();
@@ -49,18 +49,18 @@ namespace SkyEngine
 		
 		SVector2i MainWindowSize;
 
-		TPointer<IGraphicsAPI> GraphicsApi;
+		THardPointer<IGraphicsAPI> GraphicsApi;
 		IPlatformInterface* PlatformInterface;
-		TPointer<CRenderer> Renderer;
+		THardPointer<CRenderer> Renderer;
 		EGraphicsAPI GraphicsApiType;
-		TPointer<CLogManager> LogManager;
+		THardPointer<CLogManager> LogManager;
 		CMeshManager MeshManager;
 		CMaterialManager MaterialManager;
 		CTextureManager TextureManager;
 		CAssetManager AssetManager;
 
 		// TODO: Weak pointer to not hold ref
-		TPointer<CEngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
+		THardPointer<CEngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
 		CViewportCanvas* GetViewportCanvas() const { return ViewportCanvas; }
 		std::string GetProjectDirectory() const { return ProjectDirectory; }
 		std::string GetContentDirectory() const { return ContentPath; }
@@ -74,11 +74,13 @@ namespace SkyEngine
 		CUICanvas* UILayer;
 		CViewportCanvas* ViewportCanvas;
 		
-		TPointer<CEngineWindow> ApplicationWindow;
+		THardPointer<CEngineWindow> ApplicationWindow;
 		std::string ProjectDirectory;
 		std::string ContentPath;
 	private:
 		static Application* EngineApplication;
+
+		void ConversionTests() const;
 
 	};
 
@@ -87,9 +89,9 @@ namespace SkyEngine
 }
 
 ENGINE_API SkyEngine::Application* GetApplication();
-ENGINE_API TPointer<IGraphicsAPI> GetGraphicsAPI();
+ENGINE_API THardPointer<IGraphicsAPI> GetGraphicsAPI();
 ENGINE_API IPlatformInterface* GetPlatformInterface();
-ENGINE_API TPointer<CRenderer> GetRenderer();
+ENGINE_API THardPointer<CRenderer> GetRenderer();
 ENGINE_API CMeshManager* GetMeshManager();
 ENGINE_API CMaterialManager* GetMaterialManager();
 ENGINE_API CTextureManager* GetTextureManager();

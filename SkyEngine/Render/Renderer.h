@@ -26,9 +26,9 @@ public:
 	CRenderer();
 	virtual ~CRenderer() = default;	
 	
-	void InsertEntityMeshToRenderList(std::map<TPointer<CMaterialInterface>, TArray<ISceneVisual*>>& MeshesByMaterial, const TPointer<Entity>& EntityToRender);
+	void InsertEntityMeshToRenderList(std::map<TAssetObjectPointer<CMaterialInterface>, TArray<ISceneVisual*>>& MeshesByMaterial, const THardPointer<Entity>& EntityToRender);
 	void RenderScenes();
-	void Render(std::vector<TPointer<Entity>> Entities);
+	void Render(std::vector<THardPointer<Entity>> Entities);
 	void RenderMesh(ISceneVisual* SceneVisual, STransform Transform);
 	void RenderLines(ISceneVisual* SceneVisual, STransform Transform);
 	void RenderImGui();
@@ -36,19 +36,19 @@ public:
 	// void AddBox(ISceneVisual* BoxVisual);
 	// void RemoveBox(ISceneVisual* BoxVisual);
 
-	TPointer<CSceneRenderer> AddSceneRenderer(TPointer<Scene> InTargetScene, SVector2i InSize);
+	THardPointer<CSceneRenderer> AddSceneRenderer(TAssetObjectPointer<Scene> InTargetScene, SVector2i InSize);
 	
-	TPointer<CShader> ActiveShader;
+	THardPointer<CShader> ActiveShader;
 
-	TPointer<CMaterialInterface> DefaultMaterial;
+	TAssetObjectPointer<CMaterialInterface> DefaultMaterial;
 	
 protected:
-	std::vector<TPointer<CSceneRenderer>> SceneRenderers;
+	std::vector<THardPointer<CSceneRenderer>> SceneRenderers;
 	Matrix4 CurrentView;
 	Matrix4 CurrentProjection;
 
 	// TArray<ISceneVisual*> BoxVisuals;
-	// TPointer<CShader> BoxShader;
+	// THardPointer<CShader> BoxShader;
 };
 
 // template <typename T>

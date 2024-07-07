@@ -19,7 +19,7 @@ CContentBrowser::CContentBrowser(const TWeakPointer<CEngineWindow>& InOwningWind
 	bCanClose = false;
 }
 
-void CContentBrowser::DeletePopup(TPointer<CAsset> Asset)
+void CContentBrowser::DeletePopup(THardPointer<CAsset> Asset)
 {
 }
 
@@ -79,14 +79,15 @@ void CContentBrowser::OnRender()
 			}
 			ImGui::EndMenu();
 		}
-		if (ImGui::MenuItem("Reload"))
+		if (ImGui::MenuItem("Refresh"))
 		{
-				
+			GetAssetManager()->ScanForAssets();
+			// TODO: Look for missing assets and prompt to remove or keep and warn if not saved
 		}
 		ImGui::EndPopup();
 	}
 
-	TPointer<CAsset> CreatedAsset;
+	TObjectPointer<CAsset> CreatedAsset;
 	if (ImGui::BeginPopup("NamePopup"))
 	{			
 		ImGui::Text("Enter name");						
@@ -148,10 +149,10 @@ void CContentBrowser::OnRender()
 
 	// TODO: Do better
 	bool bFirstInList = true;
-	TArray<TPointer<CAsset>> Assets = GetAssetManager()->GetAssets();
+	TArray<TObjectPointer<CAsset>> Assets = GetAssetManager()->GetAssets();
 	for (uint16 i = 0; i < Assets.size(); ++i)
 	{
-		TPointer<CAsset> Asset = Assets[i];
+		TObjectPointer<CAsset> Asset = Assets[i];
 
 		std::string AssetPath = StringUtils::NormalizePath(Asset->FilePath);
 		// Check asset is somewhere within this directory
@@ -213,7 +214,7 @@ void CContentBrowser::OnRender()
 		{
 			Asset->Open();
 			// TODO: Determine structure for opening at a per asset basis without having editor code in engine...
-			if (TPointer<CMaterialInterface> Material = Asset->Load<CMaterialInterface>())
+			if (TAssetObjectPointer<CMaterialInterface> Material = Asset->Load<CMaterialInterface>())
 			{
 				GetApplication()->GetApplicationWindow()->GetCanvas<CMaterialEditorPanel>()->SetMaterial(Material);
 			}
@@ -294,7 +295,7 @@ void CContentBrowser::OnRender()
 		{
 			// Set payload to carry the index of our item (could be anything)
 			// TODO: Need to split up material into meta data for shader type, so class type is just material
-			ImGui::SetDragDropPayload(std::format("ASSET:{}", Asset->ClassName).c_str(), &Asset, sizeof(TPointer<CAsset>));
+			ImGui::SetDragDropPayload(std::format("ASSET:{}", Asset->ClassName).c_str(), &Asset, sizeof(THardPointer<CAsset>));
 
 			// Display preview (could be anything, e.g. when dragging an image we could decide to display
 			// the filename and a small preview of the image, etc.)

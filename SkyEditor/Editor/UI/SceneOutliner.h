@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Canvas/UICanvas.h"
+#include "Core/Object.h"
 
 class Scene;
 
@@ -12,5 +13,5 @@ public:
 	CSceneOutliner(TWeakPointer<CEngineWindow> InOwningWindow);
 	virtual void OnRender() override;
 	
-	TPointer<Scene> EditorScene;
+	TAssetObjectPointer<Scene> EditorScene;
 };

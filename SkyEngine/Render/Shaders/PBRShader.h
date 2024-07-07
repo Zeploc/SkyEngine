@@ -22,7 +22,7 @@ public:
 		DefineShaderParameter(Shininess);
 	ListShaderVariables()
 		SVector4 DiffuseColour = SVector4(1.0f);
-		TPointer<CTexture> DiffuseTexture = nullptr;
+		TAssetObjectPointer<CTexture> DiffuseTexture = nullptr;
 		float SpecularStrength = 1.0f;
 		float Shininess = 32.0f;
 	EndShaderParams()

@@ -7,7 +7,7 @@ extern SkyEngine::Application* SkyEngine::CreateApplication();
 int main(int argc, char** argv)
 {
 	const auto App = SkyEngine::CreateApplication();
-	// TPointer<SkyEngine::Application> ApplicationLifetimePointer(App);
+	// THardPointer<SkyEngine::Application> ApplicationLifetimePointer(App);
 	std::string ExecutablePath;
 	if (argv)
 	{

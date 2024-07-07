@@ -24,7 +24,7 @@ void EditorWindowManager::CleanupWindows()
 	EditorWindowsToRemove.clear();
 }
 
-TPointer<CEngineWindow> EditorWindowManager::GetMainWindow()
+THardPointer<CEngineWindow> EditorWindowManager::GetMainWindow()
 {
 	return GetApplication()->GetApplicationWindow();
 }

@@ -14,5 +14,5 @@ public:
 	static void RenderVariableField(SSerializableVariable Variable);
 	
 	/* If class filter is empty all assets displayed, returns true if a change of asset occurred */
-	static bool RenderAssetObjectField(TPointer<CAssetObject>& AssetObject, std::string ClassFilter = std::string());
+	static bool RenderAssetObjectField(TAssetObjectPointer<>& AssetObject, std::string ClassFilter = std::string());
 };

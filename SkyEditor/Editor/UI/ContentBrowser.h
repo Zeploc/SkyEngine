@@ -9,7 +9,7 @@ class CContentBrowser : public CUICanvas
 {
 public:
 	CContentBrowser(const TWeakPointer<CEngineWindow>& InOwningWindow);
-	void DeletePopup(TPointer<CAsset> Asset);
+	void DeletePopup(THardPointer<CAsset> Asset);
 	void OnRender() override;
 
 protected:

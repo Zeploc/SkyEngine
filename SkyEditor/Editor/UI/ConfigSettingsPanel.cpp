@@ -8,7 +8,7 @@
 #include "Dependencies/ImGui/imgui.h"
 #include "Render/Textures/Texture.h"
 
-CConfigSettingsPanel::CConfigSettingsPanel(TWeakPointer<CEngineWindow> InOwningWindow, TPointer<CConfig> InConfig)
+CConfigSettingsPanel::CConfigSettingsPanel(TWeakPointer<CEngineWindow> InOwningWindow, THardPointer<CConfig> InConfig)
     : CUICanvas(InOwningWindow, "Config: " + InConfig->GetName()), Config((InConfig))
 {
 	StartingSize = {830, 450};

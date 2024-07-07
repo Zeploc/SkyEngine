@@ -23,7 +23,7 @@ public:
 	CEngineWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bInFullScreen);
 	bool SetupWindow();
 	virtual ~CEngineWindow();
-	static TPointer<CEngineWindow> CreateEngineWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bInFullScreen = false);
+	static THardPointer<CEngineWindow> CreateEngineWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bInFullScreen = false);
 	std::string GetWindowName() { return WindowName; }
 
 	virtual void SetWindowFullScreen(bool bFullScreen) = 0;
@@ -44,7 +44,7 @@ public:
 
 	void Render();
 	
-	// void Render(std::vector<TPointer<Entity>> Entities, std::vector<TPointer<UIElement>> UIElements);
+	// void Render(std::vector<THardPointer<Entity>> Entities, std::vector<THardPointer<UIElement>> UIElements);
 	virtual void Update();
 
 	void SubscribeEventListener(IEventListener* NewEventListener);

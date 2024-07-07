@@ -52,14 +52,14 @@ private:
 
 	// Singleton
 public:
-	static TPointer<SoundManager> GetInstance();
+	static THardPointer<SoundManager> GetInstance();
 
 	static void DestoryInstance();
 
 	~SoundManager(); // Shared pointer has to be able to call destructor so can't be private
 
 private:
-	static TPointer<SoundManager> m_pSoundManager;
+	static THardPointer<SoundManager> m_pSoundManager;
 
 	SoundManager();
 

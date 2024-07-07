@@ -28,7 +28,7 @@ CEditorViewportCanvas::CEditorViewportCanvas(TWeakPointer<CEngineWindow> InOwnin
 
 void CEditorViewportCanvas::OnUpdate()
 {
-	for (TPointer<CUIWidget> Widget : Widgets)
+	for (THardPointer<CUIWidget> Widget : Widgets)
 	{
 		Widget->Update();
 	}
@@ -92,7 +92,7 @@ void CEditorViewportCanvas::OnRender()
 	ViewportCanvas.Position = {ViewportNode->Pos.x,ViewportNode->Pos.y};
 	ViewportCanvas.Size = {ViewportNode->Size.x, ViewportNode->Size.y};
 	
-	for (TPointer<CUIWidget> Widget : Widgets)
+	for (THardPointer<CUIWidget> Widget : Widgets)
 	{
 		Widget->DrawUI(ViewportCanvas);
 	}
@@ -105,15 +105,15 @@ void CEditorViewportCanvas::OnRender()
 	{
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(std::format("ASSET:{}", CMaterialInterface::GetStaticName()).c_str()))
 		{
-			IM_ASSERT(payload->DataSize == sizeof(TPointer<CAsset>));
-			TPointer<CAsset> PayloadAsset = *(const TPointer<CAsset>*)payload->Data;
-			TPointer<CMaterialInterface> DroppedMaterial = PayloadAsset->Load<CMaterialInterface>();
+			IM_ASSERT(payload->DataSize == sizeof(THardPointer<CAsset>));
+			TObjectPointer<CAsset> PayloadAsset = *(const THardPointer<CAsset>*)payload->Data;
+			TAssetObjectPointer<CMaterialInterface> DroppedMaterial = PayloadAsset->Load<CMaterialInterface>();
 			if (DroppedMaterial)
 			{
 				UpdateSelectedEntity();
 				if (SelectedEntity)
 				{
-					TPointer<CMeshComponent> MeshComponent = SelectedEntity->FindComponent<CMeshComponent>();
+					THardPointer<CMeshComponent> MeshComponent = SelectedEntity->FindComponent<CMeshComponent>();
 					if (MeshComponent)
 					{
 						MeshComponent->SetMaterial(DroppedMaterial);
@@ -160,7 +160,7 @@ void CEditorViewportCanvas::OnRender()
 
 }
 
-void CEditorViewportCanvas::AddViewportWidget(TPointer<CUIWidget> InWidget)
+void CEditorViewportCanvas::AddViewportWidget(THardPointer<CUIWidget> InWidget)
 {	
 	Widgets.push_back(InWidget);	
 	InWidget->SetOwningLayer(this);
@@ -194,7 +194,7 @@ void CEditorViewportCanvas::StartGizmoViewDrag()
 
 bool CEditorViewportCanvas::OnMouseButtonPressed(int MouseButton, int Mods)
 {
-	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
+	const THardPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 	const SVector2i ScreenCenter = GetViewportPosition() + GetViewportSize() / 2;
 	const SVector2i MousePos = ApplicationWindow->GetInput().MousePos;
 	
@@ -207,7 +207,7 @@ bool CEditorViewportCanvas::OnMouseButtonPressed(int MouseButton, int Mods)
 		{
 			std::stringstream DuplicateString;
 			DuplicateString << SelectedEntity;
-			const TPointer<Entity> NewEntity = Entity::GetEntityFromStringStream(DuplicateString);
+			const THardPointer<Entity> NewEntity = Entity::GetEntityFromStringStream(DuplicateString);
 			SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
 			SelectEntity(NewEntity);
 		}
@@ -279,7 +279,7 @@ bool CEditorViewportCanvas::OnMouseButtonPressed(int MouseButton, int Mods)
 
 bool CEditorViewportCanvas::OnMouseButtonReleased(int MouseButton, int Mods)
 {	
-	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
+	const THardPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 	
 	if (MouseButton == GLFW_MOUSE_BUTTON_RIGHT)
 	{
@@ -307,7 +307,7 @@ bool CEditorViewportCanvas::OnMouseButtonReleased(int MouseButton, int Mods)
 
 bool CEditorViewportCanvas::OnMouseMoved(SVector2i MousePos)
 {
-	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
+	const THardPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 	const SVector2i ScreenCenter = GetViewportPosition() + GetViewportSize() / 2;
 	const SVector2i ScreenOffset = (MousePos) - ScreenCenter;
 	const SVector2 Offset = SVector2(ScreenOffset) * MouseSensitivity;
@@ -374,7 +374,7 @@ bool CEditorViewportCanvas::DeleteSelected()
 	{
 		return false;
 	}
-	const TPointer<Scene> Scene = SceneManager::GetInstance()->GetCurrentScene();
+	const TAssetObjectPointer<Scene> Scene = SceneManager::GetInstance()->GetCurrentScene();
 	Scene->DestroyEntity(SelectedEntity);
 	SelectedEntity = nullptr;
 	SelectEntity(nullptr);
@@ -388,12 +388,12 @@ void CEditorViewportCanvas::CreateEntity(const std::string& MeshAsset)
 	{
 		EntityName = "NewEntity";
 	}
-	const TPointer<Entity> NewEntity(new Entity(STransform(), EntityName));
+	const THardPointer<Entity> NewEntity(new Entity(STransform(), EntityName));
 	SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
 	SelectEntity(NewEntity, true);
 	if (!MeshAsset.empty())
 	{
-		TPointer<CMeshComponent> NewMeshComponent = std::make_shared<CMeshComponent>(NewEntity, MeshAsset, nullptr);
+		THardPointer<CMeshComponent> NewMeshComponent = std::make_shared<CMeshComponent>(NewEntity, MeshAsset, nullptr);
 		NewEntity->AddComponent(NewMeshComponent);
 	}
 }
@@ -442,7 +442,7 @@ bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 	if (KeyCode == GLFW_KEY_G)
 	{
 		bWireframe = !bWireframe;
-		const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
+		const THardPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 		GetGraphicsAPI()->SetWireframeMode(bWireframe);
 		return true;
 	}
@@ -486,7 +486,7 @@ void CEditorViewportCanvas::SpectatorUpdate()
 
 	const SVector ForwardMovement = ViewportCamera->GetForwardVector() * CameraSpeed * CTimeManager::GetDeltaTime();
 	
-	const TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
+	const THardPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 	if (ApplicationWindow->GetInput().KeyState[GLFW_KEY_W] == CWindowInput::INPUT_HOLD)
 	{
 		ViewportCamera->Transform.Position += ForwardMovement;
@@ -536,7 +536,7 @@ bool CEditorViewportCanvas::OnWindowResize(unsigned int Width, unsigned int Heig
 	return false;
 }
 
-void CEditorViewportCanvas::SelectEntity(TPointer<Entity> HitEntity, bool bFocusCamera)
+void CEditorViewportCanvas::SelectEntity(THardPointer<Entity> HitEntity, bool bFocusCamera)
 {
 	if (HitEntity == SelectedEntity)
 	{
@@ -564,14 +564,14 @@ void CEditorViewportCanvas::SelectEntity(TPointer<Entity> HitEntity, bool bFocus
 
 void CEditorViewportCanvas::UpdateSelectedEntity()
 {
-	TPointer<Scene> Scene = SceneManager::GetInstance()->GetCurrentScene();
+	TAssetObjectPointer<Scene> Scene = SceneManager::GetInstance()->GetCurrentScene();
 
-	TPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
+	THardPointer<CEngineWindow> ApplicationWindow = GetApplication()->GetApplicationWindow();
 	SVector2i MousePos = ApplicationWindow->GetInput().MousePos;
 	SVector rayStart = ViewportCamera->Transform.Position;
 	SVector RayDirection = ScreenToWorldDirection(MousePos);
 	SVector HitPos;
-	std::vector<TPointer<Entity>> HitEntities;
+	std::vector<THardPointer<Entity>> HitEntities;
 	std::vector<SVector> HitPosition;
 	for (auto& Ent : Scene->Entities)
 	{
@@ -597,7 +597,7 @@ void CEditorViewportCanvas::UpdateSelectedEntity()
 				ClosestHitID = i;
 			}
 		}
-		TPointer<Entity> HitEntity = HitEntities[ClosestHitID]; // Hit ent
+		THardPointer<Entity> HitEntity = HitEntities[ClosestHitID]; // Hit ent
 		HitPos = HitPosition[ClosestHitID];
 
 		SelectEntity(HitEntity);

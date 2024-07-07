@@ -21,7 +21,7 @@ class ENGINE_API Scene : public CAssetObject
 {
 public:
 	Scene(const std::string& InSceneName);
-	~Scene() override;
+	virtual ~Scene() override;
 	// Override shared_from_this so manual downcast not needed
 	// ReSharper disable once CppHidingFunction
 	std::shared_ptr<Scene> shared_from_this();
@@ -36,12 +36,12 @@ public:
 
 	virtual void RenderScene();
 
-	void AddEntity(TPointer<Entity> _Entity);
+	void AddEntity(THardPointer<Entity> _Entity);
 
-	void DestroyEntity(TPointer<Entity> _Entity);
+	void DestroyEntity(THardPointer<Entity> _Entity);
 
 	int AddEntityID();
-	void VerifyEntityID(TPointer<Entity> EntityToVerify);
+	void VerifyEntityID(THardPointer<Entity> EntityToVerify);
 
 	virtual void Update();
 	virtual bool OnMouseButtonPressed(int Button, int Mods);
@@ -65,11 +65,11 @@ public:
 	bool operator==(const Scene& rhs) const;
 
 	std::string SceneName;
-	std::vector<TPointer<Entity>> Entities;
+	std::vector<THardPointer<Entity>> Entities;
 	
 protected:
 	
-	std::vector<TPointer<Entity>> DestroyedEntities;
+	std::vector<THardPointer<Entity>> DestroyedEntities;
 	bool bIsPersistant = false;
 	b2World World2D;
 

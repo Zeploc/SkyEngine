@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Object.h"
 #include "Math/Internal/Vector2.decl.h"
 
 class Scene;
@@ -9,7 +10,7 @@ class Scene;
 class CWorldManager
 {
 public:
-	void SwitchScene(TPointer<Scene> InTargetScene);
+	void SwitchScene(TAssetObjectPointer<Scene> InTargetScene);
 	
 	bool OnMouseButtonPressed(int MouseButton, int Mods);
 	bool OnMouseButtonReleased(int MouseButton, int Mods);
@@ -20,7 +21,7 @@ public:
 	bool OnKeyReleased(int KeyCode, int Mods);
 
 protected:
-	TPointer<Scene> TargetScene;
+	TAssetObjectPointer<Scene> TargetScene;
 
 	// TODO: Current view camera
 };

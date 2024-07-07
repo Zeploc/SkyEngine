@@ -4,7 +4,7 @@
 #include "Entity.h"
 #include "Scene/Scene.h"
 
-CCollider2DComponent::CCollider2DComponent(const TPointer<Entity>& InOwner, SBodyShape InBodyShape, bool bIsStatic)
+CCollider2DComponent::CCollider2DComponent(const THardPointer<Entity>& InOwner, SBodyShape InBodyShape, bool bIsStatic)
 : CCollisionBodyComponent(InOwner, bIsStatic), BodyShape(InBodyShape)
 {
 	
@@ -14,7 +14,7 @@ void CCollider2DComponent::OnAttached()
 {
 	CCollisionBodyComponent::OnAttached();
 
-	const TPointer<Scene> Scene = GetOwner()->GetOwningScene();
+	const THardPointer<Scene> Scene = GetOwner()->GetOwningScene();
 	ensure(Scene != nullptr, "No owning scene found for 2d body component!");
 	b2World& Box2DWorld = Scene->GetWorld2D();
 

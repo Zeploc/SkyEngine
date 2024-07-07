@@ -4,6 +4,9 @@
     <Filter Include="Editor">
       <UniqueIdentifier>{8C1A20B0-78BC-4A86-6177-5EDA4DB8D1D6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Editor\Config">
+      <UniqueIdentifier>{11C010F6-7D80-8C2C-46BB-D5A9B23AD108}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Editor\Scene">
       <UniqueIdentifier>{A940DD3E-95A3-6CE3-3E29-A5992A6B3866}</UniqueIdentifier>
     </Filter>
@@ -21,9 +24,6 @@
     </Filter>
     <Filter Include="Resources\Images">
       <UniqueIdentifier>{A5CB7757-91C4-96A9-BAF6-7B2EA64E76B5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Levels">
-      <UniqueIdentifier>{DAFDF15D-C6F6-10B0-EF28-F634DB80F0BB}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resources\Models">
       <UniqueIdentifier>{B33CF260-9F35-11B3-C867-F637B4BFF0BE}</UniqueIdentifier>
@@ -48,6 +48,9 @@
     <ClInclude Include="..\SkyEngine\Dependencies\ImGuizmo\ImGuizmo.h">
       <Filter>SkyEngine\Dependencies\ImGuizmo</Filter>
     </ClInclude>
+    <ClInclude Include="Editor\Config\EditorSettingsConfig.h">
+      <Filter>Editor\Config</Filter>
+    </ClInclude>
     <ClInclude Include="Editor\EditorLogManager.h">
       <Filter>Editor</Filter>
     </ClInclude>
@@ -57,7 +60,13 @@
     <ClInclude Include="Editor\Scene\EditorScene.h">
       <Filter>Editor\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Editor\UI\ConfigSettingsPanel.h">
+      <Filter>Editor\UI</Filter>
+    </ClInclude>
     <ClInclude Include="Editor\UI\ConsoleLog.h">
+      <Filter>Editor\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\UI\ContentBrowser.h">
       <Filter>Editor\UI</Filter>
     </ClInclude>
     <ClInclude Include="Editor\UI\EntityPropertiesPanel.h">
@@ -66,7 +75,13 @@
     <ClInclude Include="Editor\UI\LayerInfoWidget.h">
       <Filter>Editor\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Editor\UI\MaterialEditorPanel.h">
+      <Filter>Editor\UI</Filter>
+    </ClInclude>
     <ClInclude Include="Editor\UI\SceneOutliner.h">
+      <Filter>Editor\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\UI\UIPresets.h">
       <Filter>Editor\UI</Filter>
     </ClInclude>
     <ClInclude Include="Editor\Windows\EditorWindow.h">
@@ -82,6 +97,9 @@
     <ClCompile Include="..\SkyEngine\Dependencies\ImGuizmo\ImGuizmo.cpp">
       <Filter>SkyEngine\Dependencies\ImGuizmo</Filter>
     </ClCompile>
+    <ClCompile Include="Editor\Config\EditorSettingsConfig.cpp">
+      <Filter>Editor\Config</Filter>
+    </ClCompile>
     <ClCompile Include="Editor\EditorLogManager.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
@@ -91,7 +109,13 @@
     <ClCompile Include="Editor\Scene\EditorScene.cpp">
       <Filter>Editor\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Editor\UI\ConfigSettingsPanel.cpp">
+      <Filter>Editor\UI</Filter>
+    </ClCompile>
     <ClCompile Include="Editor\UI\ConsoleLog.cpp">
+      <Filter>Editor\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\UI\ContentBrowser.cpp">
       <Filter>Editor\UI</Filter>
     </ClCompile>
     <ClCompile Include="Editor\UI\EntityPropertiesPanel.cpp">
@@ -100,7 +124,13 @@
     <ClCompile Include="Editor\UI\LayerInfoWidget.cpp">
       <Filter>Editor\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Editor\UI\MaterialEditorPanel.cpp">
+      <Filter>Editor\UI</Filter>
+    </ClCompile>
     <ClCompile Include="Editor\UI\SceneOutliner.cpp">
+      <Filter>Editor\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\UI\UIPresets.cpp">
       <Filter>Editor\UI</Filter>
     </ClCompile>
     <ClCompile Include="Editor\Windows\EditorWindow.cpp">
@@ -195,15 +225,6 @@
     </None>
     <None Include="Resources\Images\coastMountain513.raw">
       <Filter>Resources\Images</Filter>
-    </None>
-    <None Include="Resources\Levels\Demo Scene.slvl">
-      <Filter>Resources\Levels</Filter>
-    </None>
-    <None Include="Resources\Levels\Example.slvl">
-      <Filter>Resources\Levels</Filter>
-    </None>
-    <None Include="Resources\Levels\SingleItem.slvl">
-      <Filter>Resources\Levels</Filter>
     </None>
     <None Include="Resources\Models\theDude.DAE">
       <Filter>Resources\Models</Filter>
@@ -351,6 +372,9 @@
     </None>
     <None Include="Resources\Sounds\menu-click.wav">
       <Filter>Resources\Sounds</Filter>
+    </None>
+    <None Include="Resources\imgui.ini">
+      <Filter>Resources</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

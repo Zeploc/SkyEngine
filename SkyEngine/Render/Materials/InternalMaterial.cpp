@@ -26,7 +26,7 @@ std::string CMaterialInterface::GetStaticName()
 	return "Material";
 }
 
-TPointer<CMaterialInterface> CMaterialInterface::MakeMaterialFromShaderName(const std::string& ShaderName, const std::string& MaterialName)
+THardPointer<CMaterialInterface> CMaterialInterface::MakeMaterialFromShaderName(const std::string& ShaderName, const std::string& MaterialName)
 {
 	if (ShaderName == CPBRShader::GetStaticName())
 	{

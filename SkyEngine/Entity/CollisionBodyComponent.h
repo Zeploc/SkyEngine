@@ -7,7 +7,7 @@
 class CCollisionBodyComponent : public CComponent
 {
 public:
-	CCollisionBodyComponent(const TPointer<Entity>& InOwner, bool bIsStatic);
+	CCollisionBodyComponent(const THardPointer<Entity>& InOwner, bool bIsStatic);
 
 	virtual void SetPhysicsEnabled(bool bNewPhysicsEnabled);
 	virtual bool IsPhysicsEnabled() = 0;

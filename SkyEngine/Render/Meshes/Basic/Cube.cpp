@@ -10,7 +10,7 @@
 #include "Render/Materials/InternalMaterial.h"
 #include "Render/Shaders/PBRShader.h"
 
-CCube::CCube(const TPointer<Entity>& InOwner, const TPointer<CMaterialInterface>& InMaterial)
+CCube::CCube(const THardPointer<Entity>& InOwner, const THardPointer<CMaterialInterface>& InMaterial)
 : CMeshComponent(InOwner, MESH_CUBE, InMaterial)
 {
 }

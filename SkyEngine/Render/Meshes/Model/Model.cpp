@@ -20,7 +20,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-Model::Model(const TPointer<Entity>& InOwner, glm::vec4 _Colour, const char* ModelSource)
+Model::Model(const THardPointer<Entity>& InOwner, glm::vec4 _Colour, const char* ModelSource)
 	: CMeshComponent(InOwner)
 {
 	LEGACY_Width = 0; // fWidth;
@@ -62,7 +62,7 @@ void Model::BindModel()
 	// 	}
 	// }
 	// pModelObject = std::make_shared<ModelObject>(MeshMaterial->GetTextureData().Path);
-	// ShaderManager::Models.insert(std::pair<std::string, TPointer<ModelObject>>(ModelPath, pModelObject));
+	// ShaderManager::Models.insert(std::pair<std::string, THardPointer<ModelObject>>(ModelPath, pModelObject));
 }
 
 /************************************************************

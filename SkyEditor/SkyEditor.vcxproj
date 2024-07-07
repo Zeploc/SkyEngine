@@ -196,9 +196,6 @@
     <None Include="Resources\Images\TexturesCom_SmoothCliff_1024_albedo.tif" />
     <None Include="Resources\Images\Thumbs.db" />
     <None Include="Resources\Images\coastMountain513.raw" />
-    <None Include="Resources\Levels\Demo Scene.slvl" />
-    <None Include="Resources\Levels\Example.slvl" />
-    <None Include="Resources\Levels\SingleItem.slvl" />
     <None Include="Resources\Models\theDude.DAE" />
     <None Include="Resources\Models\theDude_idle_run.DAE" />
     <None Include="Resources\Shaders\AnimatedModel.fs" />
@@ -248,6 +245,7 @@
     <None Include="Resources\Sounds\Hit.wav" />
     <None Include="Resources\Sounds\LevelMusic.mp3" />
     <None Include="Resources\Sounds\menu-click.wav" />
+    <None Include="Resources\imgui.ini" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Images\Asphalt8_1x1.jpg" />
@@ -273,18 +271,6 @@
     <ProjectReference Include="..\SkyEngine\Dependencies\ImGui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assets\Levels\Default.slvl" />
-    <Content Include="Assets\Levels\Fence.slvl" />
-    <Content Include="Assets\Levels\New.slvl" />
-    <Content Include="Assets\Levels\Updated.slvl" />
-    <Content Include="Assets\Materials\BoxMaterial.sasset" />
-    <Content Include="Assets\Materials\BrickMaterial.sasset" />
-    <Content Include="Assets\Materials\CliffMaterial.sasset" />
-    <Content Include="Assets\Materials\ColouredBrickMaterial.sasset" />
-    <Content Include="Assets\Materials\ColouredBrickPlaneMaterial.sasset" />
-    <Content Include="Assets\Materials\PlaneMaterial.sasset" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

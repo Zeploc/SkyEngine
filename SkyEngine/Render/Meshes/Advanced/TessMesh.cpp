@@ -14,7 +14,7 @@
 #include "Render/Materials/Material.h"
 #include "Render/Materials/MaterialType.h"
 
-TessMesh::TessMesh(const TPointer<Entity>& InOwner,float fWidth, float fHeight, glm::vec4 _Colour)
+TessMesh::TessMesh(const THardPointer<Entity>& InOwner,float fWidth, float fHeight, glm::vec4 _Colour)
 	: CMeshComponent(InOwner)
 {
 	LEGACY_Width = fWidth;

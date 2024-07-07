@@ -7,6 +7,9 @@
     <Filter Include="Core">
       <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Asset">
+      <UniqueIdentifier>{3D53EDCC-290B-2F1A-9212-08767EE9C90A}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Dependencies">
       <UniqueIdentifier>{6C01343A-5864-C3DE-01EA-FB94ED2B8F61}</UniqueIdentifier>
     </Filter>
@@ -39,6 +42,12 @@
     </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Config">
+      <UniqueIdentifier>{EF4E2101-5BDA-8EC5-64EB-11BAD0F5EAC5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\File">
+      <UniqueIdentifier>{99809061-0541-0C98-CE7B-55153AFB5074}</UniqueIdentifier>
     </Filter>
     <Filter Include="Platform\Window">
       <UniqueIdentifier>{D1E05B2F-3D6C-C9F3-467D-4CE8B28725F4}</UniqueIdentifier>
@@ -73,6 +82,9 @@
     <Filter Include="Render\Shaders">
       <UniqueIdentifier>{9ED5B93E-8AA3-AD44-7337-1E6B5FA489A9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\Textures">
+      <UniqueIdentifier>{389B1852-A426-8616-AD37-090B1942E216}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{B3F7140E-1F0C-3DBF-E88D-E01E546139F0}</UniqueIdentifier>
     </Filter>
@@ -105,7 +117,19 @@
     <ClInclude Include="Core\Application.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Asset\Asset.h">
+      <Filter>Core\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Asset\AssetInterface.h">
+      <Filter>Core\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Asset\AssetManager.h">
+      <Filter>Core\Asset</Filter>
+    </ClInclude>
     <ClInclude Include="Core\Core.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CoreTypes.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\Delegates.h">
@@ -117,7 +141,13 @@
     <ClInclude Include="Core\EventListener.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\String.h">
+    <ClInclude Include="Core\Object.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\SerializableVariable.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\StringUtils.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\WorldManager.h">
@@ -176,6 +206,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\GraphicsAPI.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Vulkan\VkFramebuffer.h">
+      <Filter>Graphics\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Vulkan\VulkanAPI.h">
       <Filter>Graphics\Vulkan</Filter>
@@ -237,6 +270,18 @@
     <ClInclude Include="Math\Vector4.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Platform\Config\Config.h">
+      <Filter>Platform\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Config\ProjectSettingsConfig.h">
+      <Filter>Platform\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\File\FileManager.h">
+      <Filter>Platform\File</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\File\PathUtils.h">
+      <Filter>Platform\File</Filter>
+    </ClInclude>
     <ClInclude Include="Platform\PlatformInterface.h">
       <Filter>Platform</Filter>
     </ClInclude>
@@ -265,6 +310,9 @@
       <Filter>Render\Materials</Filter>
     </ClInclude>
     <ClInclude Include="Render\Materials\Material.h">
+      <Filter>Render\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Materials\MaterialManager.h">
       <Filter>Render\Materials</Filter>
     </ClInclude>
     <ClInclude Include="Render\Materials\MaterialType.h">
@@ -354,14 +402,20 @@
     <ClInclude Include="Render\Shaders\UnlitShader.h">
       <Filter>Render\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="Render\Texture.h">
-      <Filter>Render</Filter>
+    <ClInclude Include="Render\Textures\Texture.h">
+      <Filter>Render\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Textures\TextureManager.h">
+      <Filter>Render\Textures</Filter>
     </ClInclude>
     <ClInclude Include="SEPCH.h" />
     <ClInclude Include="Scene\Scene.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneManager.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SceneUtils.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="SkyEngine.h" />
@@ -406,10 +460,28 @@
     <ClCompile Include="Core\Application.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Asset\Asset.cpp">
+      <Filter>Core\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Asset\AssetInterface.cpp">
+      <Filter>Core\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Asset\AssetManager.cpp">
+      <Filter>Core\Asset</Filter>
+    </ClCompile>
     <ClCompile Include="Core\Core.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Core\EventListener.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Object.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\SerializableVariable.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\StringUtils.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Core\WorldManager.cpp">
@@ -454,6 +526,9 @@
     <ClCompile Include="Graphics\GraphicsAPI.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Vulkan\VkFramebuffer.cpp">
+      <Filter>Graphics\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="Graphics\Vulkan\VulkanAPI.cpp">
       <Filter>Graphics\Vulkan</Filter>
     </ClCompile>
@@ -477,6 +552,18 @@
     </ClCompile>
     <ClCompile Include="Math\Transform.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Config\Config.cpp">
+      <Filter>Platform\Config</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Config\ProjectSettingsConfig.cpp">
+      <Filter>Platform\Config</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\File\FileManager.cpp">
+      <Filter>Platform\File</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\File\PathUtils.cpp">
+      <Filter>Platform\File</Filter>
     </ClCompile>
     <ClCompile Include="Platform\PlatformInterface.cpp">
       <Filter>Platform</Filter>
@@ -503,6 +590,9 @@
       <Filter>Render\Materials</Filter>
     </ClCompile>
     <ClCompile Include="Render\Materials\Material.cpp">
+      <Filter>Render\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Materials\MaterialManager.cpp">
       <Filter>Render\Materials</Filter>
     </ClCompile>
     <ClCompile Include="Render\Meshes\Advanced\CubeMap.cpp">
@@ -589,11 +679,20 @@
     <ClCompile Include="Render\Shaders\UnlitShader.cpp">
       <Filter>Render\Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="Render\Textures\Texture.cpp">
+      <Filter>Render\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Textures\TextureManager.cpp">
+      <Filter>Render\Textures</Filter>
+    </ClCompile>
     <ClCompile Include="SEPCH.cpp" />
     <ClCompile Include="Scene\Scene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\SceneManager.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SceneUtils.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="Sound\SoundManager.cpp">

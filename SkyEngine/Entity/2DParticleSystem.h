@@ -40,11 +40,11 @@ public:
 
 	void Update() override;
 
-	std::vector<TPointer<Entity>> GetAdditionalEntitiesToRender() override;
+	std::vector<THardPointer<Entity>> GetAdditionalEntitiesToRender() override;
 
 	struct Particle2D
 	{
-		TPointer<Entity> pEntity;
+		THardPointer<Entity> pEntity;
 		float fSpeed;
 		SVector2 v2Direction;
 		float fFalloffDistance;

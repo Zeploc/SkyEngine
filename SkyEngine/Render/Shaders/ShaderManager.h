@@ -32,42 +32,42 @@ public:
 
 	static void AddComputeProgram(std::string ShaderName, std::string ComputePath);
 
-	static void ShaderCreated(const TPointer<CShader>NewShader);
-	static TPointer<CShader> GetShader(std::string ShaderName);
-	static TPointer<CUndefinedShader> GetUndefinedShader(std::string ShaderName);
+	static void ShaderCreated(const THardPointer<CShader>NewShader);
+	static THardPointer<CShader> GetShader(std::string ShaderName);
+	static THardPointer<CUndefinedShader> GetUndefinedShader(std::string ShaderName);
 	template<class T>
-	static TPointer<T> GetShader();	
+	static THardPointer<T> GetShader();	
 
-	static std::map<std::string, TPointer<ModelObject>> Models;
+	static std::map<std::string, THardPointer<ModelObject>> Models;
 
 	static Text::cFont AddFont(std::string fontPath, int iPSize);
 	
 	// TODO: Needed for template as static shaders can't be exported :( 
-	static std::map<std::string, TPointer<CShader>> GetShaders();
+	static std::map<std::string, THardPointer<CShader>> GetShaders();
 	
 protected:
 	template<class T>
 	static void AddShader();
 	
-	static std::map<std::string, TPointer<CShader>> Shaders;
+	static std::map<std::string, THardPointer<CShader>> Shaders;
 };
 
 template <class T>
 void ShaderManager::AddShader()
 {
-	const TPointer<CShader> NewShader = std::make_shared<T>();
+	const THardPointer<CShader> NewShader = std::make_shared<T>();
 	ShaderCreated(NewShader);
 }
 
 template <class T>
-TPointer<T> ShaderManager::GetShader()
+THardPointer<T> ShaderManager::GetShader()
 {
-	const std::map<std::string, TPointer<CShader>> CurrentShaders = GetShaders();
+	const std::map<std::string, THardPointer<CShader>> CurrentShaders = GetShaders();
 	// TODO: improve retrieval based on stored method
 	for (auto Element : CurrentShaders)
 	{
-		TPointer<CShader> Shader = Element.second;
-		if (TPointer<T> CheckedShader = Cast<T>(Shader))
+		THardPointer<CShader> Shader = Element.second;
+		if (THardPointer<T> CheckedShader = Cast<T>(Shader))
 		{
 			return CheckedShader;
 		}				
