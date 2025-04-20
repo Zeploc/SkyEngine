@@ -24,7 +24,7 @@ TAssetObjectPointer<CTexture> CTextureManager::AddNewTexture(const std::string& 
 	}
 	CLogManager::Get()->DisplayMessage("Adding Texture, \"" + std::string(TexturePath) + "\", Total Texture Count : " + std::to_string(Textures.size()));
 	std::string TextureAssetName = PathUtils::GetFileName(TexturePath, false);
-	const TAssetObjectPointer<CAsset> TextureAsset = GetAssetManager()->AddAsset("Textures/" + TextureAssetName + ".sasset", CTexture::GetStaticName());
+	const TObjectPointer<CAsset> TextureAsset = GetAssetManager()->AddAsset("Textures/" + TextureAssetName + ".sasset", CTexture::GetStaticName());
 	TextureAsset->SetDefaultObject(NewTexture);
 	AddLoadedTexture(NewTexture);
 	return NewTexture;
@@ -39,7 +39,7 @@ TAssetObjectPointer<CTexture> CTextureManager::FindTexture(const std::string& Te
 			return Texture;
 		}
 	}
-	if (const TAssetObjectPointer<CAsset> Asset = GetAssetManager()->GetAssetByName(TextureSource))
+	if (const TObjectPointer<CAsset> Asset = GetAssetManager()->GetAssetByName(TextureSource))
 	{
 		if (TAssetObjectPointer<CTexture> LoadedTexture = Asset->Load<CTexture>())
 		{

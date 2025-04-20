@@ -115,8 +115,25 @@ bool CAsset::Delete()
 
 TAssetObjectPointer<CAssetObject> CAsset::Reload()
 {
+	// Required to stop it being cleaned up
+	THardPointer<CAsset> Cached = shared_from_this();
 	Unload();
-	return Load();
+	// Store original object to redirect
+	TAssetObjectPointer<CAssetObject> OriginalObject = Object;
+
+	// Reload by clearing object so it recreates
+	Object = nullptr;
+	Load();
+	
+	// TODO: Use proper asset/object management to redirect/reload instead of this garbage
+	// Reassign shared ptr memory to new object
+	std::shared_ptr<CAssetObject> OriginalPtr = (OriginalObject.GetWeak().lock());
+	CAssetObject& AssetObject = *OriginalPtr;
+	AssetObject = *Object;
+	
+	OriginalPtr.reset();
+	
+	return Object;
 }
 
 bool CAsset::Save()

@@ -118,6 +118,11 @@ void SceneManager::SwitchScene(std::string SceneName, bool _bInstant)
 		CLogManager::Get()->DisplayMessage("Could not find scene " + SceneName);
 		return;
 	}
+	// Already in scene check
+	if (CurrentScene == SceneName)
+	{
+		return;
+	}
 
 	if (_bInstant)
 	{
@@ -127,7 +132,7 @@ void SceneManager::SwitchScene(std::string SceneName, bool _bInstant)
 			const TAssetObjectPointer<Scene> ExistingScene = GetCurrentScene();
 			ExistingScene->Asset->Unload();
 		}
-		
+	
 		CurrentScene = SceneName;
 		SceneToSwitch = CurrentScene;
 		CLogManager::Get()->DisplayMessage("Switching to Scene \"" + GetCurrentScene()->SceneName + "\"");

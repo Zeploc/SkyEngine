@@ -16,12 +16,16 @@ TAssetObjectPointer<CMaterialInterface> CMaterialManager::FindMaterial(const std
 {
 	for (THardPointer<CMaterialInterface> Material : Materials)
 	{
+		if (!ensure(Material.get(), "Empty Materail in materail manager list!"))
+		{
+			continue;
+		}
 		if (Material->GetMaterialName() == MaterialName)
 		{
 			return Material;
 		}
 	}
-	if (const TAssetObjectPointer<CAsset> Asset = GetAssetManager()->GetAssetByName(MaterialName))
+	if (const TObjectPointer<CAsset> Asset = GetAssetManager()->GetAssetByName(MaterialName))
 	{
 		if (TAssetObjectPointer<CMaterialInterface> LoadedMaterial = Asset->Load<CMaterialInterface>())
 		{

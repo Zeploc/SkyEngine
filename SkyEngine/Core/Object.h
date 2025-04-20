@@ -18,16 +18,8 @@ public:
 	// TWeakPointer<CAssetObject> weak_from_this();
 };
 
-
-struct SObjectPointerBase
-{
-public:
-	template<class T>
-	bool Equals(const TWeakPointer<T>& lhs, const TWeakPointer<T>& rhs);
-}
-
 template<class T>
-struct ENGINE_API TObjectPointer
+struct TObjectPointer
 {
 public:
 	// Empty
@@ -159,7 +151,7 @@ concept ConvertableToAssetObject = std::constructible_from<CAssetObject, T>;
 
 // TODO: Limit template type to CAssetObject, And not allow type asset
 template<class T = CAssetObject>//, std::enable_if_t<std::is_base_of_v<CAssetObject, T>, bool> = true>
-struct ENGINE_API TAssetObjectPointer : public TObjectPointer<T>
+struct TAssetObjectPointer : public TObjectPointer<T>
 {
 public:
 	using TObjectPointer<T>::TObjectPointer;

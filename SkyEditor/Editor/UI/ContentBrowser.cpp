@@ -116,7 +116,8 @@ void CContentBrowser::OnRender()
 	if (CreatedAsset)
 	{
 		CreatedAsset->Metadata = MetaData;
-		CreatedAsset->SetDefaultObject(CreatedAsset->MakeObject());
+		THardPointer<CAssetObject> NewAsset = CreatedAsset->MakeObject();
+		CreatedAsset->SetDefaultObject(NewAsset);
 		CreatedAsset->Load()->OnLoaded();
 		CreatedAsset->Save();
 			

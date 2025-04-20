@@ -297,7 +297,7 @@ Matrix4 Matrix4::GetInverse()
 			nan,nan,nan,nan,
 			nan,nan,nan,nan,
 			nan,nan,nan,nan);*/
-		ensure(0, "Matrix function inverse doesn't exist");
+		ensure(false, "Matrix function inverse doesn't exist");
 		return *this;
 	}
 
