@@ -17,6 +17,22 @@ void SShaderParameter::SetDeserializedVariable(std::istream& is)
 	}
 }
 
+void SShaderParameter::OnValueChanged()
+{
+	SSerializableVariable::OnValueChanged();
+	if (Type == EVariableType::Object)
+	{
+		if (*AssetObject)
+		{
+			LoadedTexture = Cast<CTexture>(*AssetObject);
+		}
+		else
+		{
+			LoadedTexture = nullptr;
+		}
+	}
+}
+
 void BaseShaderParameters::UploadMaterialParameters()
 {
 	for (const SShaderParameter& ShaderParameter : ShaderVariables)

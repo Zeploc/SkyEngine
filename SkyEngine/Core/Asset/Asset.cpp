@@ -78,9 +78,8 @@ TAssetObjectPointer<CAssetObject> CAsset::Load()
 	ensure(CreatedObject != nullptr, "Failed to create class from name!");
 	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(CreatedObject.get());
 	FileStream >> AssetInterface;
-	AssetInterface->Asset = shared_from_this();
 
-	Object = CreatedObject;
+	SetDefaultObject(CreatedObject);
 	AssetInterface->OnLoaded();
 
 	return Object;
@@ -105,7 +104,7 @@ void CAsset::Unloaded()
 	IAssetObjectInterface* AssetInterface = GetInterface<IAssetObjectInterface>(AssetObject);
 	AssetInterface->OnUnloaded();
 	AssetInterface->Asset = nullptr;
-	Object = nullptr;
+	DisconnectObject();
 }
 
 bool CAsset::Delete()
@@ -180,6 +179,7 @@ void CAsset::SetDefaultObject(TAssetObjectPointer<CAssetObject> NewObject)
 	NewObject->Asset = shared_from_this();
 	Metadata = NewObject->GetMetaData();
 	Object = NewObject;
+	HardObject = Object->shared_from_this();
 }
 
 void CAsset::Open()
@@ -197,6 +197,7 @@ void CAsset::Open()
 void CAsset::DisconnectObject()
 {
 	Object = nullptr;
+	HardObject = nullptr;
 }
 
 std::string CAsset::GetAbsoluteFilePath() const

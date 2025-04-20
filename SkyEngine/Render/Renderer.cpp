@@ -26,7 +26,7 @@ CRenderer::CRenderer()
 	{
 		// Made static to not go out of scope (will last the lifetime of the application)
 		// TODO: Instead store this in a collection of materials/memory management
-		static const THardPointer<CMaterial_PBR> DefaultPbrMaterial = std::make_shared<CMaterial_PBR>("DefaultMaterial");
+		const THardPointer<CMaterial_PBR> DefaultPbrMaterial = std::make_shared<CMaterial_PBR>("DefaultMaterial");
 		DefaultPbrMaterial->Params.DiffuseColour = {0.5f, 0.5f, 0.5f, 1.0f};
 		DefaultPbrMaterial->bTwoSided = true;
 		DefaultMaterialAsset = GetAssetManager()->AddAsset("Materials/DefaultMaterial.sasset", DefaultPbrMaterial->GetAssetClassName());

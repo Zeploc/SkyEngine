@@ -53,7 +53,7 @@ protected:
 	
 	bool bUseSpectatorControls = false;
 	bool bRotatingAroundPoint = false;
-	bool bLookingAround = false;
+	bool bDollyingOnFocusPoint = false;
 	bool bPanning = false;
 	/* When pressing shift and moving an object, the camera will maintain the offset */
 	bool bGizmoViewDrag = false;

@@ -48,6 +48,8 @@ protected:
 	// TODO: Only for editor
 	/* If wanting to get this externally, use Load() */
 	TAssetObjectPointer<CAssetObject> Object = nullptr;
+
+	THardPointer<CAssetObject> HardObject = nullptr;
 };
 
 template <typename T>

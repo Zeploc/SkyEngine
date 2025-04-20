@@ -249,7 +249,7 @@ bool CEditorViewportCanvas::OnMouseButtonPressed(int MouseButton, int Mods)
 		}
 		else if (MouseButton == GLFW_MOUSE_BUTTON_RIGHT)
 		{
-			bLookingAround = true;
+			bDollyingOnFocusPoint = true;
 			ApplicationWindow->SetCursorVisible(false);
 			PreviousMousePosition = MousePos;
 			ApplicationWindow->SetCursorPosition(ScreenCenter);
@@ -267,7 +267,7 @@ bool CEditorViewportCanvas::OnMouseButtonPressed(int MouseButton, int Mods)
 	}
 
 	bHandled |= bRotatingAroundPoint;
-	bHandled |= bLookingAround;
+	bHandled |= bDollyingOnFocusPoint;
 	bHandled |= bPanning;
 	if (bHandled)
 	{
@@ -286,7 +286,7 @@ bool CEditorViewportCanvas::OnMouseButtonReleased(int MouseButton, int Mods)
 		ApplicationWindow->SetCursorVisible(true);
 		bUseSpectatorControls = false;
 		ApplicationWindow->SetCursorPosition(PreviousMousePosition);
-		bLookingAround = false;
+		bDollyingOnFocusPoint = false;
 		return true;
 	}
 	if (MouseButton == GLFW_MOUSE_BUTTON_LEFT && (bPanning || bRotatingAroundPoint))
@@ -330,9 +330,9 @@ bool CEditorViewportCanvas::OnMouseMoved(SVector2i MousePos)
 		ApplicationWindow->SetCursorPosition(ScreenCenter);
 		return true;
 	}
-	if (bLookingAround)
+	if (bDollyingOnFocusPoint)
 	{	
-		CurrentFocusDistance += Offset.Y * .3f;
+		CurrentFocusDistance += Offset.Y * .3f * -1.0f;
 		ApplicationWindow->SetCursorPosition(ScreenCenter);
 		ViewportCamera->Transform.Position = CameraPivotPoint + (-ViewportCamera->GetForwardVector() * CurrentFocusDistance);
 		return true;
@@ -408,7 +408,7 @@ bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 	{			
 		StartGizmoViewDrag();
 	}
-	if (bPanning || bLookingAround || bRotatingAroundPoint)
+	if (bPanning || bDollyingOnFocusPoint || bRotatingAroundPoint)
 	{
 		return false;
 	}
@@ -557,6 +557,7 @@ void CEditorViewportCanvas::SelectEntity(THardPointer<Entity> HitEntity, bool bF
 			if (bFocusCamera)
 			{
 				FocusEntity();
+				
 			}
 		}
 	}

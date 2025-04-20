@@ -16,6 +16,7 @@ struct ENGINE_API SShaderParameter : public SSerializableVariable
 	using SSerializableVariable::SSerializableVariable;
 	
 	virtual void SetDeserializedVariable(std::istream& is) override;
+	void OnValueChanged() override;
 	
 	int32_t Location = -1;
 	TAssetObjectPointer<CTexture> LoadedTexture;

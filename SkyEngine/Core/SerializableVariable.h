@@ -111,6 +111,7 @@ struct ENGINE_API SSerializableVariable
 	
 	virtual std::string GetSerializedVariable() const;
 	virtual void SetDeserializedVariable(std::istream& is);
+	virtual void OnValueChanged() {}
 };
 
 #define SetSerializeVariable(VariableName) SerializeVariableWithTags(VariableName)

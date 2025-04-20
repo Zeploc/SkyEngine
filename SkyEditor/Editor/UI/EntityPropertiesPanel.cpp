@@ -28,7 +28,7 @@ void CEntityPropertiesPanel::OnRender()
 		ImGui::Separator();
 		ImGui::Spacing();
 
-		for (const SSerializableVariable& SerializableVariable : SelectedEntity->GetSerializeVariables())
+		for (SSerializableVariable& SerializableVariable : SelectedEntity->GetSerializeVariables())
 		{
 			CUIPresets::RenderVariableField(SerializableVariable);
 		}
@@ -42,7 +42,7 @@ void CEntityPropertiesPanel::OnRender()
 			ImGui::Separator();
 			ImGui::Spacing();
 			
-			for (const SSerializableVariable& SerializableVariable : Component->GetSerializeVariables())
+			for (SSerializableVariable& SerializableVariable : Component->GetSerializeVariables())
 			{
 				CUIPresets::RenderVariableField(SerializableVariable);
 			}
