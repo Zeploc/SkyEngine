@@ -414,8 +414,8 @@ bool EditorApplication::UnsavedSceneCheck()
 			StringUtils::ReplaceFirst(ExistingFile, FilePrefix, "");
 			if (ExistingFile != Basic_String)
 			{
-				const int UnsavedChangesResponse = PlatformInterface->DisplayMessageBox("Unsaved Changes!", "Unsaved changes, do you want to continue?", MB_YESNO);
-				if (UnsavedChangesResponse == IDNO)
+				const int UnsavedChangesResponse = PlatformInterface->DisplayMessageBox("Unsaved Changes!", "Unsaved changes, do you want to discard and continue?", MB_OKCANCEL);
+				if (UnsavedChangesResponse == IDCANCEL)
 				{
 					return false;
 				}

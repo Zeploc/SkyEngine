@@ -187,3 +187,10 @@ TAssetObjectPointer<T> Cast(TAssetObjectPointer<U> Base)
 {
 	return TAssetObjectPointer<T>(std::dynamic_pointer_cast<T>(Base.GetWeak().lock()));
 }
+
+// Handle object ptr given to ensure
+template<class T>
+bool __M_Ensure(const char* expr_str, TObjectPointer<T> ptr, const char* file, int line, const char* msg = "No information given")
+{
+	return __M_Ensure(expr_str, ptr.IsValid(), file, line, msg);
+}

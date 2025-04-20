@@ -97,10 +97,15 @@ void CAsset::Unload()
 
 void CAsset::Unloaded()
 {
+	if (!ensure(Object, "Attempted to unload a unloaded asset!"))
+	{
+		return;
+	}
 	THardPointer<CAssetObject> AssetObject = Object.GetWeak().lock();	
 	IAssetObjectInterface* AssetInterface = GetInterface<IAssetObjectInterface>(AssetObject);
 	AssetInterface->OnUnloaded();
 	AssetInterface->Asset = nullptr;
+	Object = nullptr;
 }
 
 bool CAsset::Delete()
@@ -115,14 +120,19 @@ bool CAsset::Delete()
 
 TAssetObjectPointer<CAssetObject> CAsset::Reload()
 {
+	// If not loaded, a simple load is enough
+	if (!Object)
+	{
+		return Load();
+	}
+	
 	// Required to stop it being cleaned up
 	THardPointer<CAsset> Cached = shared_from_this();
+	TAssetObjectPointer<CAssetObject> OriginalObject = Object;
 	Unload();
 	// Store original object to redirect
-	TAssetObjectPointer<CAssetObject> OriginalObject = Object;
 
 	// Reload by clearing object so it recreates
-	Object = nullptr;
 	Load();
 	
 	// TODO: Use proper asset/object management to redirect/reload instead of this garbage

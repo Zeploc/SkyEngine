@@ -49,7 +49,7 @@ void CAssetManager::UnloadAsset(TWeakPointer<CAsset> Asset)
 		return;
 	}
 	const std::shared_ptr<CAsset> AssetPtr = Asset.lock();
-	Utils::RemoveFromArray(Assets, AssetPtr);
+	// Utils::RemoveFromArray(Assets, AssetPtr);
 	AssetPtr->Unloaded();
 }
 
