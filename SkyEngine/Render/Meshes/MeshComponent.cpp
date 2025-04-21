@@ -26,7 +26,7 @@ CMeshComponent::CMeshComponent(const THardPointer<Entity>& InOwner)
 	SetSerializeVariable(bVisible);
 }
 
-CMeshComponent::CMeshComponent(const THardPointer<Entity>& InOwner, std::string InMeshAsset, const TAssetObjectPointer<CMaterialInterface>& InMaterial)
+CMeshComponent::CMeshComponent(const THardPointer<Entity>& InOwner, TAssetObjectPointer<CMesh> InMeshAsset, const TAssetObjectPointer<CMaterialInterface>& InMaterial)
 : CComponent(InOwner), MeshAsset(InMeshAsset)
 {
 	if (InMaterial)
@@ -63,7 +63,7 @@ void CMeshComponent::Unload()
 
 bool CMeshComponent::ShouldRender() const
 {
-	return IsVisible();
+	return IsVisible() && MeshAsset;
 }
 
 TAssetObjectPointer<CMaterialInterface> CMeshComponent::GetMaterial() const
@@ -76,13 +76,9 @@ void CMeshComponent::SetMaterial(TAssetObjectPointer<CMaterialInterface> NewMate
 	MeshMaterial = NewMaterial;
 }
 
-bool CMeshComponent::SetMeshAsset(std::string NewMeshAssetName)
+bool CMeshComponent::SetMeshAsset(TAssetObjectPointer<CMesh> NewMeshAsset)
 {
-	if (!GetMeshManager()->HasMesh(NewMeshAssetName))
-	{
-		return false;
-	}
-	MeshAsset = NewMeshAssetName;
+	MeshAsset = NewMeshAsset;
 	// GetGraphicsAPI()->CleanupMesh(this);
 	// BindMeshData();
 	return true;
@@ -90,12 +86,12 @@ bool CMeshComponent::SetMeshAsset(std::string NewMeshAssetName)
 
 uint32_t CMeshComponent::GetVao() const
 {
-	return GetMeshData().GetVao();
+	return GetMeshAsset()->GetVao();
 }
 
 int CMeshComponent::GetIndicesCount() const
 {
-	return GetMeshData().GetIndicesCount();
+	return GetMeshAsset()->GetIndicesCount();
 }
 
 STransform CMeshComponent::GetRenderTransform() const
@@ -110,7 +106,7 @@ bool CMeshComponent::CheckHit(SVector RayStart, SVector RayDirection, SVector& H
 	// CLogManager::Get()->DisplayMessage("No Check Hit for mesh ray hit check!");
 
 	// TODO: Not working with plane?
-	return Utils::CheckMeshHit(GetOwner()->Transform, GetMeshData(), RayStart, RayDirection, HitPos);
+	return Utils::CheckMeshHit(GetOwner()->Transform, *GetMeshAsset(), RayStart, RayDirection, HitPos);
 }
 
 void CMeshComponent::SetVisible(bool bNewVisible)
@@ -126,11 +122,6 @@ void CMeshComponent::AddCollisionBounds(float fWidth, float fHeight, float fDept
 void CMeshComponent::AddCollisionBounds(THardPointer<CCollisionBounds> NewCollision)
 {
 	MeshCollisionBounds = NewCollision;
-}
-
-CMeshData CMeshComponent::GetMeshData() const
-{
-	return GetMeshManager()->GetMesh(MeshAsset);
 }
 
 void CMeshComponent::Serialize(std::ostream& os)

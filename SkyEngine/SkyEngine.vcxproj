@@ -234,7 +234,7 @@
     <ClInclude Include="Render\Meshes\Basic\Triangle.h" />
     <ClInclude Include="Render\Meshes\BoxComponent.h" />
     <ClInclude Include="Render\Meshes\MeshComponent.h" />
-    <ClInclude Include="Render\Meshes\MeshData.h" />
+    <ClInclude Include="Render\Meshes\Mesh.h" />
     <ClInclude Include="Render\Meshes\MeshManager.h" />
     <ClInclude Include="Render\Meshes\Model\AnimatedModel.h" />
     <ClInclude Include="Render\Meshes\Model\Model.h" />
@@ -331,7 +331,7 @@
     <ClCompile Include="Render\Meshes\Basic\Triangle.cpp" />
     <ClCompile Include="Render\Meshes\BoxComponent.cpp" />
     <ClCompile Include="Render\Meshes\MeshComponent.cpp" />
-    <ClCompile Include="Render\Meshes\MeshData.cpp" />
+    <ClCompile Include="Render\Meshes\Mesh.cpp" />
     <ClCompile Include="Render\Meshes\MeshManager.cpp" />
     <ClCompile Include="Render\Meshes\Model\AnimatedModel.cpp" />
     <ClCompile Include="Render\Meshes\Model\Model.cpp" />

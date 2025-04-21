@@ -1,9 +1,10 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #include "SEPCH.h"
-#include "MeshData.h"
+#include "Mesh.h"
 
 #include "Core/Application.h"
+#include "Core/Asset/Asset.h"
 #include "System/LogManager.h"
 
 void STriangle::TransformTriangle(STransform Transform)
@@ -32,21 +33,34 @@ bool STriangle::TestHit(SVector RayStart, SVector RayDirection, SVector& HitPos)
 	return (Det >= 1e-6 && t >= 0.0 && u >= 0.0 && v >= 0.0 && (u+v) <= 1.0);
 }
 
-CMeshData::CMeshData()
+CMesh::CMesh()
 {
 }
 
-CMeshData::CMeshData(const TArray<float> &PositionData, const TArray<uint32_t> &IndexData, const TArray<float>& NormalData)
+CMesh::CMesh(const TArray<float> &PositionData, const TArray<uint32_t> &IndexData, const TArray<float>& NormalData)
 	: Positions(PositionData), Indices(IndexData), Normals(NormalData)
 {
 }
 
-void CMeshData::SetUVs(const TArray<float>& UVData)
+void CMesh::InitData(const TArray<float>& PositionData, const TArray<uint32_t>& IndexData, const TArray<float>& NormalData)
+{
+	Positions = PositionData;
+	Indices = IndexData;
+	Normals = NormalData;
+}
+
+void CMesh::OnLoaded()
+{
+	SetupMeshData();	
+	CLogManager::Get()->DisplayMessage(std::format("Created Mesh {} with vao {}", Asset->DisplayName, Vao));
+}
+
+void CMesh::SetUVs(const TArray<float>& UVData)
 {
 	UVs = UVData;
 }
 
-void CMeshData::BindData(unsigned vao) const
+void CMesh::BindData(unsigned vao) const
 {
 	std::vector<float> OutVertices;
 	std::vector<uint32_t> OutIndices;
@@ -54,14 +68,19 @@ void CMeshData::BindData(unsigned vao) const
 	GetGraphicsAPI()->BindVertexArray(OutVertices, OutIndices, vao);	
 }
 
-void CMeshData::SetupMeshData()
+void CMesh::SetupMeshData()
 {
+	// TODO: Hook into graphics API being setup (would then support switching graphics api in editor time)
+	if (!ensure(GetGraphicsAPI(), "Attempted to load mesh before graphics API! Currently not supported"))
+	{
+		return;
+	}
 	Vao = GetGraphicsAPI()->CreateVertexBuffer(*this);
 	IndicesCount = GetIndicesCount();
 	BindData(Vao);
 }
 
-void CMeshData::GetFinalData(TArray<float>& OutVertices, TArray<uint32_t>& OutIndices) const
+void CMesh::GetFinalData(TArray<float>& OutVertices, TArray<uint32_t>& OutIndices) const
 {
 	OutIndices = Indices;
 	OutVertices.clear();
@@ -87,12 +106,12 @@ void CMeshData::GetFinalData(TArray<float>& OutVertices, TArray<uint32_t>& OutIn
 	}
 }
 
-int CMeshData::GetIndicesCount() const
+int CMesh::GetIndicesCount() const
 {
 	return static_cast<int>(Indices.size());
 }
 
-TArray<STriangle> CMeshData::GetTriangles() const
+TArray<STriangle> CMesh::GetTriangles() const
 {
 	TArray<STriangle> Triangles;
 	int CurrentIndex = 0;
@@ -124,32 +143,32 @@ TArray<STriangle> CMeshData::GetTriangles() const
 	return Triangles;
 }
 
-void CMeshData::Serialize(std::ostream& os)
+void CMesh::Serialize(std::ostream& os)
 {
 	// TODO:
 }
 
-void CMeshData::Deserialize(std::istream& is)
+void CMesh::Deserialize(std::istream& is)
 {
 	// TODO:
 }
 
-std::string CMeshData::GetAssetClassName()
+std::string CMesh::GetAssetClassName()
 {
 	return GetStaticName();
 }
 
-std::string CMeshData::GetStaticName()
+std::string CMesh::GetStaticName()
 {
 	return "Mesh";
 }
 
-void CMeshData::Open()
+void CMesh::Open()
 {
 	
 }
 
-void CMeshData::PushPositions(TArray<float>& OutVertices, int VertexIndex) const
+void CMesh::PushPositions(TArray<float>& OutVertices, int VertexIndex) const
 {
 	const int StartingPosition = VertexIndex * POSITION_ELEMENTS_COUNT;
 	for (int i = 0; i < POSITION_ELEMENTS_COUNT; ++i)
@@ -159,7 +178,7 @@ void CMeshData::PushPositions(TArray<float>& OutVertices, int VertexIndex) const
 	}	
 }
 
-void CMeshData::PushUVs(TArray<float>& OutVertices, int VertexIndex) const
+void CMesh::PushUVs(TArray<float>& OutVertices, int VertexIndex) const
 {
 	const int StartingPosition = VertexIndex * UV_ELEMENTS_COUNT;
 	for (int i = 0; i < UV_ELEMENTS_COUNT; ++i)
@@ -169,7 +188,7 @@ void CMeshData::PushUVs(TArray<float>& OutVertices, int VertexIndex) const
 	}
 }
 
-void CMeshData::PushNormals(TArray<float>& OutVertices, int VertexIndex) const
+void CMesh::PushNormals(TArray<float>& OutVertices, int VertexIndex) const
 {
 	const int StartingPosition = VertexIndex * NORMAL_ELEMENTS_COUNT;
 	for (int i = 0; i < NORMAL_ELEMENTS_COUNT; ++i)

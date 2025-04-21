@@ -12,7 +12,7 @@
 
 // Library Include //
 
-#include "MeshData.h"
+#include "Mesh.h"
 #include "Render/SceneVisual.h"
 
 // TODO: Warnings with exporting class containing STDL
@@ -27,7 +27,7 @@ class ENGINE_API CMeshComponent : public CComponent, public ISceneVisual
 {
 public:
 	CMeshComponent(const THardPointer<Entity>& InOwner);
-	CMeshComponent(const THardPointer<Entity>& InOwner, std::string InMeshAsset, const TAssetObjectPointer<CMaterialInterface>& InMaterial = nullptr);
+	CMeshComponent(const THardPointer<Entity>& InOwner, TAssetObjectPointer<CMesh> InMeshAsset, const TAssetObjectPointer<CMaterialInterface>& InMaterial = nullptr);
 	virtual ~CMeshComponent();
 
 	void OnAttached() override;
@@ -39,8 +39,8 @@ public:
 	bool ShouldRender() const override;
 	virtual STransform GetRenderTransform() const override;
 	
-	std::string GetMeshAsset() const { return MeshAsset; }
-	virtual bool SetMeshAsset(std::string NewMeshAssetName);
+	TAssetObjectPointer<CMesh> GetMeshAsset() const { return MeshAsset; }
+	virtual bool SetMeshAsset(TAssetObjectPointer<CMesh> NewMeshAsset);
 	
 	TAssetObjectPointer<CMaterialInterface> GetMaterial() const override;
 	virtual void SetMaterial(TAssetObjectPointer<CMaterialInterface> NewMaterial);
@@ -71,11 +71,10 @@ public:
 	float LEGACY_Depth = 0;
 	
 protected:
-	virtual CMeshData GetMeshData() const;
 	void Serialize(std::ostream& os) override;
 	void Deserialize(std::istream& is) override;
 	THardPointer<CCollisionBounds> MeshCollisionBounds;
-	std::string MeshAsset;
+	TAssetObjectPointer<CMesh> MeshAsset;
 
 	bool bVisible = true;
 };

@@ -22,7 +22,7 @@ public:
 		const char* TessControlShaderFilename, const char* TessEvalShaderFilename) override;
 	bool CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename) override;
 	THardPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) override;
-	unsigned CreateVertexBuffer(const CMeshData& MeshData) override;
+	unsigned CreateVertexBuffer(const CMesh& MeshData) override;
 	void BindVertexArray(const std::vector<float>& vertices, const std::vector<uint32_t>& indices,
 		unsigned& vao) override;
 	void RenderMesh(ISceneVisual* SceneVisual) override;

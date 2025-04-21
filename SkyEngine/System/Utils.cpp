@@ -366,7 +366,7 @@ SRotator Utils::StringToRotator(std::string _string)
 	return SRotator(x, y, z);
 }
 
-bool Utils::CheckMeshHit(STransform MeshTransform, const CMeshData& MeshData, SVector RayStart, SVector RayDirection, SVector& HitPos)
+bool Utils::CheckMeshHit(STransform MeshTransform, const CMesh& MeshData, SVector RayStart, SVector RayDirection, SVector& HitPos)
 {
 	TArray<STriangle> Triangles = MeshData.GetTriangles();
 	for (STriangle Triangle : Triangles)

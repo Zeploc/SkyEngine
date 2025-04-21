@@ -88,11 +88,11 @@ void GeometryObject::Render(STransform Newtransform)
 	// glBindVertexArray(0);
 }
 
-CMeshData GeometryObject::GetMeshData() const
-{
-	const std::vector<float> VertexPositions;
-	const std::vector<float> Normals;
-	const std::vector<uint32_t> Indices;
-	// TODO:
-	return CMeshData(VertexPositions, Indices, Normals);
-}
+// CMesh GeometryObject::GetMeshData() const
+// {
+// 	const std::vector<float> VertexPositions;
+// 	const std::vector<float> Normals;
+// 	const std::vector<uint32_t> Indices;
+// 	// TODO:
+// 	return CMesh(VertexPositions, Indices, Normals);
+// }

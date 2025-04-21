@@ -6,7 +6,8 @@
 #include "Core/Core.h"
 
 #include "Math/Vector2.h"
-#include "Render/Meshes/MeshData.h"
+
+#include "Render/Meshes/Mesh.h"
 
 class Matrix4;
 class CEngineWindow;
@@ -40,7 +41,7 @@ public:
 	
 	virtual void ImGuiInit() = 0;
 	
-	virtual unsigned int CreateVertexBuffer(const CMeshData& MeshData) = 0;
+	virtual unsigned int CreateVertexBuffer(const CMesh& MeshData) = 0;
 	virtual bool GenerateTexture(TAssetObjectPointer<CTexture> Texture, bool bAA = true) = 0;
 	/* Create a new VAO if -1, otherwise will use it  */
 	virtual void BindVertexArray(const std::vector<float>& vertices, const std::vector<uint32_t>& indices, unsigned& vao) = 0;

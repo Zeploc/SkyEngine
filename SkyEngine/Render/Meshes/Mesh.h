@@ -23,12 +23,17 @@ struct STriangle
 	bool TestHit(SVector RayStart, SVector RayDirection, SVector& HitPos) const;
 };
 
-class ENGINE_API CMeshData : public CAssetObject
+class ENGINE_API CMesh : public CAssetObject
 {
 public:
-	CMeshData();
-	CMeshData(const TArray<float> &PositionData, const TArray<uint32_t> &IndexData, const TArray<float>& NormalData);
-	~CMeshData() {}
+	CMesh();
+	CMesh(const TArray<float> &PositionData, const TArray<uint32_t> &IndexData, const TArray<float>& NormalData);
+	~CMesh() {}
+
+	// TODO: Remove once better way of populating default meshes has been created
+	void InitData(const TArray<float> &PositionData, const TArray<uint32_t> &IndexData, const TArray<float>& NormalData);
+
+	void OnLoaded() override;
 	
 	void SetUVs(const std::vector<float>& UVData);
 

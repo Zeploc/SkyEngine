@@ -1,7 +1,7 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
-#include "MeshData.h"
+#include "Mesh.h"
 #include "Entity/Component.h"
 #include "Render/SceneVisual.h"
 
@@ -28,5 +28,5 @@ public:
 protected:
 	void Deserialize(std::istream& is) override;
 	TAssetObjectPointer<CMaterialInterface> BoxMaterial;
-	std::string BoxMeshName;
+	TAssetObjectPointer<CMesh> MeshAsset;
 };

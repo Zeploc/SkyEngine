@@ -2,9 +2,11 @@
 #include "MeshManager.h"
 
 #include <format>
+#include <memory>
 
-#include "MeshData.h"
+#include "Mesh.h"
 #include "Basic/DefaultMeshes.h"
+#include "Core/Application.h"
 #include "System/LogManager.h"
 
 CMeshManager::CMeshManager()
@@ -13,49 +15,54 @@ CMeshManager::CMeshManager()
 
 void CMeshManager::Init()
 {
-	AddMesh(MESH_CUBE, DefaultMesh::GetCubeData());
-	AddMesh(MESH_PLANE, DefaultMesh::GetPlaneData());
-	AddMesh(MESH_SPHERE, DefaultMesh::GetSphereData());
-	AddMesh(MESH_PYRAMID, DefaultMesh::GetPyramidData());
+	DefaultMesh::GetCube();
+	DefaultMesh::GetPlane();
+	DefaultMesh::GetSphere();
+	DefaultMesh::GetPyramid();
+	DefaultMesh::GetBox();
+	// AddMesh(MESH_CUBE, std::make_shared<CMesh>(new DefaultMesh::GetCubeData());
+	// AddMesh(MESH_PLANE, DefaultMesh::GetPlaneData());
+	// AddMesh(MESH_SPHERE, DefaultMesh::GetSphereData());
+	// AddMesh(MESH_PYRAMID, DefaultMesh::GetPyramidData());
 }
 
-bool CMeshManager::AddMesh(const std::string MeshName, const CMeshData& MeshData)
+bool CMeshManager::AddMesh(const std::string MeshName, const CMesh& MeshData)
 {
-	if (MeshDatas.contains(MeshName))
-	{
-		CLogManager::Get()->DisplayError(std::format("Attempted to add mesh {} that already exists", MeshName));
-		return false;
-	}
-	if (!MeshData.IsValid())
-	{
-		CLogManager::Get()->DisplayError(std::format("Attempted to add mesh {} that has no vertices", MeshName));
-		return false;
-	}
-	MeshDatas.insert(std::make_pair(MeshName, CMeshData(MeshData)));
-	CMeshData& StoredMesh = MeshDatas[MeshName];
-	StoredMesh.SetupMeshData();
-	CLogManager::Get()->DisplayMessage(std::format("Created Mesh {} with vao {}", MeshName, StoredMesh.GetVao()));
+	// if (Meshes.contains(MeshName))
+	// {
+	// 	CLogManager::Get()->DisplayError(std::format("Attempted to add mesh {} that already exists", MeshName));
+	// 	return false;
+	// }
+	// if (!MeshData.IsValid())
+	// {
+	// 	CLogManager::Get()->DisplayError(std::format("Attempted to add mesh {} that has no vertices", MeshName));
+	// 	return false;
+	// }
+	// Meshes.insert(std::make_pair(MeshName, CMesh(MeshData)));
+	// CMesh& StoredMesh = Meshes[MeshName];
+	// StoredMesh.SetupMeshData();
+	// CLogManager::Get()->DisplayMessage(std::format("Created Mesh {} with vao {}", MeshName, StoredMesh.GetVao()));
 	return true;
 }
 
 bool CMeshManager::HasMesh(const std::string MeshName) const
 {
-	return MeshDatas.contains(MeshName);
+	return Meshes.contains(MeshName);
 }
 
-CMeshData CMeshManager::GetMesh(const std::string MeshName)
+CMesh CMeshManager::GetMesh(const std::string MeshName)
 {
-	if (!MeshDatas.contains(MeshName))
+	if (!Meshes.contains(MeshName))
 	{
-		return CMeshData();
+		return CMesh();
 	}
-	return MeshDatas[MeshName];
+	return Meshes[MeshName];
 }
 
 TArray<std::string> CMeshManager::GetAvailableMeshes() const
 {
 	TArray<std::string> MeshNames;
-	for (auto MeshPair : MeshDatas)
+	for (auto MeshPair : Meshes)
 	{
 		MeshNames.push_back(MeshPair.first);
 	}

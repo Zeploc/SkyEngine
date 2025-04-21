@@ -19,6 +19,7 @@
 #include "System/TimeManager.h"
 #include "UI/UIWidget.h"
 #include "Render/Materials/InternalMaterial.h"
+#include "Render/Meshes/Basic/DefaultMeshes.h"
 
 CEditorViewportCanvas::CEditorViewportCanvas(TWeakPointer<CEngineWindow> InOwningWindow)
 	: CViewportCanvas(InOwningWindow)
@@ -381,19 +382,19 @@ bool CEditorViewportCanvas::DeleteSelected()
 	return true;
 }
 
-void CEditorViewportCanvas::CreateEntity(const std::string& MeshAsset)
+void CEditorViewportCanvas::CreateEntity(TAssetObjectPointer<CMesh> Mesh)
 {
-	std::string EntityName = MeshAsset;
-	if (EntityName.empty())
+	std::string EntityName = "NewEntity" ;
+	if (Mesh)
 	{
-		EntityName = "NewEntity";
+		EntityName = Mesh->Asset->DisplayName;
 	}
 	const THardPointer<Entity> NewEntity(new Entity(STransform(), EntityName));
 	SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
 	SelectEntity(NewEntity, true);
-	if (!MeshAsset.empty())
+	if (Mesh.IsValid())
 	{
-		THardPointer<CMeshComponent> NewMeshComponent = std::make_shared<CMeshComponent>(NewEntity, MeshAsset, nullptr);
+		THardPointer<CMeshComponent> NewMeshComponent = std::make_shared<CMeshComponent>(NewEntity, Mesh, nullptr);
 		NewEntity->AddComponent(NewMeshComponent);
 	}
 }
@@ -423,12 +424,12 @@ bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
 	}
 	if (KeyCode == GLFW_KEY_F && Mods & CWindowInput::ModiferType::Control)
 	{
-		CreateEntity(MESH_CUBE);
+		CreateEntity(DefaultMesh::GetCube());
 		return true;
 	}
 	if (KeyCode == GLFW_KEY_G && Mods & CWindowInput::ModiferType::Control)
 	{
-		CreateEntity(MESH_SPHERE);
+		CreateEntity(DefaultMesh::GetSphere());
 		return true;
 	}
 	if (KeyCode == GLFW_KEY_F)

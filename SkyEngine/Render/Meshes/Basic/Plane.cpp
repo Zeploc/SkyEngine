@@ -7,6 +7,7 @@
 #include <soil/SOIL2.h>
 
 // Engine Includes //
+#include "DefaultMeshes.h"
 #include "../MeshManager.h"
 #include "Render/Shaders/ShaderManager.h"
 #include "Core/Application.h"
@@ -23,7 +24,7 @@
 #--Return--#: 		NA
 ************************************************************/
 CPlane::CPlane(const THardPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial)
-: CMeshComponent(InOwner, MESH_PLANE, InMaterial)
+: CMeshComponent(InOwner, DefaultMesh::GetPlane(), InMaterial)
 {
 	CollisionBox.fHeight = LEGACY_Height;
 	CollisionBox.fWidth = LEGACY_Width;
@@ -36,7 +37,7 @@ CPlane::CPlane(const THardPointer<Entity>& InOwner, TAssetObjectPointer<CMateria
 #--Return--#: 		NA
 ************************************************************/
 CPlane::CPlane(const THardPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial, glm::vec2 v2FrameCounts, int _iFPS)
-: CMeshComponent(InOwner, MESH_PLANE, InMaterial)
+: CMeshComponent(InOwner, DefaultMesh::GetPlane(), InMaterial)
 {
 	CollisionBox.fHeight = LEGACY_Height;
 	CollisionBox.fWidth = LEGACY_Width;
@@ -65,7 +66,7 @@ CPlane::CPlane(const THardPointer<Entity>& InOwner, TAssetObjectPointer<CMateria
 #--Return--#: 		NA
 ************************************************************/
 CPlane::CPlane(const THardPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial, int iCount, bool bHorizontal)
-: CMeshComponent(InOwner, MESH_PLANE, InMaterial)
+: CMeshComponent(InOwner, DefaultMesh::GetPlane(), InMaterial)
 {	
 	CollisionBox.fHeight = LEGACY_Height;
 	CollisionBox.fWidth = LEGACY_Width;

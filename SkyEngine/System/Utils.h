@@ -11,7 +11,7 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include "EnumTypes.h"
-#include "Render/Meshes/MeshData.h"
+#include "Render/Meshes/Mesh.h"
 
 struct STransform;
 // Forward Declarations //
@@ -84,7 +84,7 @@ public:
 	static SVector StringToVec3(std::string _string);
 	static SRotator StringToRotator(std::string _string);
 
-	static bool CheckMeshHit(STransform MeshTransform, const CMeshData& MeshData, SVector RayStart, SVector RayDirection, SVector& HitPos);
+	static bool CheckMeshHit(STransform MeshTransform, const CMesh& MeshData, SVector RayStart, SVector RayDirection, SVector& HitPos);
 	
 	static bool CheckFaceHit(SVector BottomLeftOffset, SVector TopRightOffset, SVector RayStart, SVector RayDirection, THardPointer<Entity> EntityCheck, SVector& HitPos);
 

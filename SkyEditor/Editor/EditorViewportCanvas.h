@@ -21,7 +21,7 @@ public:
 	THardPointer<Entity> GetSelectedEntity() const { return SelectedEntity; }
 	void SelectEntity(THardPointer<Entity> HitEntity, bool bFocusCamera = false);
 	bool DeleteSelected();
-	void CreateEntity(const std::string& MeshAsset = {});
+	void CreateEntity(TAssetObjectPointer<CMesh> Mesh = nullptr);
 
 protected:
 	bool OnMouseButtonPressed(int MouseButton, int Mods) override;

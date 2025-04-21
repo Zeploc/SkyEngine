@@ -348,7 +348,7 @@ THardPointer<IFramebuffer> CVulkanAPI::CreateFramebuffer(const SFramebufferSpeci
 	return CreatePointer<CVkFramebuffer>(Specification);
 }
 
-unsigned CVulkanAPI::CreateVertexBuffer(const CMeshData& MeshData)
+unsigned CVulkanAPI::CreateVertexBuffer(const CMesh& MeshData)
 {
 	//TODO: Implement
 	return -1;

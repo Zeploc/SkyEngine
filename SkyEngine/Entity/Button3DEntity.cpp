@@ -12,6 +12,7 @@
 #include "Render/Materials/Material.h"
 #include "Render/Meshes/MeshManager.h"
 #include "Render/Meshes/Basic/Cube.h"
+#include "Render/Meshes/Basic/DefaultMeshes.h"
 #include "Render/Shaders/UnlitShader.h"
 #include "Render/Textures/Texture.h"
 
@@ -25,7 +26,7 @@ Button3DEntity::Button3DEntity(STransform _Transform, float fWidth, float fHeigh
 	THardPointer<CMaterial_Unlit> UIMaterial = std::make_shared<CMaterial_Unlit>("UIMaterial");
 	UIMaterial->Params.DiffuseColour = _Colour;
 	GetMaterialManager()->AddMaterial(UIMaterial);
-	THardPointer<CMeshComponent> ButtonCubeMesh = std::make_shared<CMeshComponent>(shared_from_this(), MESH_CUBE, UIMaterial);
+	THardPointer<CMeshComponent> ButtonCubeMesh = std::make_shared<CMeshComponent>(shared_from_this(), DefaultMesh::GetCube(), UIMaterial);
 	AddComponent(ButtonCubeMesh);
 	btnColour = _Colour;
 	btnHighlightColour = _HightlightColour;
@@ -40,7 +41,7 @@ Button3DEntity::Button3DEntity(STransform _Transform, float fWidth, float fHeigh
 	UIMaterial->Params.DiffuseColour = _Colour;
 	UIMaterial->Params.DiffuseTexture = ButtonTexture;
 	GetMaterialManager()->AddMaterial(UIMaterial);
-	THardPointer<CMeshComponent> ButtonCubeMesh = std::make_shared<CMeshComponent>(shared_from_this(), MESH_CUBE, UIMaterial);
+	THardPointer<CMeshComponent> ButtonCubeMesh = std::make_shared<CMeshComponent>(shared_from_this(), DefaultMesh::GetCube(), UIMaterial);
 	AddComponent(ButtonCubeMesh);
 	btnColour = _Colour;
 	btnHighlightColour = _HightlightColour;

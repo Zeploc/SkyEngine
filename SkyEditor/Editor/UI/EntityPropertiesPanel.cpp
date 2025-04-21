@@ -53,53 +53,53 @@ void CEntityPropertiesPanel::OnRender()
 void CEntityPropertiesPanel::MeshDropdown(const std::shared_ptr<CMeshComponent>& MeshComponent)
 {
 	// TODO: Swap with asset field once mesh is an asset
-	static std::string CurrentMeshName = "No Mesh";
-	CurrentMeshName.reserve(50);
-	std::string CurrentMeshAsset = MeshComponent->GetMeshAsset();
-	if (!CurrentMeshAsset.empty())
-	{
-		CurrentMeshName = CurrentMeshAsset;
-	}
-	
-	ImGuiContext& g = *GImGui;	
-
-	if (!ImGui::BeginCombo("##MeshDropdown", CurrentMeshName.c_str(), ImGuiComboFlags_None))
-	{
-		return;
-	}
-
-	// Display items
-	// FIXME-OPT: Use clipper (but we need to disable it on the appearing frame to make sure our call to SetItemDefaultFocus() is processed)
-	bool bValueChanged = false;
-
-	const TArray<std::string> MeshNames = GetMeshManager()->GetAvailableMeshes();
-	for (int i = 0; i < MeshNames.size(); i++)
-	{
-		std::string MeshName = MeshNames[i];
-		ImGui::PushID(i);
-		const bool bItemSelected = (MeshName == CurrentMeshName);
-		// if (!items_getter(data, i, &item_text))
-		// 	item_text = "*Unknown item*";
-		if (ImGui::Selectable(MeshName.c_str(), bItemSelected))
-		{
-			if (GetMeshManager()->HasMesh(MeshName))
-			{
-				MeshComponent->SetMeshAsset(MeshName);
-				CurrentMeshName = MeshName;
-				bValueChanged = true;
-			}
-		}
-		if (bItemSelected)
-		{
-			ImGui::SetItemDefaultFocus();
-		}
-		ImGui::PopID();
-	}
-
-	ImGui::EndCombo();
-
-	if (bValueChanged)
-	{
-		ImGui::MarkItemEdited(g.LastItemData.ID);
-	}
+	// static std::string CurrentMeshName = "No Mesh";
+	// CurrentMeshName.reserve(50);
+	// std::string CurrentMeshAsset = MeshComponent->GetMeshAsset();
+	// if (!CurrentMeshAsset.empty())
+	// {
+	// 	CurrentMeshName = CurrentMeshAsset;
+	// }
+	//
+	// ImGuiContext& g = *GImGui;	
+	//
+	// if (!ImGui::BeginCombo("##MeshDropdown", CurrentMeshName.c_str(), ImGuiComboFlags_None))
+	// {
+	// 	return;
+	// }
+	//
+	// // Display items
+	// // FIXME-OPT: Use clipper (but we need to disable it on the appearing frame to make sure our call to SetItemDefaultFocus() is processed)
+	// bool bValueChanged = false;
+	//
+	// const TArray<std::string> MeshNames = GetMeshManager()->GetAvailableMeshes();
+	// for (int i = 0; i < MeshNames.size(); i++)
+	// {
+	// 	std::string MeshName = MeshNames[i];
+	// 	ImGui::PushID(i);
+	// 	const bool bItemSelected = (MeshName == CurrentMeshName);
+	// 	// if (!items_getter(data, i, &item_text))
+	// 	// 	item_text = "*Unknown item*";
+	// 	if (ImGui::Selectable(MeshName.c_str(), bItemSelected))
+	// 	{
+	// 		if (GetMeshManager()->HasMesh(MeshName))
+	// 		{
+	// 			// MeshComponent->SetMeshAsset(MeshName);
+	// 			CurrentMeshName = MeshName;
+	// 			bValueChanged = true;
+	// 		}
+	// 	}
+	// 	if (bItemSelected)
+	// 	{
+	// 		ImGui::SetItemDefaultFocus();
+	// 	}
+	// 	ImGui::PopID();
+	// }
+	//
+	// ImGui::EndCombo();
+	//
+	// if (bValueChanged)
+	// {
+	// 	ImGui::MarkItemEdited(g.LastItemData.ID);
+	// }
 }

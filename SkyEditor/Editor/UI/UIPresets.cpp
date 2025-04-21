@@ -163,7 +163,7 @@ bool CUIPresets::RenderAssetObjectField(TAssetObjectPointer<>& AssetObject, std:
 	
 	ImGui::BeginGroup();
 	
-	if (ImGui::Button("Image", ImVec2(60, 60)))
+	if (ImGui::Button(ClassFilter.c_str(), ImVec2(60, 60)))
 	{
 		// Open combo
 	}
@@ -172,7 +172,9 @@ bool CUIPresets::RenderAssetObjectField(TAssetObjectPointer<>& AssetObject, std:
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {10,10});
 		
 	bool bValueChanged = false;
-	if (ImGui::BeginCombo("##MaterialsDropdown", AssetName.c_str(), ImGuiComboFlags_None))
+	// TODO: Should use property name instead
+    const std::string DropdownName = "##" + ClassFilter + "Dropdown";
+	if (ImGui::BeginCombo(DropdownName.c_str(), AssetName.c_str(), ImGuiComboFlags_None))
 	{
 	    // Display items
 		// FIXME-OPT: Use clipper (but we need to disable it on the appearing frame to make sure our call to SetItemDefaultFocus() is processed)

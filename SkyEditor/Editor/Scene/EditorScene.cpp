@@ -22,6 +22,7 @@
 #include "Render/Materials/Material.h"
 #include "Render/Meshes/BoxComponent.h"
 #include "Render/Meshes/MeshManager.h"
+#include "Render/Meshes/Basic/DefaultMeshes.h"
 
 EditorScene::EditorScene(const std::string& InSceneName) : Scene(InSceneName)
 {
@@ -56,13 +57,13 @@ void EditorScene::AddSampleEntities()
 	TAssetObjectPointer<CMaterialInterface> BoxMaterial = GetMaterialManager()->FindMaterial("BoxMaterial");
 	
 	THardPointer<Entity> SphereRaycastTest(new Entity(STransform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {2, 2, 2}}, "Sphere"));
-	THardPointer<CMeshComponent> SphereRaycastMesh = std::make_shared<CMeshComponent>(SphereRaycastTest, MESH_SPHERE, CliffMaterial);
+	THardPointer<CMeshComponent> SphereRaycastMesh = std::make_shared<CMeshComponent>(SphereRaycastTest, DefaultMesh::GetSphere(), CliffMaterial);
 	SphereRaycastTest->AddComponent(SphereRaycastMesh);
 	AddEntity(SphereRaycastTest);
 			
 	THardPointer<Entity> FloorEntity(new Entity({{0, 0, 0}, {0, -90, 0}, {50}}, "Floor Plane"));
 	//glm::vec3 Points[4] = { {-10, 10, 1}, {10, 10, -1 }, { 10, -10, 0 }, { -10, -10, -3 } };
-	const THardPointer<CMeshComponent> FloorPlanMesh = std::make_shared<CMeshComponent>(FloorEntity, MESH_PLANE, PlaneMaterial);
+	const THardPointer<CMeshComponent> FloorPlanMesh = std::make_shared<CMeshComponent>(FloorEntity, DefaultMesh::GetPlane(), PlaneMaterial);
 	FloorEntity->AddComponent(FloorPlanMesh);
 	AddEntity(FloorEntity);
 	
@@ -94,19 +95,19 @@ void EditorScene::AddSampleEntities()
 	// AddEntity(ModelEntity, true);
 	
 	THardPointer<Entity> CubeEnty(new Entity(STransform{{10.0f, 4.0f, 4.0f}, {0, 0, 0}, {3, 3, 3}}, "Cube"));
-	THardPointer<CMeshComponent> CubyMesh(new CMeshComponent(CubeEnty, MESH_CUBE, ColouredBrickMaterial));
+	THardPointer<CMeshComponent> CubyMesh(new CMeshComponent(CubeEnty, DefaultMesh::GetCube(), ColouredBrickMaterial));
 	CubeEnty->AddComponent(CubyMesh);
 	AddEntity(CubeEnty);
 	
 	THardPointer<Entity> PyramidEntity(new Entity(STransform{{10.0f, 4.0f, 8.0f}, {0, 0, 0}, {3, 3, 3}}, "Pyramid"));
-	THardPointer<CMeshComponent> PyramidMesh(new CMeshComponent(PyramidEntity, MESH_PYRAMID, ColouredBrickMaterial));
+	THardPointer<CMeshComponent> PyramidMesh(new CMeshComponent(PyramidEntity, DefaultMesh::GetPyramid(), ColouredBrickMaterial));
 	PyramidEntity->AddComponent(PyramidMesh);
 	// PyramidMesh->SetLit(false, true);
 	// TODO: Identify and fix pyramid lighting
 	AddEntity(PyramidEntity);
 	
 	THardPointer<Entity> SphereEntity(new Entity(STransform{{10.0f, 4.0f, 12.0f}, {0, 0, 0}, {2, 2, 2}}, "Sphere 2"));
-	THardPointer<CMeshComponent> SphereMesh(new CMeshComponent(SphereEntity, MESH_SPHERE, ColouredBrickMaterial));
+	THardPointer<CMeshComponent> SphereMesh(new CMeshComponent(SphereEntity, DefaultMesh::GetSphere(), ColouredBrickMaterial));
 	SphereEntity->AddComponent(SphereMesh);
 	AddEntity(SphereEntity);
 	

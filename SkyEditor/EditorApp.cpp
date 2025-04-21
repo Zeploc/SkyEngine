@@ -41,6 +41,7 @@
 #include "Platform/Window/EngineWindow.h"
 #include "Render/SceneRenderer.h"
 #include "Render/Materials/Material.h"
+#include "Render/Meshes/Basic/DefaultMeshes.h"
 #include "Render/Shaders/PBRShader.h"
 #include "Render/Shaders/UndefinedShader.h"
 #include "Render/Shaders/UnlitShader.h"
@@ -284,11 +285,11 @@ void EditorApplication::MainMenuBar()
 				}
 				else if (ImGui::MenuItem("Cube"))
 				{
-					EditorViewportLayer->CreateEntity(MESH_CUBE);
+					EditorViewportLayer->CreateEntity(DefaultMesh::GetCube());
 				}
 				else if (ImGui::MenuItem("Sphere"))
 				{
-					EditorViewportLayer->CreateEntity(MESH_SPHERE);
+					EditorViewportLayer->CreateEntity(DefaultMesh::GetSphere());
 				}
 				ImGui::EndMenu();
 			}
@@ -307,19 +308,19 @@ void EditorApplication::MainMenuBar()
 				// }
 				if (ImGui::MenuItem("Cube Component"))
 				{
-					NewMeshComponent = std::make_shared<CMeshComponent>(SelectedEntity, MESH_CUBE, nullptr);
+					NewMeshComponent = std::make_shared<CMeshComponent>(SelectedEntity, DefaultMesh::GetCube(), nullptr);
 				}
 				if (ImGui::MenuItem("Plane Component"))
 				{
-					NewMeshComponent = std::make_shared<CMeshComponent>(SelectedEntity, MESH_PLANE, nullptr);
+					NewMeshComponent = std::make_shared<CMeshComponent>(SelectedEntity, DefaultMesh::GetPlane(), nullptr);
 				}
 				if (ImGui::MenuItem("Pyramid Component"))
 				{
-					NewMeshComponent = std::make_shared<CMeshComponent>(SelectedEntity, MESH_PYRAMID, nullptr);
+					NewMeshComponent = std::make_shared<CMeshComponent>(SelectedEntity, DefaultMesh::GetPyramid(), nullptr);
 				}
 				if (ImGui::MenuItem("Sphere Component"))
 				{
-					NewMeshComponent = std::make_shared<CMeshComponent>(SelectedEntity, MESH_SPHERE, nullptr);
+					NewMeshComponent = std::make_shared<CMeshComponent>(SelectedEntity, DefaultMesh::GetSphere(), nullptr);
 				}
 				if (NewMeshComponent)
 				{

@@ -57,7 +57,7 @@ std::string CGLAPI::GetGraphicsDisplayName()
 	return "OpenGL";
 }
 
-unsigned CGLAPI::CreateVertexBuffer(const CMeshData& MeshData)
+unsigned CGLAPI::CreateVertexBuffer(const CMesh& MeshData)
 {
 	// TODO: Move buffer/stride determination to shader
 	

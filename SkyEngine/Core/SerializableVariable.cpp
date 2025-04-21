@@ -133,6 +133,17 @@ void SSerializableVariable::SetDeserializedVariable(std::istream& is)
 				}
 				else
 				{
+					// Fallback for if asset exists but not in file (ie currently used for engine meshes)
+					for (TObjectPointer<CAsset> Asset : GetAssetManager()->GetAssets())
+					{
+						if (AssetPath == Asset->FilePath)
+						{
+							*AssetObject = GetAssetManager()->LoadAsset(AssetPath);
+						}
+					}
+				}
+				if (!AssetObject->IsValid())
+				{
 					LOG_ERROR("Failed to load asset by path {}", AssetPath);
 				}
 			}

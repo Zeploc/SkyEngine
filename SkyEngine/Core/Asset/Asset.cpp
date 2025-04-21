@@ -224,10 +224,9 @@ THardPointer<CAssetObject> CAsset::MakeObject() const
 	{
 		return std::make_shared<CTexture>();
 	}
-	if (ClassName == "MeshAsset")
+	if (ClassName == CMesh::GetStaticName())
 	{
-		// TODO: Mesh Asset
-		return std::make_shared<CMeshData>();
+		return std::make_shared<CMesh>();
 	}
 	return nullptr;
 }

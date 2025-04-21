@@ -9,26 +9,22 @@
 CBoxComponent::CBoxComponent(const THardPointer<Entity>& InOwner, const TAssetObjectPointer<CMaterialInterface>& InMaterial)
 	: CComponent(InOwner), BoxMaterial(InMaterial)
 {
-	BoxMeshName = "Box";
+	MeshAsset = DefaultMesh::GetBox();
 }
 
 void CBoxComponent::OnAttached()
 {
 	CComponent::OnAttached();
-	if (!GetMeshManager()->HasMesh(BoxMeshName))
-	{
-		GetMeshManager()->AddMesh(BoxMeshName, DefaultMesh::GetBoxData());
-	}
 }
 
 uint32_t CBoxComponent::GetVao() const
 {
-	return GetMeshManager()->GetMesh(BoxMeshName).GetVao();
+	return MeshAsset->GetVao();
 }
 
 int CBoxComponent::GetIndicesCount() const
 {
-	return GetMeshManager()->GetMesh(BoxMeshName).GetIndicesCount();
+	return MeshAsset->GetIndicesCount();
 }
 
 std::string CBoxComponent::GetComponentClassName()
@@ -43,7 +39,7 @@ std::string CBoxComponent::GetStaticName()
 
 bool CBoxComponent::ShouldRender() const
 {
-	return true;
+	return MeshAsset.IsValid();
 }
 
 bool CBoxComponent::IsVisible() const

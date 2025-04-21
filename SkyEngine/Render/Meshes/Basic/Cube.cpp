@@ -4,6 +4,7 @@
 #include "Cube.h"
 
 // Engine Includes //
+#include "DefaultMeshes.h"
 #include "../MeshManager.h"
 #include "Render/Shaders/ShaderManager.h"
 #include "Core/Application.h"
@@ -11,7 +12,7 @@
 #include "Render/Shaders/PBRShader.h"
 
 CCube::CCube(const THardPointer<Entity>& InOwner, const THardPointer<CMaterialInterface>& InMaterial)
-: CMeshComponent(InOwner, MESH_CUBE, InMaterial)
+: CMeshComponent(InOwner, DefaultMesh::GetCube(), InMaterial)
 {
 }
 
