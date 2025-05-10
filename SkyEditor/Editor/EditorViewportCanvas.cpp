@@ -135,9 +135,9 @@ void CEditorViewportCanvas::OnRender()
 				SVector HitPos;
 				if (GetWorldHit(HitEntity, HitPos))
 				{
-					THardPointer<Entity> CreatedEntity = CreateEntity(DroppedMesh);
-					SelectEntity(CreatedEntity);
+					THardPointer<Entity> CreatedEntity = CreateEntity(DroppedMesh, false);
 					CreatedEntity->Transform.Position = HitPos;
+					SelectEntity(CreatedEntity);
 				}				
 			}
 		}
@@ -371,8 +371,6 @@ bool CEditorViewportCanvas::OnMouseMoved(SVector2i MousePos)
 		NewCameraForwardVector.Rotate(Offset.Y, ViewportCamera->GetRightVector());
 		ViewportCamera->SetForwardVector(NewCameraForwardVector);
 		ApplicationWindow->SetCursorPosition(ScreenCenter);
-		CLogManager::Get()->DisplayMessage("Camera position: " + ViewportCamera->Transform.Position.ToString());
-		
 	}
 	
 	return false;
@@ -401,7 +399,7 @@ bool CEditorViewportCanvas::DeleteSelected()
 	return true;
 }
 
-THardPointer<Entity> CEditorViewportCanvas::CreateEntity(TAssetObjectPointer<CMesh> Mesh)
+THardPointer<Entity> CEditorViewportCanvas::CreateEntity(TAssetObjectPointer<CMesh> Mesh, bool bFocusCamera)
 {
 	std::string EntityName = "NewEntity" ;
 	if (Mesh)
@@ -410,7 +408,7 @@ THardPointer<Entity> CEditorViewportCanvas::CreateEntity(TAssetObjectPointer<CMe
 	}
 	THardPointer<Entity> NewEntity(new Entity(STransform(), EntityName));
 	SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
-	SelectEntity(NewEntity, true);
+	SelectEntity(NewEntity, bFocusCamera);
 	if (Mesh.IsValid())
 	{
 		THardPointer<CMeshComponent> NewMeshComponent = std::make_shared<CMeshComponent>(NewEntity, Mesh, nullptr);

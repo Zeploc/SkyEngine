@@ -22,7 +22,7 @@ public:
 	void SelectEntity(THardPointer<Entity> HitEntity, bool bFocusCamera = false);
 	bool GetWorldHit(THardPointer<Entity>& HitEntity, SVector& HitPos);
 	bool DeleteSelected();
-	THardPointer<Entity> CreateEntity(TAssetObjectPointer<CMesh> Mesh = nullptr);
+	THardPointer<Entity> CreateEntity(TAssetObjectPointer<CMesh> Mesh = nullptr, bool bFocusCamera = true);
 
 protected:
 	bool OnMouseButtonPressed(int MouseButton, int Mods) override;
