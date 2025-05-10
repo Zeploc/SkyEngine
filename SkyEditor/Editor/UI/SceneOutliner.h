@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Canvas/UICanvas.h"
-#include "Core/Object.h"
+#include "Core/Asset/AssetObject.h"
 
 class Scene;
 

@@ -14,7 +14,7 @@
 ModelObject::ModelObject(std::string path)
 {
 	// TODO: Convert to use same base program
-	this->program = ShaderManager::GetShader("ModelProgram")->GetShaderProgram();//Shader::Programs["BaseProgram"];//
+	// this->program = ShaderManager::GetShader("ModelProgram")->GetShaderProgram();//Shader::Programs["BaseProgram"];//
 	this->loadModel(path);
 }
 
@@ -78,6 +78,59 @@ ModelMesh ModelObject::processMesh(aiMesh* mesh, const aiScene* scene)
 	vector<GLuint> indices;
 	vector<MeshTexture> textures;
 
+	map<GLuint, vector<glm::vec3>> NormalSetsPerVertex;
+	vector<glm::vec3> generated_normals;
+
+	bool bGenerateNormals = mesh->mNormals == nullptr;
+
+	// Now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
+	for (GLuint i = 0; i < mesh->mNumFaces; i++)
+	{
+		std::vector<glm::vec3> index_vectors;
+		std::vector<GLuint> vertex_indexes;
+		aiFace face = mesh->mFaces[i];
+		// Retrieve all indices of the face and store them in the indices vector
+		for (GLuint j = 0; j < face.mNumIndices; j++)
+		{
+			GLuint vertex_index = face.mIndices[j];
+			indices.push_back(vertex_index);
+
+			if (bGenerateNormals)
+			{
+				vertex_indexes.push_back(vertex_index);
+				index_vectors.push_back(glm::vec3(mesh->mVertices[vertex_index].x, mesh->mVertices[vertex_index].y, mesh->mVertices[vertex_index].z));
+			}
+		}
+
+		if (bGenerateNormals)
+		{
+			glm::vec3 face_normal = glm::cross(index_vectors[1] - index_vectors[0], index_vectors[2] - index_vectors[1]);
+			for (GLuint Index_Vector : vertex_indexes)
+			{
+				if (!NormalSetsPerVertex.contains(Index_Vector))
+				{
+					vector<glm::vec3> newvec = vector<glm::vec3>();
+					NormalSetsPerVertex.insert(std::pair(Index_Vector, newvec));
+				}
+				NormalSetsPerVertex[Index_Vector].push_back(face_normal);
+			}
+		}		
+	}
+	if (bGenerateNormals)
+	{
+		generated_normals.resize(NormalSetsPerVertex.size());
+		for (auto NormalsSet : NormalSetsPerVertex)
+		{
+			glm::vec3 normal;
+			for (glm::vec3 Direction_Vector : NormalsSet.second)
+			{
+				normal += Direction_Vector;
+			}
+			normal /= NormalsSet.second.size();
+			generated_normals[NormalsSet.first] = normal;
+		}
+	}	
+	
 	// Walk through each of the mesh's vertices
 	for (GLuint i = 0; i < mesh->mNumVertices; i++)
 	{
@@ -89,9 +142,18 @@ ModelMesh ModelObject::processMesh(aiMesh* mesh, const aiScene* scene)
 		vector.z = mesh->mVertices[i].z;
 		vertex.Position = vector;
 		// Normals
-		vector.x = mesh->mNormals[i].x;
-		vector.y = mesh->mNormals[i].y;
-		vector.z = mesh->mNormals[i].z;
+		if (mesh->mNormals)
+		{
+			vector.x = mesh->mNormals[i].x;
+			vector.y = mesh->mNormals[i].y;
+			vector.z = mesh->mNormals[i].z;
+		}
+		else
+		{
+			vector.x = generated_normals[i].x;
+			vector.y = generated_normals[i].y;
+			vector.z = generated_normals[i].z;
+		}
 		vertex.Normal = vector;
 		// Texture Coordinates
 		if (mesh->mTextureCoords[0]) // Does the mesh contain texture coordinates?
@@ -108,16 +170,6 @@ ModelMesh ModelObject::processMesh(aiMesh* mesh, const aiScene* scene)
 			vertex.TexCoords = glm::vec2(0.0f, 0.0f);
 		}
 		vertices.push_back(vertex);
-	}
-	// Now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
-	for (GLuint i = 0; i < mesh->mNumFaces; i++)
-	{
-		aiFace face = mesh->mFaces[i];
-		// Retrieve all indices of the face and store them in the indices vector
-		for (GLuint j = 0; j < face.mNumIndices; j++)
-		{
-			indices.push_back(face.mIndices[j]);
-		}
 	}
 	// Process materials
 	if (mesh->mMaterialIndex >= 0)

@@ -6,7 +6,7 @@
 
 #include "Application.h"
 #include "Asset/Asset.h"
-#include "Core/Object.h"
+#include "Core/Asset/AssetObject.h"
 #include "System/LogManager.h"
 
 std::string SSerializableVariable::GetMetaTag(std::string Key)

@@ -160,6 +160,7 @@
     <ClInclude Include="Core\Asset\Asset.h" />
     <ClInclude Include="Core\Asset\AssetInterface.h" />
     <ClInclude Include="Core\Asset\AssetManager.h" />
+    <ClInclude Include="Core\Asset\AssetObject.h" />
     <ClInclude Include="Core\Core.h" />
     <ClInclude Include="Core\CoreTypes.h" />
     <ClInclude Include="Core\Delegates.h" />
@@ -277,6 +278,7 @@
     <ClCompile Include="Core\Asset\Asset.cpp" />
     <ClCompile Include="Core\Asset\AssetInterface.cpp" />
     <ClCompile Include="Core\Asset\AssetManager.cpp" />
+    <ClCompile Include="Core\Asset\AssetObject.cpp" />
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Core\EventListener.cpp" />
     <ClCompile Include="Core\Object.cpp" />

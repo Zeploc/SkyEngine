@@ -20,8 +20,9 @@ public:
 
 	THardPointer<Entity> GetSelectedEntity() const { return SelectedEntity; }
 	void SelectEntity(THardPointer<Entity> HitEntity, bool bFocusCamera = false);
+	bool GetWorldHit(THardPointer<Entity>& HitEntity, SVector& HitPos);
 	bool DeleteSelected();
-	void CreateEntity(TAssetObjectPointer<CMesh> Mesh = nullptr);
+	THardPointer<Entity> CreateEntity(TAssetObjectPointer<CMesh> Mesh = nullptr);
 
 protected:
 	bool OnMouseButtonPressed(int MouseButton, int Mods) override;

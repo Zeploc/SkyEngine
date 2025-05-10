@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "Asset/AssetInterface.h"
 #include "Core/Core.h"
 
 class ENGINE_API CObject : public std::enable_shared_from_this<CObject>
@@ -10,13 +9,6 @@ class ENGINE_API CObject : public std::enable_shared_from_this<CObject>
 public:
 };
 
-class ENGINE_API CAssetObject : public CObject, public IAssetObjectInterface
-{
-public:
-	
-	std::shared_ptr<CAssetObject> shared_from_this();
-	// TWeakPointer<CAssetObject> weak_from_this();
-};
 
 template<class T>
 struct TObjectPointer

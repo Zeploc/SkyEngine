@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Core/Core.h"
-#include "Core/Object.h"
+#include "Core/Asset/AssetObject.h"
 
 class CTexture;
 

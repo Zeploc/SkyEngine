@@ -124,6 +124,23 @@ void CEditorViewportCanvas::OnRender()
 			}
 			
 		}
+		else if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(std::format("ASSET:{}", CMesh::GetStaticName()).c_str()))
+		{
+			IM_ASSERT(payload->DataSize == sizeof(THardPointer<CAsset>));
+			TObjectPointer<CAsset> PayloadAsset = *(const THardPointer<CAsset>*)payload->Data;
+			TAssetObjectPointer<CMesh> DroppedMesh = PayloadAsset->Load<CMesh>();
+			if (DroppedMesh)
+			{
+				THardPointer<Entity> HitEntity;
+				SVector HitPos;
+				if (GetWorldHit(HitEntity, HitPos))
+				{
+					THardPointer<Entity> CreatedEntity = CreateEntity(DroppedMesh);
+					SelectEntity(CreatedEntity);
+					CreatedEntity->Transform.Position = HitPos;
+				}				
+			}
+		}
 		ImGui::EndDragDropTarget();
 	}
 	
@@ -354,6 +371,8 @@ bool CEditorViewportCanvas::OnMouseMoved(SVector2i MousePos)
 		NewCameraForwardVector.Rotate(Offset.Y, ViewportCamera->GetRightVector());
 		ViewportCamera->SetForwardVector(NewCameraForwardVector);
 		ApplicationWindow->SetCursorPosition(ScreenCenter);
+		CLogManager::Get()->DisplayMessage("Camera position: " + ViewportCamera->Transform.Position.ToString());
+		
 	}
 	
 	return false;
@@ -382,14 +401,14 @@ bool CEditorViewportCanvas::DeleteSelected()
 	return true;
 }
 
-void CEditorViewportCanvas::CreateEntity(TAssetObjectPointer<CMesh> Mesh)
+THardPointer<Entity> CEditorViewportCanvas::CreateEntity(TAssetObjectPointer<CMesh> Mesh)
 {
 	std::string EntityName = "NewEntity" ;
 	if (Mesh)
 	{
 		EntityName = Mesh->Asset->DisplayName;
 	}
-	const THardPointer<Entity> NewEntity(new Entity(STransform(), EntityName));
+	THardPointer<Entity> NewEntity(new Entity(STransform(), EntityName));
 	SceneManager::GetInstance()->GetCurrentScene()->AddEntity(NewEntity);
 	SelectEntity(NewEntity, true);
 	if (Mesh.IsValid())
@@ -397,6 +416,7 @@ void CEditorViewportCanvas::CreateEntity(TAssetObjectPointer<CMesh> Mesh)
 		THardPointer<CMeshComponent> NewMeshComponent = std::make_shared<CMeshComponent>(NewEntity, Mesh, nullptr);
 		NewEntity->AddComponent(NewMeshComponent);
 	}
+	return NewEntity;
 }
 
 bool CEditorViewportCanvas::OnKeyPressed(int KeyCode, int Mods, int RepeatCount)
@@ -564,7 +584,7 @@ void CEditorViewportCanvas::SelectEntity(THardPointer<Entity> HitEntity, bool bF
 	}
 }
 
-void CEditorViewportCanvas::UpdateSelectedEntity()
+bool CEditorViewportCanvas::GetWorldHit(THardPointer<Entity>& HitEntity, SVector& HitPos)
 {
 	TAssetObjectPointer<Scene> Scene = SceneManager::GetInstance()->GetCurrentScene();
 
@@ -572,7 +592,6 @@ void CEditorViewportCanvas::UpdateSelectedEntity()
 	SVector2i MousePos = ApplicationWindow->GetInput().MousePos;
 	SVector rayStart = ViewportCamera->Transform.Position;
 	SVector RayDirection = ScreenToWorldDirection(MousePos);
-	SVector HitPos;
 	std::vector<THardPointer<Entity>> HitEntities;
 	std::vector<SVector> HitPosition;
 	for (auto& Ent : Scene->Entities)
@@ -599,9 +618,19 @@ void CEditorViewportCanvas::UpdateSelectedEntity()
 				ClosestHitID = i;
 			}
 		}
-		THardPointer<Entity> HitEntity = HitEntities[ClosestHitID]; // Hit ent
+		HitEntity = HitEntities[ClosestHitID]; // Hit ent
 		HitPos = HitPosition[ClosestHitID];
+		return true;
+	}
+	return false;
+}
 
+void CEditorViewportCanvas::UpdateSelectedEntity()
+{
+	THardPointer<Entity> HitEntity;
+	SVector HitPos;
+	if (GetWorldHit(HitEntity, HitPos))	
+	{
 		SelectEntity(HitEntity);
 	}
 	else

@@ -4,7 +4,9 @@
 #include "Mesh.h"
 
 #include "Core/Application.h"
+#include "Core/SerializableVariable.h"
 #include "Core/Asset/Asset.h"
+#include "Model/ModelObject.h"
 #include "System/LogManager.h"
 
 void STriangle::TransformTriangle(STransform Transform)
@@ -35,11 +37,13 @@ bool STriangle::TestHit(SVector RayStart, SVector RayDirection, SVector& HitPos)
 
 CMesh::CMesh()
 {
+	SetSerializeVariable(MeshPath);
 }
 
 CMesh::CMesh(const TArray<float> &PositionData, const TArray<uint32_t> &IndexData, const TArray<float>& NormalData)
 	: Positions(PositionData), Indices(IndexData), Normals(NormalData)
 {
+	SetSerializeVariable(MeshPath);
 }
 
 void CMesh::InitData(const TArray<float>& PositionData, const TArray<uint32_t>& IndexData, const TArray<float>& NormalData)
@@ -51,6 +55,33 @@ void CMesh::InitData(const TArray<float>& PositionData, const TArray<uint32_t>& 
 
 void CMesh::OnLoaded()
 {
+	if (!MeshPath.empty())
+	{
+		ModelObject ModelTest(MeshPath);
+		ensure(ModelTest.meshes.size() > 0, "Invalid mesh");
+
+		std::vector<float> VertexPositions;
+		std::vector<float> Normals;
+		std::vector<float> UVs;
+		for (Vertex MeshVertex : ModelTest.meshes[0].vertices)
+		{
+			VertexPositions.push_back(MeshVertex.Position.x);
+			VertexPositions.push_back(MeshVertex.Position.y);
+			VertexPositions.push_back(MeshVertex.Position.z);
+			Normals.push_back(MeshVertex.Normal.x);
+			Normals.push_back(MeshVertex.Normal.y);
+			Normals.push_back(MeshVertex.Normal.z);
+			UVs.push_back(MeshVertex.TexCoords.x);
+			UVs.push_back(MeshVertex.TexCoords.y);
+		}
+	
+		InitData(VertexPositions, ModelTest.meshes[0].indices, Normals);
+		if (UVs.size() > 0)
+		{
+			SetUVs(UVs);
+		}
+	}
+	
 	SetupMeshData();	
 	CLogManager::Get()->DisplayMessage(std::format("Created Mesh {} with vao {}", Asset->DisplayName, Vao));
 }
@@ -141,16 +172,6 @@ TArray<STriangle> CMesh::GetTriangles() const
 		}
 	}
 	return Triangles;
-}
-
-void CMesh::Serialize(std::ostream& os)
-{
-	// TODO:
-}
-
-void CMesh::Deserialize(std::istream& is)
-{
-	// TODO:
 }
 
 std::string CMesh::GetAssetClassName()

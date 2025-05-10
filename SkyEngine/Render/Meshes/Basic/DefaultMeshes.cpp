@@ -4,7 +4,7 @@
 #include "Core/Application.h"
 #include "Core/Asset/Asset.h"
 
-TAssetObjectPointer<CMesh> GetOrCreateMeshAsset(std::string MeshName, const std::vector<float> VertexPositions, const std::vector<float> Normals, const std::vector<uint32_t> Indices, const std::vector<float> UVs = {})
+TAssetObjectPointer<CMesh> DefaultMesh::GetOrCreateMeshAsset(std::string MeshName, const std::vector<float> VertexPositions, const std::vector<float> Normals, const std::vector<uint32_t> Indices, const std::vector<float> UVs)
 {
 	if (!ensure(GetAssetManager(), "Mesh data was attempted before asset manager!"))
 	{
@@ -18,7 +18,6 @@ TAssetObjectPointer<CMesh> GetOrCreateMeshAsset(std::string MeshName, const std:
 	TObjectPointer<CAsset> Asset = GetAssetManager()->AddAsset(AssetPath, CMesh::GetStaticName());
 
 	// Basic object setup, shouldn't be done here since should be asset management process
-	Asset->ClassName = CMesh::GetStaticName();
 	const THardPointer<CAssetObject> CreatedObject = Asset->MakeObject();
 	ensure(CreatedObject != nullptr, "Failed to create class from name!");
 	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(CreatedObject.get());

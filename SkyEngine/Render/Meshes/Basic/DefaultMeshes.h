@@ -10,6 +10,8 @@
 
 namespace DefaultMesh
 {
+	ENGINE_API TAssetObjectPointer<CMesh> GetOrCreateMeshAsset(std::string MeshName, const std::vector<float> VertexPositions, const std::vector<float> Normals, const std::vector<uint32_t> Indices, const std::vector<float> UVs = {});
+	
 	ENGINE_API TAssetObjectPointer<CMesh> GetCube();
 	ENGINE_API TAssetObjectPointer<CMesh> GetPlane();
 	ENGINE_API TAssetObjectPointer<CMesh> GetSphere();

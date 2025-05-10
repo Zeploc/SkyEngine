@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Core/Core.h"
-#include "Core/Object.h"
+#include "Core/Asset/AssetObject.h"
 #include "Math/Transform.h"
 #include "Math/Vector4.h"
 #include "Math/Vector.h"
@@ -49,12 +49,12 @@ public:
 	TArray<uint32_t> GetIndices() const { return Indices; }
 
 	TArray<STriangle> GetTriangles() const;
-
-	void Serialize(std::ostream& os) override;
-	void Deserialize(std::istream& is) override;
+	
 	std::string GetAssetClassName() override;
 	static std::string GetStaticName(); 
 	void Open() override;
+	
+	std::string MeshPath;
 	
 #define POSITION_ELEMENTS_COUNT 3
 #define NORMAL_ELEMENTS_COUNT 3
@@ -67,6 +67,7 @@ protected:
 	void PushNormals(TArray<float>& OutVertices, int VertexIndex) const;
 
 protected:
+	
 	TArray<float> Positions;
 	TArray<uint32_t> Indices;
 	TArray<float> UVs;

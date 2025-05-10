@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-#include "Core/Object.h"
+#include "Core/Asset/AssetObject.h"
 #include "Core/StringUtils.h"
 #include "Platform/File/FileManager.h"
 #include "Platform/File/PathUtils.h"

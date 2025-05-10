@@ -22,7 +22,7 @@
 #include <map>
 #include <vector>
 
-#include "Core/Object.h"
+#include "Core/Asset/AssetObject.h"
 #include "Math/Matrix.h"
 #include "Math/Transform.h"
 #include "Render/Lighting.h"

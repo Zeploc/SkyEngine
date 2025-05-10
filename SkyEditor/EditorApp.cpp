@@ -42,6 +42,7 @@
 #include "Render/SceneRenderer.h"
 #include "Render/Materials/Material.h"
 #include "Render/Meshes/Basic/DefaultMeshes.h"
+#include "Render/Meshes/Model/ModelObject.h"
 #include "Render/Shaders/PBRShader.h"
 #include "Render/Shaders/UndefinedShader.h"
 #include "Render/Shaders/UnlitShader.h"

@@ -6,9 +6,11 @@
 #include "Core/Application.h"
 #include "Core/StringUtils.h"
 #include "Core/Asset/Asset.h"
+#include "Platform/File/FileManager.h"
 #include "Platform/File/PathUtils.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Render/Materials/Material.h"
+#include "Render/Meshes/Model/ModelMesh.h"
 #include "Render/Shaders/PBRShader.h"
 #include "Render/Shaders/UnlitShader.h"
 
@@ -77,6 +79,10 @@ void CContentBrowser::OnRender()
 			{
 				NewAssetClassName = Scene::GetStaticName();
 			}
+			if (ImGui::MenuItem("Mesh"))
+			{
+				NewAssetClassName = CMesh::GetStaticName();
+			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::MenuItem("Refresh"))
@@ -87,6 +93,7 @@ void CContentBrowser::OnRender()
 		ImGui::EndPopup();
 	}
 
+	std::string MeshFilePath;
 	TObjectPointer<CAsset> CreatedAsset;
 	if (ImGui::BeginPopup("NamePopup"))
 	{			
@@ -103,12 +110,23 @@ void CContentBrowser::OnRender()
 		ImGui::SameLine();
 		if (ImGui::Button("Create"))
 		{
+			bool bAdditionalStepComplete = true;
 			std::string Extension = ".sasset";
 			if (NewAssetClassName == Scene::GetStaticName())
 			{
 				Extension = ".slvl";
 			}
-			CreatedAsset = GetAssetManager()->AddAsset(Directory + std::string(AssetName) + Extension, NewAssetClassName);
+			else if (NewAssetClassName == CMesh::GetStaticName())
+			{
+				if (!CFileManager::OpenFile(MeshFilePath, "obj", GetApplication()->GetContentDirectory()))
+				{
+					bAdditionalStepComplete = false;
+				}
+			}
+			if (bAdditionalStepComplete)
+			{
+				CreatedAsset = GetAssetManager()->AddAsset(Directory + std::string(AssetName) + Extension, NewAssetClassName);
+			}
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::EndPopup();
@@ -117,6 +135,10 @@ void CContentBrowser::OnRender()
 	{
 		CreatedAsset->Metadata = MetaData;
 		THardPointer<CAssetObject> NewAsset = CreatedAsset->MakeObject();
+		if (!MeshFilePath.empty())
+		{
+			Cast<CMesh>(NewAsset)->MeshPath = MeshFilePath;
+		}
 		CreatedAsset->SetDefaultObject(NewAsset);
 		CreatedAsset->Load()->OnLoaded();
 		CreatedAsset->Save();

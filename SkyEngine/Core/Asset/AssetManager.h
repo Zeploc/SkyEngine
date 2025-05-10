@@ -2,7 +2,7 @@
 
 #pragma once
 #include "Core/Core.h"
-#include "Core/Object.h"
+#include "Core/Asset/AssetObject.h"
 
 // TODO: Warnings with exporting class containing STDL
 #pragma warning (disable : 4251)

@@ -4,7 +4,7 @@
 
 #include "InternalMaterial.h"
 #include "Core/Application.h"
-#include "Core/Object.h"
+#include "Core/Asset/AssetObject.h"
 #include "Core/Asset/AssetInterface.h"
 #include "Render/Renderer.h"
 #include "Render/Lighting.h"
