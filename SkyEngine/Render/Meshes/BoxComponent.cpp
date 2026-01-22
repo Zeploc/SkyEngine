@@ -6,7 +6,7 @@
 #include "Entity/Entity.h"
 #include "System/LogManager.h"
 
-CBoxComponent::CBoxComponent(const THardPointer<Entity>& InOwner, const TAssetObjectPointer<CMaterialInterface>& InMaterial)
+CBoxComponent::CBoxComponent(const TSharedPointer<Entity>& InOwner, const TAssetObjectPointer<CMaterialInterface>& InMaterial)
 	: CComponent(InOwner), BoxMaterial(InMaterial)
 {
 	MeshAsset = DefaultMesh::GetBox();

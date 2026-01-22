@@ -54,7 +54,7 @@ namespace SkyEngine
 		TAssetObjectPointer<Scene> PreviousScene = SceneManager::GetInstance()->GetCurrentScene();
 		SceneManager::GetInstance()->AddScene(NewScene);
 		SceneManager::GetInstance()->SwitchScene(NewScene->SceneName, true);
-		const THardPointer<Camera> FoundCamera = SceneUtils::FindEntityOfClass<Camera>();
+		const TSharedPointer<Camera> FoundCamera = SceneUtils::FindEntityOfClass<Camera>();
 		ViewportCanvas->GetSceneRenderer()->SetSceneTarget(NewScene);
 		if (FoundCamera)
 		{
@@ -237,7 +237,7 @@ SkyEngine::Application* GetApplication()
 	return SkyEngine::Application::Get();
 }
 
-THardPointer<IGraphicsAPI> GetGraphicsAPI()
+TSharedPointer<IGraphicsAPI> GetGraphicsAPI()
 {
 	return SkyEngine::Application::Get()->GraphicsApi;
 }
@@ -247,7 +247,7 @@ IPlatformInterface* GetPlatformInterface()
 	return SkyEngine::Application::Get()->PlatformInterface;
 }
 
-THardPointer<CRenderer> GetRenderer()
+TSharedPointer<CRenderer> GetRenderer()
 {
 	return SkyEngine::Application::Get()->Renderer;
 }

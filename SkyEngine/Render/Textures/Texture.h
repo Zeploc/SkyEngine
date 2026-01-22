@@ -39,12 +39,12 @@ public:
 	
 	void OnLoaded() override;
 
-	friend std::ostream& operator<<(std::ostream& os, const THardPointer<CTexture>& InTexture)
+	friend std::ostream& operator<<(std::ostream& os, const TSharedPointer<CTexture>& InTexture)
 	{
 		os << InTexture->Path;
 		return os;
 	}
-	friend std::istream& operator>>(std::istream& is, THardPointer<CTexture>& OutTexture)
+	friend std::istream& operator>>(std::istream& is, TSharedPointer<CTexture>& OutTexture)
 	{
 		is >> OutTexture->Path;
 		return is;

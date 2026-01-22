@@ -84,13 +84,13 @@ bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 		
 	}
 	
-	// THardPointer<CTexture> BrickTexture = TextureManager.AddNewTexture("Resources\\Images\\StoneWall_2x2.jpg");
+	// TSharedPointer<CTexture> BrickTexture = TextureManager.AddNewTexture("Resources\\Images\\StoneWall_2x2.jpg");
 	// BrickTexture->Asset->Save();
-	// THardPointer<CTexture> BrickTexture = TextureManager.AddNewTexture("Resources\\Images\\Asphalt8_1x1.jpg");
+	// TSharedPointer<CTexture> BrickTexture = TextureManager.AddNewTexture("Resources\\Images\\Asphalt8_1x1.jpg");
 	// BrickTexture->Asset->Save();
-	// THardPointer<CTexture> BrickTexture = TextureManager.AddNewTexture("Resources\\Images\\RockyDirt2C_4x4.jpg");
+	// TSharedPointer<CTexture> BrickTexture = TextureManager.AddNewTexture("Resources\\Images\\RockyDirt2C_4x4.jpg");
 	// BrickTexture->Asset->Save();
-	// THardPointer<CTexture> BrickTexture = TextureManager.AddNewTexture("Resources\\Images\\WaterPlain_seamless_S.jpg");
+	// TSharedPointer<CTexture> BrickTexture = TextureManager.AddNewTexture("Resources\\Images\\WaterPlain_seamless_S.jpg");
 	// BrickTexture->Asset->Save();
 	//SetupPlaceholderMaterials();
 	
@@ -102,7 +102,7 @@ bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 	// Failed, open empty scene
 	else
 	{
-		const THardPointer<Scene> NewScene = CreatePointer<Scene>("Untitled");		
+		const TSharedPointer<Scene> NewScene = CreatePointer<Scene>("Untitled");		
 		SceneManager::GetInstance()->AddScene(NewScene);
 		ViewportCanvas->GetSceneRenderer()->SetSceneTarget(NewScene);
 		ViewportCanvas->SetupCamera();
@@ -115,13 +115,13 @@ bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 	WindowName = "Sky Editor: " + CProjectSettingsConfig::Get()->ProjectName;
 	ApplicationWindow->SetWindowTitle(WindowName + " - Untitled");
 
-	THardPointer<CLayerInfoWidget> LayerInfoWidget = std::make_shared<CLayerInfoWidget>();
+	TSharedPointer<CLayerInfoWidget> LayerInfoWidget = std::make_shared<CLayerInfoWidget>();
 	EditorViewportLayer->AddViewportWidget(LayerInfoWidget);
-	// THardPointer<CEntityPropertiesPanel> EntityPropertiesPanel = std::make_shared<CEntityPropertiesPanel>(ApplicationWindow);
+	// TSharedPointer<CEntityPropertiesPanel> EntityPropertiesPanel = std::make_shared<CEntityPropertiesPanel>(ApplicationWindow);
 	CEntityPropertiesPanel* EntityPropertiesPanel = new CEntityPropertiesPanel(ApplicationWindow);
 	ApplicationWindow->PushLayer(EntityPropertiesPanel);
 	// UILayer->AddWidget(EntityPropertiesPanel);
-	// THardPointer<CSceneOutliner> SceneOutliner = std::make_shared<CSceneOutliner>(ApplicationWindow);
+	// TSharedPointer<CSceneOutliner> SceneOutliner = std::make_shared<CSceneOutliner>(ApplicationWindow);
 	CSceneOutliner* SceneOutliner = new CSceneOutliner(ApplicationWindow);
 	ApplicationWindow->PushLayer(SceneOutliner);
 	// ConsoleLog = std::make_shared<CConsoleLog>();
@@ -156,17 +156,17 @@ void EditorApplication::SetupPlaceholderMaterials()
 	// }
 	// else
 	BrickMaterial = std::make_shared<CMaterial_PBR>("BrickMaterial");
-	// THardPointer<TMaterial<CUndefinedShader>> BrickMaterial = std::make_shared<TMaterial<CUndefinedShader>>("BrickMaterial", ShaderManager::GetUndefinedShader("BaseProgram"));
+	// TSharedPointer<TMaterial<CUndefinedShader>> BrickMaterial = std::make_shared<TMaterial<CUndefinedShader>>("BrickMaterial", ShaderManager::GetUndefinedShader("BaseProgram"));
 	BrickMaterial->Params.DiffuseTexture = BrickTexture;
 	GetMaterialManager()->AddMaterial(BrickMaterial);
 
 	// Would be nice to be able to copy an existing material as a template
-	THardPointer<CMaterial_PBR> ColouredBrickMaterial = std::make_shared<CMaterial_PBR>("ColouredBrickMaterial");
+	TSharedPointer<CMaterial_PBR> ColouredBrickMaterial = std::make_shared<CMaterial_PBR>("ColouredBrickMaterial");
 	ColouredBrickMaterial->Params.DiffuseTexture = BrickTexture;
 	ColouredBrickMaterial->Params.DiffuseColour = {0.5f, 0.3f, 0.3f, 1.0f};
 	GetMaterialManager()->AddMaterial(ColouredBrickMaterial);
 	
-	THardPointer<CMaterial_PBR> ColouredBrickPlaneMaterial = std::make_shared<CMaterial_PBR>("ColouredBrickPlaneMaterial");
+	TSharedPointer<CMaterial_PBR> ColouredBrickPlaneMaterial = std::make_shared<CMaterial_PBR>("ColouredBrickPlaneMaterial");
 	ColouredBrickPlaneMaterial->Params.DiffuseTexture = BrickTexture;
 	ColouredBrickPlaneMaterial->Params.DiffuseColour = {0.5f, 0.3f, 0.3f, 1.0f};
 	ColouredBrickPlaneMaterial->bTwoSided = true;
@@ -203,8 +203,8 @@ void EditorApplication::SetupConfigs()
 	Application::SetupConfigs();
 	
 	CConfig::RegisterConfig<CEditorSettingsConfig>();
-	const THardPointer<CProjectSettingsConfig> ProjectSettings = CProjectSettingsConfig::Get();
-	const THardPointer<CEditorSettingsConfig> EditorSettings = CEditorSettingsConfig::Get();
+	const TSharedPointer<CProjectSettingsConfig> ProjectSettings = CProjectSettingsConfig::Get();
+	const TSharedPointer<CEditorSettingsConfig> EditorSettings = CEditorSettingsConfig::Get();
 	LogManager->DisplayMessage("Resolution: " + ProjectSettings->DefaultResolution.ToString()); 
 	LogManager->DisplayMessage("Graphics Mode: " + std::to_string(ProjectSettings->GraphicsMode));
 	MainWindowSize = TVector2<int>(EditorSettings->Resolution);
@@ -299,10 +299,10 @@ void EditorApplication::MainMenuBar()
 				EditorViewportLayer->DeleteSelected();
 			}
 			ImGui::Separator();
-			THardPointer<Entity> SelectedEntity = EditorViewportLayer->GetSelectedEntity();
+			TSharedPointer<Entity> SelectedEntity = EditorViewportLayer->GetSelectedEntity();
 			if (ImGui::BeginMenu("Add New Component", SelectedEntity != nullptr))
 			{
-				THardPointer<CMeshComponent> NewMeshComponent = nullptr;
+				TSharedPointer<CMeshComponent> NewMeshComponent = nullptr;
 				// if (ImGui::MenuItem("Mesh Component"))
 				// {
 				// 	NewMeshComponent = std::make_shared<CMeshComponent>(SelectedEntity, 50.0f, 50.0f, 50.0f, nullptr);

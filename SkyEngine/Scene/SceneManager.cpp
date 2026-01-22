@@ -14,7 +14,7 @@
 // Local Includes //
 
 // Static Variables //
-THardPointer<SceneManager> SceneManager::m_pSceneManager;
+TSharedPointer<SceneManager> SceneManager::m_pSceneManager;
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -189,11 +189,11 @@ TAssetObjectPointer<Scene> SceneManager::GetCurrentScene()
 #--Parameters--#:	NA
 #--Return--#: 		Returns static pointer to self
 ************************************************************/
-THardPointer<SceneManager> SceneManager::GetInstance()
+TSharedPointer<SceneManager> SceneManager::GetInstance()
 {
 	if (!m_pSceneManager) // null or doesn't exist
 	{
-		m_pSceneManager = THardPointer<SceneManager>(new SceneManager());
+		m_pSceneManager = TSharedPointer<SceneManager>(new SceneManager());
 	}
 	return m_pSceneManager;
 }

@@ -26,5 +26,5 @@ public:
 
 	virtual void Open() = 0;
 	
-	THardPointer<CAsset> Asset;
+	TSharedPointer<CAsset> Asset;
 };

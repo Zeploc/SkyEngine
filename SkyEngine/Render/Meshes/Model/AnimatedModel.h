@@ -29,7 +29,7 @@
 class AnimatedModel : public CMeshComponent
 {
 public:
-	AnimatedModel(const THardPointer<Entity>& InOwner, std::string modelFilename, std::string texFilename);
+	AnimatedModel(const TSharedPointer<Entity>& InOwner, std::string modelFilename, std::string texFilename);
 
 	~AnimatedModel();
 

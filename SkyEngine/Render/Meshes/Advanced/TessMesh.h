@@ -8,7 +8,7 @@
 class TessMesh : public CMeshComponent
 {
 public:
-	TessMesh(const THardPointer<Entity>& InOwner,float fWidth, float fHeight, glm::vec4 _Colour);
+	TessMesh(const TSharedPointer<Entity>& InOwner,float fWidth, float fHeight, glm::vec4 _Colour);
 
 	~TessMesh();
 

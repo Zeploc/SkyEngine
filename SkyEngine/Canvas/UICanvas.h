@@ -18,10 +18,10 @@ public:
 	void OnDetach() override;
 	void OnUpdate() override;
 	void OnRender() override;
-	void AddWidget(THardPointer<CUIWidget> InWidget);
+	void AddWidget(TSharedPointer<CUIWidget> InWidget);
 
 protected:
 	// TODO: Override events based on widgets if blocking/handling
 
-	std::vector<THardPointer<CUIWidget>> Widgets;
+	std::vector<TSharedPointer<CUIWidget>> Widgets;
 };

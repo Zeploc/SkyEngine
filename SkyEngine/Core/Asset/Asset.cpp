@@ -74,7 +74,7 @@ TAssetObjectPointer<CAssetObject> CAsset::Load()
 	std::getline(FileStream, AssetData, ']');
 	ApplyAssetData(AssetData);
 
-	const THardPointer<CAssetObject> CreatedObject = MakeObject();
+	const TSharedPointer<CAssetObject> CreatedObject = MakeObject();
 	ensure(CreatedObject != nullptr, "Failed to create class from name!");
 	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(CreatedObject.get());
 	FileStream >> AssetInterface;
@@ -100,7 +100,7 @@ void CAsset::Unloaded()
 	{
 		return;
 	}
-	THardPointer<CAssetObject> AssetObject = Object.GetWeak().lock();	
+	TSharedPointer<CAssetObject> AssetObject = Object.GetWeak().lock();	
 	IAssetObjectInterface* AssetInterface = GetInterface<IAssetObjectInterface>(AssetObject);
 	AssetInterface->OnUnloaded();
 	AssetInterface->Asset = nullptr;
@@ -126,7 +126,7 @@ TAssetObjectPointer<CAssetObject> CAsset::Reload()
 	}
 	
 	// Required to stop it being cleaned up
-	THardPointer<CAsset> Cached = shared_from_this();
+	TSharedPointer<CAsset> Cached = shared_from_this();
 	TAssetObjectPointer<CAssetObject> OriginalObject = Object;
 	Unload();
 	// Store original object to redirect
@@ -151,7 +151,7 @@ bool CAsset::Save()
 	{
 		return false;
 	}
-	THardPointer<CAssetObject> AssetObject = Object.GetWeak().lock();	
+	TSharedPointer<CAssetObject> AssetObject = Object.GetWeak().lock();	
 	IAssetObjectInterface* AssetInterface = GetInterface<IAssetObjectInterface>(AssetObject);
 	// Update meta data
 	Metadata = AssetInterface->GetMetaData();
@@ -186,7 +186,7 @@ void CAsset::Open()
 {
 	// Confirm loaded first
 	Load();
-	THardPointer<CAssetObject> AssetObject = Object.GetWeak().lock();	
+	TSharedPointer<CAssetObject> AssetObject = Object.GetWeak().lock();	
 	IAssetObjectInterface* AssetInterface = GetInterface<IAssetObjectInterface>(AssetObject);
 	if (AssetInterface)
 	{
@@ -205,7 +205,7 @@ std::string CAsset::GetAbsoluteFilePath() const
 	return PathUtils::CombinePath(GetApplication()->GetContentDirectory(), FilePath);
 }
 
-THardPointer<CAssetObject> CAsset::MakeObject() const
+TSharedPointer<CAssetObject> CAsset::MakeObject() const
 {
 	if (ClassName == CMaterialInterface::GetStaticName())
 	{

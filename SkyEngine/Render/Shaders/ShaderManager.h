@@ -32,42 +32,42 @@ public:
 
 	static void AddComputeProgram(std::string ShaderName, std::string ComputePath);
 
-	static void ShaderCreated(const THardPointer<CShader>NewShader);
-	static THardPointer<CShader> GetShader(std::string ShaderName);
-	static THardPointer<CUndefinedShader> GetUndefinedShader(std::string ShaderName);
+	static void ShaderCreated(const TSharedPointer<CShader>NewShader);
+	static TSharedPointer<CShader> GetShader(std::string ShaderName);
+	static TSharedPointer<CUndefinedShader> GetUndefinedShader(std::string ShaderName);
 	template<class T>
-	static THardPointer<T> GetShader();	
+	static TSharedPointer<T> GetShader();	
 
-	static std::map<std::string, THardPointer<ModelObject>> Models;
+	static std::map<std::string, TSharedPointer<ModelObject>> Models;
 
 	static Text::cFont AddFont(std::string fontPath, int iPSize);
 	
 	// TODO: Needed for template as static shaders can't be exported :( 
-	static std::map<std::string, THardPointer<CShader>> GetShaders();
+	static std::map<std::string, TSharedPointer<CShader>> GetShaders();
 	
 protected:
 	template<class T>
 	static void AddShader();
 	
-	static std::map<std::string, THardPointer<CShader>> Shaders;
+	static std::map<std::string, TSharedPointer<CShader>> Shaders;
 };
 
 template <class T>
 void ShaderManager::AddShader()
 {
-	const THardPointer<CShader> NewShader = std::make_shared<T>();
+	const TSharedPointer<CShader> NewShader = std::make_shared<T>();
 	ShaderCreated(NewShader);
 }
 
 template <class T>
-THardPointer<T> ShaderManager::GetShader()
+TSharedPointer<T> ShaderManager::GetShader()
 {
-	const std::map<std::string, THardPointer<CShader>> CurrentShaders = GetShaders();
+	const std::map<std::string, TSharedPointer<CShader>> CurrentShaders = GetShaders();
 	// TODO: improve retrieval based on stored method
 	for (auto Element : CurrentShaders)
 	{
-		THardPointer<CShader> Shader = Element.second;
-		if (THardPointer<T> CheckedShader = Cast<T>(Shader))
+		TSharedPointer<CShader> Shader = Element.second;
+		if (TSharedPointer<T> CheckedShader = Cast<T>(Shader))
 		{
 			return CheckedShader;
 		}				

@@ -11,7 +11,7 @@ CProjectSettingsConfig::CProjectSettingsConfig()
 	DefineConfigVariable(DefaultResolution);
 }
 
-THardPointer<CProjectSettingsConfig> CProjectSettingsConfig::Get()
+TSharedPointer<CProjectSettingsConfig> CProjectSettingsConfig::Get()
 {
 	return GetConfig<CProjectSettingsConfig>();
 }

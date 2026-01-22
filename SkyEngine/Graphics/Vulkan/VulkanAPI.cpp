@@ -343,7 +343,7 @@ bool CVulkanAPI::CreateComputeProgram(uint32_t& ProgramID, const char* ComputeSh
 	return false;
 }
 
-THardPointer<IFramebuffer> CVulkanAPI::CreateFramebuffer(const SFramebufferSpecification& Specification)
+TSharedPointer<IFramebuffer> CVulkanAPI::CreateFramebuffer(const SFramebufferSpecification& Specification)
 {
 	return CreatePointer<CVkFramebuffer>(Specification);
 }
@@ -492,7 +492,7 @@ void CVulkanAPI::SetWireframeMode(bool bInWireframeEnabled)
 	//TODO: Implement
 }
 
-void CVulkanAPI::ApplyMaterialFlags(THardPointer<CMaterialInterface> InMaterial)
+void CVulkanAPI::ApplyMaterialFlags(TSharedPointer<CMaterialInterface> InMaterial)
 {
 	//TODO: Implement
 }

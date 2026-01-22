@@ -26,7 +26,7 @@ CRenderer::CRenderer()
 	{
 		// Made static to not go out of scope (will last the lifetime of the application)
 		// TODO: Instead store this in a collection of materials/memory management
-		const THardPointer<CMaterial_PBR> DefaultPbrMaterial = std::make_shared<CMaterial_PBR>("DefaultMaterial");
+		const TSharedPointer<CMaterial_PBR> DefaultPbrMaterial = std::make_shared<CMaterial_PBR>("DefaultMaterial");
 		DefaultPbrMaterial->Params.DiffuseColour = {0.5f, 0.5f, 0.5f, 1.0f};
 		DefaultPbrMaterial->bTwoSided = true;
 		DefaultMaterialAsset = GetAssetManager()->AddAsset("Materials/DefaultMaterial.sasset", DefaultPbrMaterial->GetAssetClassName());
@@ -36,11 +36,11 @@ CRenderer::CRenderer()
 	GetMaterialManager()->AddMaterial(DefaultMaterial);
 }
 
-void CRenderer::InsertEntityMeshToRenderList(std::map<TAssetObjectPointer<CMaterialInterface>, TArray<ISceneVisual*>>& MeshesByMaterial, const THardPointer<Entity>& EntityToRender)
+void CRenderer::InsertEntityMeshToRenderList(std::map<TAssetObjectPointer<CMaterialInterface>, TArray<ISceneVisual*>>& MeshesByMaterial, const TSharedPointer<Entity>& EntityToRender)
 {
 	std::map<TWeakPointer<CMaterialInterface>, TArray<ISceneVisual*>> Test;
 	
-	for (const THardPointer<CComponent>& Component : EntityToRender->GetComponents())
+	for (const TSharedPointer<CComponent>& Component : EntityToRender->GetComponents())
 	{
 		ISceneVisual* SceneVisual = GetInterface<ISceneVisual>(Component);
 		if (SceneVisual && SceneVisual->GetMaterial())
@@ -60,7 +60,7 @@ void CRenderer::InsertEntityMeshToRenderList(std::map<TAssetObjectPointer<CMater
 
 void CRenderer::RenderScenes()
 {
-	for (THardPointer<CSceneRenderer> SceneRenderer : SceneRenderers)
+	for (TSharedPointer<CSceneRenderer> SceneRenderer : SceneRenderers)
 	{
 		CurrentView = SceneRenderer->GetView();
 		CurrentProjection = SceneRenderer->GetProjection();
@@ -68,19 +68,19 @@ void CRenderer::RenderScenes()
 	}
 }
 
-void CRenderer::Render(std::vector<THardPointer<Entity>> Entities)
+void CRenderer::Render(std::vector<TSharedPointer<Entity>> Entities)
 {
 	// TODO: Later store in/update list as new meshes added
 	std::map<TAssetObjectPointer<CMaterialInterface>, TArray<ISceneVisual*>> MeshesByMaterial;
 	
-	for (const THardPointer<Entity>& EntityToRender : Entities)
+	for (const TSharedPointer<Entity>& EntityToRender : Entities)
 	{
 		if (EntityToRender && EntityToRender->CanRender())
 		{
 			InsertEntityMeshToRenderList(MeshesByMaterial, EntityToRender);
 		}
-		std::vector<THardPointer<Entity>> AdditionalEntitiesToRender = EntityToRender->GetAdditionalEntitiesToRender();
-		for (const THardPointer<Entity>& AdditionalEntity : AdditionalEntitiesToRender)
+		std::vector<TSharedPointer<Entity>> AdditionalEntitiesToRender = EntityToRender->GetAdditionalEntitiesToRender();
+		for (const TSharedPointer<Entity>& AdditionalEntity : AdditionalEntitiesToRender)
 		{
 			if (AdditionalEntity && AdditionalEntity->CanRender())
 			{
@@ -95,7 +95,7 @@ void CRenderer::Render(std::vector<THardPointer<Entity>> Entities)
 		const TAssetObjectPointer<CMaterialInterface> Material = MaterialMeshSet.first;
 
 		// Confirm/bind shader
-		THardPointer<CShader> Shader = Material->GetBaseShader();
+		TSharedPointer<CShader> Shader = Material->GetBaseShader();
 		if (ActiveShader != Shader)
 		{
 			ActiveShader = Shader;
@@ -138,7 +138,7 @@ void CRenderer::Render(std::vector<THardPointer<Entity>> Entities)
 	// 	}
 	// }
 	
-	// for (const THardPointer<UIElement>& UIElement : UIElements)
+	// for (const TSharedPointer<UIElement>& UIElement : UIElements)
 	// {
 	// 	RenderUIElement(UIElement);
 	// }
@@ -179,9 +179,9 @@ void CRenderer::RenderImGui()
 // 	}
 // }
 
-THardPointer<CSceneRenderer> CRenderer::AddSceneRenderer(TAssetObjectPointer<Scene> InTargetScene, SVector2i InSize)
+TSharedPointer<CSceneRenderer> CRenderer::AddSceneRenderer(TAssetObjectPointer<Scene> InTargetScene, SVector2i InSize)
 {
-	THardPointer<CSceneRenderer> SceneRenderer = CreatePointer<CSceneRenderer>();
+	TSharedPointer<CSceneRenderer> SceneRenderer = CreatePointer<CSceneRenderer>();
 	SceneRenderers.push_back(SceneRenderer);
 	SceneRenderer->Init(InTargetScene, InSize);
 	return SceneRenderer;

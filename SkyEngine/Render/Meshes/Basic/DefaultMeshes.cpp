@@ -18,7 +18,7 @@ TAssetObjectPointer<CMesh> DefaultMesh::GetOrCreateMeshAsset(std::string MeshNam
 	TObjectPointer<CAsset> Asset = GetAssetManager()->AddAsset(AssetPath, CMesh::GetStaticName());
 
 	// Basic object setup, shouldn't be done here since should be asset management process
-	const THardPointer<CAssetObject> CreatedObject = Asset->MakeObject();
+	const TSharedPointer<CAssetObject> CreatedObject = Asset->MakeObject();
 	ensure(CreatedObject != nullptr, "Failed to create class from name!");
 	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(CreatedObject.get());
 

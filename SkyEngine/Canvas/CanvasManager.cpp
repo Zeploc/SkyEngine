@@ -26,14 +26,14 @@ CCanvasManager::~CCanvasManager()
 	Canvases.clear();
 }
 
-void CCanvasManager::SetupCanvasManager(THardPointer<CEngineWindow> InOwningWindow)
+void CCanvasManager::SetupCanvasManager(TSharedPointer<CEngineWindow> InOwningWindow)
 {
 	OwningWindow = InOwningWindow;
 	
 	GuiContext = ImGui::CreateContext();
 	ImGui::StyleColorsDark();
 	
-	// THardPointer<CGLFWWindow> GraphicsWindow = std::static_pointer_cast<CGLFWWindow>(GetApplication()->GetApplicationWindow());
+	// TSharedPointer<CGLFWWindow> GraphicsWindow = std::static_pointer_cast<CGLFWWindow>(GetApplication()->GetApplicationWindow());
 	// ImGui_ImplGlfw_InitForOpenGL(GraphicsWindow->GetGlWindow(), true);
 	
 	ImGuiIO& Io = ImGui::GetIO();

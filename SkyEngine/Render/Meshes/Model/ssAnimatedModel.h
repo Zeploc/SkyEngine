@@ -49,7 +49,7 @@ public:
 
 	bool loadMesh(std::string fileName);
 
-	void render(THardPointer<Terrain> terrain);
+	void render(TSharedPointer<Terrain> terrain);
 
 	GLuint numBones()
 	{
@@ -153,7 +153,7 @@ private:
 
 	void ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const Matrix4& ParentTransform);
 
-	void setShaderEffectVariables(THardPointer<Terrain> terrain);
+	void setShaderEffectVariables(TSharedPointer<Terrain> terrain);
 
 	//rendering
 

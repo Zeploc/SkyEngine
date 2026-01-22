@@ -13,16 +13,16 @@ public:
 	void OnUpdate() override;
 	void OnRender() override;
 	
-	void AddViewportWidget(THardPointer<CUIWidget> InWidget);
+	void AddViewportWidget(TSharedPointer<CUIWidget> InWidget);
 	SVector2i GetViewportSize() override;
 	SVector2i GetViewportPosition() override;
 	void StartGizmoViewDrag();
 
-	THardPointer<Entity> GetSelectedEntity() const { return SelectedEntity; }
-	void SelectEntity(THardPointer<Entity> HitEntity, bool bFocusCamera = false);
-	bool GetWorldHit(THardPointer<Entity>& HitEntity, SVector& HitPos);
+	TSharedPointer<Entity> GetSelectedEntity() const { return SelectedEntity; }
+	void SelectEntity(TSharedPointer<Entity> HitEntity, bool bFocusCamera = false);
+	bool GetWorldHit(TSharedPointer<Entity>& HitEntity, SVector& HitPos);
 	bool DeleteSelected();
-	THardPointer<Entity> CreateEntity(TAssetObjectPointer<CMesh> Mesh = nullptr, bool bFocusCamera = true);
+	TSharedPointer<Entity> CreateEntity(TAssetObjectPointer<CMesh> Mesh = nullptr, bool bFocusCamera = true);
 
 protected:
 	bool OnMouseButtonPressed(int MouseButton, int Mods) override;
@@ -42,9 +42,9 @@ protected:
 	bool UsingSpectatorControls() const { return bUseSpectatorControls; }	
 	void SpectatorUpdate();
 
-	std::vector<THardPointer<CUIWidget>> Widgets;
+	std::vector<TSharedPointer<CUIWidget>> Widgets;
 
-	THardPointer<Entity> SelectedEntity;
+	TSharedPointer<Entity> SelectedEntity;
 	int GizmoMode = 7;
 	int GizmoTransformSpace = 0;
 	float CameraSpeed = 12.0f;

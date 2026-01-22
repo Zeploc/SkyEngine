@@ -11,7 +11,7 @@
 #include "Entity/Entity.h"
 #include "Render/Materials/InternalMaterial.h"
 
-CSphere::CSphere(const THardPointer<Entity>& InOwner, const THardPointer<CMaterialInterface>& InMaterial)
+CSphere::CSphere(const TSharedPointer<Entity>& InOwner, const TSharedPointer<CMaterialInterface>& InMaterial)
 : CMeshComponent(InOwner, DefaultMesh::GetSphere(), InMaterial)
 {
 }

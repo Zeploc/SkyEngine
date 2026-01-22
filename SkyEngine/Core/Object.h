@@ -4,12 +4,20 @@
 
 #include "Core/Core.h"
 
+// TODO: Is this needed?
+/**
+ * Base basic object type, which all unmanaged pointer should be
+ */
 class ENGINE_API CObject : public std::enable_shared_from_this<CObject>
 {
 public:
 };
 
 
+/**
+ * Managed internally by a weak pointer, used as a consistent type with helpers
+ * @tparam T Object type pointed to
+ */
 template<class T>
 struct TObjectPointer
 {
@@ -43,7 +51,7 @@ public:
 	
 	// Handles raw pointer being initialized as a weak ptr, has risk if base pointer is not managed by a smart pointer
 	template<class U, std::enable_if_t<std::is_base_of_v<T, U>, bool> = true>
-	TObjectPointer(THardPointer<U> InObjectPointer)
+	TObjectPointer(TSharedPointer<U> InObjectPointer)
 	: ObjectPointer(TWeakPointer<T>(InObjectPointer))
 	{
 		
@@ -51,7 +59,7 @@ public:
 	
 	// Handles raw pointer being initialized as a weak ptr, has risk if base pointer is not managed by a smart pointer
 	TObjectPointer(T* InPointer)
-	: ObjectPointer(TWeakPointer<T>(THardPointer<T>(InPointer)))
+	: ObjectPointer(TWeakPointer<T>(TSharedPointer<T>(InPointer)))
 	{
 		
 	}
@@ -142,6 +150,10 @@ template <typename T>
 concept ConvertableToAssetObject = std::constructible_from<CAssetObject, T>;
 
 // TODO: Limit template type to CAssetObject, And not allow type asset
+/**
+ * Used to hold an asset object, which will handle unloading and loading of the underlying object via the asset
+ * @tparam T Asset object eg Map, Mesh, Material, etc
+ */
 template<class T = CAssetObject>//, std::enable_if_t<std::is_base_of_v<CAssetObject, T>, bool> = true>
 struct TAssetObjectPointer : public TObjectPointer<T>
 {

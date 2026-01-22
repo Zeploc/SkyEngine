@@ -18,5 +18,5 @@ public:
 	TArray<TAssetObjectPointer<CMaterialInterface>> GetAllLoadedMaterials() const;
 	
 private:
-	TArray<THardPointer<CMaterialInterface>> Materials;
+	TArray<TSharedPointer<CMaterialInterface>> Materials;
 };

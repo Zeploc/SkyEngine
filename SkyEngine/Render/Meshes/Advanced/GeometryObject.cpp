@@ -18,7 +18,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-GeometryObject::GeometryObject(const THardPointer<Entity>& InOwner, glm::vec4 _Colour)
+GeometryObject::GeometryObject(const TSharedPointer<Entity>& InOwner, glm::vec4 _Colour)
 	: CMeshComponent(InOwner)
 {
 	LEGACY_Width = 1;

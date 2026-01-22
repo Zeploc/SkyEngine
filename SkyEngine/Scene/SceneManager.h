@@ -30,7 +30,7 @@ public:
 
 	// Singleton
 public:
-	static THardPointer<SceneManager> GetInstance();
+	static TSharedPointer<SceneManager> GetInstance();
 
 	static void DestoryInstance();
 
@@ -38,7 +38,7 @@ public:
 
 private:
 	std::map<std::string, TAssetObjectPointer<Scene>> Scenes;
-	static THardPointer<SceneManager> m_pSceneManager;
+	static TSharedPointer<SceneManager> m_pSceneManager;
 	std::string CurrentScene = "";
 	std::string SceneToSwitch = "";
 

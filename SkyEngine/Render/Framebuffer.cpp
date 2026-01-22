@@ -5,9 +5,9 @@
 
 #include "Core/Application.h"
 
-THardPointer<IFramebuffer> IFramebuffer::Create(const SFramebufferSpecification& Specification)
+TSharedPointer<IFramebuffer> IFramebuffer::Create(const SFramebufferSpecification& Specification)
 {
-	THardPointer<IFramebuffer> Framebuffer = GetGraphicsAPI()->CreateFramebuffer(Specification);	
+	TSharedPointer<IFramebuffer> Framebuffer = GetGraphicsAPI()->CreateFramebuffer(Specification);	
 	Framebuffer->Invalidate();
 	return Framebuffer;
 }

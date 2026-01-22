@@ -188,13 +188,13 @@ void ParticleSystem2D::Update()
 		int iRandPath = rand() % m_vParticlePaths.size();
 
 		TAssetObjectPointer<CTexture> ParticleTexture = GetTextureManager()->FindTexture(m_vParticlePaths[iRandPath]);	
-		THardPointer<CMaterial_Unlit> ParticleMaterial = std::make_shared<CMaterial_Unlit>("ParticleMaterial");
+		TSharedPointer<CMaterial_Unlit> ParticleMaterial = std::make_shared<CMaterial_Unlit>("ParticleMaterial");
 		ParticleMaterial->Params.DiffuseColour = SVector4(1.0f, 1.0f, 1.0f, 1.0f);
 		ParticleMaterial->Params.DiffuseTexture = ParticleTexture;
 		
-		THardPointer<Entity> NewParticleEntity = std::make_shared<Entity>(Transform, "Particle");
+		TSharedPointer<Entity> NewParticleEntity = std::make_shared<Entity>(Transform, "Particle");
 		NewParticleEntity->Transform.Scale = fNewSize;
-		THardPointer<CPlane> NewParticlePlaneMesh = std::make_shared<CPlane>(NewParticleEntity, ParticleMaterial);
+		TSharedPointer<CPlane> NewParticlePlaneMesh = std::make_shared<CPlane>(NewParticleEntity, ParticleMaterial);
 		NewParticleEntity->AddComponent(NewParticlePlaneMesh);
 
 		Particle2D NewParticle = {NewParticleEntity, fNewSpeed, v2NewDirection, fNewFalloffDistance, fNewFalloffTime, 0.0f};
@@ -241,9 +241,9 @@ void ParticleSystem2D::Update()
 	}
 }
 
-std::vector<THardPointer<Entity>> ParticleSystem2D::GetAdditionalEntitiesToRender()
+std::vector<TSharedPointer<Entity>> ParticleSystem2D::GetAdditionalEntitiesToRender()
 {
-	std::vector<THardPointer<Entity>> ParticleEntities;
+	std::vector<TSharedPointer<Entity>> ParticleEntities;
 	for (auto it : m_vParticles)
 	{
 		ParticleEntities.push_back(it.pEntity);

@@ -16,7 +16,7 @@
 #include "System/LogManager.h"
 #include "System/Utils.h"
 
-CMeshComponent::CMeshComponent(const THardPointer<Entity>& InOwner)
+CMeshComponent::CMeshComponent(const TSharedPointer<Entity>& InOwner)
 	: CComponent(InOwner)
 {
 	MeshMaterial = GetRenderer()->DefaultMaterial;
@@ -26,7 +26,7 @@ CMeshComponent::CMeshComponent(const THardPointer<Entity>& InOwner)
 	SetSerializeVariable(bVisible);
 }
 
-CMeshComponent::CMeshComponent(const THardPointer<Entity>& InOwner, TAssetObjectPointer<CMesh> InMeshAsset, const TAssetObjectPointer<CMaterialInterface>& InMaterial)
+CMeshComponent::CMeshComponent(const TSharedPointer<Entity>& InOwner, TAssetObjectPointer<CMesh> InMeshAsset, const TAssetObjectPointer<CMaterialInterface>& InMaterial)
 : CComponent(InOwner), MeshAsset(InMeshAsset)
 {
 	if (InMaterial)
@@ -114,12 +114,12 @@ void CMeshComponent::SetVisible(bool bNewVisible)
 	bVisible = bNewVisible;
 }
 
-void CMeshComponent::AddCollisionBounds(float fWidth, float fHeight, float fDepth, THardPointer<Entity> _EntityRef)
+void CMeshComponent::AddCollisionBounds(float fWidth, float fHeight, float fDepth, TSharedPointer<Entity> _EntityRef)
 {
 	MeshCollisionBounds = std::make_shared<CCollisionBounds>(fWidth, fHeight, fDepth, _EntityRef);
 }
 
-void CMeshComponent::AddCollisionBounds(THardPointer<CCollisionBounds> NewCollision)
+void CMeshComponent::AddCollisionBounds(TSharedPointer<CCollisionBounds> NewCollision)
 {
 	MeshCollisionBounds = NewCollision;
 }

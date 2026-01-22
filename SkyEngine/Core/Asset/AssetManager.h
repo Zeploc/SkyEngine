@@ -34,6 +34,6 @@ public:
 
 protected:
 	/* Shared ptrs of assets, only given weak ptrs outside to this to maintain control */
-	TArray<THardPointer<CAsset>> Assets;
+	TArray<TSharedPointer<CAsset>> Assets;
 	std::string AssetDirectory;
 };

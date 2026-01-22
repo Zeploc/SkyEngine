@@ -26,8 +26,8 @@ class CMaterialInterface;
 class ENGINE_API CMeshComponent : public CComponent, public ISceneVisual
 {
 public:
-	CMeshComponent(const THardPointer<Entity>& InOwner);
-	CMeshComponent(const THardPointer<Entity>& InOwner, TAssetObjectPointer<CMesh> InMeshAsset, const TAssetObjectPointer<CMaterialInterface>& InMaterial = nullptr);
+	CMeshComponent(const TSharedPointer<Entity>& InOwner);
+	CMeshComponent(const TSharedPointer<Entity>& InOwner, TAssetObjectPointer<CMesh> InMeshAsset, const TAssetObjectPointer<CMaterialInterface>& InMaterial = nullptr);
 	virtual ~CMeshComponent();
 
 	void OnAttached() override;
@@ -53,11 +53,11 @@ public:
 
 	virtual void OnDestroy() {}
 
-	void AddCollisionBounds(float fHeight, float fWidth, float fDepth, THardPointer<Entity> _EntityRef);
+	void AddCollisionBounds(float fHeight, float fWidth, float fDepth, TSharedPointer<Entity> _EntityRef);
 
-	void AddCollisionBounds(THardPointer<CCollisionBounds> NewCollision);
+	void AddCollisionBounds(TSharedPointer<CCollisionBounds> NewCollision);
 
-	THardPointer<CCollisionBounds> GetCollisionBounds()
+	TSharedPointer<CCollisionBounds> GetCollisionBounds()
 	{
 		return MeshCollisionBounds;
 	}
@@ -73,7 +73,7 @@ public:
 protected:
 	void Serialize(std::ostream& os) override;
 	void Deserialize(std::istream& is) override;
-	THardPointer<CCollisionBounds> MeshCollisionBounds;
+	TSharedPointer<CCollisionBounds> MeshCollisionBounds;
 	TAssetObjectPointer<CMesh> MeshAsset;
 
 	bool bVisible = true;

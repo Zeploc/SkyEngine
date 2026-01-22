@@ -8,7 +8,7 @@
 class ENGINE_API CBoxComponent : public CComponent, public ISceneVisual
 {
 public:
-	CBoxComponent(const THardPointer<Entity>& InOwner, const TAssetObjectPointer<CMaterialInterface>& InMaterial);
+	CBoxComponent(const TSharedPointer<Entity>& InOwner, const TAssetObjectPointer<CMaterialInterface>& InMaterial);
 	// using CComponent::CComponent;
 	void OnAttached() override;	
 	

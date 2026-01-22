@@ -4,9 +4,11 @@
 
 #include "AssetInterface.h"
 #include "Core/Core.h"
-#include "Core/Asset/AssetObject.h"
 #include "Core/SerializableVariable.h"
 
+/**
+ * Objects that are an asset type, which are serializable and loaded via asset manager
+ */
 class ENGINE_API CAssetObject : public CObject, public IAssetObjectInterface
 {
 public:

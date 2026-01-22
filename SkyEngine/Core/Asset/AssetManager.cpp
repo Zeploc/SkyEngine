@@ -19,7 +19,7 @@ TObjectPointer<CAsset> CAssetManager::AddAsset(const std::string& AssetPath, con
 	TObjectPointer<CAsset> FoundAsset = FindAsset(AssetPath);
 	if (!FoundAsset)
 	{
-		THardPointer<CAsset> NewAsset = CreatePointer<CAsset>(StringUtils::NormalizePath(AssetPath), NewClass);
+		TSharedPointer<CAsset> NewAsset = CreatePointer<CAsset>(StringUtils::NormalizePath(AssetPath), NewClass);
 		Assets.push_back(NewAsset);
 		FoundAsset = NewAsset;
 	}
@@ -56,7 +56,7 @@ void CAssetManager::UnloadAsset(TWeakPointer<CAsset> Asset)
 TObjectPointer<CAsset> CAssetManager::FindAsset(const std::string& AssetPath) const
 {
 	std::string NormalizePath = StringUtils::NormalizePath(AssetPath);
-	for (THardPointer<CAsset> Asset : Assets)
+	for (TSharedPointer<CAsset> Asset : Assets)
 	{
 		if (Asset->FilePath == NormalizePath)
 		{
@@ -124,7 +124,7 @@ TArray<TObjectPointer<CAsset>> CAssetManager::GetAssets() const
 TArray<TObjectPointer<CAsset>> CAssetManager::GetAssetsOfClass(const std::string& ClassName) const
 {
 	TArray<TObjectPointer<CAsset>> FoundAssets;
-	for (const THardPointer<CAsset>& Asset : Assets)
+	for (const TSharedPointer<CAsset>& Asset : Assets)
 	{
 		if (Asset->ClassName == ClassName)
 		{
@@ -136,7 +136,7 @@ TArray<TObjectPointer<CAsset>> CAssetManager::GetAssetsOfClass(const std::string
 
 TObjectPointer<CAsset> CAssetManager::GetAssetByName(const std::string& AssetName) const
 {
-	for (const THardPointer<CAsset>& Asset : Assets)
+	for (const TSharedPointer<CAsset>& Asset : Assets)
 	{
 		if (Asset->DisplayName == AssetName)
 		{

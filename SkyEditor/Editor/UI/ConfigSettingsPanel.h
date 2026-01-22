@@ -10,9 +10,9 @@ struct SSerializableVariable;
 class CConfigSettingsPanel : public CUICanvas
 {
 public:
-	CConfigSettingsPanel(TWeakPointer<CEngineWindow> InOwningWindow, THardPointer<CConfig> InConfig);
+	CConfigSettingsPanel(TWeakPointer<CEngineWindow> InOwningWindow, TSharedPointer<CConfig> InConfig);
 	virtual void OnRender() override;
 protected:
 	
-	THardPointer<CConfig> Config;
+	TSharedPointer<CConfig> Config;
 };

@@ -63,20 +63,20 @@ public:
 
 	static glm::vec3 GetTextAncoredPosition(glm::vec2 position, glm::vec2 Dimensions, EANCHOR _AnchorType);
 
-	static bool isColliding2D(THardPointer<Entity> Entity1, THardPointer<Entity> Entity2);
+	static bool isColliding2D(TSharedPointer<Entity> Entity1, TSharedPointer<Entity> Entity2);
 
 	//static bool isColliding2D(Entity* Entity1, Pointer<Entity> Entity2);
 
-	static bool CheckCollision2D(THardPointer<Entity> Entity1, THardPointer<Entity> Entity2, glm::vec2 Movement);
+	static bool CheckCollision2D(TSharedPointer<Entity> Entity1, TSharedPointer<Entity> Entity2, glm::vec2 Movement);
 
 	//static bool CheckCollision2D(Entity* Entity1, Pointer<Entity> Entity2, glm::vec2 Movement);
 
-	static glm::vec2 GetDistance2D(THardPointer<Entity> Entity1, THardPointer<Entity> Entity2);
+	static glm::vec2 GetDistance2D(TSharedPointer<Entity> Entity1, TSharedPointer<Entity> Entity2);
 
 	//static glm::vec2 GetDistance2D(Entity* Entity1, Pointer<Entity> Entity2);
 	//static glm::vec2 FindTextDimenions(std::string text);
 
-	static glm::vec2 GetDifference2D(THardPointer<Entity> Entity1, THardPointer<Entity> Entity2);
+	static glm::vec2 GetDifference2D(TSharedPointer<Entity> Entity1, TSharedPointer<Entity> Entity2);
 
 	static std::vector<std::string> SeparateString(std::string _string, char _seperator);
 
@@ -86,15 +86,15 @@ public:
 
 	static bool CheckMeshHit(STransform MeshTransform, const CMesh& MeshData, SVector RayStart, SVector RayDirection, SVector& HitPos);
 	
-	static bool CheckFaceHit(SVector BottomLeftOffset, SVector TopRightOffset, SVector RayStart, SVector RayDirection, THardPointer<Entity> EntityCheck, SVector& HitPos);
+	static bool CheckFaceHit(SVector BottomLeftOffset, SVector TopRightOffset, SVector RayStart, SVector RayDirection, TSharedPointer<Entity> EntityCheck, SVector& HitPos);
 
 	static bool CheckSphereHit(SVector RayStart, SVector RayDirection, SVector SphereCenter, float SphereRadius, SVector& HitPos);
 
-	static bool CheckCubeHit(SVector RayStart, SVector RayDirection, SVector CubeDimensions, THardPointer<Entity> EntityCheck, SVector& HitPos);
+	static bool CheckCubeHit(SVector RayStart, SVector RayDirection, SVector CubeDimensions, TSharedPointer<Entity> EntityCheck, SVector& HitPos);
 
-	static bool CheckPlaneEntityHit(SVector RayStart, SVector RayDirection, THardPointer<Entity> EntityCheck, SVector& HitPos);
+	static bool CheckPlaneEntityHit(SVector RayStart, SVector RayDirection, TSharedPointer<Entity> EntityCheck, SVector& HitPos);
 	
-	static THardPointer<Entity> WorldCubeMap;
+	static TSharedPointer<Entity> WorldCubeMap;
 
 	// TODO: Move to custom array once setups
 	/* Check if an element exists in a array */

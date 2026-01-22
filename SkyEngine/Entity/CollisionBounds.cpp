@@ -13,7 +13,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CCollisionBounds::CCollisionBounds(float _fWidth, float _fHeight, float _fDepth, THardPointer<Entity> _EntityRef)
+CCollisionBounds::CCollisionBounds(float _fWidth, float _fHeight, float _fDepth, TSharedPointer<Entity> _EntityRef)
 : EntityRef(_EntityRef), fHeight(_fHeight), fWidth(_fWidth), fDepth(_fDepth)
 {
 
@@ -39,15 +39,15 @@ void CCollisionBounds::SetOffset(glm::vec3 _NewOffset)
 	v3Offset = _NewOffset;
 }
 
-bool CCollisionBounds::isColliding(THardPointer<Entity> Entity2)
+bool CCollisionBounds::isColliding(TSharedPointer<Entity> Entity2)
 {
 	if (!Entity2)
 	{
 		return false;
 	}
 	// TODO: 3D Collision
-	// THardPointer<CMeshComponent> Entity1Mesh = std::dynamic_pointer_cast<CMeshComponent>(EntityRef->EntityMesh);
-	// THardPointer<CMeshComponent> Entity2Mesh = std::dynamic_pointer_cast<CMeshComponent>(Entity2->EntityMesh);
+	// TSharedPointer<CMeshComponent> Entity1Mesh = std::dynamic_pointer_cast<CMeshComponent>(EntityRef->EntityMesh);
+	// TSharedPointer<CMeshComponent> Entity2Mesh = std::dynamic_pointer_cast<CMeshComponent>(Entity2->EntityMesh);
 	// float HalfWidth1 = (fWidth) / 2; // * * abs(EntityRef->Transform.Scale.x);
 	// float HalfHeight1 = (fHeight) / 2; // * * abs(EntityRef->Transform.Scale.y);
 	// float HalfDepth1 = (fDepth) / 2; // * * abs(EntityRef->Transform.Scale.z);
@@ -70,11 +70,11 @@ bool CCollisionBounds::isColliding(THardPointer<Entity> Entity2)
 	return false;
 }
 
-bool CCollisionBounds::CheckCollision(THardPointer<Entity> Entity2, glm::vec3 Movement)
+bool CCollisionBounds::CheckCollision(TSharedPointer<Entity> Entity2, glm::vec3 Movement)
 {
 	// TODO: 3D Collision
-	// THardPointer<CMeshComponent> Entity1Mesh = std::dynamic_pointer_cast<CMeshComponent>(EntityRef->EntityMesh);
-	// THardPointer<CMeshComponent> Entity2Mesh = std::dynamic_pointer_cast<CMeshComponent>(Entity2->EntityMesh);
+	// TSharedPointer<CMeshComponent> Entity1Mesh = std::dynamic_pointer_cast<CMeshComponent>(EntityRef->EntityMesh);
+	// TSharedPointer<CMeshComponent> Entity2Mesh = std::dynamic_pointer_cast<CMeshComponent>(Entity2->EntityMesh);
 	// float HalfWidth1 = (fWidth) / 2; // *abs(EntityRef->Transform.Scale.x);
 	// float HalfHeight1 = (fHeight) / 2; // *abs(EntityRef->Transform.Scale.y);
 	// float HalfDepth1 = (fDepth) / 2; // *abs(EntityRef->Transform.Scale.z);
@@ -97,12 +97,12 @@ bool CCollisionBounds::CheckCollision(THardPointer<Entity> Entity2, glm::vec3 Mo
 	return false;
 }
 
-glm::vec3 CCollisionBounds::GetDistance(THardPointer<Entity> Entity2)
+glm::vec3 CCollisionBounds::GetDistance(TSharedPointer<Entity> Entity2)
 {
 	// TODO: 3D Collision
 	glm::vec3 fDistance = glm::vec3(0, 0, 0);
-	// THardPointer<CMeshComponent> Entity1Mesh = std::dynamic_pointer_cast<CMeshComponent>(EntityRef->EntityMesh);
-	// THardPointer<CMeshComponent> Entity2Mesh = std::dynamic_pointer_cast<CMeshComponent>(Entity2->EntityMesh);
+	// TSharedPointer<CMeshComponent> Entity1Mesh = std::dynamic_pointer_cast<CMeshComponent>(EntityRef->EntityMesh);
+	// TSharedPointer<CMeshComponent> Entity2Mesh = std::dynamic_pointer_cast<CMeshComponent>(Entity2->EntityMesh);
 	// float HalfWidth1 = (fWidth) / 2; // * * abs(EntityRef->Transform.Scale.x);
 	// float HalfHeight1 = (fHeight) / 2; // * * abs(EntityRef->Transform.Scale.y);
 	// float HalfDepth1 = (fDepth) / 2; // * * abs(EntityRef->Transform.Scale.z);

@@ -1,7 +1,7 @@
 ﻿#include "SEPCH.h"
 #include "CollisionBodyComponent.h"
 
-CCollisionBodyComponent::CCollisionBodyComponent(const THardPointer<Entity>& InOwner, bool bIsStatic)
+CCollisionBodyComponent::CCollisionBodyComponent(const TSharedPointer<Entity>& InOwner, bool bIsStatic)
 : CComponent(InOwner), bStaticBody(bIsStatic)
 {
 }

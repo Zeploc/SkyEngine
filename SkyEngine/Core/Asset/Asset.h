@@ -6,6 +6,9 @@
 
 class CAssetObject;
 
+/**
+ * Manages an asset object, loading and unloading it as needed. Used as a soft link to an asset.
+ */
 class ENGINE_API CAsset : public std::enable_shared_from_this<CAsset>
 {
 public:
@@ -40,7 +43,7 @@ public:
 	// TODO: Unsaved
 	
 	/* Creates the object for this asset when loading based on the class and meta data */
-	THardPointer<CAssetObject> MakeObject() const;
+	TSharedPointer<CAssetObject> MakeObject() const;
 
 protected:
 	void ApplyAssetData(std::string AssetData);
@@ -49,7 +52,7 @@ protected:
 	/* If wanting to get this externally, use Load() */
 	TAssetObjectPointer<CAssetObject> Object = nullptr;
 
-	THardPointer<CAssetObject> HardObject = nullptr;
+	TSharedPointer<CAssetObject> HardObject = nullptr;
 };
 
 template <typename T>

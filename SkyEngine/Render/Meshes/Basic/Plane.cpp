@@ -23,7 +23,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CPlane::CPlane(const THardPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial)
+CPlane::CPlane(const TSharedPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial)
 : CMeshComponent(InOwner, DefaultMesh::GetPlane(), InMaterial)
 {
 	CollisionBox.fHeight = LEGACY_Height;
@@ -36,7 +36,7 @@ CPlane::CPlane(const THardPointer<Entity>& InOwner, TAssetObjectPointer<CMateria
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CPlane::CPlane(const THardPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial, glm::vec2 v2FrameCounts, int _iFPS)
+CPlane::CPlane(const TSharedPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial, glm::vec2 v2FrameCounts, int _iFPS)
 : CMeshComponent(InOwner, DefaultMesh::GetPlane(), InMaterial)
 {
 	CollisionBox.fHeight = LEGACY_Height;
@@ -65,7 +65,7 @@ CPlane::CPlane(const THardPointer<Entity>& InOwner, TAssetObjectPointer<CMateria
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CPlane::CPlane(const THardPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial, int iCount, bool bHorizontal)
+CPlane::CPlane(const TSharedPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial, int iCount, bool bHorizontal)
 : CMeshComponent(InOwner, DefaultMesh::GetPlane(), InMaterial)
 {	
 	CollisionBox.fHeight = LEGACY_Height;

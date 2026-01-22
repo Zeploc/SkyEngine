@@ -9,11 +9,11 @@
 class ENGINE_API CPlane : public CMeshComponent
 {
 public:
-	CPlane(const THardPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial = nullptr);
+	CPlane(const TSharedPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial = nullptr);
 
-	CPlane(const THardPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial, glm::vec2 v2FrameCounts, int _iFPS);
+	CPlane(const TSharedPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial, glm::vec2 v2FrameCounts, int _iFPS);
 
-	CPlane(const THardPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial, int iCount, bool bHorizontal);
+	CPlane(const TSharedPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial, int iCount, bool bHorizontal);
 
 	~CPlane();
 

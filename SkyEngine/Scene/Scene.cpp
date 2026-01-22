@@ -56,7 +56,7 @@ std::shared_ptr<Scene> Scene::shared_from_this()
 void Scene::Serialize(std::ostream& os)
 {	
 	os << "[" + SceneName + "]\n";
-	for (THardPointer<Entity> Entity : Entities)
+	for (TSharedPointer<Entity> Entity : Entities)
 	{	 	
 		os << Entity << "\n";
 	}
@@ -64,8 +64,8 @@ void Scene::Serialize(std::ostream& os)
 
 void Scene::Deserialize(std::istream& is)
 {
-	std::vector< THardPointer<Entity>> EntitiesCopy = Entities;
-	for (THardPointer<Entity> CurrentEnt : EntitiesCopy)
+	std::vector< TSharedPointer<Entity>> EntitiesCopy = Entities;
+	for (TSharedPointer<Entity> CurrentEnt : EntitiesCopy)
 	{		
 		DestroyEntity(CurrentEnt);
 	}
@@ -78,7 +78,7 @@ void Scene::Deserialize(std::istream& is)
 	
 	while(is.peek() != EOF )
 	{
-		THardPointer<Entity> NewEntity = Entity::GetEntityFromStringStream(is);
+		TSharedPointer<Entity> NewEntity = Entity::GetEntityFromStringStream(is);
 		AddEntity(NewEntity);
 		// New line
 		std::getline(is, Empty, '\n');
@@ -131,7 +131,7 @@ void Scene::RenderScene()
 #--Parameters--#: 	Entity to add
 #--Return--#: 		NA
 ************************************************************/
-void Scene::AddEntity(THardPointer<Entity> _Entity)
+void Scene::AddEntity(TSharedPointer<Entity> _Entity)
 {
 	VerifyEntityID(_Entity);
 	Entities.push_back(_Entity);
@@ -144,7 +144,7 @@ void Scene::AddEntity(THardPointer<Entity> _Entity)
 #--Parameters--#: 	Entity to destroy
 #--Return--#: 		NA
 ************************************************************/
-void Scene::DestroyEntity(THardPointer<Entity> _Entity)
+void Scene::DestroyEntity(TSharedPointer<Entity> _Entity)
 {
 	DestroyedEntities.push_back(_Entity);
 	_Entity->OnDestroy();
@@ -163,9 +163,9 @@ void Scene::DestroyEntity(THardPointer<Entity> _Entity)
 	//EntDetroy.reset();
 }
 
-void Scene::VerifyEntityID(THardPointer<Entity> EntityToVerify)
+void Scene::VerifyEntityID(TSharedPointer<Entity> EntityToVerify)
 {
-	for (const THardPointer<Entity>& Entity : Entities)
+	for (const TSharedPointer<Entity>& Entity : Entities)
 	{
 		if (EntityToVerify->GetEntityID() == Entity->GetEntityID())
 		{			
@@ -189,7 +189,7 @@ int Scene::AddEntityID()
 ************************************************************/
 void Scene::Update()
 {		
-	for (const THardPointer<Entity>& Entity : Entities)
+	for (const TSharedPointer<Entity>& Entity : Entities)
 	{
 		Entity->BaseUpdate();
 	}
@@ -212,7 +212,7 @@ void Scene::OnLoaded()
 
 void Scene::OnUnloaded()
 {
-	for (const THardPointer<Entity>& Entity : Entities)
+	for (const TSharedPointer<Entity>& Entity : Entities)
 	{
 		Entity->Unload();
 	}
@@ -220,7 +220,7 @@ void Scene::OnUnloaded()
 
 void Scene::BeginPlay()
 {
-	for (const THardPointer<Entity>& Entity : Entities)
+	for (const TSharedPointer<Entity>& Entity : Entities)
 	{
 		Entity->BeginPlay();
 	}

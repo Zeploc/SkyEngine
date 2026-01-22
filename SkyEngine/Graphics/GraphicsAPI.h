@@ -37,7 +37,7 @@ public:
 	
 	virtual std::string GetGraphicsDisplayName() = 0;
 
-	static THardPointer<IGraphicsAPI> CreateGraphicsAPI(EGraphicsAPI APIType);
+	static TSharedPointer<IGraphicsAPI> CreateGraphicsAPI(EGraphicsAPI APIType);
 	
 	virtual void ImGuiInit() = 0;
 	
@@ -61,7 +61,7 @@ public:
 	virtual void ImGuiNewFrame() = 0;
 	virtual void SwapBuffers() = 0;
 
-	virtual THardPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) = 0;	
+	virtual TSharedPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) = 0;	
 
 	virtual void BindShader(uint32_t ShaderProgramID) = 0;
 	virtual void Clear(SVector ClearColour) = 0;
@@ -70,7 +70,7 @@ public:
 	// /* Where Y=0 is the top of the screen */
 	// virtual void SetRenderViewport(const SVector2i InViewportPosition, const SVector2i InViewportSize) = 0;
 	virtual void SetWireframeMode(bool bInWireframeEnabled) = 0;
-	virtual void ApplyMaterialFlags(THardPointer<CMaterialInterface> InMaterial) = 0;
+	virtual void ApplyMaterialFlags(TSharedPointer<CMaterialInterface> InMaterial) = 0;
 	
 	// template <typename T>
 	// void PassAttributeToShader(int32_t ShaderLocation, T Attribute);

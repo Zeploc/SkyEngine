@@ -337,7 +337,7 @@ bool CGLAPI::CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShader
 	return true;
 }
 
-THardPointer<IFramebuffer> CGLAPI::CreateFramebuffer(const SFramebufferSpecification& Specification)
+TSharedPointer<IFramebuffer> CGLAPI::CreateFramebuffer(const SFramebufferSpecification& Specification)
 {
 	return CreatePointer<GLFramebuffer>(Specification);
 }
@@ -483,7 +483,7 @@ void CGLAPI::SetWireframeMode(bool bInWireframeEnabled)
 	glPolygonMode(GL_FRONT_AND_BACK, bInWireframeEnabled ? GL_LINE : GL_FILL);
 }
 
-void CGLAPI::ApplyMaterialFlags(THardPointer<CMaterialInterface>InMaterial)
+void CGLAPI::ApplyMaterialFlags(TSharedPointer<CMaterialInterface>InMaterial)
 {
 	if (!InMaterial->bTwoSided)
 	{

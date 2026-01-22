@@ -17,7 +17,7 @@ class EditorWindow
 public:
 	void CreateExternalWindow();
 
-	EditorWindow(std::string InWindowName, THardPointer<CEngineWindow> InLinkedWindow = nullptr, SVector2 InSize = SVector2(100, 100), SVector2 InPosition = SVector2(0, 0));
+	EditorWindow(std::string InWindowName, TSharedPointer<CEngineWindow> InLinkedWindow = nullptr, SVector2 InSize = SVector2(100, 100), SVector2 InPosition = SVector2(0, 0));
 
 	void SetupGlutBindings();
 
@@ -31,7 +31,7 @@ public:
 
 	void SetWindowPosition(SVector2i _position);
 
-	THardPointer<CEngineWindow> GetParentWindow() { return LinkedWindow; }
+	TSharedPointer<CEngineWindow> GetParentWindow() { return LinkedWindow; }
 
 	void MainWindowSizeChanged(int _w, int _h);
 
@@ -57,9 +57,9 @@ protected:
 	glm::vec3 BackColour = glm::vec3(1, 1, 1);
 
 	std::string WindowName;
-	THardPointer<CEngineWindow> LinkedWindow;
+	TSharedPointer<CEngineWindow> LinkedWindow;
 
-	THardPointer<UIImage> BackImage;
+	TSharedPointer<UIImage> BackImage;
 
 	SVector2i Size = glm::vec2(100, 100);
 	SVector2i Position = glm::vec2(0, 0);
@@ -67,7 +67,7 @@ protected:
 	SVector2i DragOffset;
 	bool DraggingWindow = false;
 
-	std::vector<THardPointer<UIElement>> UIElements;
+	std::vector<TSharedPointer<UIElement>> UIElements;
 
 	bool bCanPopIn = true;
 };

@@ -367,7 +367,7 @@ void ssAnimatedModel::rotate(float rotSpeed)
 	currentRotationSpeed = rotSpeed;
 }
 
-void ssAnimatedModel::setShaderEffectVariables(THardPointer<Terrain> terrain)
+void ssAnimatedModel::setShaderEffectVariables(TSharedPointer<Terrain> terrain)
 {
 	glUseProgram(this->program);
 
@@ -413,7 +413,7 @@ void ssAnimatedModel::setShaderEffectVariables(THardPointer<Terrain> terrain)
 	// Lighting::PassLightingToShader(program);
 }
 
-void ssAnimatedModel::render(THardPointer<Terrain> terrain)
+void ssAnimatedModel::render(TSharedPointer<Terrain> terrain)
 {
 	setShaderEffectVariables(terrain);
 

@@ -58,20 +58,20 @@ Entity::~Entity()
 	CLogManager::Get()->DisplayMessage("Entity " + std::to_string(EntityID) + " destroyed!");	
 }
 
-void Entity::AddComponent(THardPointer<CComponent> NewComponent)
+void Entity::AddComponent(TSharedPointer<CComponent> NewComponent)
 {
 	Components.push_back(NewComponent);
 	NewComponent->OnAttached();
 }
 
-void Entity::AddToScene(THardPointer<Scene> InScene)
+void Entity::AddToScene(TSharedPointer<Scene> InScene)
 {
 	OwningScene = InScene;
 }
 
 void Entity::BeginPlay()
 {
-	for (const THardPointer<CComponent>& Component : Components)
+	for (const TSharedPointer<CComponent>& Component : Components)
 	{
 		Component->BeginPlay();
 	}
@@ -79,7 +79,7 @@ void Entity::BeginPlay()
 
 void Entity::Unload()
 {
-	for (const THardPointer<CComponent>& Component : Components)
+	for (const TSharedPointer<CComponent>& Component : Components)
 	{
 		Component->Unload();
 	}
@@ -91,7 +91,7 @@ bool Entity::CanRender()
 	{
 		return false;
 	}
-	for (const THardPointer<CComponent>& Component : Components)
+	for (const TSharedPointer<CComponent>& Component : Components)
 	{
 		const ISceneVisual* SceneVisual = GetInterface<ISceneVisual>(Component);
 		if (SceneVisual && SceneVisual->ShouldRender())
@@ -151,7 +151,7 @@ void Entity::BaseUpdate()
 		return;
 	}
 	Update();
-	for (const THardPointer<CComponent>& Component : Components)
+	for (const TSharedPointer<CComponent>& Component : Components)
 	{
 		Component->Update();
 	}
@@ -164,9 +164,9 @@ void Entity::Update()
 
 bool Entity::CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos)
 {
-	for (THardPointer<CComponent> Element : Components)
+	for (TSharedPointer<CComponent> Element : Components)
 	{
-		const THardPointer<CMeshComponent> MeshComponent = Cast<CMeshComponent>(Element);
+		const TSharedPointer<CMeshComponent> MeshComponent = Cast<CMeshComponent>(Element);
 		if (MeshComponent && MeshComponent->CheckHit(RayStart, RayDirection, HitPos))
 		{
 			return true;
@@ -179,7 +179,7 @@ bool Entity::CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos)
 void Entity::OnDestroy()
 {
 	CLogManager::Get()->DisplayMessage("Entity with ID #" + std::to_string(EntityID) + " destroyed!");
-	for (THardPointer<CComponent> Component : Components)
+	for (TSharedPointer<CComponent> Component : Components)
 	{
 		Component->OnDestroy();
 	}
@@ -207,25 +207,25 @@ std::string Entity::GetEntityClassName()
 	return "Entity";
 }
 
-THardPointer<Entity> Entity::MakeEntityFromClassName(const std::string& ClassName)
+TSharedPointer<Entity> Entity::MakeEntityFromClassName(const std::string& ClassName)
 {
 	if (ClassName == Camera::GetStaticName())
 	{
-		THardPointer<Camera> NewCameraEntity = std::make_shared<Camera>(STransform());
+		TSharedPointer<Camera> NewCameraEntity = std::make_shared<Camera>(STransform());
 		return NewCameraEntity;
 	}
 	
-	THardPointer<Entity> NewEntity = std::make_shared<Entity>(STransform());
+	TSharedPointer<Entity> NewEntity = std::make_shared<Entity>(STransform());
 	return NewEntity;
 }
 
-THardPointer<Entity> Entity::GetEntityFromStringStream(std::istream& is)
+TSharedPointer<Entity> Entity::GetEntityFromStringStream(std::istream& is)
 {	
 	std::string _;
 	std::string EntityClass;
 	std::getline(is, _, '[');
 	std::getline(is, EntityClass, ']');
-	THardPointer<Entity> NewEntity = MakeEntityFromClassName(EntityClass);
+	TSharedPointer<Entity> NewEntity = MakeEntityFromClassName(EntityClass);
 	is >> NewEntity;
 	return NewEntity;
 }
@@ -242,7 +242,7 @@ void Entity::Serialize(std::ostream& os)
 
 void Entity::SerializeComponents(std::ostream& os)
 {
-	for (const THardPointer<CComponent>& Component : Components)
+	for (const TSharedPointer<CComponent>& Component : Components)
 	{
 		os << Component;
 	}
@@ -266,7 +266,7 @@ void Entity::DeserializeComponents(std::istream& is)
 		std::getline(is, _, '[');
 		std::getline(is, ComponentType, ']');
 		// is >> ComponentType;
-		THardPointer<CComponent> NewComponent = CComponent::MakeComponentFromClassName(ComponentType, shared_from_this());
+		TSharedPointer<CComponent> NewComponent = CComponent::MakeComponentFromClassName(ComponentType, shared_from_this());
 		if (NewComponent)
 		{
 			is >> NewComponent;
@@ -278,14 +278,14 @@ void Entity::DeserializeComponents(std::istream& is)
 	}
 }
 
-std::ostream& operator<<(std::ostream& os, const THardPointer<Entity>& InEntity)
+std::ostream& operator<<(std::ostream& os, const TSharedPointer<Entity>& InEntity)
 {
 	InEntity->Serialize(os);
 	InEntity->SerializeComponents(os);
 	return os;
 }
 
-std::istream& operator>>(std::istream& is, THardPointer<Entity>& InEntity)
+std::istream& operator>>(std::istream& is, TSharedPointer<Entity>& InEntity)
 {
 	InEntity->Deserialize(is);
 	InEntity->DeserializeComponents(is);

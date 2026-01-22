@@ -7,7 +7,7 @@
 #include "Render/Meshes/BoxComponent.h"
 #include "Render/Meshes/MeshComponent.h"
 
-CComponent::CComponent(const THardPointer<Entity>& InOwner)
+CComponent::CComponent(const TSharedPointer<Entity>& InOwner)
 {
 	Owner = InOwner;
 }
@@ -37,7 +37,7 @@ std::string CComponent::GetComponentClassName()
 	return "Component";
 }
 
-THardPointer<CComponent> CComponent::MakeComponentFromClassName(const std::string& ClassName, THardPointer<Entity> Owner)
+TSharedPointer<CComponent> CComponent::MakeComponentFromClassName(const std::string& ClassName, TSharedPointer<Entity> Owner)
 {
 	if (ClassName == CMeshComponent::GetStaticName())
 	{
@@ -50,13 +50,13 @@ THardPointer<CComponent> CComponent::MakeComponentFromClassName(const std::strin
 	return nullptr;
 }
 
-std::ostream& operator<<(std::ostream& os, const THardPointer<CComponent>& InComponent)
+std::ostream& operator<<(std::ostream& os, const TSharedPointer<CComponent>& InComponent)
 {
 	InComponent->Serialize(os);
 	return os;
 }
 
-std::istream& operator>>(std::istream& is, THardPointer<CComponent>& InComponent)
+std::istream& operator>>(std::istream& is, TSharedPointer<CComponent>& InComponent)
 {
 	InComponent->Deserialize(is);
 	return is;

@@ -11,7 +11,7 @@
 #include "Render/Materials/InternalMaterial.h"
 #include "Render/Shaders/PBRShader.h"
 
-CCube::CCube(const THardPointer<Entity>& InOwner, const THardPointer<CMaterialInterface>& InMaterial)
+CCube::CCube(const TSharedPointer<Entity>& InOwner, const TSharedPointer<CMaterialInterface>& InMaterial)
 : CMeshComponent(InOwner, DefaultMesh::GetCube(), InMaterial)
 {
 }

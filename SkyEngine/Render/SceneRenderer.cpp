@@ -44,7 +44,7 @@ void CSceneRenderer::SetSceneTarget(TAssetObjectPointer<Scene> InTargetScene)
 	// TODO: Update camera
 }
 
-void CSceneRenderer::LinkCamera(THardPointer<Camera> Camera)
+void CSceneRenderer::LinkCamera(TSharedPointer<Camera> Camera)
 {
 	LinkedCamera = Camera;
 }

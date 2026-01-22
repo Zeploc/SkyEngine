@@ -12,7 +12,7 @@
 class CCollisionBounds
 {
 public:
-	CCollisionBounds(float fHeight, float fWidth, float fDepth, THardPointer<Entity> _EntityRef);
+	CCollisionBounds(float fHeight, float fWidth, float fDepth, TSharedPointer<Entity> _EntityRef);
 
 	~CCollisionBounds();
 
@@ -20,15 +20,15 @@ public:
 
 	void SetOffset(glm::vec3 _NewOffset);
 
-	bool isColliding(THardPointer<Entity> Entity2);
+	bool isColliding(TSharedPointer<Entity> Entity2);
 
-	bool CheckCollision(THardPointer<Entity> Entity2, glm::vec3 Movement);
+	bool CheckCollision(TSharedPointer<Entity> Entity2, glm::vec3 Movement);
 
-	glm::vec3 GetDistance(THardPointer<Entity> Entity2);
+	glm::vec3 GetDistance(TSharedPointer<Entity> Entity2);
 
 	glm::vec3 GetDimensions() { return glm::vec3(fWidth, fHeight, fDepth); };
 	glm::vec3 GetOffset() { return v3Offset; };
-	THardPointer<Entity> EntityRef;
+	TSharedPointer<Entity> EntityRef;
 private:
 	float fHeight;
 	float fWidth;

@@ -18,7 +18,7 @@
 // Local Includes //
 
 // Static Variables //
-THardPointer<Entity> Utils::WorldCubeMap;
+TSharedPointer<Entity> Utils::WorldCubeMap;
 
 /************************************************************
 #--Description--#:  Gets position from anchor and current position
@@ -158,10 +158,10 @@ glm::vec3 Utils::GetTextAncoredPosition(glm::vec2 position, glm::vec2 Dimensions
 #--Parameters--#:	two pointers to the entities
 #--Return--#: 		Returns boolean whether the entities are colliding
 ************************************************************/
-bool Utils::isColliding2D(THardPointer<Entity> Entity1, THardPointer<Entity> Entity2)
+bool Utils::isColliding2D(TSharedPointer<Entity> Entity1, TSharedPointer<Entity> Entity2)
 {
-	THardPointer<CCollider2DComponent> Collider1 = Entity1->FindComponent<CCollider2DComponent>();
-	THardPointer<CCollider2DComponent> Collider2 = Entity2->FindComponent<CCollider2DComponent>();
+	TSharedPointer<CCollider2DComponent> Collider1 = Entity1->FindComponent<CCollider2DComponent>();
+	TSharedPointer<CCollider2DComponent> Collider2 = Entity2->FindComponent<CCollider2DComponent>();
 	if (!Collider1 || !Collider2)
 	{
 		CLogManager::Get()->DisplayMessage("Missing collider in entity for 2d collide test");
@@ -199,10 +199,10 @@ bool Utils::isColliding2D(THardPointer<Entity> Entity1, THardPointer<Entity> Ent
 #--Parameters--#:	two pointers to the entities and the movement to check for first entity
 #--Return--#: 		Returns boolean whether the entities would collide
 ************************************************************/
-bool Utils::CheckCollision2D(THardPointer<Entity> Entity1, THardPointer<Entity> Entity2, glm::vec2 Movement)
+bool Utils::CheckCollision2D(TSharedPointer<Entity> Entity1, TSharedPointer<Entity> Entity2, glm::vec2 Movement)
 {
-	THardPointer<CCollider2DComponent> Collider1 = Entity1->FindComponent<CCollider2DComponent>();
-	THardPointer<CCollider2DComponent> Collider2 = Entity2->FindComponent<CCollider2DComponent>();
+	TSharedPointer<CCollider2DComponent> Collider1 = Entity1->FindComponent<CCollider2DComponent>();
+	TSharedPointer<CCollider2DComponent> Collider2 = Entity2->FindComponent<CCollider2DComponent>();
 	if (!Collider1 || !Collider2)
 	{
 		CLogManager::Get()->DisplayMessage("Missing collider in entity for 2d collide test");
@@ -240,11 +240,11 @@ bool Utils::CheckCollision2D(THardPointer<Entity> Entity1, THardPointer<Entity> 
 #--Parameters--#:	two pointers to the entities
 #--Return--#: 		Returns vector 2 of distance
 ************************************************************/
-glm::vec2 Utils::GetDistance2D(THardPointer<Entity> Entity1, THardPointer<Entity> Entity2)
+glm::vec2 Utils::GetDistance2D(TSharedPointer<Entity> Entity1, TSharedPointer<Entity> Entity2)
 {
 	glm::vec2 fDistance = glm::vec2(0, 0);
-	THardPointer<CCollider2DComponent> Collider1 = Entity1->FindComponent<CCollider2DComponent>();
-	THardPointer<CCollider2DComponent> Collider2 = Entity2->FindComponent<CCollider2DComponent>();
+	TSharedPointer<CCollider2DComponent> Collider1 = Entity1->FindComponent<CCollider2DComponent>();
+	TSharedPointer<CCollider2DComponent> Collider2 = Entity2->FindComponent<CCollider2DComponent>();
 	if (!Collider1 || !Collider2)
 	{
 		CLogManager::Get()->DisplayMessage("Missing collider in entity for 2d collide test");
@@ -292,11 +292,11 @@ glm::vec2 Utils::GetDistance2D(THardPointer<Entity> Entity1, THardPointer<Entity
 #--Parameters--#:	two pointers to the entities
 #--Return--#: 		Returns vector 2 of distance with direction
 ************************************************************/
-glm::vec2 Utils::GetDifference2D(THardPointer<Entity> Entity1, THardPointer<Entity> Entity2)
+glm::vec2 Utils::GetDifference2D(TSharedPointer<Entity> Entity1, TSharedPointer<Entity> Entity2)
 {
 	glm::vec2 fDistance = glm::vec2(0, 0);
-	THardPointer<CCollider2DComponent> Collider1 = Entity1->FindComponent<CCollider2DComponent>();
-	THardPointer<CCollider2DComponent> Collider2 = Entity2->FindComponent<CCollider2DComponent>();
+	TSharedPointer<CCollider2DComponent> Collider1 = Entity1->FindComponent<CCollider2DComponent>();
+	TSharedPointer<CCollider2DComponent> Collider2 = Entity2->FindComponent<CCollider2DComponent>();
 	if (!Collider1 || !Collider2)
 	{
 		CLogManager::Get()->DisplayMessage("Missing collider in entity for 2d collide test");
@@ -430,7 +430,7 @@ bool Utils::CheckSphereHit(SVector RayStart, SVector RayDirection, SVector Spher
 }
 
 // TODO: Change transform (account for rotation and scale)
-bool Utils::CheckCubeHit(SVector RayStart, SVector RayDirection, SVector CubeDimensions, THardPointer<Entity> EntityCheck, SVector& HitPos)
+bool Utils::CheckCubeHit(SVector RayStart, SVector RayDirection, SVector CubeDimensions, TSharedPointer<Entity> EntityCheck, SVector& HitPos)
 {
 	SVector HalfDimensionvec = SVector(CubeDimensions.X / 2.0f, CubeDimensions.Y / 2.0f, CubeDimensions.Z / 2.0f);
 	std::vector<SVector> HitPositions;
@@ -480,7 +480,7 @@ bool Utils::CheckCubeHit(SVector RayStart, SVector RayDirection, SVector CubeDim
 	return true;
 }
 
-bool Utils::CheckPlaneEntityHit(SVector RayStart, SVector RayDirection, THardPointer<Entity> EntityCheck, SVector& HitPos)
+bool Utils::CheckPlaneEntityHit(SVector RayStart, SVector RayDirection, TSharedPointer<Entity> EntityCheck, SVector& HitPos)
 {
 	// Should be component based
 	// glm::vec3 HalfDimensionvec = glm::vec3(EntityCheck->EntityMesh->LEGACY_Width / 2.0f, EntityCheck->EntityMesh->LEGACY_Height / 2.0f, EntityCheck->EntityMesh->LEGACY_Depth / 2.0f);
@@ -501,7 +501,7 @@ SVector Utils::LinePlaneIntersect(SVector RayStart, SVector RayDirection, SVecto
 }
 
 // TODO: Remove need for entity (use transform/matrix)
-bool Utils::CheckFaceHit(SVector BottomLeftOffset, SVector TopRightOffset, SVector RayStart, SVector RayDirection, THardPointer<Entity> EntityCheck, SVector& HitPos)
+bool Utils::CheckFaceHit(SVector BottomLeftOffset, SVector TopRightOffset, SVector RayStart, SVector RayDirection, TSharedPointer<Entity> EntityCheck, SVector& HitPos)
 {
 	SVector AnchoredPosition = EntityCheck->Transform.Position;
 	SVector lb = BottomLeftOffset + AnchoredPosition;

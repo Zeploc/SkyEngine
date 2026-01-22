@@ -17,7 +17,7 @@ public:
 	CMaterialInterface();
 	virtual void BindMaterial();
 	static std::string GetStaticName();
-	static THardPointer<CMaterialInterface> MakeMaterialFromShaderName(const std::string& ShaderName, const std::string& MaterialName);
+	static TSharedPointer<CMaterialInterface> MakeMaterialFromShaderName(const std::string& ShaderName, const std::string& MaterialName);
 
 	// Override shared_from_this so manual downcast not needed
 	// ReSharper disable once CppHidingFunction
@@ -27,7 +27,7 @@ public:
 	virtual bool HasTexture() = 0;
 	virtual TArray<struct SShaderParameter>& GetMaterialVariables() = 0;
 
-	virtual THardPointer<CShader> GetBaseShader() = 0;
+	virtual TSharedPointer<CShader> GetBaseShader() = 0;
 	virtual std::string GetMaterialName() const = 0;
 	void Open() override;
 

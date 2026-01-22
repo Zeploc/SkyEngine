@@ -16,7 +16,7 @@ void CTextureManager::AddLoadedTexture(TAssetObjectPointer<CTexture> NewTexture)
 
 TAssetObjectPointer<CTexture> CTextureManager::AddNewTexture(const std::string& TexturePath)
 {
-	THardPointer<CTexture> NewTexture = CreatePointer<CTexture>(TexturePath);
+	TSharedPointer<CTexture> NewTexture = CreatePointer<CTexture>(TexturePath);
 	if (!GetGraphicsAPI()->GenerateTexture(NewTexture))
 	{
 		NewTexture = nullptr;

@@ -36,12 +36,12 @@ public:
 
 	virtual void RenderScene();
 
-	void AddEntity(THardPointer<Entity> _Entity);
+	void AddEntity(TSharedPointer<Entity> _Entity);
 
-	void DestroyEntity(THardPointer<Entity> _Entity);
+	void DestroyEntity(TSharedPointer<Entity> _Entity);
 
 	int AddEntityID();
-	void VerifyEntityID(THardPointer<Entity> EntityToVerify);
+	void VerifyEntityID(TSharedPointer<Entity> EntityToVerify);
 
 	virtual void Update();
 	virtual bool OnMouseButtonPressed(int Button, int Mods);
@@ -65,11 +65,11 @@ public:
 	bool operator==(const Scene& rhs) const;
 
 	std::string SceneName;
-	std::vector<THardPointer<Entity>> Entities;
+	std::vector<TSharedPointer<Entity>> Entities;
 	
 protected:
 	
-	std::vector<THardPointer<Entity>> DestroyedEntities;
+	std::vector<TSharedPointer<Entity>> DestroyedEntities;
 	bool bIsPersistant = false;
 	b2World World2D;
 

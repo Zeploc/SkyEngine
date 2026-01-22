@@ -229,8 +229,8 @@ bool CUIPresets::RenderAssetObjectField(TAssetObjectPointer<>& AssetObject, std:
 	{
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(std::format("ASSET:{}", ClassFilter).c_str()))
 		{
-			IM_ASSERT(payload->DataSize == sizeof(THardPointer<CAsset>));
-			Asset = *(const THardPointer<CAsset>*)payload->Data;
+			IM_ASSERT(payload->DataSize == sizeof(TSharedPointer<CAsset>));
+			Asset = *(const TSharedPointer<CAsset>*)payload->Data;
 			bValueChanged = true;
 		}
 		ImGui::EndDragDropTarget();

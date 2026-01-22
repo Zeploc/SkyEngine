@@ -72,7 +72,7 @@ struct SBodyShape
 class CCollider2DComponent : public CCollisionBodyComponent
 {
 public:
-	CCollider2DComponent(const THardPointer<Entity>& InOwner, SBodyShape InBodyShape, bool bIsStatic);
+	CCollider2DComponent(const TSharedPointer<Entity>& InOwner, SBodyShape InBodyShape, bool bIsStatic);
 
 	virtual void OnAttached() override;
 	virtual void Update() override;

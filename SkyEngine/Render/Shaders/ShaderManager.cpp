@@ -21,8 +21,8 @@
 
 // Local Includes //
 
-std::map<std::string, THardPointer<ModelObject>> ShaderManager::Models;
-std::map<std::string, THardPointer<CShader>> ShaderManager::Shaders;
+std::map<std::string, TSharedPointer<ModelObject>> ShaderManager::Models;
+std::map<std::string, TSharedPointer<CShader>> ShaderManager::Shaders;
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -82,25 +82,25 @@ void ShaderManager::LoadAllDefaultShaders()
 
 void ShaderManager::AddShaderProgram(std::string ShaderName, std::string VertexShaderPath, std::string FragmentShaderPath, std::string GeometryShaderPath)
 {
-	const THardPointer<CUndefinedShader> NewShader = std::make_shared<CUndefinedShader>(ShaderName, VertexShaderPath, FragmentShaderPath);
+	const TSharedPointer<CUndefinedShader> NewShader = std::make_shared<CUndefinedShader>(ShaderName, VertexShaderPath, FragmentShaderPath);
 	NewShader->SetGeometryShader(GeometryShaderPath);
 	ShaderCreated(NewShader);
 }
 
 void ShaderManager::AddTessProgram(std::string ShaderName, std::string VertexShaderPath, std::string FragmentShaderPath, std::string TessControlShaderPath, std::string TessEvalShaderPath)
 {
-	const THardPointer<CUndefinedShader> NewShader = std::make_shared<CUndefinedShader>(ShaderName, VertexShaderPath, FragmentShaderPath);
+	const TSharedPointer<CUndefinedShader> NewShader = std::make_shared<CUndefinedShader>(ShaderName, VertexShaderPath, FragmentShaderPath);
 	NewShader->SetTessShader(TessControlShaderPath, TessEvalShaderPath);
 	ShaderCreated(NewShader);
 }
 
 void ShaderManager::AddComputeProgram(std::string ShaderName, std::string ComputePath)
 {
-	const THardPointer<CUndefinedShader> NewShader = std::make_shared<CUndefinedShader>(ShaderName, ComputePath);
+	const TSharedPointer<CUndefinedShader> NewShader = std::make_shared<CUndefinedShader>(ShaderName, ComputePath);
 	ShaderCreated(NewShader);
 }
 
-void ShaderManager::ShaderCreated(const THardPointer<CShader>NewShader)
+void ShaderManager::ShaderCreated(const TSharedPointer<CShader>NewShader)
 {
 	std::string ShaderName = NewShader->GetShaderName();
 	if (!NewShader->CompileShader())
@@ -113,7 +113,7 @@ void ShaderManager::ShaderCreated(const THardPointer<CShader>NewShader)
 	CLogManager::Get()->DisplayMessage("Loading Shader \"" + ShaderName + "\"");
 }
 
-THardPointer<CShader> ShaderManager::GetShader(std::string ShaderName)
+TSharedPointer<CShader> ShaderManager::GetShader(std::string ShaderName)
 {
 	if (!Shaders.contains(ShaderName))
 	{
@@ -122,7 +122,7 @@ THardPointer<CShader> ShaderManager::GetShader(std::string ShaderName)
 	return Shaders[ShaderName];
 }
 
-THardPointer<CUndefinedShader> ShaderManager::GetUndefinedShader(std::string ShaderName)
+TSharedPointer<CUndefinedShader> ShaderManager::GetUndefinedShader(std::string ShaderName)
 {
 	if (!Shaders.contains(ShaderName))
 	{
@@ -221,7 +221,7 @@ Text::cFont ShaderManager::AddFont(std::string fontPath, int iPSize)
 	return newFont;
 }
 
-std::map<std::string, THardPointer<CShader>> ShaderManager::GetShaders()
+std::map<std::string, TSharedPointer<CShader>> ShaderManager::GetShaders()
 {
 	return Shaders;
 }

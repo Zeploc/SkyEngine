@@ -40,9 +40,9 @@ CEngineWindow::~CEngineWindow()
 	}
 }
 
-THardPointer<CEngineWindow> CEngineWindow::CreateEngineWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bInFullScreen)
+TSharedPointer<CEngineWindow> CEngineWindow::CreateEngineWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bInFullScreen)
 {	
-	THardPointer<CEngineWindow> NewWindow = GetPlatformInterface()->CreateNewWindow(InWindowName, InWindowSize, bInFullScreen);	
+	TSharedPointer<CEngineWindow> NewWindow = GetPlatformInterface()->CreateNewWindow(InWindowName, InWindowSize, bInFullScreen);	
 	return NewWindow;
 }
 

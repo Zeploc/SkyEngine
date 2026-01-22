@@ -14,7 +14,7 @@ void CMaterialManager::AddMaterial(TAssetObjectPointer<CMaterialInterface> NewMa
 
 TAssetObjectPointer<CMaterialInterface> CMaterialManager::FindMaterial(const std::string& MaterialName) const
 {
-	for (THardPointer<CMaterialInterface> Material : Materials)
+	for (TSharedPointer<CMaterialInterface> Material : Materials)
 	{
 		if (!ensure(Material.get(), "Empty Materail in materail manager list!"))
 		{

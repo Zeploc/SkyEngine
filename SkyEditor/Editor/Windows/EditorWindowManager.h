@@ -32,7 +32,7 @@ public:
 
 	static std::vector<class EditorWindow*> GetWindows() { return EditorWindows; };
 
-	static THardPointer<CEngineWindow> GetMainWindow();	
+	static TSharedPointer<CEngineWindow> GetMainWindow();	
 
 protected:
 	static bool IsRemovedID(EditorWindow* _Window);

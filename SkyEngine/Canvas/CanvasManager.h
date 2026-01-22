@@ -17,7 +17,7 @@ class CCanvasManager
 public:
 	CCanvasManager();
 	virtual ~CCanvasManager();
-	void SetupCanvasManager(THardPointer<CEngineWindow> InOwningWindow);
+	void SetupCanvasManager(TSharedPointer<CEngineWindow> InOwningWindow);
 	/* Returns responded canvas */
 	void OnEvent(CEvent& Event);
 

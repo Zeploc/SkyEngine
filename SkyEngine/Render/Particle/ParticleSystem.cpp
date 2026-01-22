@@ -235,7 +235,7 @@ void ParticleSystem::DrawEntity()
 
 	glm::vec3 vQuad1, vQuad2;
 	CViewportCanvas* ViewportCanvas = GetApplication()->GetViewportCanvas();
-	THardPointer<Camera> ViewportCamera = ViewportCanvas->GetViewportCamera();
+	TSharedPointer<Camera> ViewportCamera = ViewportCanvas->GetViewportCamera();
 	glm::vec3 vView = ViewportCamera->GetForwardVector();
 	vView = normalize(vView);
 	vQuad1 = cross(vView, ViewportCamera->GetUpVector());

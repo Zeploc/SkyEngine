@@ -176,7 +176,7 @@ std::istream& operator>>(std::istream& is, BaseShaderParameters& InMaterialParam
 	return is;
 }
 
-void CShader::BindMaterial(THardPointer<CMaterialInterface> InMaterial)
+void CShader::BindMaterial(TSharedPointer<CMaterialInterface> InMaterial)
 {
 	ensure(InMaterial != nullptr, "Missing material to set shader attributes!");
 

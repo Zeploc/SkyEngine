@@ -21,7 +21,7 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CubeMap::CubeMap(const THardPointer<Entity>& InOwner, float fWidth, float fHeight, float fDepth, char* _TextureSources[6])
+CubeMap::CubeMap(const TSharedPointer<Entity>& InOwner, float fWidth, float fHeight, float fDepth, char* _TextureSources[6])
 	: CMeshComponent(InOwner)
 {
 	TextureSources[0] = _TextureSources[0];

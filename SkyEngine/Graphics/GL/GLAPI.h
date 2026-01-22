@@ -25,7 +25,7 @@ public:
 	bool CreateShaderProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* GeometryShaderFilename) override;
 	bool CreateTessProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename) override;
 	bool CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename) override;
-	THardPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) override;
+	TSharedPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) override;
 	void RenderMesh(ISceneVisual* SceneVisual) override;
 	void RenderLines(ISceneVisual* SceneVisual, float Thickness) override;
 	void CleanupMesh(ISceneVisual* SceneVisual) override;
@@ -48,7 +48,7 @@ public:
 	void Clear(SVector ClearColour) override;
 	void SetRenderViewportSize(const SVector2i InViewportSize) override;
 	void SetWireframeMode(bool bInWireframeEnabled) override;
-	void ApplyMaterialFlags(THardPointer<CMaterialInterface> InMaterial) override;
+	void ApplyMaterialFlags(TSharedPointer<CMaterialInterface> InMaterial) override;
 
 private:
 	std::string ReadShader(const char* filename);

@@ -8,7 +8,7 @@
 class ENGINE_API CSphere : public CMeshComponent
 {
 public:
-	CSphere(const THardPointer<Entity>& InOwner, const THardPointer<CMaterialInterface>& InMaterial = nullptr);	
+	CSphere(const TSharedPointer<Entity>& InOwner, const TSharedPointer<CMaterialInterface>& InMaterial = nullptr);	
 	~CSphere();
 	
 };

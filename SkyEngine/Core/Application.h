@@ -49,18 +49,18 @@ namespace SkyEngine
 		
 		SVector2i MainWindowSize;
 
-		THardPointer<IGraphicsAPI> GraphicsApi;
+		TSharedPointer<IGraphicsAPI> GraphicsApi;
 		IPlatformInterface* PlatformInterface;
-		THardPointer<CRenderer> Renderer;
+		TSharedPointer<CRenderer> Renderer;
 		EGraphicsAPI GraphicsApiType;
-		THardPointer<CLogManager> LogManager;
+		TSharedPointer<CLogManager> LogManager;
 		CMeshManager MeshManager;
 		CMaterialManager MaterialManager;
 		CTextureManager TextureManager;
 		CAssetManager AssetManager;
 
 		// TODO: Weak pointer to not hold ref
-		THardPointer<CEngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
+		TSharedPointer<CEngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
 		CViewportCanvas* GetViewportCanvas() const { return ViewportCanvas; }
 		std::string GetProjectDirectory() const { return ProjectDirectory; }
 		std::string GetContentDirectory() const { return ContentPath; }
@@ -74,7 +74,7 @@ namespace SkyEngine
 		CUICanvas* UILayer;
 		CViewportCanvas* ViewportCanvas;
 		
-		THardPointer<CEngineWindow> ApplicationWindow;
+		TSharedPointer<CEngineWindow> ApplicationWindow;
 		std::string ProjectDirectory;
 		std::string ContentPath;
 	private:
@@ -89,9 +89,9 @@ namespace SkyEngine
 }
 
 ENGINE_API SkyEngine::Application* GetApplication();
-ENGINE_API THardPointer<IGraphicsAPI> GetGraphicsAPI();
+ENGINE_API TSharedPointer<IGraphicsAPI> GetGraphicsAPI();
 ENGINE_API IPlatformInterface* GetPlatformInterface();
-ENGINE_API THardPointer<CRenderer> GetRenderer();
+ENGINE_API TSharedPointer<CRenderer> GetRenderer();
 ENGINE_API CMeshManager* GetMeshManager();
 ENGINE_API CMaterialManager* GetMaterialManager();
 ENGINE_API CTextureManager* GetTextureManager();
