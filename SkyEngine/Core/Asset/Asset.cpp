@@ -11,6 +11,7 @@
 #include "Render/Materials/MaterialType.h"
 #include "Render/Shaders/PBRShader.h"
 #include "Render/Textures/Texture.h"
+#include "Audio/Audio.h"
 #include "System/LogManager.h"
 
 CAsset::CAsset(const std::string& AssetPath, const std::string& InClass)
@@ -134,7 +135,7 @@ TAssetObjectPointer<CAssetObject> CAsset::Reload()
 	
 	// Required to stop it being cleaned up
 	TSharedPointer<CAsset> Cached = shared_from_this();
-	TAssetObjectPointer<CAssetObject> OriginalObject = Object;
+	TSharedPointer<CAssetObject> OriginalObject = Object->shared_from_this();
 	Unload();
 	// Store original object to redirect
 
@@ -143,11 +144,10 @@ TAssetObjectPointer<CAssetObject> CAsset::Reload()
 	
 	// TODO: Use proper asset/object management to redirect/reload instead of this garbage
 	// Reassign shared ptr memory to new object
-	std::shared_ptr<CAssetObject> OriginalPtr = (OriginalObject.GetWeak().lock());
-	CAssetObject& AssetObject = *OriginalPtr;
+	CAssetObject& AssetObject = *OriginalObject;
 	AssetObject = *Object;
 	
-	OriginalPtr.reset();
+	OriginalObject.reset();
 	
 	return Object;
 }
@@ -234,6 +234,10 @@ TSharedPointer<CAssetObject> CAsset::MakeObject() const
 	if (ClassName == CMesh::GetStaticName())
 	{
 		return std::make_shared<CMesh>();
+	}
+	if (ClassName == CAudio::GetStaticName())
+	{
+		return std::make_shared<CAudio>();
 	}
 	return nullptr;
 }

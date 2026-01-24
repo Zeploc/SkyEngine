@@ -13,6 +13,8 @@
 #include "Render/Meshes/Model/ModelMesh.h"
 #include "Render/Shaders/PBRShader.h"
 #include "Render/Shaders/UnlitShader.h"
+#include "Audio/Audio.h"
+#include "Platform/PlatformInterface.h"
 
 CContentBrowser::CContentBrowser(const TWeakPointer<CEngineWindow>& InOwningWindow): CUICanvas(InOwningWindow, "Content Browser")
 {
@@ -75,6 +77,7 @@ void CContentBrowser::OnRender()
 			AssetMenus.push_back(CTexture::GetStaticName());
 			AssetMenus.push_back(Scene::GetStaticName());
 			AssetMenus.push_back(CMesh::GetStaticName());
+			AssetMenus.push_back(CAudio::GetStaticName());
 			for (const string& AssetMenu : AssetMenus)
 			{
 				if (ImGui::MenuItem(AssetMenu.c_str()))
@@ -93,6 +96,7 @@ void CContentBrowser::OnRender()
 	}
 
 	std::string MeshFilePath;
+	std::string AudioFilePath;
 	TObjectPointer<CAsset> CreatedAsset;
 	if (ImGui::BeginPopup("NamePopup"))
 	{			
@@ -134,6 +138,24 @@ void CContentBrowser::OnRender()
 					StringUtils::Replace(MeshFilePath, ContentDirectory, "");
 				}
 			}
+			else if (NewAssetClassName == CAudio::GetStaticName())
+			{
+				if (!CFileManager::OpenFile(AudioFilePath, "Audio (*.mp3)\0*.mp3\0*.wav\0", ContentDirectory))
+				{
+					bAdditionalStepComplete = false;
+				}
+				if (bAdditionalStepComplete && !StringUtils::Contains(AudioFilePath, ContentDirectory))
+				{
+					// TODO: Prompt to import
+					string ErrorMessage = "File \"" + AudioFilePath + "\" not in content directory \"" + ContentDirectory + "\"\nCan't make asset";
+					GetPlatformInterface()->DisplayMessageBox("File not in content directory!", ErrorMessage, MB_OK);
+					bAdditionalStepComplete = false;
+				}
+				if (bAdditionalStepComplete)
+				{
+					StringUtils::Replace(AudioFilePath, ContentDirectory, "");
+				}
+			}
 			if (bAdditionalStepComplete)
 			{
 				CreatedAsset = GetAssetManager()->AddAsset(Directory + std::string(AssetName) + "." + Extension, NewAssetClassName);
@@ -149,6 +171,10 @@ void CContentBrowser::OnRender()
 		if (!MeshFilePath.empty())
 		{
 			Cast<CMesh>(NewAsset)->MeshPath = MeshFilePath;
+		}
+		else if (!AudioFilePath.empty())
+		{
+			Cast<CAudio>(NewAsset)->RelativeAudioPath = AudioFilePath;
 		}
 		CreatedAsset->SetDefaultObject(NewAsset);
 		CreatedAsset->Load()->OnLoaded();

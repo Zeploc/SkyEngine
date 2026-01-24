@@ -3,7 +3,7 @@
 
 std::shared_ptr<CAssetObject> CAssetObject::shared_from_this()
 {
-	return std::static_pointer_cast<CAssetObject>(CObject::shared_from_this());
+	return std::static_pointer_cast<CAssetObject>(std::enable_shared_from_this<CObject>::shared_from_this());
 }
 
 void CAssetObject::Serialize(std::ostream& os)

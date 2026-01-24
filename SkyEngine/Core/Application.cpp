@@ -8,8 +8,6 @@
 
 // Engine Includes //
 #include "Events/MouseEvent.h"
-#include "Input/Input.h"
-#include "Sound/SoundManager.h"
 #include "System/LogManager.h"
 #include "Canvas/Canvas.h"
 #include "Canvas/ViewportCanvas.h"
@@ -96,12 +94,15 @@ namespace SkyEngine
 		Renderer = CreatePointer<CRenderer>();
 
 		CTimeManager::Start();
-		SoundManager::GetInstance()->InitFMod();
+		if (!ensure(GetPlatformInterface()->GetAudioInterface()->Initialize(), "Audio initialization failed!"))
+		{
+			LogManager->DisplayWarning("Failed to initialize audio interface!");
+		}
 		InitializeEngineAssets();
-
+		
 		SetupViewportLayer();
 		ApplicationWindow->PushLayer(ViewportCanvas);
-		
+
 		return true;
 	}
 	
@@ -195,7 +196,6 @@ namespace SkyEngine
 		// TODO: Placeholders until layer/windows properly get cleaned up
 		SceneManager::DestoryInstance();
 		
-		SoundManager::DestoryInstance();
 		Text::Fonts.~vector();
 		LogManager.reset();
 	}

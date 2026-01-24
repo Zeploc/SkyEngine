@@ -6,6 +6,7 @@
 
 #include "Math/Internal/Vector2.decl.h"
 
+class IAudioInterface;
 class CEngineWindow;
 
 class ENGINE_API IPlatformInterface
@@ -14,6 +15,8 @@ public:
 	virtual ~IPlatformInterface() = default;
 	
 	virtual TSharedPointer<CEngineWindow> CreateNewWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bFullScreen) = 0;
+
+	virtual TSharedPointer<IAudioInterface> GetAudioInterface() = 0;
 
 	/* Returns int for response type */
 	virtual int32_t DisplayMessageBox(std::string Title, std::string Message, uint32_t Options) = 0; 

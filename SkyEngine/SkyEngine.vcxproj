@@ -152,6 +152,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Audio\AudioInterface.h" />
     <ClInclude Include="Canvas\Canvas.h" />
     <ClInclude Include="Canvas\CanvasManager.h" />
     <ClInclude Include="Canvas\UICanvas.h" />
@@ -214,6 +215,7 @@
     <ClInclude Include="Platform\File\FileManager.h" />
     <ClInclude Include="Platform\File\PathUtils.h" />
     <ClInclude Include="Platform\PlatformInterface.h" />
+    <ClInclude Include="Platform\Windows\FmodAudio.h" />
     <ClInclude Include="Platform\Window\EngineWindow.h" />
     <ClInclude Include="Platform\Window\GLFW\GLFWIncludes.h" />
     <ClInclude Include="Platform\Window\GLFW\GLFWWindow.h" />
@@ -259,7 +261,7 @@
     <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\SceneUtils.h" />
     <ClInclude Include="SkyEngine.h" />
-    <ClInclude Include="Sound\SoundManager.h" />
+    <ClInclude Include="Audio\Audio.h" />
     <ClInclude Include="System\EnumTypes.h" />
     <ClInclude Include="System\LogManager.h" />
     <ClInclude Include="System\Math_3d.h" />
@@ -313,6 +315,7 @@
     <ClCompile Include="Platform\File\FileManager.cpp" />
     <ClCompile Include="Platform\File\PathUtils.cpp" />
     <ClCompile Include="Platform\PlatformInterface.cpp" />
+    <ClCompile Include="Platform\Windows\FmodAudio.cpp" />
     <ClCompile Include="Platform\Window\EngineWindow.cpp" />
     <ClCompile Include="Platform\Window\GLFW\GLFWWindow.cpp" />
     <ClCompile Include="Platform\Window\GLFW\imgui_impl_glfw.cpp" />
@@ -357,7 +360,7 @@
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\SceneUtils.cpp" />
-    <ClCompile Include="Sound\SoundManager.cpp" />
+    <ClCompile Include="Audio\Audio.cpp" />
     <ClCompile Include="System\LogManager.cpp" />
     <ClCompile Include="System\TimeManager.cpp" />
     <ClCompile Include="System\Utils.cpp" />
