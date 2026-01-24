@@ -52,15 +52,6 @@ public:
 	virtual bool CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos);
 
 	virtual void OnDestroy() {}
-
-	void AddCollisionBounds(float fHeight, float fWidth, float fDepth, TSharedPointer<Entity> _EntityRef);
-
-	void AddCollisionBounds(TSharedPointer<CCollisionBounds> NewCollision);
-
-	TSharedPointer<CCollisionBounds> GetCollisionBounds()
-	{
-		return MeshCollisionBounds;
-	}
 	
 	std::string GetComponentClassName() override;
 	static std::string GetStaticName();
@@ -73,7 +64,6 @@ public:
 protected:
 	void Serialize(std::ostream& os) override;
 	void Deserialize(std::istream& is) override;
-	TSharedPointer<CCollisionBounds> MeshCollisionBounds;
 	TAssetObjectPointer<CMesh> MeshAsset;
 
 	bool bVisible = true;

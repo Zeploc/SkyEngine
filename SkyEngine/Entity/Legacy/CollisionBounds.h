@@ -5,7 +5,7 @@
 // Library Includes //
 
 // Engine Library //
-#include "Entity.h"
+#include "Entity/Entity.h"
 
 // OpenGL Library //
 

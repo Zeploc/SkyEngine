@@ -7,7 +7,7 @@
 // OpenGL Library Includes //
 
 // Local Includes //
-#include "Entity.h"
+#include "Entity/Entity.h"
 #include "Math/Vector2.h"
 #include "System/Utils.h"
 

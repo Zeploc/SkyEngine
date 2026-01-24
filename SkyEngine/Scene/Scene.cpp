@@ -16,15 +16,11 @@
 #include <fstream>
 
 #include "Core/Application.h"
-#include "Core/StringUtils.h"
-#include "Entity/Button3DEntity.h"
+#include "Entity/Legacy/Button3DEntity.h"
 #include "Render/Renderer.h"
 #include "Input/Input.h"
 #include "Platform/Window/GLFW/GLFWIncludes.h"
 #include "Render/Materials/Material.h"
-#include "Render/Meshes/MeshComponent.h"
-#include "Render/Shaders/PBRShader.h"
-#include "System/LogManager.h"
 
 /************************************************************
 #--Description--#:  Constructor function

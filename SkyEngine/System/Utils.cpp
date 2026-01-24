@@ -9,10 +9,9 @@
 
 // Engine Includes //
 #include "LogManager.h"
-#include "Entity/Body2DComponent.h"
 #include "Entity/Entity.h"
+#include "Entity/Legacy/Body2DComponent.h"
 #include "Math/Vector4.h"
-#include "Render/Meshes/Basic/Cube.h"
 #include "Render/Meshes/Basic/Plane.h"
 
 // Local Includes //

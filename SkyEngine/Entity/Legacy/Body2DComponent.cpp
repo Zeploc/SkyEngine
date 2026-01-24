@@ -1,7 +1,7 @@
 ﻿#include "SEPCH.h"
 #include "Body2DComponent.h"
 
-#include "Entity.h"
+#include "Entity/Entity.h"
 #include "Scene/Scene.h"
 
 CCollider2DComponent::CCollider2DComponent(const TSharedPointer<Entity>& InOwner, SBodyShape InBodyShape, bool bIsStatic)

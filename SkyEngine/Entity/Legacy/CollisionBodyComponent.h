@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Component.h"
+#include "Entity/Component.h"
 
 class CCollisionBodyComponent : public CComponent
 {

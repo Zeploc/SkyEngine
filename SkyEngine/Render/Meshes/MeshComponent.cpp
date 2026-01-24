@@ -5,7 +5,6 @@
 
 // Engine Includes //
 #include "Core/Application.h"
-#include "Entity/CollisionBounds.h"
 #include "Entity/Entity.h"
 #include "Render/Renderer.h"
 #include "Render/Materials/InternalMaterial.h"
@@ -41,8 +40,6 @@ CMeshComponent::CMeshComponent(const TSharedPointer<Entity>& InOwner, TAssetObje
 
 CMeshComponent::~CMeshComponent()
 {
-	//if (MeshCollisionBounds) delete MeshCollisionBounds;
-	MeshCollisionBounds = nullptr;
 	// TODO: Give id (component system?) and link to parent
 	CLogManager::Get()->DisplayMessage("Mesh was destroyed!");	
 }
@@ -108,16 +105,6 @@ bool CMeshComponent::CheckHit(SVector RayStart, SVector RayDirection, SVector& H
 void CMeshComponent::SetVisible(bool bNewVisible)
 {
 	bVisible = bNewVisible;
-}
-
-void CMeshComponent::AddCollisionBounds(float fWidth, float fHeight, float fDepth, TSharedPointer<Entity> _EntityRef)
-{
-	MeshCollisionBounds = std::make_shared<CCollisionBounds>(fWidth, fHeight, fDepth, _EntityRef);
-}
-
-void CMeshComponent::AddCollisionBounds(TSharedPointer<CCollisionBounds> NewCollision)
-{
-	MeshCollisionBounds = NewCollision;
 }
 
 void CMeshComponent::Serialize(std::ostream& os)

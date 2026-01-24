@@ -11,13 +11,13 @@
 
 #include "Editor/Windows/EditorWindow.h"
 #include "Editor/Windows/EditorWindowManager.h"
-#include <Render/Particle/ParticleSystem.h>
 #include <Render/Meshes/Basic/Plane.h>
 
 #include <Windows.h>
 
 #include "Core/Application.h"
 #include "Editor/EditorViewportCanvas.h"
+#include "Entity/Entity.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Render/Materials/Material.h"
 #include "Render/Meshes/BoxComponent.h"
