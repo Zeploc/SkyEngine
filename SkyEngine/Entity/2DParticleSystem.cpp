@@ -187,7 +187,7 @@ void ParticleSystem2D::Update()
 		// Random path from paths
 		int iRandPath = rand() % m_vParticlePaths.size();
 
-		TAssetObjectPointer<CTexture> ParticleTexture = GetTextureManager()->FindTexture(m_vParticlePaths[iRandPath]);	
+		TAssetObjectPointer<CTexture> ParticleTexture = CTextureUtils::FindTextureBySource(m_vParticlePaths[iRandPath]);	
 		TSharedPointer<CMaterial_Unlit> ParticleMaterial = std::make_shared<CMaterial_Unlit>("ParticleMaterial");
 		ParticleMaterial->Params.DiffuseColour = SVector4(1.0f, 1.0f, 1.0f, 1.0f);
 		ParticleMaterial->Params.DiffuseTexture = ParticleTexture;

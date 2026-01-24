@@ -65,5 +65,5 @@ void CBoxComponent::Deserialize(std::istream& is)
 {
 	CComponent::Deserialize(is);
 	
-	BoxMaterial = GetMaterialManager()->FindMaterial("BoxMaterial");
+	BoxMaterial = CMaterialUtils::FindMaterial("BoxMaterial");
 }

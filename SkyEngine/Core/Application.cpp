@@ -12,7 +12,6 @@
 #include "Sound/SoundManager.h"
 #include "System/LogManager.h"
 #include "Canvas/Canvas.h"
-#include "Canvas/UICanvas.h"
 #include "Canvas/ViewportCanvas.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Platform/Windows/WindowsPlatform.h"
@@ -21,11 +20,11 @@
 #include "System/TimeManager.h"
 #include "Render/Renderer.h"
 #include "Render/SceneRenderer.h"
-#include "Render/Meshes/MeshManager.h"
 #include "Scene/SceneUtils.h"
 #include "Entity/Camera.h"
 #include "Platform/Config/Config.h"
 #include "Platform/Config/ProjectSettingsConfig.h"
+#include "Render/Meshes/Basic/DefaultMeshes.h"
 #include "Render/Textures/Texture.h"
 
 // make sure the winsock lib is included...
@@ -97,8 +96,8 @@ namespace SkyEngine
 		Renderer = CreatePointer<CRenderer>();
 
 		CTimeManager::Start();
-		MeshManager.Init();
 		SoundManager::GetInstance()->InitFMod();
+		InitializeEngineAssets();
 
 		SetupViewportLayer();
 		ApplicationWindow->PushLayer(ViewportCanvas);
@@ -119,6 +118,15 @@ namespace SkyEngine
 		
 		// TODO: Should be moved out of editor
 		ContentPath = ProjectDirectory + "\\SkyEditor\\Assets\\";
+	}
+
+	void Application::InitializeEngineAssets()
+	{		
+		DefaultMesh::GetCube();
+		DefaultMesh::GetPlane();
+		DefaultMesh::GetSphere();
+		DefaultMesh::GetPyramid();
+		DefaultMesh::GetBox();
 	}
 
 	void Application::SetupConfigs()
@@ -250,21 +258,6 @@ IPlatformInterface* GetPlatformInterface()
 TSharedPointer<CRenderer> GetRenderer()
 {
 	return SkyEngine::Application::Get()->Renderer;
-}
-
-CMeshManager* GetMeshManager()
-{
-	return &SkyEngine::Application::Get()->MeshManager;
-}
-
-CMaterialManager* GetMaterialManager()
-{
-	return &SkyEngine::Application::Get()->MaterialManager;
-}
-
-CTextureManager* GetTextureManager()
-{
-	return &SkyEngine::Application::Get()->TextureManager;
 }
 
 CAssetManager* GetAssetManager()

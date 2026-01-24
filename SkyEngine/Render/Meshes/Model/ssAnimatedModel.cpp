@@ -309,7 +309,7 @@ bool ssAnimatedModel::initMaterials(const aiScene* pScene, const std::string fil
 
 				std::string FullPath = Dir + "/" + p;
 
-				TAssetObjectPointer<CTexture> Texture = GetTextureManager()->FindTexture(FullPath.c_str());
+				TAssetObjectPointer<CTexture> Texture = CTextureUtils::FindTextureBySource(FullPath.c_str());
 				m_Textures[i] = Texture;
 
 				if (!m_Textures[i]->IsValid())

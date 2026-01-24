@@ -3,15 +3,9 @@
 #include "SEPCH.h"
 #include "Plane.h"
 
-// OpenGL Library //
-#include <soil/SOIL2.h>
-
 // Engine Includes //
 #include "DefaultMeshes.h"
-#include "../MeshManager.h"
 #include "Render/Shaders/ShaderManager.h"
-#include "Core/Application.h"
-#include "Core/Asset/Asset.h"
 #include "Render/Materials/Material.h"
 #include "Render/Shaders/PBRShader.h"
 #include "Render/Textures/Texture.h"

@@ -118,7 +118,7 @@ TArray<std::string> TMaterial<S>::GetMetaData() const
 template <class S>
 void TMaterial<S>::OnLoaded()
 {
-	GetMaterialManager()->AddMaterial(shared_from_this());
+
 }
 
 template <class S>

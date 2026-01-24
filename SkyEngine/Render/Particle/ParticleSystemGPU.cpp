@@ -74,7 +74,7 @@ void ParticleSystemGPU::BindParticleSystemGPU(const char* TexturePath)
 
 	program = ShaderManager::GetShader("GPUParticlesProgram")->GetShaderProgram();
 
-	Texture = GetTextureManager()->FindTexture(TexturePath);
+	Texture = CTextureUtils::FindTextureBySource(TexturePath);
 
 	// Position
 	glGenBuffers(1, &posVbo);

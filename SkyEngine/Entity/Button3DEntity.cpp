@@ -10,7 +10,6 @@
 #include "Input/Input.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Render/Materials/Material.h"
-#include "Render/Meshes/MeshManager.h"
 #include "Render/Meshes/Basic/Cube.h"
 #include "Render/Meshes/Basic/DefaultMeshes.h"
 #include "Render/Shaders/UnlitShader.h"
@@ -25,7 +24,7 @@ Button3DEntity::Button3DEntity(STransform _Transform, float fWidth, float fHeigh
 	// TODO: Link UI pointer and set colour?
 	TSharedPointer<CMaterial_Unlit> UIMaterial = std::make_shared<CMaterial_Unlit>("UIMaterial");
 	UIMaterial->Params.DiffuseColour = _Colour;
-	GetMaterialManager()->AddMaterial(UIMaterial);
+	CMaterialUtils::RegisterNewMaterial(UIMaterial);
 	TSharedPointer<CMeshComponent> ButtonCubeMesh = std::make_shared<CMeshComponent>(shared_from_this(), DefaultMesh::GetCube(), UIMaterial);
 	AddComponent(ButtonCubeMesh);
 	btnColour = _Colour;
@@ -36,11 +35,11 @@ Button3DEntity::Button3DEntity(STransform _Transform, float fWidth, float fHeigh
 : Entity(_Transform, "Button 3D")
 {
 	// TODO: Link UI pointer and set colour?
-	TAssetObjectPointer<CTexture> ButtonTexture = GetTextureManager()->FindTexture(Texturepath);
+	TAssetObjectPointer<CTexture> ButtonTexture = CTextureUtils::FindTextureBySource(Texturepath);
 	TSharedPointer<CMaterial_Unlit> UIMaterial = std::make_shared<CMaterial_Unlit>("UIMaterial");
 	UIMaterial->Params.DiffuseColour = _Colour;
 	UIMaterial->Params.DiffuseTexture = ButtonTexture;
-	GetMaterialManager()->AddMaterial(UIMaterial);
+	CMaterialUtils::RegisterNewMaterial(UIMaterial);
 	TSharedPointer<CMeshComponent> ButtonCubeMesh = std::make_shared<CMeshComponent>(shared_from_this(), DefaultMesh::GetCube(), UIMaterial);
 	AddComponent(ButtonCubeMesh);
 	btnColour = _Colour;

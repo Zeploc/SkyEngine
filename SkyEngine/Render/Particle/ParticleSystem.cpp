@@ -77,7 +77,7 @@ void ParticleSystem::BindParticleSystem(const char* TexturePath)
 
 	program = ShaderManager::GetShader("ParticleShader")->GetShaderProgram();
 
-	Texture = GetTextureManager()->FindTexture(TexturePath);
+	Texture = CTextureUtils::FindTextureBySource(TexturePath);
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);

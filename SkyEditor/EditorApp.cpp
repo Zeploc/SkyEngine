@@ -63,6 +63,7 @@ void EditorApplication::SetProjectDirectory(std::string ExecutablePath)
 
 bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 {
+	
 	const bool bSuccessfulSetup = Application::ApplicationSetup(ExecutablePath);
 	if (!bSuccessfulSetup)
 	{
@@ -145,7 +146,7 @@ bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 
 void EditorApplication::SetupPlaceholderMaterials()
 {
-	TAssetObjectPointer<CTexture> BrickTexture = GetTextureManager()->FindTexture("Resources/Images/StoneWall_2x2.jpg");
+	TAssetObjectPointer<CTexture> BrickTexture = CTextureUtils::FindTextureBySource("Resources/Images/StoneWall_2x2.jpg");
 	
 	TAssetObjectPointer<CMaterial_PBR> BrickMaterial;
 	
@@ -158,34 +159,28 @@ void EditorApplication::SetupPlaceholderMaterials()
 	BrickMaterial = std::make_shared<CMaterial_PBR>("BrickMaterial");
 	// TSharedPointer<TMaterial<CUndefinedShader>> BrickMaterial = std::make_shared<TMaterial<CUndefinedShader>>("BrickMaterial", ShaderManager::GetUndefinedShader("BaseProgram"));
 	BrickMaterial->Params.DiffuseTexture = BrickTexture;
-	GetMaterialManager()->AddMaterial(BrickMaterial);
 
 	// Would be nice to be able to copy an existing material as a template
 	TSharedPointer<CMaterial_PBR> ColouredBrickMaterial = std::make_shared<CMaterial_PBR>("ColouredBrickMaterial");
 	ColouredBrickMaterial->Params.DiffuseTexture = BrickTexture;
 	ColouredBrickMaterial->Params.DiffuseColour = {0.5f, 0.3f, 0.3f, 1.0f};
-	GetMaterialManager()->AddMaterial(ColouredBrickMaterial);
 	
 	TSharedPointer<CMaterial_PBR> ColouredBrickPlaneMaterial = std::make_shared<CMaterial_PBR>("ColouredBrickPlaneMaterial");
 	ColouredBrickPlaneMaterial->Params.DiffuseTexture = BrickTexture;
 	ColouredBrickPlaneMaterial->Params.DiffuseColour = {0.5f, 0.3f, 0.3f, 1.0f};
 	ColouredBrickPlaneMaterial->bTwoSided = true;
-	GetMaterialManager()->AddMaterial(ColouredBrickPlaneMaterial);
 	
 	TAssetObjectPointer<CMaterial_PBR> CliffMaterial = std::make_shared<CMaterial_PBR>("CliffMaterial");
-	TAssetObjectPointer<CTexture> CliffTexture = GetTextureManager()->FindTexture("Resources/Images/SmoothCliff_1024.jpg");
+	TAssetObjectPointer<CTexture> CliffTexture = CTextureUtils::FindTextureBySource("Resources/Images/SmoothCliff_1024.jpg");
 	CliffMaterial->Params.DiffuseTexture = BrickTexture;
 	CliffMaterial->Params.DiffuseColour = {0.1f, 0.8f, 0.3f, 1.0f};	
-	GetMaterialManager()->AddMaterial(CliffMaterial);
 
 	TAssetObjectPointer<CMaterial_PBR> PlaneMaterial = std::make_shared<CMaterial_PBR>("PlaneMaterial");
 	PlaneMaterial->Params.DiffuseColour = {0.5f, 0.5f, 0.5f, 1.0f};
 	PlaneMaterial->bTwoSided = true;
-	GetMaterialManager()->AddMaterial(PlaneMaterial);
 	
 	TAssetObjectPointer<CMaterial_Unlit> BoxMaterial = std::make_shared<CMaterial_Unlit>("BoxMaterial");
 	BoxMaterial->Params.DiffuseColour = SVector4(1.0f, 0.1f, 0.1f, 1.0f);
-	GetMaterialManager()->AddMaterial(BoxMaterial);	
 	
 	TObjectPointer<CAsset> MaterialAsset;
 	TArray<TAssetObjectPointer<CMaterialInterface>> Materials = {BrickMaterial, ColouredBrickMaterial, ColouredBrickPlaneMaterial, CliffMaterial, PlaneMaterial, BoxMaterial};

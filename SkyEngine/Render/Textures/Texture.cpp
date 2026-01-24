@@ -39,7 +39,6 @@ TWeakPointer<CTexture> CTexture::weak_from_this()
 void CTexture::OnLoaded()
 {	
 	GetGraphicsAPI()->GenerateTexture(weak_from_this());
-	GetTextureManager()->AddLoadedTexture(shared_from_this());
 }
 
 void CTexture::Serialize(std::ostream& os)

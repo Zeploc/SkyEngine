@@ -21,7 +21,6 @@
 #include "Platform/Window/EngineWindow.h"
 #include "Render/Materials/Material.h"
 #include "Render/Meshes/BoxComponent.h"
-#include "Render/Meshes/MeshManager.h"
 #include "Render/Meshes/Basic/DefaultMeshes.h"
 
 EditorScene::EditorScene(const std::string& InSceneName) : Scene(InSceneName)
@@ -50,11 +49,11 @@ void EditorScene::OnLoaded()
 
 void EditorScene::AddSampleEntities()
 {
-	TAssetObjectPointer<CMaterialInterface> ColouredBrickMaterial = GetMaterialManager()->FindMaterial("ColouredBrickMaterial");
-	TAssetObjectPointer<CMaterialInterface> ColouredBrickPlaneMaterial = GetMaterialManager()->FindMaterial("ColouredBrickPlaneMaterial");
-	TAssetObjectPointer<CMaterialInterface> CliffMaterial = GetMaterialManager()->FindMaterial("CliffMaterial");
-	TAssetObjectPointer<CMaterialInterface> PlaneMaterial = GetMaterialManager()->FindMaterial("PlaneMaterial");
-	TAssetObjectPointer<CMaterialInterface> BoxMaterial = GetMaterialManager()->FindMaterial("BoxMaterial");
+	TAssetObjectPointer<CMaterialInterface> ColouredBrickMaterial = CMaterialUtils::FindMaterial("ColouredBrickMaterial");
+	TAssetObjectPointer<CMaterialInterface> ColouredBrickPlaneMaterial = CMaterialUtils::FindMaterial("ColouredBrickPlaneMaterial");
+	TAssetObjectPointer<CMaterialInterface> CliffMaterial = CMaterialUtils::FindMaterial("CliffMaterial");
+	TAssetObjectPointer<CMaterialInterface> PlaneMaterial = CMaterialUtils::FindMaterial("PlaneMaterial");
+	TAssetObjectPointer<CMaterialInterface> BoxMaterial = CMaterialUtils::FindMaterial("BoxMaterial");
 	
 	TSharedPointer<Entity> SphereRaycastTest(new Entity(STransform{{18.0f, 2.0f, 0.0f}, {0, 0, 0}, {2, 2, 2}}, "Sphere"));
 	TSharedPointer<CMeshComponent> SphereRaycastMesh = std::make_shared<CMeshComponent>(SphereRaycastTest, DefaultMesh::GetSphere(), CliffMaterial);

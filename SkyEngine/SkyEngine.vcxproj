@@ -223,7 +223,7 @@
     <ClInclude Include="Render\Lighting.h" />
     <ClInclude Include="Render\Materials\InternalMaterial.h" />
     <ClInclude Include="Render\Materials\Material.h" />
-    <ClInclude Include="Render\Materials\MaterialManager.h" />
+    <ClInclude Include="Render\Materials\MaterialUtils.h" />
     <ClInclude Include="Render\Materials\MaterialType.h" />
     <ClInclude Include="Render\Meshes\Advanced\CubeMap.h" />
     <ClInclude Include="Render\Meshes\Advanced\GeometryObject.h" />
@@ -236,7 +236,6 @@
     <ClInclude Include="Render\Meshes\BoxComponent.h" />
     <ClInclude Include="Render\Meshes\MeshComponent.h" />
     <ClInclude Include="Render\Meshes\Mesh.h" />
-    <ClInclude Include="Render\Meshes\MeshManager.h" />
     <ClInclude Include="Render\Meshes\Model\AnimatedModel.h" />
     <ClInclude Include="Render\Meshes\Model\Model.h" />
     <ClInclude Include="Render\Meshes\Model\ModelMesh.h" />
@@ -254,7 +253,7 @@
     <ClInclude Include="Render\Shaders\UndefinedShader.h" />
     <ClInclude Include="Render\Shaders\UnlitShader.h" />
     <ClInclude Include="Render\Textures\Texture.h" />
-    <ClInclude Include="Render\Textures\TextureManager.h" />
+    <ClInclude Include="Render\Textures\TextureUtils.h" />
     <ClInclude Include="SEPCH.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SceneManager.h" />
@@ -322,7 +321,7 @@
     <ClCompile Include="Render\Lighting.cpp" />
     <ClCompile Include="Render\Materials\InternalMaterial.cpp" />
     <ClCompile Include="Render\Materials\Material.cpp" />
-    <ClCompile Include="Render\Materials\MaterialManager.cpp" />
+    <ClCompile Include="Render\Materials\MaterialUtils.cpp" />
     <ClCompile Include="Render\Meshes\Advanced\CubeMap.cpp" />
     <ClCompile Include="Render\Meshes\Advanced\GeometryObject.cpp" />
     <ClCompile Include="Render\Meshes\Advanced\TessMesh.cpp" />
@@ -334,7 +333,6 @@
     <ClCompile Include="Render\Meshes\BoxComponent.cpp" />
     <ClCompile Include="Render\Meshes\MeshComponent.cpp" />
     <ClCompile Include="Render\Meshes\Mesh.cpp" />
-    <ClCompile Include="Render\Meshes\MeshManager.cpp" />
     <ClCompile Include="Render\Meshes\Model\AnimatedModel.cpp" />
     <ClCompile Include="Render\Meshes\Model\Model.cpp" />
     <ClCompile Include="Render\Meshes\Model\ModelMesh.cpp" />
@@ -352,7 +350,7 @@
     <ClCompile Include="Render\Shaders\UndefinedShader.cpp" />
     <ClCompile Include="Render\Shaders\UnlitShader.cpp" />
     <ClCompile Include="Render\Textures\Texture.cpp" />
-    <ClCompile Include="Render\Textures\TextureManager.cpp" />
+    <ClCompile Include="Render\Textures\TextureUtils.cpp" />
     <ClCompile Include="SEPCH.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

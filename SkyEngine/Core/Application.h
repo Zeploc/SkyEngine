@@ -8,9 +8,8 @@
 #include "Core/Core.h"
 #include "Graphics/GraphicsAPI.h"
 #include "Math/Vector2.h"
-#include "Render/Materials/MaterialManager.h"
-#include "Render/Meshes/MeshManager.h"
-#include "Render/Textures/TextureManager.h"
+#include "Render/Materials/MaterialUtils.h"
+#include "Render/Textures/TextureUtils.h"
 
 class Scene;
 class CViewportCanvas;
@@ -54,9 +53,6 @@ namespace SkyEngine
 		TSharedPointer<CRenderer> Renderer;
 		EGraphicsAPI GraphicsApiType;
 		TSharedPointer<CLogManager> LogManager;
-		CMeshManager MeshManager;
-		CMaterialManager MaterialManager;
-		CTextureManager TextureManager;
 		CAssetManager AssetManager;
 
 		// TODO: Weak pointer to not hold ref
@@ -69,6 +65,7 @@ namespace SkyEngine
 		inline static Application* Get();
 	protected:
 		virtual void SetProjectDirectory(std::string ExecutablePath);
+		void InitializeEngineAssets();
 		
 		// TODO: Remove since viewport layer should make game UI canvas
 		CUICanvas* UILayer;
@@ -92,8 +89,5 @@ ENGINE_API SkyEngine::Application* GetApplication();
 ENGINE_API TSharedPointer<IGraphicsAPI> GetGraphicsAPI();
 ENGINE_API IPlatformInterface* GetPlatformInterface();
 ENGINE_API TSharedPointer<CRenderer> GetRenderer();
-ENGINE_API CMeshManager* GetMeshManager();
-ENGINE_API CMaterialManager* GetMaterialManager();
-ENGINE_API CTextureManager* GetTextureManager();
 ENGINE_API CAssetManager* GetAssetManager();
 
