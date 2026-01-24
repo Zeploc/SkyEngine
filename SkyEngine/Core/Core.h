@@ -53,10 +53,10 @@
 #endif
 
 #ifndef NDEBUG
-#   define ensure(Expr, Msg) \
-__M_Ensure(#Expr, Expr, __FILE__, __LINE__, Msg)
+#   define ensure(Expr, Msg, ...) \
+__M_Ensure(#Expr, Expr, __FILE__, __LINE__, std::format(Msg, __VA_ARGS__).c_str())
 #else
-#   define M_Assert(Expr, Msg)
+#   define M_Assert(Expr, std::format(Msg, __VA_ARGS__).c_str())
 #endif
 
 #define LOG_MESSAGE(Text, ...)\

@@ -3,6 +3,8 @@
 #include "SEPCH.h"
 #include "Matrix.h"
 
+#include <format>
+
 #include "Quaternion.h"
 #include "Vector.h"
 #include "Vector4.h"
@@ -286,7 +288,7 @@ Matrix4 Matrix4::GetInverse()
 {
 	// Compute the reciprocal determinant
 	float det = Determinant();
-	if (det == 0.0f)
+	if (ensure(det == 0.0f, "Matrix function inverse doesn't exist"))
 	{
 		// Matrix not invertible. Setting all elements to nan is not really
 		// correct in a mathematical sense but it is easy to debug for the
@@ -297,7 +299,6 @@ Matrix4 Matrix4::GetInverse()
 			nan,nan,nan,nan,
 			nan,nan,nan,nan,
 			nan,nan,nan,nan);*/
-		ensure(false, "Matrix function inverse doesn't exist");
 		return *this;
 	}
 

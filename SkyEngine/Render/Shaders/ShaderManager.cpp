@@ -105,8 +105,7 @@ void ShaderManager::ShaderCreated(const TSharedPointer<CShader>NewShader)
 	std::string ShaderName = NewShader->GetShaderName();
 	if (!NewShader->CompileShader())
 	{
-		const std::string ErrorMessage = "Failed to create shader" + ShaderName;
-		ensure(false, ErrorMessage.c_str());
+		ensure(false, "Failed to create shader %s", ShaderName);
 		return;
 	}
 	Shaders.insert(std::pair(ShaderName, NewShader));

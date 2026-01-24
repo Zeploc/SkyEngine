@@ -166,7 +166,7 @@ std::string CGLAPI::ReadShader(const char* filename)
 	std::string shaderCode;
 	std::ifstream file(filename, std::ios::in);
 
-	ensure (file.good(), (std::string("Can't read file ") + filename).c_str());
+	ensure(file.good(), "Can't read file %s", filename);
 
 	file.seekg(0, std::ios::end);
 	shaderCode.resize(file.tellg());

@@ -73,9 +73,13 @@ TAssetObjectPointer<CAssetObject> CAsset::Load()
 	std::getline(FileStream, _, '[');
 	std::getline(FileStream, AssetData, ']');
 	ApplyAssetData(AssetData);
+	if (!ensure(!ClassName.empty(), "Class name must be valid"))
+	{
+		return nullptr;
+	}
 
 	const TSharedPointer<CAssetObject> CreatedObject = MakeObject();
-	ensure(CreatedObject != nullptr, "Failed to create class from name!");
+	ensure(CreatedObject != nullptr, "Failed to create class from name [%s]!", ClassName);
 	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(CreatedObject.get());
 	FileStream >> AssetInterface;
 
