@@ -90,6 +90,11 @@ std::string Scene::GetStaticName()
 	return "Scene";
 }
 
+std::string Scene::GetFileExtension()
+{
+	return "slvl";
+}
+
 std::string Scene::GetAssetClassName()
 {
 	return GetStaticName();

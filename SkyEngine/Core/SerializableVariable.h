@@ -114,7 +114,7 @@ struct ENGINE_API SSerializableVariable
 	virtual void OnValueChanged() {}
 };
 
-#define SetSerializeVariable(VariableName) SerializeVariableWithTags(VariableName)
+#define SetSerializeVariable(VariableName) SerializeVariableWithTags(VariableName, {})
 
 #define SerializeVariableWithTags(VariableName, MetaTags) CustomSerializeVariable(SSerializableVariable, SerializeVariables, VariableName)
 

@@ -71,17 +71,16 @@ void CContentBrowser::OnRender()
 					
 				ImGui::EndMenu();
 			}
-			if (ImGui::MenuItem("Texture"))
+			TArray<std::string> AssetMenus;
+			AssetMenus.push_back(CTexture::GetStaticName());
+			AssetMenus.push_back(Scene::GetStaticName());
+			AssetMenus.push_back(CMesh::GetStaticName());
+			for (const string& AssetMenu : AssetMenus)
 			{
-				NewAssetClassName = CTexture::GetStaticName();
-			}
-			if (ImGui::MenuItem("Scene"))
-			{
-				NewAssetClassName = Scene::GetStaticName();
-			}
-			if (ImGui::MenuItem("Mesh"))
-			{
-				NewAssetClassName = CMesh::GetStaticName();
+				if (ImGui::MenuItem(AssetMenu.c_str()))
+				{
+					NewAssetClassName = AssetMenu;
+				}
 			}
 			ImGui::EndMenu();
 		}
@@ -111,21 +110,33 @@ void CContentBrowser::OnRender()
 		if (ImGui::Button("Create"))
 		{
 			bool bAdditionalStepComplete = true;
-			std::string Extension = ".sasset";
+			std::string Extension = CAsset::GetFileExtension();
+			const string ContentDirectory = GetApplication()->GetContentDirectory();
 			if (NewAssetClassName == Scene::GetStaticName())
 			{
-				Extension = ".slvl";
+				Extension = Scene::GetFileExtension();
 			}
 			else if (NewAssetClassName == CMesh::GetStaticName())
 			{
-				if (!CFileManager::OpenFile(MeshFilePath, "obj", GetApplication()->GetContentDirectory()))
+				if (!CFileManager::OpenFile(MeshFilePath, "obj", ContentDirectory))
 				{
 					bAdditionalStepComplete = false;
+				}
+				if (bAdditionalStepComplete && !StringUtils::Contains(MeshFilePath, ContentDirectory))
+				{
+					// TODO: Prompt to import
+					string ErrorMessage = "File \"" + MeshFilePath + "\" not in content directory \"" + ContentDirectory + "\"\nCan't make asset";
+					GetPlatformInterface()->DisplayMessageBox("File not in content directory!", ErrorMessage, MB_OK);
+					bAdditionalStepComplete = false;
+				}
+				if (bAdditionalStepComplete)
+				{
+					StringUtils::Replace(MeshFilePath, ContentDirectory, "");
 				}
 			}
 			if (bAdditionalStepComplete)
 			{
-				CreatedAsset = GetAssetManager()->AddAsset(Directory + std::string(AssetName) + Extension, NewAssetClassName);
+				CreatedAsset = GetAssetManager()->AddAsset(Directory + std::string(AssetName) + "." + Extension, NewAssetClassName);
 			}
 			ImGui::CloseCurrentPopup();
 		}

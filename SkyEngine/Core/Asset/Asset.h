@@ -45,6 +45,8 @@ public:
 	/* Creates the object for this asset when loading based on the class and meta data */
 	TSharedPointer<CAssetObject> MakeObject() const;
 
+	static std::string GetFileExtension();
+
 protected:
 	void ApplyAssetData(std::string AssetData);
 	

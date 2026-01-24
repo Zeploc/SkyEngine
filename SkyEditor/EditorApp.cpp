@@ -73,17 +73,12 @@ bool EditorApplication::ApplicationSetup(std::string ExecutablePath)
 	AssetManager.SetAssetPath(ContentPath);
 	AssetManager.ScanForAssets();
 
-	TObjectPointer<CAsset> Asset = AssetManager.FindAsset("Textures/Asphalt8_1x1.sasset");
-	TAssetObjectPointer<CTexture> TextureObjectPointer = Asset->Load<CTexture>();
-	LOG_MESSAGE("Object Pointer valid: {}", TextureObjectPointer.IsValid() ? "True" : "False");
-	LOG_MESSAGE("Attempting to unload...");
-	Asset->Unload();
-	LOG_MESSAGE("Object Pointer valid: {}", TextureObjectPointer.IsValid() ? "True" : "False");
-
-	if (!Asset)
-	{
-		
-	}
+	// TObjectPointer<CAsset> Asset = AssetManager.FindAsset("Textures/Asphalt8_1x1.sasset");
+	// TAssetObjectPointer<CTexture> TextureObjectPointer = Asset->Load<CTexture>();
+	// LOG_MESSAGE("Object Pointer valid: {}", TextureObjectPointer.IsValid() ? "True" : "False");
+	// LOG_MESSAGE("Attempting to unload...");
+	// Asset->Unload();
+	// LOG_MESSAGE("Object Pointer valid: {}", TextureObjectPointer.IsValid() ? "True" : "False");
 	
 	// TSharedPointer<CTexture> BrickTexture = TextureManager.AddNewTexture("Resources\\Images\\StoneWall_2x2.jpg");
 	// BrickTexture->Asset->Save();
@@ -383,7 +378,7 @@ void EditorApplication::OnExit()
 void EditorApplication::OpenNewScene()
 {
 	std::string FilePath;
-	if (!CFileManager::OpenFile(FilePath, "slvl", ContentPath))
+	if (!CFileManager::OpenFile(FilePath, Scene::GetFileExtension(), ContentPath))
 	{
 		// No file opened (cancelled)
 		return;
@@ -470,7 +465,7 @@ void EditorApplication::SaveScene(bool bAsNew)
 		{
 			return;
 		}
-		PathUtils::SetExtension(ChosenFilePath, "slvl");
+		PathUtils::SetExtension(ChosenFilePath, Scene::GetFileExtension());
 		ScenePath = ChosenFilePath;
 		StringUtils::Replace(ScenePath, ContentPath, "");
 		TObjectPointer<CAsset> NewSceneAsset = AssetManager.AddAsset(ScenePath, Scene::GetStaticName());

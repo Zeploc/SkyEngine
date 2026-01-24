@@ -57,8 +57,8 @@ void CMesh::OnLoaded()
 {
 	if (!MeshPath.empty())
 	{
-		ModelObject ModelTest(MeshPath);
-		ensure(ModelTest.meshes.size() > 0, "Invalid mesh");
+		ModelObject ModelTest(GetAbsolutePath());
+		ensure(!ModelTest.meshes.empty(), "Invalid mesh");
 
 		std::vector<float> VertexPositions;
 		std::vector<float> Normals;
@@ -76,7 +76,7 @@ void CMesh::OnLoaded()
 		}
 	
 		InitData(VertexPositions, ModelTest.meshes[0].indices, Normals);
-		if (UVs.size() > 0)
+		if (!UVs.empty())
 		{
 			SetUVs(UVs);
 		}
@@ -187,6 +187,11 @@ std::string CMesh::GetStaticName()
 void CMesh::Open()
 {
 	
+}
+
+std::string CMesh::GetAbsolutePath() const
+{
+	return GetApplication()->GetContentDirectory() + MeshPath;
 }
 
 void CMesh::PushPositions(TArray<float>& OutVertices, int VertexIndex) const

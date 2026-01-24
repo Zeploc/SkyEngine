@@ -79,7 +79,10 @@ TAssetObjectPointer<CAssetObject> CAsset::Load()
 	}
 
 	const TSharedPointer<CAssetObject> CreatedObject = MakeObject();
-	ensure(CreatedObject != nullptr, "Failed to create class from name [%s]!", ClassName);
+	if (!ensure(CreatedObject != nullptr, "Failed to create class from name [%s]!", ClassName))
+	{
+		return nullptr;
+	}
 	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(CreatedObject.get());
 	FileStream >> AssetInterface;
 
@@ -233,4 +236,9 @@ TSharedPointer<CAssetObject> CAsset::MakeObject() const
 		return std::make_shared<CMesh>();
 	}
 	return nullptr;
+}
+
+std::string CAsset::GetFileExtension()
+{
+	return "sasset";
 }

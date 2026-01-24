@@ -54,6 +54,7 @@ public:
 	static std::string GetStaticName(); 
 	void Open() override;
 	
+	std::string GetAbsolutePath() const;
 	std::string MeshPath;
 	
 #define POSITION_ELEMENTS_COUNT 3

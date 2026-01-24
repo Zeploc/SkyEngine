@@ -288,7 +288,7 @@ Matrix4 Matrix4::GetInverse()
 {
 	// Compute the reciprocal determinant
 	float det = Determinant();
-	if (ensure(det == 0.0f, "Matrix function inverse doesn't exist"))
+	if (!ensure(det != 0.0f, "Matrix function inverse doesn't exist"))
 	{
 		// Matrix not invertible. Setting all elements to nan is not really
 		// correct in a mathematical sense but it is easy to debug for the

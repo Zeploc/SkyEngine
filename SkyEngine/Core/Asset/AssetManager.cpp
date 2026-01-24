@@ -6,6 +6,7 @@
 #include "Core/StringUtils.h"
 #include "Platform/File/FileManager.h"
 #include "Platform/File/PathUtils.h"
+#include "Scene/Scene.h"
 #include "System/LogManager.h"
 #include "System/Utils.h"
 
@@ -112,7 +113,12 @@ void CAssetManager::ScanForAssets()
 	for (std::string FilePath : FilePaths)
 	{
 		StringUtils::Replace(FilePath, AssetDirectory, "");
-		AddAsset(FilePath);
+		std::string FileExtension = PathUtils::GetExtension(FilePath);
+		const bool bValidExtension = FileExtension == CAsset::GetFileExtension() || FileExtension == Scene::GetFileExtension();
+		if (bValidExtension)
+		{
+			AddAsset(FilePath);
+		}
 	}
 }
 

@@ -29,6 +29,7 @@ public:
 	void Serialize(std::ostream& os) override;
 	void Deserialize(std::istream& is) override;
 	static std::string GetStaticName();
+	static std::string GetFileExtension();
 	std::string GetAssetClassName() override;
 	void Open() override;
 
