@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Audio">
-      <UniqueIdentifier>{99999999-5672-74A8-3F2D-88FC2B6EFBF8}</UniqueIdentifier>
+      <UniqueIdentifier>{9718D90C-032D-01BE-CCAE-A41D3882FDEE}</UniqueIdentifier>
     </Filter>
     <Filter Include="Canvas">
       <UniqueIdentifier>{614442AB-4DE6-6C81-36A1-80D522E2F3D1}</UniqueIdentifier>
@@ -21,6 +21,9 @@
     </Filter>
     <Filter Include="Entity">
       <UniqueIdentifier>{A2E9DAB0-8E8B-0587-7746-19DB63878CD7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity\Legacy">
+      <UniqueIdentifier>{66869A3E-D246-1675-9B81-5FF207015B51}</UniqueIdentifier>
     </Filter>
     <Filter Include="Events">
       <UniqueIdentifier>{3A8963B1-262B-8E87-0FE6-A1DBFB2615D8}</UniqueIdentifier>
@@ -70,17 +73,20 @@
     <Filter Include="Render\Meshes">
       <UniqueIdentifier>{590EC312-C5CE-3E49-8E09-88C6FA888325}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Render\Meshes\Advanced">
-      <UniqueIdentifier>{7ED16865-6ACB-91B7-5338-28C83FD1F723}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Render\Meshes\Basic">
       <UniqueIdentifier>{CA9BD8BD-36FD-B5CB-BF6A-FC7D2BCBEC8A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\Meshes\Legacy">
+      <UniqueIdentifier>{3D578190-29E6-0A5A-D204-1F55BE721B00}</UniqueIdentifier>
     </Filter>
     <Filter Include="Render\Meshes\Model">
       <UniqueIdentifier>{5916A7BE-C577-84CC-4EE5-CA7EBA45BB8B}</UniqueIdentifier>
     </Filter>
     <Filter Include="Render\Particle">
       <UniqueIdentifier>{688D225F-D418-9023-DD29-13184934EC23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\Particle\Legacy">
+      <UniqueIdentifier>{6C6F77DC-5869-A02E-41D6-363F2D6F069B}</UniqueIdentifier>
     </Filter>
     <Filter Include="Render\Shaders">
       <UniqueIdentifier>{9ED5B93E-8AA3-AD44-7337-1E6B5FA489A9}</UniqueIdentifier>
@@ -96,15 +102,6 @@
     </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{83755900-6F01-880B-D8AF-880BC45A880B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Entity\Legacy">
-      <UniqueIdentifier>{6B883C8C-0849-417A-9D86-455483256195}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Render\Meshes\Legacy">
-      <UniqueIdentifier>{E66C6351-4694-44C1-903D-947514732101}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Render\Particle\Legacy">
-      <UniqueIdentifier>{36067087-B244-4284-8846-5C0D08031350}</UniqueIdentifier>
     </Filter>
     <Filter Include="UI\Legacy">
       <UniqueIdentifier>{27CBCAD8-9335-7F4F-DC73-30F5481D5DA4}</UniqueIdentifier>
@@ -135,13 +132,13 @@
     <ClInclude Include="Core\Asset\Asset.h">
       <Filter>Core\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Asset\AssetObject.h">
-      <Filter>Core\Asset</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Asset\AssetInterface.h">
       <Filter>Core\Asset</Filter>
     </ClInclude>
     <ClInclude Include="Core\Asset\AssetManager.h">
+      <Filter>Core\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Asset\AssetObject.h">
       <Filter>Core\Asset</Filter>
     </ClInclude>
     <ClInclude Include="Core\Core.h">
@@ -174,6 +171,15 @@
     <ClInclude Include="Dependencies\ImGuizmo\ImGuizmo.h">
       <Filter>Dependencies\ImGuizmo</Filter>
     </ClInclude>
+    <ClInclude Include="Entity\Camera.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\Component.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\Entity.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
     <ClInclude Include="Entity\Legacy\2DParticleSystem.h">
       <Filter>Entity\Legacy</Filter>
     </ClInclude>
@@ -183,20 +189,11 @@
     <ClInclude Include="Entity\Legacy\Button3DEntity.h">
       <Filter>Entity\Legacy</Filter>
     </ClInclude>
-    <ClInclude Include="Entity\Camera.h">
-      <Filter>Entity</Filter>
-    </ClInclude>
     <ClInclude Include="Entity\Legacy\CollisionBodyComponent.h">
       <Filter>Entity\Legacy</Filter>
     </ClInclude>
     <ClInclude Include="Entity\Legacy\CollisionBounds.h">
       <Filter>Entity\Legacy</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity\Component.h">
-      <Filter>Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity\Entity.h">
-      <Filter>Entity</Filter>
     </ClInclude>
     <ClInclude Include="Events\ApplicationEvent.h">
       <Filter>Events</Filter>
@@ -315,10 +312,10 @@
     <ClInclude Include="Platform\Window\GLFW\imgui_impl_glfw.h">
       <Filter>Platform\Window\GLFW</Filter>
     </ClInclude>
-    <ClInclude Include="Platform\Windows\WindowsPlatform.h">
+    <ClInclude Include="Platform\Windows\FmodAudio.h">
       <Filter>Platform\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="Platform\Windows\FmodAudio.h">
+    <ClInclude Include="Platform\Windows\WindowsPlatform.h">
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="Render\Framebuffer.h">
@@ -333,23 +330,11 @@
     <ClInclude Include="Render\Materials\Material.h">
       <Filter>Render\Materials</Filter>
     </ClInclude>
-    <ClInclude Include="Render\Materials\MaterialUtils.h">
-      <Filter>Render\Materials</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\Materials\MaterialManager.h">
-      <Filter>Render\Materials</Filter>
-    </ClInclude>
     <ClInclude Include="Render\Materials\MaterialType.h">
       <Filter>Render\Materials</Filter>
     </ClInclude>
-    <ClInclude Include="Render\Meshes\Legacy\CubeMap.h">
-      <Filter>Render\Meshes\Legacy</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\Meshes\Legacy\GeometryObject.h">
-      <Filter>Render\Meshes\Legacy</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\Meshes\Legacy\TessMesh.h">
-      <Filter>Render\Meshes\Legacy</Filter>
+    <ClInclude Include="Render\Materials\MaterialUtils.h">
+      <Filter>Render\Materials</Filter>
     </ClInclude>
     <ClInclude Include="Render\Meshes\Basic\Cube.h">
       <Filter>Render\Meshes\Basic</Filter>
@@ -369,16 +354,19 @@
     <ClInclude Include="Render\Meshes\BoxComponent.h">
       <Filter>Render\Meshes</Filter>
     </ClInclude>
-    <ClInclude Include="Render\Meshes\MeshComponent.h">
-      <Filter>Render\Meshes</Filter>
+    <ClInclude Include="Render\Meshes\Legacy\CubeMap.h">
+      <Filter>Render\Meshes\Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Meshes\Legacy\GeometryObject.h">
+      <Filter>Render\Meshes\Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Meshes\Legacy\TessMesh.h">
+      <Filter>Render\Meshes\Legacy</Filter>
     </ClInclude>
     <ClInclude Include="Render\Meshes\Mesh.h">
       <Filter>Render\Meshes</Filter>
     </ClInclude>
-    <ClInclude Include="Render\Meshes\MeshData.h">
-      <Filter>Render\Meshes</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\Meshes\MeshManager.h">
+    <ClInclude Include="Render\Meshes\MeshComponent.h">
       <Filter>Render\Meshes</Filter>
     </ClInclude>
     <ClInclude Include="Render\Meshes\Model\AnimatedModel.h">
@@ -435,9 +423,6 @@
     <ClInclude Include="Render\Textures\TextureUtils.h">
       <Filter>Render\Textures</Filter>
     </ClInclude>
-    <ClInclude Include="Render\Textures\TextureManager.h">
-      <Filter>Render\Textures</Filter>
-    </ClInclude>
     <ClInclude Include="SEPCH.h" />
     <ClInclude Include="Scene\Scene.h">
       <Filter>Scene</Filter>
@@ -472,11 +457,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Canvas\Canvas.cpp">
-      <Filter>Canvas</Filter>
-    </ClCompile>
     <ClCompile Include="Audio\Audio.cpp">
       <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Canvas\Canvas.cpp">
+      <Filter>Canvas</Filter>
     </ClCompile>
     <ClCompile Include="Canvas\CanvasManager.cpp">
       <Filter>Canvas</Filter>
@@ -493,13 +478,13 @@
     <ClCompile Include="Core\Asset\Asset.cpp">
       <Filter>Core\Asset</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Asset\AssetObject.cpp">
-      <Filter>Core\Asset</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Asset\AssetInterface.cpp">
       <Filter>Core\Asset</Filter>
     </ClCompile>
     <ClCompile Include="Core\Asset\AssetManager.cpp">
+      <Filter>Core\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Asset\AssetObject.cpp">
       <Filter>Core\Asset</Filter>
     </ClCompile>
     <ClCompile Include="Core\Core.cpp">
@@ -523,6 +508,15 @@
     <ClCompile Include="Dependencies\ImGuizmo\ImGuizmo.cpp">
       <Filter>Dependencies\ImGuizmo</Filter>
     </ClCompile>
+    <ClCompile Include="Entity\Camera.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\Component.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\Entity.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
     <ClCompile Include="Entity\Legacy\2DParticleSystem.cpp">
       <Filter>Entity\Legacy</Filter>
     </ClCompile>
@@ -532,20 +526,11 @@
     <ClCompile Include="Entity\Legacy\Button3DEntity.cpp">
       <Filter>Entity\Legacy</Filter>
     </ClCompile>
-    <ClCompile Include="Entity\Camera.cpp">
-      <Filter>Entity</Filter>
-    </ClCompile>
     <ClCompile Include="Entity\Legacy\CollisionBodyComponent.cpp">
       <Filter>Entity\Legacy</Filter>
     </ClCompile>
     <ClCompile Include="Entity\Legacy\CollisionBounds.cpp">
       <Filter>Entity\Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity\Component.cpp">
-      <Filter>Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity\Entity.cpp">
-      <Filter>Entity</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\GL\GLAPI.cpp">
       <Filter>Graphics\GL</Filter>
@@ -610,10 +595,10 @@
     <ClCompile Include="Platform\Window\GLFW\imgui_impl_glfw.cpp">
       <Filter>Platform\Window\GLFW</Filter>
     </ClCompile>
-    <ClCompile Include="Platform\Windows\WindowsPlatform.cpp">
+    <ClCompile Include="Platform\Windows\FmodAudio.cpp">
       <Filter>Platform\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="Platform\Windows\FmodAudio.cpp">
+    <ClCompile Include="Platform\Windows\WindowsPlatform.cpp">
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Render\Framebuffer.cpp">
@@ -630,18 +615,6 @@
     </ClCompile>
     <ClCompile Include="Render\Materials\MaterialUtils.cpp">
       <Filter>Render\Materials</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Materials\MaterialManager.cpp">
-      <Filter>Render\Materials</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Meshes\Legacy\CubeMap.cpp">
-      <Filter>Render\Meshes\Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Meshes\Legacy\GeometryObject.cpp">
-      <Filter>Render\Meshes\Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Meshes\Legacy\TessMesh.cpp">
-      <Filter>Render\Meshes\Legacy</Filter>
     </ClCompile>
     <ClCompile Include="Render\Meshes\Basic\Cube.cpp">
       <Filter>Render\Meshes\Basic</Filter>
@@ -661,16 +634,19 @@
     <ClCompile Include="Render\Meshes\BoxComponent.cpp">
       <Filter>Render\Meshes</Filter>
     </ClCompile>
-    <ClCompile Include="Render\Meshes\MeshComponent.cpp">
-      <Filter>Render\Meshes</Filter>
+    <ClCompile Include="Render\Meshes\Legacy\CubeMap.cpp">
+      <Filter>Render\Meshes\Legacy</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Meshes\Legacy\GeometryObject.cpp">
+      <Filter>Render\Meshes\Legacy</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Meshes\Legacy\TessMesh.cpp">
+      <Filter>Render\Meshes\Legacy</Filter>
     </ClCompile>
     <ClCompile Include="Render\Meshes\Mesh.cpp">
       <Filter>Render\Meshes</Filter>
     </ClCompile>
-    <ClCompile Include="Render\Meshes\MeshData.cpp">
-      <Filter>Render\Meshes</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Meshes\MeshManager.cpp">
+    <ClCompile Include="Render\Meshes\MeshComponent.cpp">
       <Filter>Render\Meshes</Filter>
     </ClCompile>
     <ClCompile Include="Render\Meshes\Model\AnimatedModel.cpp">
@@ -725,9 +701,6 @@
       <Filter>Render\Textures</Filter>
     </ClCompile>
     <ClCompile Include="Render\Textures\TextureUtils.cpp">
-      <Filter>Render\Textures</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Textures\TextureManager.cpp">
       <Filter>Render\Textures</Filter>
     </ClCompile>
     <ClCompile Include="SEPCH.cpp" />
