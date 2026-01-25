@@ -85,6 +85,7 @@
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -93,9 +94,6 @@
       <AdditionalLibraryDirectories>Dependencies\lib\Win64;Dependencies\lib\Win64\freetype;Dependencies\lib\Win64\freeglut;Dependencies\lib\Win64\glew;Dependencies\lib\Win64\soil;Dependencies\lib\Win64\assimp;Dependencies\lib\Win64\FMOD;Dependencies\lib\Win64\vld;Dependencies\lib\Win64\Box2D;Dependencies\lib\Win64\GLFW;Dependencies\lib\Win64\Vulkan;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\Binaries\Debug-x86_64\SkyEngine\SkyEngine.lib</ImportLibrary>
     </Link>
-    <PostBuildEvent>
-      <Command>IF EXIST ..\Binaries\Debug-x86_64\SkyEngine\SkyEngine.dll\ (xcopy /Q /E /Y /I ..\Binaries\Debug-x86_64\SkyEngine\SkyEngine.dll "..\Binaries\Debug-x86_64\SkyEditor\" &gt; nul) ELSE (xcopy /Q /Y /I ..\Binaries\Debug-x86_64\SkyEngine\SkyEngine.dll "..\Binaries\Debug-x86_64\SkyEditor\" &gt; nul)</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -111,6 +109,7 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -120,9 +119,6 @@
       <AdditionalLibraryDirectories>Dependencies\lib\Win64;Dependencies\lib\Win64\freetype;Dependencies\lib\Win64\freeglut;Dependencies\lib\Win64\glew;Dependencies\lib\Win64\soil;Dependencies\lib\Win64\assimp;Dependencies\lib\Win64\FMOD;Dependencies\lib\Win64\vld;Dependencies\lib\Win64\Box2D;Dependencies\lib\Win64\GLFW;Dependencies\lib\Win64\Vulkan;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\Binaries\Release-x86_64\SkyEngine\SkyEngine.lib</ImportLibrary>
     </Link>
-    <PostBuildEvent>
-      <Command>IF EXIST ..\Binaries\Release-x86_64\SkyEngine\SkyEngine.dll\ (xcopy /Q /E /Y /I ..\Binaries\Release-x86_64\SkyEngine\SkyEngine.dll "..\Binaries\Release-x86_64\SkyEditor\" &gt; nul) ELSE (xcopy /Q /Y /I ..\Binaries\Release-x86_64\SkyEngine\SkyEngine.dll "..\Binaries\Release-x86_64\SkyEditor\" &gt; nul)</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <ClCompile>
@@ -138,6 +134,7 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -147,9 +144,6 @@
       <AdditionalLibraryDirectories>Dependencies\lib\Win64;Dependencies\lib\Win64\freetype;Dependencies\lib\Win64\freeglut;Dependencies\lib\Win64\glew;Dependencies\lib\Win64\soil;Dependencies\lib\Win64\assimp;Dependencies\lib\Win64\FMOD;Dependencies\lib\Win64\vld;Dependencies\lib\Win64\Box2D;Dependencies\lib\Win64\GLFW;Dependencies\lib\Win64\Vulkan;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\Binaries\Dist-x86_64\SkyEngine\SkyEngine.lib</ImportLibrary>
     </Link>
-    <PostBuildEvent>
-      <Command>IF EXIST ..\Binaries\Dist-x86_64\SkyEngine\SkyEngine.dll\ (xcopy /Q /E /Y /I ..\Binaries\Dist-x86_64\SkyEngine\SkyEngine.dll "..\Binaries\Dist-x86_64\SkyEditor\" &gt; nul) ELSE (xcopy /Q /Y /I ..\Binaries\Dist-x86_64\SkyEngine\SkyEngine.dll "..\Binaries\Dist-x86_64\SkyEditor\" &gt; nul)</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Audio\Audio.h" />

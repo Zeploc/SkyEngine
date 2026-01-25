@@ -84,11 +84,15 @@
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>IF EXIST "..\Binaries\Debug-x86_64\SkyEngine\SkyEngine.dll"\ (xcopy /Q /E /Y /I "..\Binaries\Debug-x86_64\SkyEngine\SkyEngine.dll" "..\Binaries\Debug-x86_64\SkyEditor\" &gt; nul) ELSE (xcopy /Q /Y /I "..\Binaries\Debug-x86_64\SkyEngine\SkyEngine.dll" "..\Binaries\Debug-x86_64\SkyEditor\" &gt; nul)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -103,12 +107,16 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <PostBuildEvent>
+      <Command>IF EXIST "..\Binaries\Release-x86_64\SkyEngine\SkyEngine.dll"\ (xcopy /Q /E /Y /I "..\Binaries\Release-x86_64\SkyEngine\SkyEngine.dll" "..\Binaries\Release-x86_64\SkyEditor\" &gt; nul) ELSE (xcopy /Q /Y /I "..\Binaries\Release-x86_64\SkyEngine\SkyEngine.dll" "..\Binaries\Release-x86_64\SkyEditor\" &gt; nul)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <ClCompile>
@@ -123,12 +131,16 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <PostBuildEvent>
+      <Command>IF EXIST "..\Binaries\Dist-x86_64\SkyEngine\SkyEngine.dll"\ (xcopy /Q /E /Y /I "..\Binaries\Dist-x86_64\SkyEngine\SkyEngine.dll" "..\Binaries\Dist-x86_64\SkyEditor\" &gt; nul) ELSE (xcopy /Q /Y /I "..\Binaries\Dist-x86_64\SkyEngine\SkyEngine.dll" "..\Binaries\Dist-x86_64\SkyEditor\" &gt; nul)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\SkyEngine\Dependencies\ImGuizmo\ImGuizmo.h" />
