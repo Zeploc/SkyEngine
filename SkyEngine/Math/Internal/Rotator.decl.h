@@ -43,8 +43,8 @@ struct ENGINE_API SRotator
 
 	SRotator(glm::vec3 V)
 	{
-		Pitch = V.y;
-		Yaw = V.x;
+		Pitch = V.x;
+		Yaw = V.y;
 		Roll = V.z;
 	}
 	SRotator(const TVector3<float>& V);

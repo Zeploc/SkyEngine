@@ -16,40 +16,34 @@ TEST(RotatorTests, Construction) {
     EXPECT_FLOAT_EQ(r2.Pitch, 45.0f);
     EXPECT_FLOAT_EQ(r2.Yaw, 90.0f);
     EXPECT_FLOAT_EQ(r2.Roll, 180.0f);
-
-    // Constructor from array
-    float values[] = { 10.0f, 20.0f, 30.0f }; // Note: Implementation reads pFloat[0] for all three? Let's check existing code.
-    // Wait, let's verify the implementation of array constructor in Rotator.decl.h:
-    // SRotator(const float* pFloat) { Yaw = pFloat[0]; Pitch = pFloat[0]; Roll = pFloat[0]; } -> This looks like a bug in the code, but I should test for CURRENT behavior or fix it?
-    // The user asked to add tests. If I see a bug, I should probably report it or fix it if I'm confident.
-    // Given the task is "Add tests", I will add a test that Expects the likely INTENDED behavior and if it fails, I'll fix the code.
-    // Actually, looking at Decl again:
-    // Yaw = pFloat[0];
-    // Pitch = pFloat[0];
-    // Roll = pFloat[0];
-    // This is definitely a bug. It should be [0], [1], [2]. 
-    // I will write the test assuming it works CORRECTLY (0,1,2), fail, and then fix the bug.
     
     // Constructor from scalar
     SRotator r3(5.0f);
-    EXPECT_FLOAT_EQ(r3.Yaw, 5.0f);
     EXPECT_FLOAT_EQ(r3.Pitch, 5.0f);
+    EXPECT_FLOAT_EQ(r3.Yaw, 5.0f);
     EXPECT_FLOAT_EQ(r3.Roll, 5.0f);
 
     // Constructor from glm::vec3
-    glm::vec3 v(1.0f, 2.0f, 3.0f);
+    glm::vec3 v(2.0f, 1.0f, 3.0f);
     SRotator r4(v);
-    EXPECT_FLOAT_EQ(r4.Yaw, 1.0f);
     EXPECT_FLOAT_EQ(r4.Pitch, 2.0f);
+    EXPECT_FLOAT_EQ(r4.Yaw, 1.0f);
     EXPECT_FLOAT_EQ(r4.Roll, 3.0f);
     
     // Constructor from SVector
-    SVector sv(10.0f, 20.0f, 30.0f); // X->Pitch, Y->Yaw, Z->Roll based on impl?
+    SVector sv(10.0f, 20.0f, 30.0f); // X->Pitch, Y->Yaw, Z->Roll based on impl
     // impl: Pitch = V.X; Yaw = V.Y; Roll = V.Z;
     SRotator r5(sv);
     EXPECT_FLOAT_EQ(r5.Pitch, 10.0f);
     EXPECT_FLOAT_EQ(r5.Yaw, 20.0f);
     EXPECT_FLOAT_EQ(r5.Roll, 30.0f);
+
+    // Constructor from array
+    float values[] = { 10.0f, 20.0f, 30.0f }; // Note: Implementation reads pFloat[0] for all three? Let's check existing code.
+    SRotator r6(values);    
+    EXPECT_FLOAT_EQ(r6.Pitch, 10.0f);
+    EXPECT_FLOAT_EQ(r6.Yaw, 20.0f);
+    EXPECT_FLOAT_EQ(r6.Roll, 30.0f);
 }
 
 TEST(RotatorTests, MathOperations) {
@@ -118,19 +112,7 @@ TEST(RotatorTests, Conversions) {
     EXPECT_FLOAT_EQ(glmVec.y, 90.0f);
     EXPECT_FLOAT_EQ(glmVec.z, 0.0f);
 
-    // ToVector (Forward vector)
-    // Pitch=0, Yaw=90.
-    // X = cos(0)*cos(90) = 1 * 0 = 0
-    // Y = sin(0) = 0
-    // Z = cos(0)*sin(90) = 1 * 1 = 1
-    // Wait, standard math:
-    // x = cos(yaw)cos(pitch)
-    // y = sin(pitch)
-    // z = sin(yaw)cos(pitch)
-    // If Yaw is 90 deg, cos(90)=0, sin(90)=1.
-    // So (0, 0, 1).
-    // Let's verify radians conversion. glm::radians(90) is pi/2.
-    
+    // ToVector (Forward vector)    
     SVector v = r.ToVector();
     EXPECT_NEAR(v.X, 0.0f, 0.0001f);
     EXPECT_NEAR(v.Y, 0.0f, 0.0001f);
@@ -138,9 +120,9 @@ TEST(RotatorTests, Conversions) {
 
     // Cast to float*
     const float* ptr = (const float*)r;
-    EXPECT_EQ(ptr, &r.Yaw);
-    EXPECT_FLOAT_EQ(ptr[0], 90.0f);
-    EXPECT_FLOAT_EQ(ptr[1], 0.0f);
+    EXPECT_EQ(ptr, &r.Pitch);
+    EXPECT_FLOAT_EQ(ptr[0], 0.0f);
+    EXPECT_FLOAT_EQ(ptr[1], 90.0f);
     EXPECT_FLOAT_EQ(ptr[2], 0.0f);
 }
 
@@ -164,21 +146,7 @@ TEST(RotatorTests, StringOperations) {
     EXPECT_NE(streamed.find("1.5"), std::string::npos);
     EXPECT_NE(streamed.find("3.5"), std::string::npos);
 
-    // Stream operator >>
-    // Format required by implementation: Space separated within structure or just space separated?
-    // Impl: is >> StringX >> StringY >> StringZ;
-    // Then expects substrings?
-    // StringX.substr(1, len-1) -> implies it expects "(X"
-    // StringY.substr(0, len-1) -> implies "Y" or "Y,"? Wait.
-    // If input is "(1.0 2.0 3.0)"
-    // StringX = "(1.0"
-    // StringY = "2.0"
-    // StringZ = "3.0)"
-    // StringX.substr(1) -> "1.0" -> stof works.
-    // StringY.substr(0, len-1) -> "2." -> stof might fail or work? "2.0" length is 3. substr(0, 2) is "2.".
-    // StringZ.substr(0, len-1) -> "3.0" -> "3."
-    // This looks fragile. Let's test with the format it seemingly expects.
-    
+    // Stream operator >>    
     std::string input = "(10.0 20.0 30.0)";
     std::stringstream iss(input);
     SRotator rIn;
