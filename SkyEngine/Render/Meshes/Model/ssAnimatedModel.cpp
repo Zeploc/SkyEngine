@@ -43,7 +43,7 @@ ssAnimatedModel::ssAnimatedModel(std::string modelFilname, std::string texFilena
 	this->Transform.Scale = SVector(0.1f, 0.1f, 0.1f);
 	this->Transform.Position = SVector(0.0, 0.0, 0.0);
 	// TODO: Verify 1 yaw?
-	this->Transform.Rotation = SRotator(1.0f, 0.0f, 0.0f);
+	this->Transform.Rotation = SRotator(0.0f, 1.0f, 0.0f);
 
 	m_VAO = 0;
 	ZERO_MEM(m_Buffers);

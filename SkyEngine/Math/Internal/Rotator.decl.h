@@ -13,8 +13,8 @@ struct TVector3;
 
 struct ENGINE_API SRotator
 {
-	float Yaw;
 	float Pitch;
+	float Yaw;
 	float Roll;
 
 	SRotator()
@@ -22,18 +22,18 @@ struct ENGINE_API SRotator
 		Pitch = Yaw = Roll = 0;
 	}
 
-	SRotator(float InYaw, float InPitch, float InRoll)
+	SRotator(float InPitch, float InYaw, float InRoll)
 	{
-		Yaw = InYaw;
 		Pitch = InPitch;
+		Yaw = InYaw;
 		Roll = InRoll;
 	}
 
 	SRotator(const float* pFloat)
 	{
-		Yaw = pFloat[0];
 		Pitch = pFloat[0];
-		Roll = pFloat[0];
+		Yaw = pFloat[1];
+		Roll = pFloat[2];
 	}
 
 	SRotator(float f)
@@ -43,22 +43,22 @@ struct ENGINE_API SRotator
 
 	SRotator(glm::vec3 V)
 	{
-		Yaw = V.x;
 		Pitch = V.y;
+		Yaw = V.x;
 		Roll = V.z;
 	}
 	SRotator(const TVector3<float>& V);
 
 	glm::vec3 ToGLM() const
 	{
-		return glm::vec3(Yaw, Pitch, Roll);
+		return glm::vec3(Pitch, Yaw, Roll);
 	}
 
 	SRotator& operator+=(const SRotator& r)
 	{
 		// TODO: Verify
-		Yaw += r.Yaw;
 		Pitch += r.Pitch;
+		Yaw += r.Yaw;
 		Roll += r.Roll;
 
 		return *this;
@@ -67,8 +67,8 @@ struct ENGINE_API SRotator
 	SRotator& operator-()
 	{
 		// TODO: Verify
-		Yaw *= -1;
 		Pitch *= -1;
+		Yaw *= -1;
 		Roll *= -1;
 
 		return *this;
@@ -77,8 +77,8 @@ struct ENGINE_API SRotator
 	SRotator& operator-=(const SRotator& r)
 	{
 		// TODO: Verify
-		Yaw -= r.Yaw;
 		Pitch -= r.Pitch;
+		Yaw -= r.Yaw;
 		Roll -= r.Roll;
 
 		return *this;
@@ -86,8 +86,8 @@ struct ENGINE_API SRotator
 
 	SRotator& operator*=(float f)
 	{
-		Yaw *= f;
 		Pitch *= f;
+		Yaw *= f;
 		Roll *= f;
 
 		return *this;
@@ -96,7 +96,7 @@ struct ENGINE_API SRotator
 	// TODO: Verify
 	operator const float*() const
 	{
-		return &(Yaw);
+		return &(Pitch);
 	}
 
 	TVector3<float> ToVector() const;
@@ -106,13 +106,13 @@ struct ENGINE_API SRotator
 		// TODO: Update c++
 		// std::format
 		char Str[1024];
-		sprintf_s(Str,"(%.02f, %.02f, %.02f)", Yaw, Pitch, Roll);
+		sprintf_s(Str,"(%.02f, %.02f, %.02f)", Pitch, Yaw, Roll);
 		return Str;
 	}
 
 	void Print() const
 	{
-		printf("(%.02f, %.02f, %.02f)", Yaw, Pitch, Roll);
+		printf("(%.02f, %.02f, %.02f)", Pitch, Yaw, Roll);
 	}
 	
 	friend std::ostream& operator<<(std::ostream& os, const SRotator& InRotator);

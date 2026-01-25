@@ -341,8 +341,8 @@ bool CEditorViewportCanvas::OnMouseMoved(SVector2i MousePos)
 	if (bRotatingAroundPoint)
 	{		
 		SVector NewCameraForwardVector = ViewportCamera->GetForwardVector();
-		NewCameraForwardVector.Rotate(Offset.X, SVector(0,1,0));
-		NewCameraForwardVector.Rotate(Offset.Y, ViewportCamera->GetRightVector());
+		NewCameraForwardVector.Rotate(Offset.X, SVector(0,-1,0));
+		NewCameraForwardVector.Rotate(Offset.Y, -ViewportCamera->GetRightVector());
 		ViewportCamera->SetForwardVector(NewCameraForwardVector);
 		ViewportCamera->Transform.Position = CameraPivotPoint + (-ViewportCamera->GetForwardVector() * CurrentFocusDistance);
 		ApplicationWindow->SetCursorPosition(ScreenCenter);
@@ -367,8 +367,8 @@ bool CEditorViewportCanvas::OnMouseMoved(SVector2i MousePos)
 	if (bUseSpectatorControls)
 	{
 		SVector NewCameraForwardVector = ViewportCamera->GetForwardVector();
-		NewCameraForwardVector.Rotate(Offset.X, SVector(0,1,0));
-		NewCameraForwardVector.Rotate(Offset.Y, ViewportCamera->GetRightVector());
+		NewCameraForwardVector.Rotate(Offset.X, SVector(0,-1,0));
+		NewCameraForwardVector.Rotate(Offset.Y, -ViewportCamera->GetRightVector());
 		ViewportCamera->SetForwardVector(NewCameraForwardVector);
 		ApplicationWindow->SetCursorPosition(ScreenCenter);
 	}

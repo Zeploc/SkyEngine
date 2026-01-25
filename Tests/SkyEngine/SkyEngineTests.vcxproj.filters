@@ -12,6 +12,9 @@
     <ClCompile Include="Core\StringUtilsTests.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Math\RotatorTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
     <ClCompile Include="Math\VectorTests.cpp">
       <Filter>Math</Filter>
     </ClCompile>
