@@ -4,14 +4,13 @@
 #include "Sphere.h"
 
 // Engine Includes //
-#include "../MeshManager.h"
+#include "DefaultMeshes.h"
 #include "Render/Shaders/ShaderManager.h"
-#include "Core/Application.h"
 #include "Entity/Entity.h"
 #include "Render/Materials/InternalMaterial.h"
 
-CSphere::CSphere(const TPointer<Entity>& InOwner, const TPointer<CMaterialInterface>& InMaterial)
-: CMeshComponent(InOwner, MESH_SPHERE, InMaterial)
+CSphere::CSphere(const TSharedPointer<Entity>& InOwner, const TSharedPointer<CMaterialInterface>& InMaterial)
+: CMeshComponent(InOwner, DefaultMesh::GetSphere(), InMaterial)
 {
 }
 

@@ -32,42 +32,42 @@ public:
 
 	static void AddComputeProgram(std::string ShaderName, std::string ComputePath);
 
-	static void ShaderCreated(const TPointer<CShader>NewShader);
-	static TPointer<CShader> GetShader(std::string ShaderName);
-	static TPointer<CUndefinedShader> GetUndefinedShader(std::string ShaderName);
+	static void ShaderCreated(const TSharedPointer<CShader>NewShader);
+	static TSharedPointer<CShader> GetShader(std::string ShaderName);
+	static TSharedPointer<CUndefinedShader> GetUndefinedShader(std::string ShaderName);
 	template<class T>
-	static TPointer<T> GetShader();	
+	static TSharedPointer<T> GetShader();	
 
-	static std::map<std::string, TPointer<ModelObject>> Models;
+	static std::map<std::string, TSharedPointer<ModelObject>> Models;
 
 	static Text::cFont AddFont(std::string fontPath, int iPSize);
 	
 	// TODO: Needed for template as static shaders can't be exported :( 
-	static std::map<std::string, TPointer<CShader>> GetShaders();
+	static std::map<std::string, TSharedPointer<CShader>> GetShaders();
 	
 protected:
 	template<class T>
 	static void AddShader();
 	
-	static std::map<std::string, TPointer<CShader>> Shaders;
+	static std::map<std::string, TSharedPointer<CShader>> Shaders;
 };
 
 template <class T>
 void ShaderManager::AddShader()
 {
-	const TPointer<CShader> NewShader = std::make_shared<T>();
+	const TSharedPointer<CShader> NewShader = std::make_shared<T>();
 	ShaderCreated(NewShader);
 }
 
 template <class T>
-TPointer<T> ShaderManager::GetShader()
+TSharedPointer<T> ShaderManager::GetShader()
 {
-	const std::map<std::string, TPointer<CShader>> CurrentShaders = GetShaders();
+	const std::map<std::string, TSharedPointer<CShader>> CurrentShaders = GetShaders();
 	// TODO: improve retrieval based on stored method
 	for (auto Element : CurrentShaders)
 	{
-		TPointer<CShader> Shader = Element.second;
-		if (TPointer<T> CheckedShader = Cast<T>(Shader))
+		TSharedPointer<CShader> Shader = Element.second;
+		if (TSharedPointer<T> CheckedShader = Cast<T>(Shader))
 		{
 			return CheckedShader;
 		}				

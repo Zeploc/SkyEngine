@@ -14,7 +14,7 @@
 // Local Includes //
 
 // Static Variables //
-TPointer<SceneManager> SceneManager::m_pSceneManager;
+TSharedPointer<SceneManager> SceneManager::m_pSceneManager;
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -34,11 +34,11 @@ SceneManager::SceneManager()
 ************************************************************/
 SceneManager::~SceneManager()
 {
-	for (auto it : Scenes)
+	for (const auto&[name, scene]: Scenes)
 	{
-		it.second->DeleteScene();
-		it.second = nullptr;
+		scene->DeleteScene();
 	}
+	Scenes.clear();
 }
 
 /************************************************************
@@ -47,23 +47,23 @@ SceneManager::~SceneManager()
 #--Parameters--#: 	Scene to add
 #--Return--#: 		NA
 ************************************************************/
-void SceneManager::AddScene(TPointer<Scene> _Scene)
+void SceneManager::AddScene(const TAssetObjectPointer<Scene>& InScene)
 {
-	if (Scenes.contains(_Scene->SceneName))
+	if (Scenes.contains(InScene->SceneName))
 	{
 		ensure(false, "Attempted to add scene with same name as existing!");
 		return;
 	}
 	if (Scenes.empty())
 	{
-		Scenes.insert(std::pair<std::string, TPointer<Scene>>(_Scene->SceneName, _Scene));
+		Scenes[InScene->SceneName] = InScene;
 
-		SceneToSwitch = _Scene->SceneName;
+		SceneToSwitch = InScene->SceneName;
 		SwitchScene(SceneToSwitch, true);
 	}
 	else
 	{
-		Scenes.insert(std::pair<std::string, TPointer<Scene>>(_Scene->SceneName, _Scene));
+		Scenes[InScene->SceneName] = InScene;
 	}
 }
 
@@ -75,7 +75,7 @@ void SceneManager::AddScene(TPointer<Scene> _Scene)
 ************************************************************/
 void SceneManager::RemoveScene(std::string SceneName)
 {
-	if (Scenes.count(SceneName) == 0)
+	if (!Scenes.contains(SceneName))
 	{
 		// Scene Doesn't exist
 		CLogManager::Get()->DisplayMessage("Could not find scene " + SceneName);
@@ -91,11 +91,11 @@ void SceneManager::RemoveScene(std::string SceneName)
 #--Parameters--#: 	Scene to remove
 #--Return--#: 		NA
 ************************************************************/
-void SceneManager::RemoveScene(TPointer<Scene> _Scene)
+void SceneManager::RemoveScene(TAssetObjectPointer<Scene> InScene)
 {
 	for (auto it = Scenes.begin(); it != Scenes.end(); ++it)
 	{
-		if ((*it).second == _Scene)
+		if ((*it).second == InScene)
 		{
 			(*it).second->DeleteScene();
 			Scenes.erase(it);
@@ -118,16 +118,21 @@ void SceneManager::SwitchScene(std::string SceneName, bool _bInstant)
 		CLogManager::Get()->DisplayMessage("Could not find scene " + SceneName);
 		return;
 	}
+	// Already in scene check
+	if (CurrentScene == SceneName)
+	{
+		return;
+	}
 
 	if (_bInstant)
 	{
 		// TODO: Switch to storing scene assets and using load operations
 		if (!CurrentScene.empty())
 		{
-			const TPointer<Scene> ExistingScene = GetCurrentScene();
+			const TAssetObjectPointer<Scene> ExistingScene = GetCurrentScene();
 			ExistingScene->Asset->Unload();
 		}
-		
+	
 		CurrentScene = SceneName;
 		SceneToSwitch = CurrentScene;
 		CLogManager::Get()->DisplayMessage("Switching to Scene \"" + GetCurrentScene()->SceneName + "\"");
@@ -169,7 +174,7 @@ void SceneManager::RenderCurrentScene()
 	GetCurrentScene()->RenderScene();
 }
 
-TPointer<Scene> SceneManager::GetCurrentScene()
+TAssetObjectPointer<Scene> SceneManager::GetCurrentScene()
 {
 	if (Scenes.empty())
 	{
@@ -184,11 +189,11 @@ TPointer<Scene> SceneManager::GetCurrentScene()
 #--Parameters--#:	NA
 #--Return--#: 		Returns static pointer to self
 ************************************************************/
-TPointer<SceneManager> SceneManager::GetInstance()
+TSharedPointer<SceneManager> SceneManager::GetInstance()
 {
 	if (!m_pSceneManager) // null or doesn't exist
 	{
-		m_pSceneManager = TPointer<SceneManager>(new SceneManager());
+		m_pSceneManager = TSharedPointer<SceneManager>(new SceneManager());
 	}
 	return m_pSceneManager;
 }

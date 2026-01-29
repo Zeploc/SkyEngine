@@ -23,9 +23,9 @@ void CSceneOutliner::OnRender()
 	// TODO: Convert to widget and use base render
 	if (ImGui::BeginListBox("##SceneOutlinerEntityList", ImVec2(-FLT_MIN, -FLT_MIN)))
 	{
-		const TPointer<Entity> SelectedEntity = EditorApp->EditorViewportLayer->GetSelectedEntity();
-		TPointer<Entity> NewSelectedEntity = nullptr;
-		for (TPointer<Entity> Entity : EditorScene->Entities)
+		const TSharedPointer<Entity> SelectedEntity = EditorApp->EditorViewportLayer->GetSelectedEntity();
+		TSharedPointer<Entity> NewSelectedEntity = nullptr;
+		for (TSharedPointer<Entity> Entity : EditorScene->Entities)
 		{
 			if (ImGui::Selectable((Entity->GetEntityName() + "##" + std::to_string(Entity->GetEntityID())).c_str(), Entity == SelectedEntity))
 			{

@@ -8,6 +8,6 @@
 class ENGINE_API CCube : public CMeshComponent
 {
 public:
-	CCube(const TPointer<Entity>& InOwner, const TPointer<CMaterialInterface>& InMaterial = nullptr);
+	CCube(const TSharedPointer<Entity>& InOwner, const TSharedPointer<CMaterialInterface>& InMaterial = nullptr);
 	~CCube();
 };

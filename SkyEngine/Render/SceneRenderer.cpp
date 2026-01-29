@@ -6,7 +6,7 @@
 #include "Core/Application.h"
 #include "Entity/Camera.h"
 
-void CSceneRenderer::Init(TPointer<Scene> InTargetScene, SVector2i InSize)
+void CSceneRenderer::Init(TAssetObjectPointer<Scene> InTargetScene, SVector2i InSize)
 {	
 	SFramebufferSpecification FramebufferSpecification;
 	FramebufferSpecification.Size = SVector2ui(InSize);
@@ -38,13 +38,13 @@ void CSceneRenderer::Render()
 	// glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void CSceneRenderer::SetSceneTarget(TPointer<Scene> InTargetScene)
+void CSceneRenderer::SetSceneTarget(TAssetObjectPointer<Scene> InTargetScene)
 {
 	TargetScene = InTargetScene;
 	// TODO: Update camera
 }
 
-void CSceneRenderer::LinkCamera(TPointer<Camera> Camera)
+void CSceneRenderer::LinkCamera(TSharedPointer<Camera> Camera)
 {
 	LinkedCamera = Camera;
 }

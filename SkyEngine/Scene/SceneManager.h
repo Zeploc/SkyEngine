@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/Asset/AssetObject.h"
 
 class Scene;
 
@@ -13,11 +14,11 @@ class ENGINE_API SceneManager
 {
 public:
 
-	void AddScene(TPointer<Scene> _Scene);
+	void AddScene(const TAssetObjectPointer<Scene>& InScene);
 
 	void RemoveScene(std::string SceneName);
 
-	void RemoveScene(TPointer<Scene> _Scene);
+	void RemoveScene(TAssetObjectPointer<Scene> InScene);
 
 	void SwitchScene(std::string SceneName, bool _bInstant = false);
 
@@ -25,19 +26,19 @@ public:
 
 	void RenderCurrentScene();
 
-	TPointer<Scene> GetCurrentScene();
+	TAssetObjectPointer<Scene> GetCurrentScene();
 
 	// Singleton
 public:
-	static TPointer<SceneManager> GetInstance();
+	static TSharedPointer<SceneManager> GetInstance();
 
 	static void DestoryInstance();
 
 	~SceneManager(); // Shared pointer has to be able to call destructor so can't be private
 
 private:
-	std::map<std::string, TPointer<Scene>> Scenes;
-	static TPointer<SceneManager> m_pSceneManager;
+	std::map<std::string, TAssetObjectPointer<Scene>> Scenes;
+	static TSharedPointer<SceneManager> m_pSceneManager;
 	std::string CurrentScene = "";
 	std::string SceneToSwitch = "";
 

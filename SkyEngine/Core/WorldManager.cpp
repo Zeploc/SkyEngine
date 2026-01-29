@@ -5,7 +5,7 @@
 #include "Scene/Scene.h"
 #include "System/LogManager.h"
 
-void CWorldManager::SwitchScene(TPointer<Scene> InTargetScene)
+void CWorldManager::SwitchScene(TAssetObjectPointer<Scene> InTargetScene)
 {
 	TargetScene = InTargetScene;
 }

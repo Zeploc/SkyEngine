@@ -15,14 +15,14 @@ public:
 	void ImGuiInit() override;
 	
 	std::string GetGraphicsDisplayName() override;
-	bool GenerateTexture(TPointer<CTexture> Texture, bool bAA) override;
+	bool GenerateTexture(TAssetObjectPointer<CTexture> Texture, bool bAA) override;
 	bool CreateShaderProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename,
 		const char* GeometryShaderFilename) override;
 	bool CreateTessProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename,
 		const char* TessControlShaderFilename, const char* TessEvalShaderFilename) override;
 	bool CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename) override;
-	TPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) override;
-	unsigned CreateVertexBuffer(const CMeshData& MeshData) override;
+	TSharedPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) override;
+	unsigned CreateVertexBuffer(const CMesh& MeshData) override;
 	void BindVertexArray(const std::vector<float>& vertices, const std::vector<uint32_t>& indices,
 		unsigned& vao) override;
 	void RenderMesh(ISceneVisual* SceneVisual) override;
@@ -38,7 +38,7 @@ public:
 	void Clear(SVector ClearColour) override;
 	void SetRenderViewportSize(const SVector2i InViewportSize) override;
 	void SetWireframeMode(bool bInWireframeEnabled) override;
-	void ApplyMaterialFlags(TPointer<CMaterialInterface> InMaterial) override;
+	void ApplyMaterialFlags(TSharedPointer<CMaterialInterface> InMaterial) override;
 	int32_t GetAttributeLocation(const uint32_t ShaderProgram, std::string AttributeName) override;
 	void PassAttributeToShader(int32_t ShaderLocation, float Attribute) override;
 	void PassAttributeToShader(int32_t ShaderLocation, int Attribute) override;
@@ -46,7 +46,7 @@ public:
 	void PassAttributeToShader(int32_t ShaderLocation, SVector Attribute) override;
 	void PassAttributeToShader(int32_t ShaderLocation, SVector4 Attribute) override;
 	void PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute) override;
-	void PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture> Attribute) override;
+	void PassAttributeToShader(int32_t ShaderLocation, TAssetObjectPointer<CTexture> Attribute) override;
 
 private:
 	VkPhysicalDevice SetupVulkan_SelectPhysicalDevice() const;

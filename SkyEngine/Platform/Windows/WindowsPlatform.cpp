@@ -3,6 +3,7 @@
 #include "SEPCH.h"
 #include "WindowsPlatform.h"
 
+#include "FmodAudio.h"
 #include "Core/Application.h"
 #include "Platform/Window/GLFW/GLFWWindow.h"
 
@@ -17,9 +18,18 @@ std::string WindowsPlatform::GetPlatformDisplayName()
 	return "Windows";
 }
 
-TPointer<CEngineWindow> WindowsPlatform::CreateNewWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bFullScreen)
+TSharedPointer<IAudioInterface> WindowsPlatform::GetAudioInterface()
 {
-	TPointer<CGLFWWindow> NewWindow = std::make_shared<CGLFWWindow>(InWindowName, InWindowSize, bFullScreen);
+	if (!Audio)
+	{
+		Audio = std::make_shared<FmodAudio>();
+	}
+	return Audio;
+}
+
+TSharedPointer<CEngineWindow> WindowsPlatform::CreateNewWindow(const std::string& InWindowName, SVector2i InWindowSize, bool bFullScreen)
+{
+	TSharedPointer<CGLFWWindow> NewWindow = std::make_shared<CGLFWWindow>(InWindowName, InWindowSize, bFullScreen);
 	if (!NewWindow->GetGlWindow())
 	{
 		NewWindow.reset();

@@ -1,6 +1,8 @@
 ﻿#include "SEPCH.h"
 #include "PathUtils.h"
 
+#include <utility>
+
 #include "Core/StringUtils.h"
 
 std::string PathUtils::GetFileName(const std::string& Path, bool bWithExtension)
@@ -21,13 +23,6 @@ std::string PathUtils::GetDirectory(const std::string& Path)
 {
 	const uint64_t DirectoryEndIndex = Path.find_last_of("\\");
 	return Path.substr(0, DirectoryEndIndex + 1);
-}
-
-bool PathUtils::HasExtension(const std::string& Path)
-{
-	const std::string FileName = GetFileName(Path);
-	const uint64_t ExtensionEndIndex = FileName.find_last_of(".");
-	return ExtensionEndIndex < FileName.length() - 1;
 }
 
 std::string PathUtils::CombinePath(const std::string& Part1, const std::string& Part2)
@@ -65,6 +60,25 @@ std::string PathUtils::GetRelativePath(const std::string& Path, const std::strin
 	}
 	const size_t Start = FoundIndex + RelativeTo.length();
 	return Path.substr(Start, Path.length() - Start);
+}
+
+bool PathUtils::HasExtension(const std::string& Path)
+{
+	const std::string FileName = GetFileName(Path);
+	const uint64_t ExtensionEndIndex = FileName.find_last_of(".");
+	return ExtensionEndIndex < FileName.length() - 1;
+}
+
+std::string PathUtils::GetExtension(const std::string& Path)
+{
+	const uint64_t ExtensionEndIndex = Path.find_last_of(".");
+	const bool bLastCharIsFullStop = Path.length() == ExtensionEndIndex + 1;
+	if (ExtensionEndIndex == std::string::npos || bLastCharIsFullStop)
+	{
+		return {};
+	}
+	std::string Extension = Path.substr(ExtensionEndIndex + 1, Path.length() - ExtensionEndIndex);
+	return Extension;
 }
 
 void PathUtils::SetExtension(std::string& Path, const std::string& Extension)

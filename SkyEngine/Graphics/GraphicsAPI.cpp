@@ -7,9 +7,9 @@
 #include "System/LogManager.h"
 #include "Vulkan/VulkanAPI.h"
 
-TPointer<IGraphicsAPI> IGraphicsAPI::CreateGraphicsAPI(EGraphicsAPI APIType)
+TSharedPointer<IGraphicsAPI> IGraphicsAPI::CreateGraphicsAPI(EGraphicsAPI APIType)
 {
-	TPointer<IGraphicsAPI> NewGraphicsApi = nullptr;
+	TSharedPointer<IGraphicsAPI> NewGraphicsApi = nullptr;
 	switch (APIType)
 	{
 	case EGraphicsAPI::OPENGL:

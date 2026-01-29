@@ -46,7 +46,7 @@ template <typename T>
 void TVector3<T>::Rotate(T Angle, const TVector3& Axis)
 {
 	glm::mat4 RotateMatrix = glm::rotate(glm::mat4(1), glm::radians(Angle), Axis);
-	*this = glm::vec4(*this, 1.0f) * RotateMatrix;
+	*this = RotateMatrix * glm::vec4(*this, 1.0f);
 }
 
 template <typename T>

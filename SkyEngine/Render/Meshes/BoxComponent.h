@@ -1,14 +1,14 @@
 ﻿// Copyright Skyward Studios, Inc. All Rights Reserved.
 
 #pragma once
-#include "MeshData.h"
+#include "Mesh.h"
 #include "Entity/Component.h"
 #include "Render/SceneVisual.h"
 
 class ENGINE_API CBoxComponent : public CComponent, public ISceneVisual
 {
 public:
-	CBoxComponent(const TPointer<Entity>& InOwner, const TPointer<CMaterialInterface>& InMaterial);
+	CBoxComponent(const TSharedPointer<Entity>& InOwner, const TAssetObjectPointer<CMaterialInterface>& InMaterial);
 	// using CComponent::CComponent;
 	void OnAttached() override;	
 	
@@ -23,10 +23,10 @@ public:
 	bool ShouldRender() const override;
 	bool IsVisible() const override;
 	void SetVisible(bool bNewVisible) override;
-	TPointer<CMaterialInterface> GetMaterial() const override;
+	TAssetObjectPointer<CMaterialInterface> GetMaterial() const override;
 	STransform GetRenderTransform() const override;
 protected:
 	void Deserialize(std::istream& is) override;
-	TPointer<CMaterialInterface> BoxMaterial;
-	std::string BoxMeshName;
+	TAssetObjectPointer<CMaterialInterface> BoxMaterial;
+	TAssetObjectPointer<CMesh> MeshAsset;
 };

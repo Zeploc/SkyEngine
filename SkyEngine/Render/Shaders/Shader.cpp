@@ -17,6 +17,22 @@ void SShaderParameter::SetDeserializedVariable(std::istream& is)
 	}
 }
 
+void SShaderParameter::OnValueChanged()
+{
+	SSerializableVariable::OnValueChanged();
+	if (Type == EVariableType::Object)
+	{
+		if (*AssetObject)
+		{
+			LoadedTexture = Cast<CTexture>(*AssetObject);
+		}
+		else
+		{
+			LoadedTexture = nullptr;
+		}
+	}
+}
+
 void BaseShaderParameters::UploadMaterialParameters()
 {
 	for (const SShaderParameter& ShaderParameter : ShaderVariables)
@@ -45,7 +61,7 @@ void BaseShaderParameters::UploadMaterialParameters()
 		case EVariableType::Object:
 			{
 				GetGraphicsAPI()->PassAttributeToShader(UniformLocation, ShaderParameter.LoadedTexture);
-				const bool bHasTexture = ShaderParameter.LoadedTexture != nullptr;
+				const bool bHasTexture = ShaderParameter.LoadedTexture.IsValid();// != nullptr;
 				const int32_t Location = Shader->GetHasTextureUniformLocation(ShaderParameter.VariableName);
 				GetGraphicsAPI()->PassAttributeToShader(Location, bHasTexture);
 			}
@@ -160,7 +176,7 @@ std::istream& operator>>(std::istream& is, BaseShaderParameters& InMaterialParam
 	return is;
 }
 
-void CShader::BindMaterial(TPointer<CMaterialInterface> InMaterial)
+void CShader::BindMaterial(TSharedPointer<CMaterialInterface> InMaterial)
 {
 	ensure(InMaterial != nullptr, "Missing material to set shader attributes!");
 

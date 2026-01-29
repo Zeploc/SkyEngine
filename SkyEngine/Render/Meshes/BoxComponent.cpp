@@ -6,29 +6,25 @@
 #include "Entity/Entity.h"
 #include "System/LogManager.h"
 
-CBoxComponent::CBoxComponent(const TPointer<Entity>& InOwner, const TPointer<CMaterialInterface>& InMaterial)
+CBoxComponent::CBoxComponent(const TSharedPointer<Entity>& InOwner, const TAssetObjectPointer<CMaterialInterface>& InMaterial)
 	: CComponent(InOwner), BoxMaterial(InMaterial)
 {
-	BoxMeshName = "Box";
+	MeshAsset = DefaultMesh::GetBox();
 }
 
 void CBoxComponent::OnAttached()
 {
 	CComponent::OnAttached();
-	if (!GetMeshManager()->HasMesh(BoxMeshName))
-	{
-		GetMeshManager()->AddMesh(BoxMeshName, DefaultMesh::GetBoxData());
-	}
 }
 
 uint32_t CBoxComponent::GetVao() const
 {
-	return GetMeshManager()->GetMesh(BoxMeshName).GetVao();
+	return MeshAsset->GetVao();
 }
 
 int CBoxComponent::GetIndicesCount() const
 {
-	return GetMeshManager()->GetMesh(BoxMeshName).GetIndicesCount();
+	return MeshAsset->GetIndicesCount();
 }
 
 std::string CBoxComponent::GetComponentClassName()
@@ -43,7 +39,7 @@ std::string CBoxComponent::GetStaticName()
 
 bool CBoxComponent::ShouldRender() const
 {
-	return true;
+	return MeshAsset.IsValid();
 }
 
 bool CBoxComponent::IsVisible() const
@@ -55,7 +51,7 @@ void CBoxComponent::SetVisible(bool bNewVisible)
 {
 }
 
-TPointer<CMaterialInterface> CBoxComponent::GetMaterial() const
+TAssetObjectPointer<CMaterialInterface> CBoxComponent::GetMaterial() const
 {
 	return BoxMaterial;
 }
@@ -69,5 +65,5 @@ void CBoxComponent::Deserialize(std::istream& is)
 {
 	CComponent::Deserialize(is);
 	
-	BoxMaterial = GetMaterialManager()->FindMaterial("BoxMaterial");
+	BoxMaterial = CMaterialUtils::FindMaterial("BoxMaterial");
 }

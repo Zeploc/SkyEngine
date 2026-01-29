@@ -9,7 +9,7 @@ CEditorSettingsConfig::CEditorSettingsConfig()
 	DefineConfigVariable(Resolution);
 }
 
-TPointer<CEditorSettingsConfig> CEditorSettingsConfig::Get()
+TSharedPointer<CEditorSettingsConfig> CEditorSettingsConfig::Get()
 {
 	return GetConfig<CEditorSettingsConfig>();
 }

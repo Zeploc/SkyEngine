@@ -53,11 +53,10 @@
 #endif
 
 #ifndef NDEBUG
-#   define ensure(Expr, Msg) \
-__M_Ensure(#Expr, Expr, __FILE__, __LINE__, Msg); \
-_ASSERTE(Expr)
+#   define ensure(Expr, Msg, ...) \
+__M_Ensure(#Expr, Expr, __FILE__, __LINE__, std::format(Msg, __VA_ARGS__).c_str())
 #else
-#   define M_Assert(Expr, Msg) ;
+#   define M_Assert(Expr, std::format(Msg, __VA_ARGS__).c_str())
 #endif
 
 #define LOG_MESSAGE(Text, ...)\
@@ -68,4 +67,14 @@ CLogManager::Get()->Log(ELogMessageType::Warning, std::format(Text, __VA_ARGS__)
 CLogManager::Get()->Log(ELogMessageType::Error, std::format(Text, __VA_ARGS__))
 
 ENGINE_API bool __M_Ensure(const char* expr_str, bool expr, const char* file, int line, const char* msg);
-ENGINE_API void __M_Assert(const char* expr_str, bool expr, const char* file, int line, const char* msg);
+template<class T>
+bool __M_Ensure(const char* expr_str, T* ptr, const char* file, int line, const char* msg = "No information given")
+{
+	return __M_Ensure(expr_str, ptr != nullptr, file, line, msg);
+}
+template<class T>
+bool __M_Ensure(const char* expr_str, std::shared_ptr<T> ptr, const char* file, int line, const char* msg = "No information given")
+{
+	return __M_Ensure(expr_str, ptr.get(), file, line, msg);
+}
+ENGINE_API void __M_Assert(const char* expr_str, bool expr, const char* file, int line, const char* msg = "No information given");

@@ -4,14 +4,13 @@
 #include "Cube.h"
 
 // Engine Includes //
-#include "../MeshManager.h"
+#include "DefaultMeshes.h"
 #include "Render/Shaders/ShaderManager.h"
-#include "Core/Application.h"
 #include "Render/Materials/InternalMaterial.h"
 #include "Render/Shaders/PBRShader.h"
 
-CCube::CCube(const TPointer<Entity>& InOwner, const TPointer<CMaterialInterface>& InMaterial)
-: CMeshComponent(InOwner, MESH_CUBE, InMaterial)
+CCube::CCube(const TSharedPointer<Entity>& InOwner, const TSharedPointer<CMaterialInterface>& InMaterial)
+: CMeshComponent(InOwner, DefaultMesh::GetCube(), InMaterial)
 {
 }
 

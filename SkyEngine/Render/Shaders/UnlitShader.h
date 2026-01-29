@@ -19,7 +19,7 @@ public:
 		DefineShaderParameter(DiffuseTexture);
 	ListShaderVariables()	
 		SVector4 DiffuseColour = SVector4(1.0f);
-		TPointer<CTexture> DiffuseTexture = nullptr;
+		TAssetObjectPointer<CTexture> DiffuseTexture;
 	EndShaderParams()
 
 	bool HasTexture(const ShaderParameters& InParams);

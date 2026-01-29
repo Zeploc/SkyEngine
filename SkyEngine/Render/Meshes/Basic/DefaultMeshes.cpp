@@ -1,7 +1,40 @@
 ﻿#include "SEPCH.h"
 #include "DefaultMeshes.h"
 
-CMeshData DefaultMesh::GetCubeData()
+#include "Core/Application.h"
+#include "Core/Asset/Asset.h"
+
+TAssetObjectPointer<CMesh> DefaultMesh::GetOrCreateMeshAsset(std::string MeshName, const std::vector<float> VertexPositions, const std::vector<float> Normals, const std::vector<uint32_t> Indices, const std::vector<float> UVs)
+{
+	if (!ensure(GetAssetManager(), "Mesh data was attempted before asset manager!"))
+	{
+		return nullptr;
+	}
+	std::string AssetPath = std::string("Engine/Meshes/" + MeshName + ".sasset");
+	if (TObjectPointer<CAsset> Asset = GetAssetManager()->FindAsset(AssetPath))
+	{
+		return Asset->Load<CMesh>();
+	}
+	TObjectPointer<CAsset> Asset = GetAssetManager()->AddAsset(AssetPath, CMesh::GetStaticName());
+
+	// Basic object setup, shouldn't be done here since should be asset management process
+	const TSharedPointer<CAssetObject> CreatedObject = Asset->MakeObject();
+	ensure(CreatedObject != nullptr, "Failed to create class from name!");
+	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(CreatedObject.get());
+
+	Asset->SetDefaultObject(CreatedObject);
+	TAssetObjectPointer<CMesh> MeshAssetObject = Cast<CMesh>(CreatedObject);
+	MeshAssetObject->InitData(VertexPositions, Indices, Normals);
+	if (UVs.size() > 0)
+	{
+		MeshAssetObject->SetUVs(UVs);
+	}
+	AssetInterface->OnLoaded();
+	
+	return MeshAssetObject;
+}
+
+TAssetObjectPointer<CMesh> DefaultMesh::GetCube()
 {
 	constexpr float HalfWidth = 0.5f;
 	constexpr float HalfHeight = 0.5f;
@@ -123,12 +156,11 @@ CMeshData DefaultMesh::GetCubeData()
 		20, 22, 23
 	};
 
-	CMeshData CubeMeshData(VertexPositions, Indices, Normals);
-	CubeMeshData.SetUVs(UVCoords);
-	return CubeMeshData;
+	TAssetObjectPointer<CMesh> MeshAssetObject = GetOrCreateMeshAsset(MESH_CUBE, VertexPositions, Normals,Indices, UVCoords);
+	return MeshAssetObject;
 }
 
-CMeshData DefaultMesh::GetPlaneData()
+TAssetObjectPointer<CMesh> DefaultMesh::GetPlane()
 {
 	const float HalfWidth = 0.5f;
 	const float HalfHeight = 0.5f;
@@ -159,12 +191,11 @@ CMeshData DefaultMesh::GetPlaneData()
 		0, 2, 3 // Second Triangle
 	};
 
-	CMeshData PlaneMeshData(VertexPositions, Indices, Normals);
-	PlaneMeshData.SetUVs(UVCoords);
-	return PlaneMeshData;
+	TAssetObjectPointer<CMesh> MeshAssetObject = GetOrCreateMeshAsset(MESH_PLANE, VertexPositions, Normals,Indices, UVCoords);
+	return MeshAssetObject;
 }
 
-CMeshData DefaultMesh::GetSphereData()
+TAssetObjectPointer<CMesh> DefaultMesh::GetSphere()
 {
 	constexpr float Radius = 0.5f;
 	
@@ -229,12 +260,11 @@ CMeshData DefaultMesh::GetSphereData()
 		}
 	}
 
-	CMeshData SphereMeshData(VertexPositions, Indices, Normals);
-	SphereMeshData.SetUVs(UVCoords);
-	return SphereMeshData;
+	TAssetObjectPointer<CMesh> MeshAssetObject = GetOrCreateMeshAsset(MESH_SPHERE, VertexPositions, Normals,Indices, UVCoords);
+	return MeshAssetObject;
 }
 
-CMeshData DefaultMesh::GetPyramidData()
+TAssetObjectPointer<CMesh> DefaultMesh::GetPyramid()
 {
 	constexpr float HalfWidth = 0.5f;
 	constexpr float HalfHeight = 0.5f;
@@ -275,12 +305,11 @@ CMeshData DefaultMesh::GetPyramidData()
 		3, 1, 0 // Bottom Triangle 1
 	};	
 	
-	CMeshData PyramidMeshData(VertexPositions, Indices, Normals);
-	PyramidMeshData.SetUVs(UVCoords);
-	return PyramidMeshData;
+	TAssetObjectPointer<CMesh> MeshAssetObject = GetOrCreateMeshAsset(MESH_PYRAMID, VertexPositions, Normals,Indices, UVCoords);
+	return MeshAssetObject;
 }
 
-CMeshData DefaultMesh::GetBoxData()
+TAssetObjectPointer<CMesh> DefaultMesh::GetBox()
 {
 	constexpr float HalfWidth = 0.5f;
 	constexpr float HalfHeight = 0.5f;
@@ -398,7 +427,6 @@ CMeshData DefaultMesh::GetBoxData()
 		20, 21, 21, 22, 22, 23, 23, 20
 	};
 
-	CMeshData BoxMeshData(VertexPositions, Indices, Normals);
-	BoxMeshData.SetUVs(UVCoords);
-	return BoxMeshData;
+	TAssetObjectPointer<CMesh> MeshAssetObject = GetOrCreateMeshAsset("Box", VertexPositions, Normals,Indices, UVCoords);
+	return MeshAssetObject;
 }

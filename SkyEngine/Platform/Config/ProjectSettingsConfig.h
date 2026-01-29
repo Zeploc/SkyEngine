@@ -10,7 +10,7 @@ class ENGINE_API CProjectSettingsConfig final : public CConfig
 public:
 	CProjectSettingsConfig();
 
-	static TPointer<CProjectSettingsConfig> Get();
+	static TSharedPointer<CProjectSettingsConfig> Get();
 
 	int GraphicsMode = 0;
 	std::string ProjectName = "Sandbox_Project";

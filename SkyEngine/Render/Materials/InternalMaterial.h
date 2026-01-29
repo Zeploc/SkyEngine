@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Core/Core.h"
-#include "Core/Object.h"
+#include "Core/Asset/AssetObject.h"
 
 class CShader;
 
@@ -13,11 +13,11 @@ class CShader;
 class ENGINE_API CMaterialInterface : public CAssetObject
 {
 public:
-	virtual ~CMaterialInterface() = default;
+	virtual ~CMaterialInterface() override = default;
 	CMaterialInterface();
 	virtual void BindMaterial();
 	static std::string GetStaticName();
-	static TPointer<CMaterialInterface> MakeMaterialFromShaderName(const std::string& ShaderName, const std::string& MaterialName);
+	static TSharedPointer<CMaterialInterface> MakeMaterialFromShaderName(const std::string& ShaderName, const std::string& MaterialName);
 
 	// Override shared_from_this so manual downcast not needed
 	// ReSharper disable once CppHidingFunction
@@ -27,7 +27,7 @@ public:
 	virtual bool HasTexture() = 0;
 	virtual TArray<struct SShaderParameter>& GetMaterialVariables() = 0;
 
-	virtual TPointer<CShader> GetBaseShader() = 0;
+	virtual TSharedPointer<CShader> GetBaseShader() = 0;
 	virtual std::string GetMaterialName() const = 0;
 	void Open() override;
 

@@ -42,7 +42,7 @@ public:
 	void OpenNewScene();
 	bool UnsavedSceneCheck();
 	bool OpenSceneByPath(std::string FilePath);
-	bool OpenScene(TPointer<Scene> NewScene) override;
+	bool OpenScene(TAssetObjectPointer<Scene> NewScene) override;
 	void SaveScene(bool bAsNew = false);
 
 	unsigned int DockSpaceID = 0;

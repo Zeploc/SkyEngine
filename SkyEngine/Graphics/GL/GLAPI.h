@@ -19,13 +19,13 @@ public:
 	
 	std::string GetGraphicsDisplayName() override;
 	
-	unsigned int CreateVertexBuffer(const CMeshData& MeshData) override;
-	bool GenerateTexture(TPointer<CTexture> Texture, bool bAA) override;
+	unsigned int CreateVertexBuffer(const CMesh& MeshData) override;
+	bool GenerateTexture(TAssetObjectPointer<CTexture> Texture, bool bAA) override;
 	void BindVertexArray(const std::vector<float>& Vertices, const std::vector<uint32_t>& Indices, unsigned& Vao) override;
 	bool CreateShaderProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* GeometryShaderFilename) override;
 	bool CreateTessProgram(uint32_t& ProgramID, const char* VertexShaderFilename, const char* FragmentShaderFilename, const char* TessControlShaderFilename, const char* TessEvalShaderFilename) override;
 	bool CreateComputeProgram(uint32_t& ProgramID, const char* ComputeShaderFilename) override;
-	TPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) override;
+	TSharedPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) override;
 	void RenderMesh(ISceneVisual* SceneVisual) override;
 	void RenderLines(ISceneVisual* SceneVisual, float Thickness) override;
 	void CleanupMesh(ISceneVisual* SceneVisual) override;
@@ -43,12 +43,12 @@ public:
 	void PassAttributeToShader(int32_t ShaderID, SVector Attribute) override;
 	void PassAttributeToShader(int32_t ShaderID, SVector4 Attribute) override;
 	void PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute) override;
-	void PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture> Attribute) override;
+	void PassAttributeToShader(int32_t ShaderLocation, TAssetObjectPointer<CTexture> Attribute) override;
 
 	void Clear(SVector ClearColour) override;
 	void SetRenderViewportSize(const SVector2i InViewportSize) override;
 	void SetWireframeMode(bool bInWireframeEnabled) override;
-	void ApplyMaterialFlags(TPointer<CMaterialInterface> InMaterial) override;
+	void ApplyMaterialFlags(TSharedPointer<CMaterialInterface> InMaterial) override;
 
 private:
 	std::string ReadShader(const char* filename);

@@ -2,6 +2,7 @@
 
 #pragma once
 #include "Core/Core.h"
+#include "Core/Asset/AssetObject.h"
 #include "Math/Transform.h"
 
 class CMaterialInterface;
@@ -17,7 +18,7 @@ public:
 	virtual bool ShouldRenderFaces() const = 0;
 
 	// TODO: Should this be in the shader
-	virtual TPointer<CMaterialInterface> GetMaterial() const = 0;
+	virtual TAssetObjectPointer<CMaterialInterface> GetMaterial() const = 0;
 
 	virtual STransform GetRenderTransform() const = 0;
 	

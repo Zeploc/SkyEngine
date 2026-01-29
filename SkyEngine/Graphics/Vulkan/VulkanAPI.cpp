@@ -317,7 +317,7 @@ std::string CVulkanAPI::GetGraphicsDisplayName()
 	return "";
 }
 
-bool CVulkanAPI::GenerateTexture(TPointer<CTexture> Texture, bool bAA)
+bool CVulkanAPI::GenerateTexture(TAssetObjectPointer<CTexture> Texture, bool bAA)
 {
 	//TODO: Implement
 	return false;
@@ -343,12 +343,12 @@ bool CVulkanAPI::CreateComputeProgram(uint32_t& ProgramID, const char* ComputeSh
 	return false;
 }
 
-TPointer<IFramebuffer> CVulkanAPI::CreateFramebuffer(const SFramebufferSpecification& Specification)
+TSharedPointer<IFramebuffer> CVulkanAPI::CreateFramebuffer(const SFramebufferSpecification& Specification)
 {
 	return CreatePointer<CVkFramebuffer>(Specification);
 }
 
-unsigned CVulkanAPI::CreateVertexBuffer(const CMeshData& MeshData)
+unsigned CVulkanAPI::CreateVertexBuffer(const CMesh& MeshData)
 {
 	//TODO: Implement
 	return -1;
@@ -492,7 +492,7 @@ void CVulkanAPI::SetWireframeMode(bool bInWireframeEnabled)
 	//TODO: Implement
 }
 
-void CVulkanAPI::ApplyMaterialFlags(TPointer<CMaterialInterface> InMaterial)
+void CVulkanAPI::ApplyMaterialFlags(TSharedPointer<CMaterialInterface> InMaterial)
 {
 	//TODO: Implement
 }
@@ -533,7 +533,7 @@ void CVulkanAPI::PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute
 	//TODO: Implement
 }
 
-void CVulkanAPI::PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture> Attribute)
+void CVulkanAPI::PassAttributeToShader(int32_t ShaderLocation, TAssetObjectPointer<CTexture> Attribute)
 {
 	//TODO: Implement
 }

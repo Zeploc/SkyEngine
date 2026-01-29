@@ -19,7 +19,7 @@ void EditorWindow::CreateExternalWindow()
 	LinkedWindow->SetWindowPosition(Position);
 }
 
-EditorWindow::EditorWindow(std::string InWindowName, TPointer<CEngineWindow> InLinkedWindow, SVector2 InSize, SVector2 InPosition)
+EditorWindow::EditorWindow(std::string InWindowName, TSharedPointer<CEngineWindow> InLinkedWindow, SVector2 InSize, SVector2 InPosition)
 : WindowName(InWindowName), LinkedWindow(InLinkedWindow), Size(InSize), Position(InPosition)
 {
 	if (!LinkedWindow)
@@ -46,7 +46,7 @@ void EditorWindow::SetupUI()
 		// UIElements.push_back(BackImage);
 		//
 		// //20, Size.y - 20.0f
-		// TPointer<UIButton> TestBtn(new UIButton(glm::vec2(0.0f, 0.0f), EANCHOR::TOP_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), Size.X - 35, 30, nullptr));
+		// TSharedPointer<UIButton> TestBtn(new UIButton(glm::vec2(0.0f, 0.0f), EANCHOR::TOP_LEFT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), Size.X - 35, 30, nullptr));
 		//
 		// TestBtn->BindPress(this, &EditorWindow::StartDrag);
 		// TestBtn->BindRelease(this, &EditorWindow::StopDrag);
@@ -54,7 +54,7 @@ void EditorWindow::SetupUI()
 		// TestBtn->AddText(WindowName, "Resources/Fonts/Roboto-Thin.ttf", 20, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), EANCHOR::CENTER, {0, 0});
 		// UIElements.push_back(TestBtn);
 		//
-		// TPointer<UIButton> PopoutButton(new UIButton(glm::vec2(Size.X, 0.0f), EANCHOR::TOP_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 30, 30, nullptr));
+		// TSharedPointer<UIButton> PopoutButton(new UIButton(glm::vec2(Size.X, 0.0f), EANCHOR::TOP_RIGHT, 0.0f, glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 30, 30, nullptr));
 		//
 		// PopoutButton->BindPress(this, &EditorWindow::PopOut);
 		// UIElements.push_back(PopoutButton);
@@ -254,7 +254,7 @@ void EditorWindow::UpdateWindow()
 	//	
 	//}
 
-	// for (TPointer<UIElement> UIElement : UIElements)
+	// for (TSharedPointer<UIElement> UIElement : UIElements)
 	// {
 	// 	UIElement->BaseUpdate();
 	// }

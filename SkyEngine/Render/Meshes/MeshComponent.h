@@ -12,7 +12,7 @@
 
 // Library Include //
 
-#include "MeshData.h"
+#include "Mesh.h"
 #include "Render/SceneVisual.h"
 
 // TODO: Warnings with exporting class containing STDL
@@ -26,8 +26,8 @@ class CMaterialInterface;
 class ENGINE_API CMeshComponent : public CComponent, public ISceneVisual
 {
 public:
-	CMeshComponent(const TPointer<Entity>& InOwner);
-	CMeshComponent(const TPointer<Entity>& InOwner, std::string InMeshAsset, const TPointer<CMaterialInterface>& InMaterial = nullptr);
+	CMeshComponent(const TSharedPointer<Entity>& InOwner);
+	CMeshComponent(const TSharedPointer<Entity>& InOwner, TAssetObjectPointer<CMesh> InMeshAsset, const TAssetObjectPointer<CMaterialInterface>& InMaterial = nullptr);
 	virtual ~CMeshComponent();
 
 	void OnAttached() override;
@@ -39,11 +39,11 @@ public:
 	bool ShouldRender() const override;
 	virtual STransform GetRenderTransform() const override;
 	
-	std::string GetMeshAsset() const { return MeshAsset; }
-	virtual bool SetMeshAsset(std::string NewMeshAssetName);
+	TAssetObjectPointer<CMesh> GetMeshAsset() const { return MeshAsset; }
+	virtual bool SetMeshAsset(TAssetObjectPointer<CMesh> NewMeshAsset);
 	
-	TPointer<CMaterialInterface> GetMaterial() const override;
-	virtual void SetMaterial(TPointer<CMaterialInterface> NewMaterial);
+	TAssetObjectPointer<CMaterialInterface> GetMaterial() const override;
+	virtual void SetMaterial(TAssetObjectPointer<CMaterialInterface> NewMaterial);
 	
 	uint32_t GetVao() const override;
 	int GetIndicesCount() const override;
@@ -52,30 +52,19 @@ public:
 	virtual bool CheckHit(SVector RayStart, SVector RayDirection, SVector& HitPos);
 
 	virtual void OnDestroy() {}
-
-	void AddCollisionBounds(float fHeight, float fWidth, float fDepth, TPointer<Entity> _EntityRef);
-
-	void AddCollisionBounds(TPointer<CCollisionBounds> NewCollision);
-
-	TPointer<CCollisionBounds> GetCollisionBounds()
-	{
-		return MeshCollisionBounds;
-	}
 	
 	std::string GetComponentClassName() override;
 	static std::string GetStaticName();
 
-	TPointer<CMaterialInterface> MeshMaterial;
+	TAssetObjectPointer<CMaterialInterface> MeshMaterial;
 	float LEGACY_Width;
 	float LEGACY_Height;
 	float LEGACY_Depth = 0;
 	
 protected:
-	virtual CMeshData GetMeshData() const;
 	void Serialize(std::ostream& os) override;
 	void Deserialize(std::istream& is) override;
-	TPointer<CCollisionBounds> MeshCollisionBounds;
-	std::string MeshAsset;
+	TAssetObjectPointer<CMesh> MeshAsset;
 
 	bool bVisible = true;
 };

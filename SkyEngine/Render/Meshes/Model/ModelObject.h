@@ -12,7 +12,7 @@ using namespace std;
 
 #include "ModelMesh.h"
 
-class ModelObject
+class ENGINE_API ModelObject
 {
 public:
 	GLuint program;
@@ -26,9 +26,9 @@ public:
 	// Draws the model, and thus all its meshes
 	void Render(STransform MeshTransform);
 
+	vector<ModelMesh> meshes;
 private:
 	/*  Model Data  */
-	vector<ModelMesh> meshes;
 	string directory;
 	vector<MeshTexture> textures_loaded; // Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
 

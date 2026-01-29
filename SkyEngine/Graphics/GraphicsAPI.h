@@ -6,7 +6,8 @@
 #include "Core/Core.h"
 
 #include "Math/Vector2.h"
-#include "Render/Meshes/MeshData.h"
+
+#include "Render/Meshes/Mesh.h"
 
 class Matrix4;
 class CEngineWindow;
@@ -36,12 +37,12 @@ public:
 	
 	virtual std::string GetGraphicsDisplayName() = 0;
 
-	static TPointer<IGraphicsAPI> CreateGraphicsAPI(EGraphicsAPI APIType);
+	static TSharedPointer<IGraphicsAPI> CreateGraphicsAPI(EGraphicsAPI APIType);
 	
 	virtual void ImGuiInit() = 0;
 	
-	virtual unsigned int CreateVertexBuffer(const CMeshData& MeshData) = 0;
-	virtual bool GenerateTexture(TPointer<CTexture> Texture, bool bAA = true) = 0;
+	virtual unsigned int CreateVertexBuffer(const CMesh& MeshData) = 0;
+	virtual bool GenerateTexture(TAssetObjectPointer<CTexture> Texture, bool bAA = true) = 0;
 	/* Create a new VAO if -1, otherwise will use it  */
 	virtual void BindVertexArray(const std::vector<float>& vertices, const std::vector<uint32_t>& indices, unsigned& vao) = 0;
 	
@@ -60,7 +61,7 @@ public:
 	virtual void ImGuiNewFrame() = 0;
 	virtual void SwapBuffers() = 0;
 
-	virtual TPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) = 0;	
+	virtual TSharedPointer<IFramebuffer> CreateFramebuffer(const SFramebufferSpecification& Specification) = 0;	
 
 	virtual void BindShader(uint32_t ShaderProgramID) = 0;
 	virtual void Clear(SVector ClearColour) = 0;
@@ -69,7 +70,7 @@ public:
 	// /* Where Y=0 is the top of the screen */
 	// virtual void SetRenderViewport(const SVector2i InViewportPosition, const SVector2i InViewportSize) = 0;
 	virtual void SetWireframeMode(bool bInWireframeEnabled) = 0;
-	virtual void ApplyMaterialFlags(TPointer<CMaterialInterface> InMaterial) = 0;
+	virtual void ApplyMaterialFlags(TSharedPointer<CMaterialInterface> InMaterial) = 0;
 	
 	// template <typename T>
 	// void PassAttributeToShader(int32_t ShaderLocation, T Attribute);
@@ -81,5 +82,5 @@ public:
 	virtual void PassAttributeToShader(int32_t ShaderLocation, SVector Attribute) = 0;
 	virtual void PassAttributeToShader(int32_t ShaderLocation, SVector4 Attribute) = 0;
 	virtual void PassAttributeToShader(int32_t ShaderLocation, Matrix4 Attribute) = 0;
-	virtual void PassAttributeToShader(int32_t ShaderLocation, TPointer<CTexture> Attribute) = 0;
+	virtual void PassAttributeToShader(int32_t ShaderLocation, TAssetObjectPointer<CTexture> Attribute) = 0;
 };

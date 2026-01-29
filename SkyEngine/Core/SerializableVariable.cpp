@@ -6,7 +6,7 @@
 
 #include "Application.h"
 #include "Asset/Asset.h"
-#include "Core/Object.h"
+#include "Core/Asset/AssetObject.h"
 #include "System/LogManager.h"
 
 std::string SSerializableVariable::GetMetaTag(std::string Key)
@@ -68,7 +68,7 @@ std::string SSerializableVariable::GetSerializedVariable() const
 		}
 	case EVariableType::Object:
 		{
-			TPointer<CAssetObject> AssetPointer = *AssetObject;
+			TAssetObjectPointer<CAssetObject> AssetPointer = *AssetObject;
 			std::stringstream ss("None");
 			if (AssetPointer)
 			{
@@ -132,6 +132,17 @@ void SSerializableVariable::SetDeserializedVariable(std::istream& is)
 					*AssetObject = GetAssetManager()->LoadAsset(AssetPath);
 				}
 				else
+				{
+					// Fallback for if asset exists but not in file (ie currently used for engine meshes)
+					for (TObjectPointer<CAsset> Asset : GetAssetManager()->GetAssets())
+					{
+						if (AssetPath == Asset->FilePath)
+						{
+							*AssetObject = GetAssetManager()->LoadAsset(AssetPath);
+						}
+					}
+				}
+				if (!AssetObject->IsValid())
 				{
 					LOG_ERROR("Failed to load asset by path {}", AssetPath);
 				}

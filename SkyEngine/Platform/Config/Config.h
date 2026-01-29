@@ -24,7 +24,7 @@ public:
 	static bool RegisterConfig(bool bCreateIfMissing = true);
 	
 	template<class T>
-	static TPointer<T> GetConfig();
+	static TSharedPointer<T> GetConfig();
 	
 	std::string GetName() const { return ConfigName; }
 	
@@ -41,13 +41,13 @@ protected:
 	virtual void SerializeVariables(std::ostream& os) const;
 	virtual void DeserializeVariables(std::istream& is);
 
-	static TArray<TPointer<CConfig>> Configs;
+	static TArray<TSharedPointer<CConfig>> Configs;
 };
 
 template <class T>
 bool CConfig::RegisterConfig(bool bCreateIfMissing)
 {
-	TPointer<CConfig> Config = CreatePointer<T>();
+	TSharedPointer<CConfig> Config = CreatePointer<T>();
 	if (!Config->DoesConfigExist() || !Config->LoadConfig())
 	{
 		if (!bCreateIfMissing || !Config->SaveConfig())
@@ -62,11 +62,11 @@ bool CConfig::RegisterConfig(bool bCreateIfMissing)
 }
 
 template <class T>
-TPointer<T> CConfig::GetConfig()
+TSharedPointer<T> CConfig::GetConfig()
 {
-	for (TPointer<CConfig> Config : Configs)
+	for (TSharedPointer<CConfig> Config : Configs)
 	{
-		if (TPointer<T> CheckedConfig = Cast<T>(Config))
+		if (TSharedPointer<T> CheckedConfig = Cast<T>(Config))
 		{
 			return CheckedConfig;
 		}	

@@ -2,28 +2,33 @@
 
 #pragma once
 #include "Core/Core.h"
+#include "Core/Asset/AssetObject.h"
 
 class CAssetObject;
 
+/**
+ * Manages an asset object, loading and unloading it as needed. Used as a soft link to an asset.
+ */
 class ENGINE_API CAsset : public std::enable_shared_from_this<CAsset>
 {
 public:
 	CAsset(const std::string& AssetPath, const std::string& InClass = std::string());
 
 	/* Gets object if loaded, otherwise loads it first */
-	TPointer<CAssetObject> Load();
+	TAssetObjectPointer<CAssetObject> Load();
 	/* Gets object if loaded, otherwise loads it first */
 	template<typename T>
-	TPointer<T> Load();
+	TAssetObjectPointer<T> Load();
 
-	bool IsLoaded() const { return Object != nullptr; }
+	bool IsLoaded() const { return Object.IsValid();/* != nullptr;*/ }
 	
 	void Unload();
+	void Unloaded();
 	bool Delete();
 	/* Unloads the asset and reloads from disk, returning new object*/
-	TPointer<CAssetObject> Reload();
+	TAssetObjectPointer<CAssetObject> Reload();
 	bool Save();
-	void SetDefaultObject(TPointer<CAssetObject> NewObject);
+	void SetDefaultObject(TAssetObjectPointer<CAssetObject> NewObject);
 	void Open();
 	/* Clears the object link for this asset (Will load from file when load called again) */
 	void DisconnectObject();
@@ -38,18 +43,22 @@ public:
 	// TODO: Unsaved
 	
 	/* Creates the object for this asset when loading based on the class and meta data */
-	TPointer<CAssetObject> MakeObject() const;
+	TSharedPointer<CAssetObject> MakeObject() const;
+
+	static std::string GetFileExtension();
 
 protected:
 	void ApplyAssetData(std::string AssetData);
 	
 	// TODO: Only for editor
 	/* If wanting to get this externally, use Load() */
-	TPointer<CAssetObject> Object = nullptr;
+	TAssetObjectPointer<CAssetObject> Object = nullptr;
+
+	TSharedPointer<CAssetObject> HardObject = nullptr;
 };
 
 template <typename T>
-TPointer<T> CAsset::Load()
+TAssetObjectPointer<T> CAsset::Load()
 {
-	return std::dynamic_pointer_cast<T>(Load());
+	return Cast<T>(Load());
 }

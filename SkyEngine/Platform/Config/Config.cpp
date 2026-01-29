@@ -6,7 +6,7 @@
 #include "Core/Application.h"
 #include "Platform/File/FileManager.h"
 
-TArray<TPointer<CConfig>> CConfig::Configs;
+TArray<TSharedPointer<CConfig>> CConfig::Configs;
 
 CConfig::CConfig(std::string Name, std::string RelativePath)
 	: ConfigName(Name), ConfigPath(RelativePath)

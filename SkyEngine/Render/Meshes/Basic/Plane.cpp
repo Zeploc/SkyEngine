@@ -3,14 +3,9 @@
 #include "SEPCH.h"
 #include "Plane.h"
 
-// OpenGL Library //
-#include <soil/SOIL2.h>
-
 // Engine Includes //
-#include "../MeshManager.h"
+#include "DefaultMeshes.h"
 #include "Render/Shaders/ShaderManager.h"
-#include "Core/Application.h"
-#include "Core/Asset/Asset.h"
 #include "Render/Materials/Material.h"
 #include "Render/Shaders/PBRShader.h"
 #include "Render/Textures/Texture.h"
@@ -22,8 +17,8 @@
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CPlane::CPlane(const TPointer<Entity>& InOwner, TPointer<CMaterialInterface> InMaterial)
-: CMeshComponent(InOwner, MESH_PLANE, InMaterial)
+CPlane::CPlane(const TSharedPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial)
+: CMeshComponent(InOwner, DefaultMesh::GetPlane(), InMaterial)
 {
 	CollisionBox.fHeight = LEGACY_Height;
 	CollisionBox.fWidth = LEGACY_Width;
@@ -35,8 +30,8 @@ CPlane::CPlane(const TPointer<Entity>& InOwner, TPointer<CMaterialInterface> InM
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CPlane::CPlane(const TPointer<Entity>& InOwner, TPointer<CMaterialInterface> InMaterial, glm::vec2 v2FrameCounts, int _iFPS)
-: CMeshComponent(InOwner, MESH_PLANE, InMaterial)
+CPlane::CPlane(const TSharedPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial, glm::vec2 v2FrameCounts, int _iFPS)
+: CMeshComponent(InOwner, DefaultMesh::GetPlane(), InMaterial)
 {
 	CollisionBox.fHeight = LEGACY_Height;
 	CollisionBox.fWidth = LEGACY_Width;
@@ -44,8 +39,8 @@ CPlane::CPlane(const TPointer<Entity>& InOwner, TPointer<CMaterialInterface> InM
 	AnimationInfo.iFPS = _iFPS;
 	m_fFrameCheck = 1.0f / AnimationInfo.iFPS;
 
-	const TPointer<TMaterial<CPBRShader>> Material = std::static_pointer_cast<CMaterial_PBR>(MeshMaterial);
-	const TPointer<CTexture> TextureData = Material->Params.DiffuseTexture;
+	const TAssetObjectPointer<TMaterial<CPBRShader>> Material = Cast<TMaterial<CPBRShader>>(MeshMaterial);
+	const TAssetObjectPointer<CTexture> TextureData = Material->Params.DiffuseTexture;
 
 	AnimationInfo.v2FrameCount = v2FrameCounts;
 	AnimationInfo.v2EndFrame = v2FrameCounts;
@@ -64,14 +59,14 @@ CPlane::CPlane(const TPointer<Entity>& InOwner, TPointer<CMaterialInterface> InM
 #--Parameters--#:	Takes contructor values
 #--Return--#: 		NA
 ************************************************************/
-CPlane::CPlane(const TPointer<Entity>& InOwner, TPointer<CMaterialInterface> InMaterial, int iCount, bool bHorizontal)
-: CMeshComponent(InOwner, MESH_PLANE, InMaterial)
+CPlane::CPlane(const TSharedPointer<Entity>& InOwner, TAssetObjectPointer<CMaterialInterface> InMaterial, int iCount, bool bHorizontal)
+: CMeshComponent(InOwner, DefaultMesh::GetPlane(), InMaterial)
 {	
 	CollisionBox.fHeight = LEGACY_Height;
 	CollisionBox.fWidth = LEGACY_Width;
 
-	const TPointer<TMaterial<CPBRShader>> Material = std::static_pointer_cast<CMaterial_PBR>(MeshMaterial);
-	const TPointer<CTexture> TextureData = Material->Params.DiffuseTexture;
+	const TAssetObjectPointer<TMaterial<CPBRShader>> Material = Cast<TMaterial<CPBRShader>>(MeshMaterial);
+	const TAssetObjectPointer<CTexture> TextureData = Material->Params.DiffuseTexture;
 	float fImageRatio = static_cast<float>(TextureData->Width) / static_cast<float>(TextureData->Height);
 	float fObjectRatio = LEGACY_Height / LEGACY_Width;
 	float hSize = static_cast<float>(iCount);

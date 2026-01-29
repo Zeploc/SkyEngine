@@ -4,19 +4,14 @@
 #include "MeshComponent.h"
 
 // Engine Includes //
-#include "MeshManager.h"
 #include "Core/Application.h"
-#include "Core/Asset/Asset.h"
-#include "Entity/CollisionBounds.h"
 #include "Entity/Entity.h"
 #include "Render/Renderer.h"
 #include "Render/Materials/InternalMaterial.h"
-#include "Render/Shaders/PBRShader.h"
-#include "Render/Shaders/Shader.h"
 #include "System/LogManager.h"
 #include "System/Utils.h"
 
-CMeshComponent::CMeshComponent(const TPointer<Entity>& InOwner)
+CMeshComponent::CMeshComponent(const TSharedPointer<Entity>& InOwner)
 	: CComponent(InOwner)
 {
 	MeshMaterial = GetRenderer()->DefaultMaterial;
@@ -26,7 +21,7 @@ CMeshComponent::CMeshComponent(const TPointer<Entity>& InOwner)
 	SetSerializeVariable(bVisible);
 }
 
-CMeshComponent::CMeshComponent(const TPointer<Entity>& InOwner, std::string InMeshAsset, const TPointer<CMaterialInterface>& InMaterial)
+CMeshComponent::CMeshComponent(const TSharedPointer<Entity>& InOwner, TAssetObjectPointer<CMesh> InMeshAsset, const TAssetObjectPointer<CMaterialInterface>& InMaterial)
 : CComponent(InOwner), MeshAsset(InMeshAsset)
 {
 	if (InMaterial)
@@ -45,8 +40,6 @@ CMeshComponent::CMeshComponent(const TPointer<Entity>& InOwner, std::string InMe
 
 CMeshComponent::~CMeshComponent()
 {
-	//if (MeshCollisionBounds) delete MeshCollisionBounds;
-	MeshCollisionBounds = nullptr;
 	// TODO: Give id (component system?) and link to parent
 	CLogManager::Get()->DisplayMessage("Mesh was destroyed!");	
 }
@@ -63,26 +56,22 @@ void CMeshComponent::Unload()
 
 bool CMeshComponent::ShouldRender() const
 {
-	return IsVisible();
+	return IsVisible() && MeshAsset;
 }
 
-TPointer<CMaterialInterface> CMeshComponent::GetMaterial() const
+TAssetObjectPointer<CMaterialInterface> CMeshComponent::GetMaterial() const
 {
 	return MeshMaterial;
 }
 
-void CMeshComponent::SetMaterial(TPointer<CMaterialInterface> NewMaterial)
+void CMeshComponent::SetMaterial(TAssetObjectPointer<CMaterialInterface> NewMaterial)
 {
 	MeshMaterial = NewMaterial;
 }
 
-bool CMeshComponent::SetMeshAsset(std::string NewMeshAssetName)
+bool CMeshComponent::SetMeshAsset(TAssetObjectPointer<CMesh> NewMeshAsset)
 {
-	if (!GetMeshManager()->HasMesh(NewMeshAssetName))
-	{
-		return false;
-	}
-	MeshAsset = NewMeshAssetName;
+	MeshAsset = NewMeshAsset;
 	// GetGraphicsAPI()->CleanupMesh(this);
 	// BindMeshData();
 	return true;
@@ -90,12 +79,12 @@ bool CMeshComponent::SetMeshAsset(std::string NewMeshAssetName)
 
 uint32_t CMeshComponent::GetVao() const
 {
-	return GetMeshData().GetVao();
+	return GetMeshAsset()->GetVao();
 }
 
 int CMeshComponent::GetIndicesCount() const
 {
-	return GetMeshData().GetIndicesCount();
+	return GetMeshAsset()->GetIndicesCount();
 }
 
 STransform CMeshComponent::GetRenderTransform() const
@@ -110,27 +99,12 @@ bool CMeshComponent::CheckHit(SVector RayStart, SVector RayDirection, SVector& H
 	// CLogManager::Get()->DisplayMessage("No Check Hit for mesh ray hit check!");
 
 	// TODO: Not working with plane?
-	return Utils::CheckMeshHit(GetOwner()->Transform, GetMeshData(), RayStart, RayDirection, HitPos);
+	return Utils::CheckMeshHit(GetOwner()->Transform, *GetMeshAsset(), RayStart, RayDirection, HitPos);
 }
 
 void CMeshComponent::SetVisible(bool bNewVisible)
 {
 	bVisible = bNewVisible;
-}
-
-void CMeshComponent::AddCollisionBounds(float fWidth, float fHeight, float fDepth, TPointer<Entity> _EntityRef)
-{
-	MeshCollisionBounds = std::make_shared<CCollisionBounds>(fWidth, fHeight, fDepth, _EntityRef);
-}
-
-void CMeshComponent::AddCollisionBounds(TPointer<CCollisionBounds> NewCollision)
-{
-	MeshCollisionBounds = NewCollision;
-}
-
-CMeshData CMeshComponent::GetMeshData() const
-{
-	return GetMeshManager()->GetMesh(MeshAsset);
 }
 
 void CMeshComponent::Serialize(std::ostream& os)

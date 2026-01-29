@@ -8,19 +8,19 @@ class SceneUtils
 {
 public:
 	template<typename T>
-	static TPointer<T> FindEntityOfClass(TPointer<Scene> Scene = nullptr);
+	static TSharedPointer<T> FindEntityOfClass(TAssetObjectPointer<Scene> Scene = nullptr);
 };
 
 template <typename T>
-TPointer<T> SceneUtils::FindEntityOfClass(TPointer<Scene> Scene)
+TSharedPointer<T> SceneUtils::FindEntityOfClass(TAssetObjectPointer<Scene> Scene)
 {
 	if (!Scene)
 	{
 		Scene = SceneManager::GetInstance()->GetCurrentScene();
 	}
-	for (TPointer<Entity> Entity : Scene->Entities)
+	for (TSharedPointer<Entity> Entity : Scene->Entities)
 	{
-		TPointer<T> CheckedEntity = Cast<T>(Entity);
+		TSharedPointer<T> CheckedEntity = Cast<T>(Entity);
 		if (CheckedEntity)
 		{
 			return CheckedEntity;

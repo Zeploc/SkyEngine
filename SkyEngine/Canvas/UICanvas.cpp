@@ -31,7 +31,7 @@ void CUICanvas::OnDetach()
 
 void CUICanvas::OnUpdate()
 {	
-	for (TPointer<CUIWidget> Widget : Widgets)
+	for (TSharedPointer<CUIWidget> Widget : Widgets)
 	{
 		Widget->Update();
 	}
@@ -46,7 +46,7 @@ void CUICanvas::OnRender()
 	UICanvas.Position = {0,0};
 	UICanvas.Size = {ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y};
 	
-	for (TPointer<CUIWidget> Widget : Widgets)
+	for (TSharedPointer<CUIWidget> Widget : Widgets)
 	{
 		// TODO: Temp until overall style setup
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(.1f,.1f,.1f,1.0f));
@@ -55,7 +55,7 @@ void CUICanvas::OnRender()
 	}
 }
 
-void CUICanvas::AddWidget(TPointer<CUIWidget> InWidget)
+void CUICanvas::AddWidget(TSharedPointer<CUIWidget> InWidget)
 {
 	Widgets.push_back(InWidget);	
 	InWidget->SetOwningLayer(this);

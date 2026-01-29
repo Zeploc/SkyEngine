@@ -31,10 +31,14 @@ std::shared_ptr<CTexture> CTexture::shared_from_this()
 	return std::static_pointer_cast<CTexture>(CAssetObject::shared_from_this());
 }
 
+TWeakPointer<CTexture> CTexture::weak_from_this()
+{
+	return std::static_pointer_cast<CTexture>(CAssetObject::weak_from_this().lock());
+}
+
 void CTexture::OnLoaded()
 {	
-	GetGraphicsAPI()->GenerateTexture(shared_from_this());
-	GetTextureManager()->AddLoadedTexture(shared_from_this());
+	GetGraphicsAPI()->GenerateTexture(weak_from_this());
 }
 
 void CTexture::Serialize(std::ostream& os)

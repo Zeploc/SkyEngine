@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Object.h"
 #include "Math/Transform.h"
 
 #include "Math/Vector4.h"
@@ -70,11 +71,20 @@ struct ENGINE_API SSerializableVariable
 		Transform = InTransform;
 	}
 
+	// template<class T, std::enable_if_t<std::is_base_of_v<CAssetObject, T>, bool> = true>
+	// SSerializableVariable(const std::string& InName, TWeakPointer<T>* InObject) : VariableName(InName)
+	// {		
+	// 	Type = EVariableType::Object;
+	// 	AssetObject = (TAssetObjectPointer<CAssetObject>*)(InObject);
+	// 	// MetaTags.Add(MetaTag_Class, T::GetStaticName());
+	// 	MetaTags.insert(std::pair(MetaTag_Class, T::GetStaticName()));
+	// 	// MetaTags[MetaTag_Class] = T::GetStaticName();
+	// }
 	template<class T, std::enable_if_t<std::is_base_of_v<CAssetObject, T>, bool> = true>
-	SSerializableVariable(const std::string& InName, TPointer<T>* InObject) : VariableName(InName)
+	SSerializableVariable(const std::string& InName, TAssetObjectPointer<T>* InObject) : VariableName(InName)
 	{		
 		Type = EVariableType::Object;
-		AssetObject = (TPointer<CAssetObject>*)(InObject);
+		AssetObject = (TAssetObjectPointer<CAssetObject>*)(InObject);
 		// MetaTags.Add(MetaTag_Class, T::GetStaticName());
 		MetaTags.insert(std::pair(MetaTag_Class, T::GetStaticName()));
 		// MetaTags[MetaTag_Class] = T::GetStaticName();
@@ -93,7 +103,7 @@ struct ENGINE_API SSerializableVariable
 		SVector2* Vector2;
 		SVector4* Vector4;
 		STransform* Transform;
-		TPointer<CAssetObject>* AssetObject;
+		TAssetObjectPointer<CAssetObject>* AssetObject;
 	};
 	
 	void SerializeVariable(std::ostream& os) const;
@@ -101,9 +111,10 @@ struct ENGINE_API SSerializableVariable
 	
 	virtual std::string GetSerializedVariable() const;
 	virtual void SetDeserializedVariable(std::istream& is);
+	virtual void OnValueChanged() {}
 };
 
-#define SetSerializeVariable(VariableName) SerializeVariableWithTags(VariableName)
+#define SetSerializeVariable(VariableName) SerializeVariableWithTags(VariableName, {})
 
 #define SerializeVariableWithTags(VariableName, MetaTags) CustomSerializeVariable(SSerializableVariable, SerializeVariables, VariableName)
 

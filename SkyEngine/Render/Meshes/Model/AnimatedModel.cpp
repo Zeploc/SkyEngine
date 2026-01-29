@@ -35,7 +35,7 @@ void AnimatedModel::VertexBoneData::addBoneData(int BoneID, float Weight)
 	//assert(0); //more bones than we have space for
 }
 
-AnimatedModel::AnimatedModel(const TPointer<Entity>& InOwner, std::string modelFilename, std::string texFilename)
+AnimatedModel::AnimatedModel(const TSharedPointer<Entity>& InOwner, std::string modelFilename, std::string texFilename)
 	: CMeshComponent(InOwner)
 {
 	MeshMaterial = std::make_shared<TMaterial<CUndefinedShader>>("AnimatedModelMaterial", ShaderManager::GetUndefinedShader("AnimatedModel"));

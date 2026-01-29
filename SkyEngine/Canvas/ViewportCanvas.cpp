@@ -26,11 +26,11 @@ CViewportCanvas::~CViewportCanvas()
 
 void CViewportCanvas::OnAttach()
 {
-	const TPointer<CEngineWindow> EngineWindow = GetApplication()->GetApplicationWindow();
+	const TSharedPointer<CEngineWindow> EngineWindow = GetApplication()->GetApplicationWindow();
 	ViewportSize = EngineWindow->GetSize();
 	
 	Lighting::SetFogColour(SVector4(SkyColour, 1.0f));
-	const TPointer<Scene> TargetScene = SceneManager::GetInstance()->GetCurrentScene();
+	const TAssetObjectPointer<Scene> TargetScene = SceneManager::GetInstance()->GetCurrentScene();
 
 	SceneRenderer = GetRenderer()->AddSceneRenderer(TargetScene, ViewportSize);
 	SceneRenderer->ClearColour = SkyColour;
@@ -55,10 +55,10 @@ void CViewportCanvas::OnViewportResize()
 
 void CViewportCanvas::SetupCamera()
 {	
-	SetCamera(CreatePointer<Camera>(STransform(SVector(-10.0f, 10.0f, 10.0f), SRotator(-90.0f, 0.0f, 0.0f))));
+	SetCamera(CreatePointer<Camera>(STransform(SVector(-10.0f, 10.0f, 10.0f), SRotator( 0.0f, -90.0f, 0.0f))));
 }
 
-void CViewportCanvas::SetCamera(TPointer<Camera> NewCamera)
+void CViewportCanvas::SetCamera(TSharedPointer<Camera> NewCamera)
 {
 	ViewportCamera = NewCamera;
 	SceneRenderer->LinkCamera(ViewportCamera);

@@ -16,15 +16,11 @@
 #include <fstream>
 
 #include "Core/Application.h"
-#include "Core/StringUtils.h"
-#include "Entity/Button3DEntity.h"
+#include "Entity/Legacy/Button3DEntity.h"
 #include "Render/Renderer.h"
 #include "Input/Input.h"
 #include "Platform/Window/GLFW/GLFWIncludes.h"
 #include "Render/Materials/Material.h"
-#include "Render/Meshes/MeshComponent.h"
-#include "Render/Shaders/PBRShader.h"
-#include "System/LogManager.h"
 
 /************************************************************
 #--Description--#:  Constructor function
@@ -56,7 +52,7 @@ std::shared_ptr<Scene> Scene::shared_from_this()
 void Scene::Serialize(std::ostream& os)
 {	
 	os << "[" + SceneName + "]\n";
-	for (TPointer<Entity> Entity : Entities)
+	for (TSharedPointer<Entity> Entity : Entities)
 	{	 	
 		os << Entity << "\n";
 	}
@@ -64,8 +60,8 @@ void Scene::Serialize(std::ostream& os)
 
 void Scene::Deserialize(std::istream& is)
 {
-	std::vector< TPointer<Entity>> EntitiesCopy = Entities;
-	for (TPointer<Entity> CurrentEnt : EntitiesCopy)
+	std::vector< TSharedPointer<Entity>> EntitiesCopy = Entities;
+	for (TSharedPointer<Entity> CurrentEnt : EntitiesCopy)
 	{		
 		DestroyEntity(CurrentEnt);
 	}
@@ -78,7 +74,7 @@ void Scene::Deserialize(std::istream& is)
 	
 	while(is.peek() != EOF )
 	{
-		TPointer<Entity> NewEntity = Entity::GetEntityFromStringStream(is);
+		TSharedPointer<Entity> NewEntity = Entity::GetEntityFromStringStream(is);
 		AddEntity(NewEntity);
 		// New line
 		std::getline(is, Empty, '\n');
@@ -88,6 +84,11 @@ void Scene::Deserialize(std::istream& is)
 std::string Scene::GetStaticName()
 {
 	return "Scene";
+}
+
+std::string Scene::GetFileExtension()
+{
+	return "slvl";
 }
 
 std::string Scene::GetAssetClassName()
@@ -131,7 +132,7 @@ void Scene::RenderScene()
 #--Parameters--#: 	Entity to add
 #--Return--#: 		NA
 ************************************************************/
-void Scene::AddEntity(TPointer<Entity> _Entity)
+void Scene::AddEntity(TSharedPointer<Entity> _Entity)
 {
 	VerifyEntityID(_Entity);
 	Entities.push_back(_Entity);
@@ -144,7 +145,7 @@ void Scene::AddEntity(TPointer<Entity> _Entity)
 #--Parameters--#: 	Entity to destroy
 #--Return--#: 		NA
 ************************************************************/
-void Scene::DestroyEntity(TPointer<Entity> _Entity)
+void Scene::DestroyEntity(TSharedPointer<Entity> _Entity)
 {
 	DestroyedEntities.push_back(_Entity);
 	_Entity->OnDestroy();
@@ -163,9 +164,9 @@ void Scene::DestroyEntity(TPointer<Entity> _Entity)
 	//EntDetroy.reset();
 }
 
-void Scene::VerifyEntityID(TPointer<Entity> EntityToVerify)
+void Scene::VerifyEntityID(TSharedPointer<Entity> EntityToVerify)
 {
-	for (const TPointer<Entity>& Entity : Entities)
+	for (const TSharedPointer<Entity>& Entity : Entities)
 	{
 		if (EntityToVerify->GetEntityID() == Entity->GetEntityID())
 		{			
@@ -189,7 +190,7 @@ int Scene::AddEntityID()
 ************************************************************/
 void Scene::Update()
 {		
-	for (const TPointer<Entity>& Entity : Entities)
+	for (const TSharedPointer<Entity>& Entity : Entities)
 	{
 		Entity->BaseUpdate();
 	}
@@ -212,7 +213,7 @@ void Scene::OnLoaded()
 
 void Scene::OnUnloaded()
 {
-	for (const TPointer<Entity>& Entity : Entities)
+	for (const TSharedPointer<Entity>& Entity : Entities)
 	{
 		Entity->Unload();
 	}
@@ -220,7 +221,7 @@ void Scene::OnUnloaded()
 
 void Scene::BeginPlay()
 {
-	for (const TPointer<Entity>& Entity : Entities)
+	for (const TSharedPointer<Entity>& Entity : Entities)
 	{
 		Entity->BeginPlay();
 	}

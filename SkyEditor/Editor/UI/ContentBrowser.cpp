@@ -6,11 +6,15 @@
 #include "Core/Application.h"
 #include "Core/StringUtils.h"
 #include "Core/Asset/Asset.h"
+#include "Platform/File/FileManager.h"
 #include "Platform/File/PathUtils.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Render/Materials/Material.h"
+#include "Render/Meshes/Model/ModelMesh.h"
 #include "Render/Shaders/PBRShader.h"
 #include "Render/Shaders/UnlitShader.h"
+#include "Audio/Audio.h"
+#include "Platform/PlatformInterface.h"
 
 CContentBrowser::CContentBrowser(const TWeakPointer<CEngineWindow>& InOwningWindow): CUICanvas(InOwningWindow, "Content Browser")
 {
@@ -19,7 +23,7 @@ CContentBrowser::CContentBrowser(const TWeakPointer<CEngineWindow>& InOwningWind
 	bCanClose = false;
 }
 
-void CContentBrowser::DeletePopup(TPointer<CAsset> Asset)
+void CContentBrowser::DeletePopup(TSharedPointer<CAsset> Asset)
 {
 }
 
@@ -69,24 +73,31 @@ void CContentBrowser::OnRender()
 					
 				ImGui::EndMenu();
 			}
-			if (ImGui::MenuItem("Texture"))
+			TArray<std::string> AssetMenus;
+			AssetMenus.push_back(CTexture::GetStaticName());
+			AssetMenus.push_back(Scene::GetStaticName());
+			AssetMenus.push_back(CMesh::GetStaticName());
+			AssetMenus.push_back(CAudio::GetStaticName());
+			for (const string& AssetMenu : AssetMenus)
 			{
-				NewAssetClassName = CTexture::GetStaticName();
-			}
-			if (ImGui::MenuItem("Scene"))
-			{
-				NewAssetClassName = Scene::GetStaticName();
+				if (ImGui::MenuItem(AssetMenu.c_str()))
+				{
+					NewAssetClassName = AssetMenu;
+				}
 			}
 			ImGui::EndMenu();
 		}
-		if (ImGui::MenuItem("Reload"))
+		if (ImGui::MenuItem("Refresh"))
 		{
-				
+			GetAssetManager()->ScanForAssets();
+			// TODO: Look for missing assets and prompt to remove or keep and warn if not saved
 		}
 		ImGui::EndPopup();
 	}
 
-	TPointer<CAsset> CreatedAsset;
+	std::string MeshFilePath;
+	std::string AudioFilePath;
+	TObjectPointer<CAsset> CreatedAsset;
 	if (ImGui::BeginPopup("NamePopup"))
 	{			
 		ImGui::Text("Enter name");						
@@ -102,12 +113,53 @@ void CContentBrowser::OnRender()
 		ImGui::SameLine();
 		if (ImGui::Button("Create"))
 		{
-			std::string Extension = ".sasset";
+			bool bAdditionalStepComplete = true;
+			std::string Extension = CAsset::GetFileExtension();
+			const string ContentDirectory = GetApplication()->GetContentDirectory();
 			if (NewAssetClassName == Scene::GetStaticName())
 			{
-				Extension = ".slvl";
+				Extension = Scene::GetFileExtension();
 			}
-			CreatedAsset = GetAssetManager()->AddAsset(Directory + std::string(AssetName) + Extension, NewAssetClassName);
+			else if (NewAssetClassName == CMesh::GetStaticName())
+			{
+				if (!CFileManager::OpenFile(MeshFilePath, "obj", ContentDirectory))
+				{
+					bAdditionalStepComplete = false;
+				}
+				if (bAdditionalStepComplete && !StringUtils::Contains(MeshFilePath, ContentDirectory))
+				{
+					// TODO: Prompt to import
+					string ErrorMessage = "File \"" + MeshFilePath + "\" not in content directory \"" + ContentDirectory + "\"\nCan't make asset";
+					GetPlatformInterface()->DisplayMessageBox("File not in content directory!", ErrorMessage, MB_OK);
+					bAdditionalStepComplete = false;
+				}
+				if (bAdditionalStepComplete)
+				{
+					StringUtils::Replace(MeshFilePath, ContentDirectory, "");
+				}
+			}
+			else if (NewAssetClassName == CAudio::GetStaticName())
+			{
+				if (!CFileManager::OpenFile(AudioFilePath, "Audio (*.mp3)\0*.mp3\0*.wav\0", ContentDirectory))
+				{
+					bAdditionalStepComplete = false;
+				}
+				if (bAdditionalStepComplete && !StringUtils::Contains(AudioFilePath, ContentDirectory))
+				{
+					// TODO: Prompt to import
+					string ErrorMessage = "File \"" + AudioFilePath + "\" not in content directory \"" + ContentDirectory + "\"\nCan't make asset";
+					GetPlatformInterface()->DisplayMessageBox("File not in content directory!", ErrorMessage, MB_OK);
+					bAdditionalStepComplete = false;
+				}
+				if (bAdditionalStepComplete)
+				{
+					StringUtils::Replace(AudioFilePath, ContentDirectory, "");
+				}
+			}
+			if (bAdditionalStepComplete)
+			{
+				CreatedAsset = GetAssetManager()->AddAsset(Directory + std::string(AssetName) + "." + Extension, NewAssetClassName);
+			}
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::EndPopup();
@@ -115,7 +167,16 @@ void CContentBrowser::OnRender()
 	if (CreatedAsset)
 	{
 		CreatedAsset->Metadata = MetaData;
-		CreatedAsset->SetDefaultObject(CreatedAsset->MakeObject());
+		TSharedPointer<CAssetObject> NewAsset = CreatedAsset->MakeObject();
+		if (!MeshFilePath.empty())
+		{
+			Cast<CMesh>(NewAsset)->MeshPath = MeshFilePath;
+		}
+		else if (!AudioFilePath.empty())
+		{
+			Cast<CAudio>(NewAsset)->RelativeAudioPath = AudioFilePath;
+		}
+		CreatedAsset->SetDefaultObject(NewAsset);
 		CreatedAsset->Load()->OnLoaded();
 		CreatedAsset->Save();
 			
@@ -148,10 +209,10 @@ void CContentBrowser::OnRender()
 
 	// TODO: Do better
 	bool bFirstInList = true;
-	TArray<TPointer<CAsset>> Assets = GetAssetManager()->GetAssets();
+	TArray<TObjectPointer<CAsset>> Assets = GetAssetManager()->GetAssets();
 	for (uint16 i = 0; i < Assets.size(); ++i)
 	{
-		TPointer<CAsset> Asset = Assets[i];
+		TObjectPointer<CAsset> Asset = Assets[i];
 
 		std::string AssetPath = StringUtils::NormalizePath(Asset->FilePath);
 		// Check asset is somewhere within this directory
@@ -213,7 +274,7 @@ void CContentBrowser::OnRender()
 		{
 			Asset->Open();
 			// TODO: Determine structure for opening at a per asset basis without having editor code in engine...
-			if (TPointer<CMaterialInterface> Material = Asset->Load<CMaterialInterface>())
+			if (TAssetObjectPointer<CMaterialInterface> Material = Asset->Load<CMaterialInterface>())
 			{
 				GetApplication()->GetApplicationWindow()->GetCanvas<CMaterialEditorPanel>()->SetMaterial(Material);
 			}
@@ -294,7 +355,7 @@ void CContentBrowser::OnRender()
 		{
 			// Set payload to carry the index of our item (could be anything)
 			// TODO: Need to split up material into meta data for shader type, so class type is just material
-			ImGui::SetDragDropPayload(std::format("ASSET:{}", Asset->ClassName).c_str(), &Asset, sizeof(TPointer<CAsset>));
+			ImGui::SetDragDropPayload(std::format("ASSET:{}", Asset->ClassName).c_str(), &Asset, sizeof(TSharedPointer<CAsset>));
 
 			// Display preview (could be anything, e.g. when dragging an image we could decide to display
 			// the filename and a small preview of the image, etc.)

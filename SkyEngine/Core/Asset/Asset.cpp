@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-#include "Core/Object.h"
+#include "Core/Asset/AssetObject.h"
 #include "Core/StringUtils.h"
 #include "Platform/File/FileManager.h"
 #include "Platform/File/PathUtils.h"
@@ -11,6 +11,7 @@
 #include "Render/Materials/MaterialType.h"
 #include "Render/Shaders/PBRShader.h"
 #include "Render/Textures/Texture.h"
+#include "Audio/Audio.h"
 #include "System/LogManager.h"
 
 CAsset::CAsset(const std::string& AssetPath, const std::string& InClass)
@@ -51,7 +52,7 @@ void CAsset::ApplyAssetData(std::string AssetData)
 	Metadata = Tokens;
 }
 
-TPointer<CAssetObject> CAsset::Load()
+TAssetObjectPointer<CAssetObject> CAsset::Load()
 {
 	if (Object)
 	{
@@ -73,14 +74,20 @@ TPointer<CAssetObject> CAsset::Load()
 	std::getline(FileStream, _, '[');
 	std::getline(FileStream, AssetData, ']');
 	ApplyAssetData(AssetData);
+	if (!ensure(!ClassName.empty(), "Class name must be valid"))
+	{
+		return nullptr;
+	}
 
-	const TPointer<CAssetObject> CreatedObject = MakeObject();
-	ensure(CreatedObject != nullptr, "Failed to create class from name!");
+	const TSharedPointer<CAssetObject> CreatedObject = MakeObject();
+	if (!ensure(CreatedObject != nullptr, "Failed to create class from name [%s]!", ClassName))
+	{
+		return nullptr;
+	}
 	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(CreatedObject.get());
 	FileStream >> AssetInterface;
-	AssetInterface->Asset = shared_from_this();
 
-	Object = CreatedObject;
+	SetDefaultObject(CreatedObject);
 	AssetInterface->OnLoaded();
 
 	return Object;
@@ -92,9 +99,20 @@ void CAsset::Unload()
 	{
 		return;
 	}
-	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(Object.get());
+	GetAssetManager()->UnloadAsset(Object);
+}
+
+void CAsset::Unloaded()
+{
+	if (!ensure(Object, "Attempted to unload a unloaded asset!"))
+	{
+		return;
+	}
+	TSharedPointer<CAssetObject> AssetObject = Object.GetWeak().lock();	
+	IAssetObjectInterface* AssetInterface = GetInterface<IAssetObjectInterface>(AssetObject);
 	AssetInterface->OnUnloaded();
-	Object.reset();
+	AssetInterface->Asset = nullptr;
+	DisconnectObject();
 }
 
 bool CAsset::Delete()
@@ -107,10 +125,31 @@ bool CAsset::Delete()
 	return GetAssetManager()->DeleteAsset(shared_from_this());
 }
 
-TPointer<CAssetObject> CAsset::Reload()
+TAssetObjectPointer<CAssetObject> CAsset::Reload()
 {
+	// If not loaded, a simple load is enough
+	if (!Object)
+	{
+		return Load();
+	}
+	
+	// Required to stop it being cleaned up
+	TSharedPointer<CAsset> Cached = shared_from_this();
+	TSharedPointer<CAssetObject> OriginalObject = Object->shared_from_this();
 	Unload();
-	return Load();
+	// Store original object to redirect
+
+	// Reload by clearing object so it recreates
+	Load();
+	
+	// TODO: Use proper asset/object management to redirect/reload instead of this garbage
+	// Reassign shared ptr memory to new object
+	CAssetObject& AssetObject = *OriginalObject;
+	AssetObject = *Object;
+	
+	OriginalObject.reset();
+	
+	return Object;
 }
 
 bool CAsset::Save()
@@ -119,7 +158,8 @@ bool CAsset::Save()
 	{
 		return false;
 	}
-	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(Object.get());
+	TSharedPointer<CAssetObject> AssetObject = Object.GetWeak().lock();	
+	IAssetObjectInterface* AssetInterface = GetInterface<IAssetObjectInterface>(AssetObject);
 	// Update meta data
 	Metadata = AssetInterface->GetMetaData();
 	
@@ -141,18 +181,20 @@ bool CAsset::Save()
 	return true;
 }
 
-void CAsset::SetDefaultObject(TPointer<CAssetObject> NewObject)
+void CAsset::SetDefaultObject(TAssetObjectPointer<CAssetObject> NewObject)
 {
 	NewObject->Asset = shared_from_this();
 	Metadata = NewObject->GetMetaData();
 	Object = NewObject;
+	HardObject = Object->shared_from_this();
 }
 
 void CAsset::Open()
 {
 	// Confirm loaded first
 	Load();
-	IAssetObjectInterface* AssetInterface = dynamic_cast<IAssetObjectInterface*>(Object.get());
+	TSharedPointer<CAssetObject> AssetObject = Object.GetWeak().lock();	
+	IAssetObjectInterface* AssetInterface = GetInterface<IAssetObjectInterface>(AssetObject);
 	if (AssetInterface)
 	{
 		AssetInterface->Open();
@@ -162,6 +204,7 @@ void CAsset::Open()
 void CAsset::DisconnectObject()
 {
 	Object = nullptr;
+	HardObject = nullptr;
 }
 
 std::string CAsset::GetAbsoluteFilePath() const
@@ -169,7 +212,7 @@ std::string CAsset::GetAbsoluteFilePath() const
 	return PathUtils::CombinePath(GetApplication()->GetContentDirectory(), FilePath);
 }
 
-TPointer<CAssetObject> CAsset::MakeObject() const
+TSharedPointer<CAssetObject> CAsset::MakeObject() const
 {
 	if (ClassName == CMaterialInterface::GetStaticName())
 	{
@@ -188,10 +231,18 @@ TPointer<CAssetObject> CAsset::MakeObject() const
 	{
 		return std::make_shared<CTexture>();
 	}
-	if (ClassName == "MeshAsset")
+	if (ClassName == CMesh::GetStaticName())
 	{
-		// TODO: Mesh Asset
-		return std::make_shared<CMeshData>();
+		return std::make_shared<CMesh>();
+	}
+	if (ClassName == CAudio::GetStaticName())
+	{
+		return std::make_shared<CAudio>();
 	}
 	return nullptr;
+}
+
+std::string CAsset::GetFileExtension()
+{
+	return "sasset";
 }

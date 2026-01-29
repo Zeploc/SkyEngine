@@ -16,5 +16,5 @@ std::string CUnlitShader::GetStaticName()
 
 bool CUnlitShader::HasTexture(const ShaderParameters& InParams)
 {
-	return InParams.DiffuseTexture != nullptr;
+	return InParams.DiffuseTexture.IsValid();// != nullptr;
 }

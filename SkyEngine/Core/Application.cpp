@@ -8,11 +8,8 @@
 
 // Engine Includes //
 #include "Events/MouseEvent.h"
-#include "Input/Input.h"
-#include "Sound/SoundManager.h"
 #include "System/LogManager.h"
 #include "Canvas/Canvas.h"
-#include "Canvas/UICanvas.h"
 #include "Canvas/ViewportCanvas.h"
 #include "Platform/Window/EngineWindow.h"
 #include "Platform/Windows/WindowsPlatform.h"
@@ -21,11 +18,12 @@
 #include "System/TimeManager.h"
 #include "Render/Renderer.h"
 #include "Render/SceneRenderer.h"
-#include "Render/Meshes/MeshManager.h"
 #include "Scene/SceneUtils.h"
 #include "Entity/Camera.h"
 #include "Platform/Config/Config.h"
 #include "Platform/Config/ProjectSettingsConfig.h"
+#include "Render/Meshes/Basic/DefaultMeshes.h"
+#include "Render/Textures/Texture.h"
 
 // make sure the winsock lib is included...
 #pragma comment(lib,"ws2_32.lib")
@@ -48,12 +46,12 @@ namespace SkyEngine
 	{
 	}
 
-	bool Application::OpenScene(TPointer<Scene> NewScene)
+	bool Application::OpenScene(TAssetObjectPointer<Scene> NewScene)
 	{
-		TPointer<Scene> PreviousScene = SceneManager::GetInstance()->GetCurrentScene();
+		TAssetObjectPointer<Scene> PreviousScene = SceneManager::GetInstance()->GetCurrentScene();
 		SceneManager::GetInstance()->AddScene(NewScene);
 		SceneManager::GetInstance()->SwitchScene(NewScene->SceneName, true);
-		const TPointer<Camera> FoundCamera = SceneUtils::FindEntityOfClass<Camera>();
+		const TSharedPointer<Camera> FoundCamera = SceneUtils::FindEntityOfClass<Camera>();
 		ViewportCanvas->GetSceneRenderer()->SetSceneTarget(NewScene);
 		if (FoundCamera)
 		{
@@ -96,12 +94,15 @@ namespace SkyEngine
 		Renderer = CreatePointer<CRenderer>();
 
 		CTimeManager::Start();
-		MeshManager.Init();
-		SoundManager::GetInstance()->InitFMod();
-
+		if (!ensure(GetPlatformInterface()->GetAudioInterface()->Initialize(), "Audio initialization failed!"))
+		{
+			LogManager->DisplayWarning("Failed to initialize audio interface!");
+		}
+		InitializeEngineAssets();
+		
 		SetupViewportLayer();
 		ApplicationWindow->PushLayer(ViewportCanvas);
-		
+
 		return true;
 	}
 	
@@ -118,6 +119,15 @@ namespace SkyEngine
 		
 		// TODO: Should be moved out of editor
 		ContentPath = ProjectDirectory + "\\SkyEditor\\Assets\\";
+	}
+
+	void Application::InitializeEngineAssets()
+	{		
+		DefaultMesh::GetCube();
+		DefaultMesh::GetPlane();
+		DefaultMesh::GetSphere();
+		DefaultMesh::GetPyramid();
+		DefaultMesh::GetBox();
 	}
 
 	void Application::SetupConfigs()
@@ -186,9 +196,42 @@ namespace SkyEngine
 		// TODO: Placeholders until layer/windows properly get cleaned up
 		SceneManager::DestoryInstance();
 		
-		SoundManager::DestoryInstance();
 		Text::Fonts.~vector();
 		LogManager.reset();
+	}
+	
+	void Application::ConversionTests() const
+	{	
+		TWeakPointer<CTexture> WeakTexture = std::make_shared<CTexture>();
+		TWeakPointer<CObject> Weak = WeakTexture;	
+
+		// Construction from weak pointers
+		TObjectPointer<CObject> ObjectPointer(Weak);
+		TObjectPointer<CTexture> TextureObjectPointer(WeakTexture);
+
+		// Construction from object pointers with matching types
+		TObjectPointer<CObject> OtherObjectPointer(ObjectPointer);		
+		TObjectPointer<CTexture> OtherTextureObjectPointer(TextureObjectPointer);
+
+		// Conversion from derived to base
+		TObjectPointer<CObject> ConversionObjectPointer(TextureObjectPointer);		
+		TObjectPointer<CObject> DerivedWeakConversionObjectPointer(WeakTexture);
+
+		// Raw/smart pointer construction
+		TObjectPointer<CTexture> TextureFromRawPointer(WeakTexture.lock());
+		
+		// Conversion of asset pointer to direct object pointer
+		TAssetObjectPointer<CTexture> AssetObjectPointer(WeakTexture);
+		TObjectPointer<CTexture> TextureFromAssetObjectPointer(AssetObjectPointer);
+
+		// Weak from asset ptr
+		TWeakPointer<CTexture> Weak_Ptr = AssetObjectPointer.GetWeak();
+		
+		// Conversion of asset pointer to base object pointer
+		TObjectPointer<CObject> BaseFromTextureObjectPointer(AssetObjectPointer);
+		
+		TAssetObjectPointer<CTexture> Texture = TAssetObjectPointer(WeakTexture);
+		// TObjectPointer<CTexture> ObjectPointer(Weak);
 	}
 }
 
@@ -202,7 +245,7 @@ SkyEngine::Application* GetApplication()
 	return SkyEngine::Application::Get();
 }
 
-TPointer<IGraphicsAPI> GetGraphicsAPI()
+TSharedPointer<IGraphicsAPI> GetGraphicsAPI()
 {
 	return SkyEngine::Application::Get()->GraphicsApi;
 }
@@ -212,24 +255,9 @@ IPlatformInterface* GetPlatformInterface()
 	return SkyEngine::Application::Get()->PlatformInterface;
 }
 
-TPointer<CRenderer> GetRenderer()
+TSharedPointer<CRenderer> GetRenderer()
 {
 	return SkyEngine::Application::Get()->Renderer;
-}
-
-CMeshManager* GetMeshManager()
-{
-	return &SkyEngine::Application::Get()->MeshManager;
-}
-
-CMaterialManager* GetMaterialManager()
-{
-	return &SkyEngine::Application::Get()->MaterialManager;
-}
-
-CTextureManager* GetTextureManager()
-{
-	return &SkyEngine::Application::Get()->TextureManager;
 }
 
 CAssetManager* GetAssetManager()

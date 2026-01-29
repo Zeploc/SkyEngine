@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Canvas/UICanvas.h"
+#include "Core/Asset/AssetObject.h"
 
 class CMaterialInterface;
 
@@ -12,9 +13,9 @@ public:
 	CMaterialEditorPanel(TWeakPointer<CEngineWindow> InOwningWindow);
 	virtual void OnRender() override;
 
-	void SetMaterial(TPointer<CMaterialInterface> InMaterial);
+	void SetMaterial(TAssetObjectPointer<CMaterialInterface> InMaterial);
 
 protected:
-	TPointer<CMaterialInterface> Material;
+	TAssetObjectPointer<CMaterialInterface> Material;
 	
 };

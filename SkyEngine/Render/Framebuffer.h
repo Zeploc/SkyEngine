@@ -32,5 +32,5 @@ public:
 	virtual void Unbind() = 0;
 
 	/* Creates a frame buffer with the current graphics API*/
-	static TPointer<IFramebuffer> Create(const SFramebufferSpecification& Specification);
+	static TSharedPointer<IFramebuffer> Create(const SFramebufferSpecification& Specification);
 };

@@ -1,9 +1,9 @@
 [Scene]
 [Default]
-[Entity] Sphere 1 ((-2.000000 5.000000 -14.000000) (0.000000 0.000000 0.000000) (5.000000 5.000000 5.000000)) [MeshComponent] Sphere Materials\CliffMaterial.sasset true
-[Entity] Floor_Plane 2 ((0.000000 0.000000 0.000000) (-90.000000 0.000000 0.000000) (50.000000 50.000000 50.000000)) [MeshComponent] Plane Materials\PlaneMaterial.sasset true
-[Entity] Cube 3 ((10.000000 1.500000 -4.000000) (0.000000 0.000000 0.000000) (3.000000 3.000000 3.000000)) [MeshComponent] Cube Materials\ColouredBrickMaterial.sasset true
-[Entity] Pyramid 4 ((10.000000 1.500000 0.000000) (0.000000 0.000000 0.000000) (3.000000 3.000000 3.000000)) [MeshComponent] Pyramid Materials\ColouredBrickMaterial.sasset true
-[Entity] Sphere_2 5 ((10.000000 1.500000 4.000000) (0.000000 0.000000 0.000000) (2.000000 2.000000 2.000000)) [MeshComponent] Sphere Materials\ColouredBrickMaterial.sasset true
+[Entity] Sphere 1 ((-2.000000 5.000000 -14.000000) (0.000000 0.000000 0.000000) (5.000000 5.000000 5.000000)) [MeshComponent] Engine\Meshes\Sphere.sasset Materials\CliffMaterial.sasset true
+[Entity] Floor_Plane 2 ((0.000000 0.000000 0.000000) (-90.000000 0.000000 0.000000) (50.000000 50.000000 50.000000)) [MeshComponent] Engine\Meshes\Plane.sasset Materials\PlaneMaterial.sasset true
+[Entity] Cube 3 ((10.000000 1.500000 -4.000000) (0.000000 0.000000 0.000000) (3.000000 3.000000 3.000000)) [MeshComponent] Engine\Meshes\Cube.sasset Materials\ColouredBrickMaterial.sasset true
+[Entity] Pyramid 4 ((10.000000 1.500000 0.000000) (0.000000 0.000000 0.000000) (3.000000 3.000000 3.000000)) [MeshComponent] Engine\Meshes\Pyramid.sasset Materials\ColouredBrickMaterial.sasset true
+[Entity] Sphere_2 5 ((10.000000 1.500000 4.000000) (0.000000 0.000000 0.000000) (2.000000 2.000000 2.000000)) [MeshComponent] Engine\Meshes\Sphere.sasset Materials\ColouredBrickMaterial.sasset true
 [Entity] Box 7 ((4.551271 2.476230 15.842440) (0.000000 0.000000 0.000000) (8.000000 2.000000 4.000000)) [BoxComponent] 
 [Camera] Camera -842150451 ((-19.535593 21.451040 8.223121) (-35.722858 -16.867020 0.000000) (0.000000 0.000000 0.000000))

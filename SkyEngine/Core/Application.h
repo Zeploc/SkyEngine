@@ -8,9 +8,8 @@
 #include "Core/Core.h"
 #include "Graphics/GraphicsAPI.h"
 #include "Math/Vector2.h"
-#include "Render/Materials/MaterialManager.h"
-#include "Render/Meshes/MeshManager.h"
-#include "Render/Textures/TextureManager.h"
+#include "Render/Materials/MaterialUtils.h"
+#include "Render/Textures/TextureUtils.h"
 
 class Scene;
 class CViewportCanvas;
@@ -32,7 +31,7 @@ namespace SkyEngine
 		Application();
 		virtual ~Application();
 
-		virtual bool OpenScene(TPointer<Scene> NewScene);
+		virtual bool OpenScene(TAssetObjectPointer<Scene> NewScene);
 		virtual bool ApplicationSetup(std::string ExecutablePath);
 		virtual void SetupConfigs();
 		virtual void SetupLogManager();
@@ -49,18 +48,15 @@ namespace SkyEngine
 		
 		SVector2i MainWindowSize;
 
-		TPointer<IGraphicsAPI> GraphicsApi;
+		TSharedPointer<IGraphicsAPI> GraphicsApi;
 		IPlatformInterface* PlatformInterface;
-		TPointer<CRenderer> Renderer;
+		TSharedPointer<CRenderer> Renderer;
 		EGraphicsAPI GraphicsApiType;
-		TPointer<CLogManager> LogManager;
-		CMeshManager MeshManager;
-		CMaterialManager MaterialManager;
-		CTextureManager TextureManager;
+		TSharedPointer<CLogManager> LogManager;
 		CAssetManager AssetManager;
 
 		// TODO: Weak pointer to not hold ref
-		TPointer<CEngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
+		TSharedPointer<CEngineWindow> GetApplicationWindow() const { return ApplicationWindow; }
 		CViewportCanvas* GetViewportCanvas() const { return ViewportCanvas; }
 		std::string GetProjectDirectory() const { return ProjectDirectory; }
 		std::string GetContentDirectory() const { return ContentPath; }
@@ -69,16 +65,19 @@ namespace SkyEngine
 		inline static Application* Get();
 	protected:
 		virtual void SetProjectDirectory(std::string ExecutablePath);
+		void InitializeEngineAssets();
 		
 		// TODO: Remove since viewport layer should make game UI canvas
 		CUICanvas* UILayer;
 		CViewportCanvas* ViewportCanvas;
 		
-		TPointer<CEngineWindow> ApplicationWindow;
+		TSharedPointer<CEngineWindow> ApplicationWindow;
 		std::string ProjectDirectory;
 		std::string ContentPath;
 	private:
 		static Application* EngineApplication;
+
+		void ConversionTests() const;
 
 	};
 
@@ -87,11 +86,8 @@ namespace SkyEngine
 }
 
 ENGINE_API SkyEngine::Application* GetApplication();
-ENGINE_API TPointer<IGraphicsAPI> GetGraphicsAPI();
+ENGINE_API TSharedPointer<IGraphicsAPI> GetGraphicsAPI();
 ENGINE_API IPlatformInterface* GetPlatformInterface();
-ENGINE_API TPointer<CRenderer> GetRenderer();
-ENGINE_API CMeshManager* GetMeshManager();
-ENGINE_API CMaterialManager* GetMaterialManager();
-ENGINE_API CTextureManager* GetTextureManager();
+ENGINE_API TSharedPointer<CRenderer> GetRenderer();
 ENGINE_API CAssetManager* GetAssetManager();
 

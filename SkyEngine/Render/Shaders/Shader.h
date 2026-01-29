@@ -16,9 +16,10 @@ struct ENGINE_API SShaderParameter : public SSerializableVariable
 	using SSerializableVariable::SSerializableVariable;
 	
 	virtual void SetDeserializedVariable(std::istream& is) override;
+	void OnValueChanged() override;
 	
 	int32_t Location = -1;
-	TPointer<CTexture> LoadedTexture;
+	TAssetObjectPointer<CTexture> LoadedTexture;
 };
 
 // TODO: STDL warnings with exporting class with vector
@@ -32,7 +33,7 @@ struct ENGINE_API BaseShaderParameters
 	ENGINE_API friend std::istream& operator>>(std::istream& is, BaseShaderParameters& InMaterialParameters);
 	void UploadMaterialParameters();
 protected:
-	TPointer<CShader> Shader;
+	TSharedPointer<CShader> Shader;
 };
 
 class ENGINE_API CShader : public std::enable_shared_from_this<CShader>
@@ -54,7 +55,7 @@ public:
 	int32_t GetUniformLocation(const std::string& VariableName);
 	int32_t GetHasTextureUniformLocation(const std::string& VariableName);
 	virtual bool CompileShader();
-	void BindMaterial(TPointer<CMaterialInterface> InMaterial);
+	void BindMaterial(TSharedPointer<CMaterialInterface> InMaterial);
 	virtual void BindShader();
 
 	std::string GetShaderName() const { return ShaderName; }
@@ -74,7 +75,7 @@ protected:
 	// void DefineAttribute(const std::string& AttributeName, bool Boolean);
 	// void DefineAttribute(const std::string& AttributeName, SVector Vector3);
 	// void DefineAttribute(const std::string& AttributeName, SVector4 Vector4);
-	// void DefineAttribute(const std::string& AttributeName, TPointer<CTexture> Texture);
+	// void DefineAttribute(const std::string& AttributeName, TSharedPointer<CTexture> Texture);
 	// void DefineAttribute(const std::string& AttributeName, MaterialAttribute Attribute);
 	int GetAttributeLocation(std::string AttributeName) const;
 	
@@ -102,7 +103,7 @@ ShaderVariables.push_back(VariableName##Parameter)
 #define BeginShaderParams()\
 struct ShaderParameters : BaseShaderParameters\
 {\
-	void InitializeMaterialParameters(const TPointer<CShader>& InShader)\
+	void InitializeMaterialParameters(const TSharedPointer<CShader>& InShader)\
 	{\
 		Shader = InShader;
 

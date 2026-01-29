@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/Asset/AssetObject.h"
 #include "Math/Matrix.h"
 #include "Math/Vector2.h"
 
@@ -13,34 +14,34 @@ class Scene;
 class ENGINE_API CSceneRenderer
 {
 public:
-	void Init(TPointer<Scene> InTargetScene, SVector2i InSize);
+	void Init(TAssetObjectPointer<Scene> InTargetScene, SVector2i InSize);
 	void SizeChanged(SVector2i InSize);
 	void Render();
-	void SetSceneTarget(TPointer<Scene> InTargetScene);
-	void LinkCamera(TPointer<Camera> Camera);
+	void SetSceneTarget(TAssetObjectPointer<Scene> InTargetScene);
+	void LinkCamera(TSharedPointer<Camera> Camera);
 	void UpdateOrthographicProjection(float Scale, float MaxViewClipping);
 	void UpdatePerspectiveProjection(float FOV, float MaxViewClipping);
 
-	TPointer<IFramebuffer> GetFramebuffer() const { return Framebuffer; }
+	TSharedPointer<IFramebuffer> GetFramebuffer() const { return Framebuffer; }
 	
 	// TODO: Create colour type
 	SVector ClearColour = SVector(0.3f, 0.8f, 0.9f);
 	
 	Matrix4 GetView();
 	Matrix4 GetProjection();
-	TPointer<Scene> GetTargetScene() const { return TargetScene; }
+	TAssetObjectPointer<Scene> GetTargetScene() const { return TargetScene; }
 
 protected:
 	
 	// TODO: Multiple frame buffers (multiple windows, etc)
-	TPointer<IFramebuffer> Framebuffer;
+	TSharedPointer<IFramebuffer> Framebuffer;
 
-	TPointer<Scene> TargetScene;
+	TAssetObjectPointer<Scene> TargetScene;
 	SVector2i ViewSize;
 	
 	Matrix4 View;
 	Matrix4 Projection;
-	TPointer<Camera> LinkedCamera;
+	TSharedPointer<Camera> LinkedCamera;
 
 	// TODO: Enabled/disabled?
 };

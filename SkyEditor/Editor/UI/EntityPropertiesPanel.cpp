@@ -20,7 +20,7 @@ CEntityPropertiesPanel::CEntityPropertiesPanel(TWeakPointer<CEngineWindow> InOwn
 void CEntityPropertiesPanel::OnRender()
 {
 	// TODO: Convert to widget and use base render
-	const TPointer<Entity> SelectedEntity = EditorApp->EditorViewportLayer->GetSelectedEntity();
+	const TSharedPointer<Entity> SelectedEntity = EditorApp->EditorViewportLayer->GetSelectedEntity();
     
 	if (SelectedEntity)
 	{
@@ -28,7 +28,7 @@ void CEntityPropertiesPanel::OnRender()
 		ImGui::Separator();
 		ImGui::Spacing();
 
-		for (const SSerializableVariable& SerializableVariable : SelectedEntity->GetSerializeVariables())
+		for (SSerializableVariable& SerializableVariable : SelectedEntity->GetSerializeVariables())
 		{
 			CUIPresets::RenderVariableField(SerializableVariable);
 		}
@@ -36,13 +36,13 @@ void CEntityPropertiesPanel::OnRender()
 		ImGui::Separator();
 
 		// TODO: Switch to use serialize variables on components
-		for (const TPointer<CComponent>& Component : SelectedEntity->GetComponents())
+		for (const TSharedPointer<CComponent>& Component : SelectedEntity->GetComponents())
 		{			
 			ImGui::Text(Component->GetComponentClassName().c_str());
 			ImGui::Separator();
 			ImGui::Spacing();
 			
-			for (const SSerializableVariable& SerializableVariable : Component->GetSerializeVariables())
+			for (SSerializableVariable& SerializableVariable : Component->GetSerializeVariables())
 			{
 				CUIPresets::RenderVariableField(SerializableVariable);
 			}
@@ -53,53 +53,53 @@ void CEntityPropertiesPanel::OnRender()
 void CEntityPropertiesPanel::MeshDropdown(const std::shared_ptr<CMeshComponent>& MeshComponent)
 {
 	// TODO: Swap with asset field once mesh is an asset
-	static std::string CurrentMeshName = "No Mesh";
-	CurrentMeshName.reserve(50);
-	std::string CurrentMeshAsset = MeshComponent->GetMeshAsset();
-	if (!CurrentMeshAsset.empty())
-	{
-		CurrentMeshName = CurrentMeshAsset;
-	}
-	
-	ImGuiContext& g = *GImGui;	
-
-	if (!ImGui::BeginCombo("##MeshDropdown", CurrentMeshName.c_str(), ImGuiComboFlags_None))
-	{
-		return;
-	}
-
-	// Display items
-	// FIXME-OPT: Use clipper (but we need to disable it on the appearing frame to make sure our call to SetItemDefaultFocus() is processed)
-	bool bValueChanged = false;
-
-	const TArray<std::string> MeshNames = GetMeshManager()->GetAvailableMeshes();
-	for (int i = 0; i < MeshNames.size(); i++)
-	{
-		std::string MeshName = MeshNames[i];
-		ImGui::PushID(i);
-		const bool bItemSelected = (MeshName == CurrentMeshName);
-		// if (!items_getter(data, i, &item_text))
-		// 	item_text = "*Unknown item*";
-		if (ImGui::Selectable(MeshName.c_str(), bItemSelected))
-		{
-			if (GetMeshManager()->HasMesh(MeshName))
-			{
-				MeshComponent->SetMeshAsset(MeshName);
-				CurrentMeshName = MeshName;
-				bValueChanged = true;
-			}
-		}
-		if (bItemSelected)
-		{
-			ImGui::SetItemDefaultFocus();
-		}
-		ImGui::PopID();
-	}
-
-	ImGui::EndCombo();
-
-	if (bValueChanged)
-	{
-		ImGui::MarkItemEdited(g.LastItemData.ID);
-	}
+	// static std::string CurrentMeshName = "No Mesh";
+	// CurrentMeshName.reserve(50);
+	// std::string CurrentMeshAsset = MeshComponent->GetMeshAsset();
+	// if (!CurrentMeshAsset.empty())
+	// {
+	// 	CurrentMeshName = CurrentMeshAsset;
+	// }
+	//
+	// ImGuiContext& g = *GImGui;	
+	//
+	// if (!ImGui::BeginCombo("##MeshDropdown", CurrentMeshName.c_str(), ImGuiComboFlags_None))
+	// {
+	// 	return;
+	// }
+	//
+	// // Display items
+	// // FIXME-OPT: Use clipper (but we need to disable it on the appearing frame to make sure our call to SetItemDefaultFocus() is processed)
+	// bool bValueChanged = false;
+	//
+	// const TArray<std::string> MeshNames = GetMeshManager()->GetAvailableMeshes();
+	// for (int i = 0; i < MeshNames.size(); i++)
+	// {
+	// 	std::string MeshName = MeshNames[i];
+	// 	ImGui::PushID(i);
+	// 	const bool bItemSelected = (MeshName == CurrentMeshName);
+	// 	// if (!items_getter(data, i, &item_text))
+	// 	// 	item_text = "*Unknown item*";
+	// 	if (ImGui::Selectable(MeshName.c_str(), bItemSelected))
+	// 	{
+	// 		if (GetMeshManager()->HasMesh(MeshName))
+	// 		{
+	// 			// MeshComponent->SetMeshAsset(MeshName);
+	// 			CurrentMeshName = MeshName;
+	// 			bValueChanged = true;
+	// 		}
+	// 	}
+	// 	if (bItemSelected)
+	// 	{
+	// 		ImGui::SetItemDefaultFocus();
+	// 	}
+	// 	ImGui::PopID();
+	// }
+	//
+	// ImGui::EndCombo();
+	//
+	// if (bValueChanged)
+	// {
+	// 	ImGui::MarkItemEdited(g.LastItemData.ID);
+	// }
 }

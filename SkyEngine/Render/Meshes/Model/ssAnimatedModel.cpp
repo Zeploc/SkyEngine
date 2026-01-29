@@ -43,7 +43,7 @@ ssAnimatedModel::ssAnimatedModel(std::string modelFilname, std::string texFilena
 	this->Transform.Scale = SVector(0.1f, 0.1f, 0.1f);
 	this->Transform.Position = SVector(0.0, 0.0, 0.0);
 	// TODO: Verify 1 yaw?
-	this->Transform.Rotation = SRotator(1.0f, 0.0f, 0.0f);
+	this->Transform.Rotation = SRotator(0.0f, 1.0f, 0.0f);
 
 	m_VAO = 0;
 	ZERO_MEM(m_Buffers);
@@ -309,7 +309,7 @@ bool ssAnimatedModel::initMaterials(const aiScene* pScene, const std::string fil
 
 				std::string FullPath = Dir + "/" + p;
 
-				TPointer<CTexture> Texture = GetTextureManager()->FindTexture(FullPath.c_str());
+				TAssetObjectPointer<CTexture> Texture = CTextureUtils::FindTextureBySource(FullPath.c_str());
 				m_Textures[i] = Texture;
 
 				if (!m_Textures[i]->IsValid())
@@ -367,7 +367,7 @@ void ssAnimatedModel::rotate(float rotSpeed)
 	currentRotationSpeed = rotSpeed;
 }
 
-void ssAnimatedModel::setShaderEffectVariables(TPointer<Terrain> terrain)
+void ssAnimatedModel::setShaderEffectVariables(TSharedPointer<Terrain> terrain)
 {
 	glUseProgram(this->program);
 
@@ -413,7 +413,7 @@ void ssAnimatedModel::setShaderEffectVariables(TPointer<Terrain> terrain)
 	// Lighting::PassLightingToShader(program);
 }
 
-void ssAnimatedModel::render(TPointer<Terrain> terrain)
+void ssAnimatedModel::render(TSharedPointer<Terrain> terrain)
 {
 	setShaderEffectVariables(terrain);
 

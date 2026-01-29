@@ -38,15 +38,15 @@ public:
 	Entity(FTransform _Transform, float _fWidth, float _fHeight, EANCHOR _Anchor, glm::vec4 _Colour, const char* TextureSource, glm::vec2 v2FrameCounts, int _iFPS);*/
 	virtual ~Entity();
 
-	void AddComponent(TPointer<CComponent> NewComponent);
-	void AddToScene(TPointer<Scene> InScene);
+	void AddComponent(TSharedPointer<CComponent> NewComponent);
+	void AddToScene(TSharedPointer<Scene> InScene);
 	virtual void BeginPlay();
 	virtual void Unload();
 
 	//void AddMesh(Utils::ESHAPE _NewShape);
 
 	virtual bool CanRender();
-	virtual std::vector<TPointer<Entity>> GetAdditionalEntitiesToRender() { return {}; }
+	virtual std::vector<TSharedPointer<Entity>> GetAdditionalEntitiesToRender() { return {}; }
 	
 	SVector GetForwardVector() const;
 	SVector GetUpVector() const;
@@ -73,11 +73,11 @@ public:
 
 	std::string EntityToString();
 	virtual std::string GetEntityClassName();
-	static TPointer<Entity> MakeEntityFromClassName(const std::string& ClassName);
-	static TPointer<Entity> GetEntityFromStringStream(std::istream& is);
+	static TSharedPointer<Entity> MakeEntityFromClassName(const std::string& ClassName);
+	static TSharedPointer<Entity> GetEntityFromStringStream(std::istream& is);
 
-	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const TPointer<Entity>& InEntity);
-	ENGINE_API friend std::istream& operator>>(std::istream& is, TPointer<Entity>& InEntity);
+	ENGINE_API friend std::ostream& operator<<(std::ostream& os, const TSharedPointer<Entity>& InEntity);
+	ENGINE_API friend std::istream& operator>>(std::istream& is, TSharedPointer<Entity>& InEntity);
 
 	/* Moves the position by adding on the movement*/
 	void Translate(SVector _Movement);
@@ -95,13 +95,13 @@ public:
 	void AssignEntityID(int ID);
 	int GetEntityID() const { return EntityID; }
 	std::string GetEntityName() const { return Name; }
-	TPointer<Scene> GetOwningScene() const { return OwningScene; }
-	TArray<TPointer<CComponent>> GetComponents() const { return Components; }
+	TSharedPointer<Scene> GetOwningScene() const { return OwningScene; }
+	TArray<TSharedPointer<CComponent>> GetComponents() const { return Components; }
 	
 	TArray<SSerializableVariable> GetSerializeVariables() const { return SerializeVariables; }
 
 	template<typename T>
-	TPointer<T> FindComponent();
+	TSharedPointer<T> FindComponent();
 
 	bool bRayCast = true;
 
@@ -115,8 +115,8 @@ protected:
 	bool bVisible = true;
 	std::string Name;
 
-	TArray<TPointer<CComponent>> Components;
-	TPointer<Scene> OwningScene;
+	TArray<TSharedPointer<CComponent>> Components;
+	TSharedPointer<Scene> OwningScene;
 
 	int EntityID;
 	
@@ -124,11 +124,11 @@ protected:
 };
 
 template <typename T>
-TPointer<T> Entity::FindComponent()
+TSharedPointer<T> Entity::FindComponent()
 {
-	for (TPointer<CComponent> Component : Components)
+	for (TSharedPointer<CComponent> Component : Components)
 	{
-		if (TPointer<T> TestComponent = Cast<T>(Component))
+		if (TSharedPointer<T> TestComponent = Cast<T>(Component))
 		{
 			return TestComponent;
 		}

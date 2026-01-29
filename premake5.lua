@@ -16,9 +16,54 @@ IncludeDir = {}
 IncludeDir["ImGui"] = "SkyEngine/Dependencies/ImGui"
 IncludeDir["ImGuizmo"] = "SkyEngine/Dependencies/ImGuizmo"
 IncludeDir["glm"] = "SkyEngine/Dependencies/glm"
+IncludeDir["googletest"] = "SkyEngine/Dependencies/googletest/googletest/include"
 
 group "Dependencies"
     include "SkyEngine/Dependencies/ImGui"
+
+    project "GoogleTest"
+       location "SkyEngine/Dependencies"
+       kind "StaticLib"
+       language "C++"
+       cppdialect "C++20"
+       staticruntime "off"
+
+       targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
+       objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
+
+       files
+       {
+          "SkyEngine/Dependencies/googletest/googletest/src/gtest-all.cc"
+       }
+
+       includedirs
+       {
+          "SkyEngine/Dependencies/googletest/googletest/include",
+          "SkyEngine/Dependencies/googletest/googletest"
+       }
+       
+       filter "system:windows"
+          systemversion "latest"
+          defines 
+          { 
+             "SE_PLATFORM_WINDOWS"
+          }
+
+       filter "configurations:Debug"
+          defines "SKYENGINE_DEBUG"
+          symbols "On"
+          runtime "Debug"
+
+       filter "configurations:Release"
+          defines "SKYENGINE_RELEASE"
+          optimize "On"
+          runtime "Release"
+
+       filter "configurations:Dist"
+          defines "SKYENGINE_DIST"
+          optimize "On"
+          runtime "Release"
+
 group ""
 
 
@@ -112,11 +157,6 @@ project "SkyEngine"
          -- _USRDLL;
       }
 
-      postbuildcommands
-      {
-         ("{COPY} %{cfg.buildtarget.relpath} \"../Binaries/" .. outputdir .. "/SkyEditor/\"")
-      }
-
    filter "configurations:Debug"
       defines "SKYENGINE_DEBUG"
       symbols "On"
@@ -187,6 +227,11 @@ project "SkyEditor"
          -- _USRDLL;
       }
 
+      postbuildcommands
+      {
+         ("{COPY} \"../Binaries/" .. outputdir .. "/SkyEngine/SkyEngine.dll\" \"../Binaries/" .. outputdir .. "/SkyEditor/\"")
+      }
+
    filter "configurations:Debug"
       defines "SKYENGINE_DEBUG"
       symbols "On"
@@ -203,6 +248,68 @@ project "SkyEditor"
    defines "SKYENGINE_DIST"
       optimize "On"
       -- Used to make multie threaded do dll mode - otherwise lib linking fails - Can be replaced once relevant vendors switched to projects within solution
+      runtime "Release"
+
+
+project "SkyEngineTests"
+   location "Tests/SkyEngine"
+   kind "ConsoleApp"
+   language "C++"
+   staticruntime "off"
+
+   targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
+   objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
+
+   files 
+   { 
+      "Tests/SkyEngine/**.h", 
+      "Tests/SkyEngine/**.cpp" 
+   }
+
+   includedirs
+   {
+      "SkyEngine",
+      "SkyEngine/Dependencies/include",
+      "%{IncludeDir.ImGui}",
+      "%{IncludeDir.ImGuizmo}",
+      "%{IncludeDir.glm}",
+      "%{IncludeDir.googletest}"
+   }
+
+   links
+   {
+      "SkyEngine",
+      "GoogleTest"
+   }
+
+   filter "system:windows"
+      cppdialect "C++20"
+      systemversion "latest"
+
+      defines
+      {
+         "SE_PLATFORM_WINDOWS"
+      }
+
+      postbuildcommands
+      {
+         ("{COPY} \"../../Binaries/" .. outputdir .. "/SkyEngine/SkyEngine.dll\" \"../../Binaries/" .. outputdir .. "/SkyEngineTests/\"")
+      }
+
+
+   filter "configurations:Debug"
+      defines "SKYENGINE_DEBUG"
+      symbols "On"
+      runtime "Debug"
+
+   filter "configurations:Release"
+      defines "SKYENGINE_RELEASE"
+      optimize "On"
+      runtime "Release"
+
+   filter "configurations:Dist"
+   defines "SKYENGINE_DIST"
+      optimize "On"
       runtime "Release"
 
 

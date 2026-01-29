@@ -13,15 +13,16 @@ public:
 	void OnUpdate() override;
 	void OnRender() override;
 	
-	void AddViewportWidget(TPointer<CUIWidget> InWidget);
+	void AddViewportWidget(TSharedPointer<CUIWidget> InWidget);
 	SVector2i GetViewportSize() override;
 	SVector2i GetViewportPosition() override;
 	void StartGizmoViewDrag();
 
-	TPointer<Entity> GetSelectedEntity() const { return SelectedEntity; }
-	void SelectEntity(TPointer<Entity> HitEntity, bool bFocusCamera = false);
+	TSharedPointer<Entity> GetSelectedEntity() const { return SelectedEntity; }
+	void SelectEntity(TSharedPointer<Entity> HitEntity, bool bFocusCamera = false);
+	bool GetWorldHit(TSharedPointer<Entity>& HitEntity, SVector& HitPos);
 	bool DeleteSelected();
-	void CreateEntity(const std::string& MeshAsset = {});
+	TSharedPointer<Entity> CreateEntity(TAssetObjectPointer<CMesh> Mesh = nullptr, bool bFocusCamera = true);
 
 protected:
 	bool OnMouseButtonPressed(int MouseButton, int Mods) override;
@@ -41,9 +42,9 @@ protected:
 	bool UsingSpectatorControls() const { return bUseSpectatorControls; }	
 	void SpectatorUpdate();
 
-	std::vector<TPointer<CUIWidget>> Widgets;
+	std::vector<TSharedPointer<CUIWidget>> Widgets;
 
-	TPointer<Entity> SelectedEntity;
+	TSharedPointer<Entity> SelectedEntity;
 	int GizmoMode = 7;
 	int GizmoTransformSpace = 0;
 	float CameraSpeed = 12.0f;
@@ -53,7 +54,7 @@ protected:
 	
 	bool bUseSpectatorControls = false;
 	bool bRotatingAroundPoint = false;
-	bool bLookingAround = false;
+	bool bDollyingOnFocusPoint = false;
 	bool bPanning = false;
 	/* When pressing shift and moving an object, the camera will maintain the offset */
 	bool bGizmoViewDrag = false;
