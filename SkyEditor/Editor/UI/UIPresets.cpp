@@ -47,6 +47,7 @@ void CUIPresets::RenderVariableField(SSerializableVariable& Variable)
 			if (Variable.HasMetaTag(MetaTag_ReadOnlyEditor))
 			{
 				Flags |= ImGuiSliderFlags_ReadOnly;
+				Flags |= ImGuiSliderFlags_NoInput;
 			}
 			bVariableChanged = ImGui::DragScalarN(Variable.VariableName.c_str(), ImGuiDataType_Float, Variable.Number, 1, 0.2f, nullptr, nullptr, "%.2f", Flags);
 		}
@@ -57,6 +58,7 @@ void CUIPresets::RenderVariableField(SSerializableVariable& Variable)
 			if (Variable.HasMetaTag(MetaTag_ReadOnlyEditor))
 			{
 				Flags |= ImGuiSliderFlags_ReadOnly;
+				Flags |= ImGuiSliderFlags_NoInput;
 			}
 			bVariableChanged = ImGui::DragScalarN(Variable.VariableName.c_str(), ImGuiDataType_U32, Variable.Integer, 1, 1, nullptr, nullptr, nullptr, Flags);
 		}
@@ -84,6 +86,7 @@ void CUIPresets::RenderVariableField(SSerializableVariable& Variable)
 			if (Variable.HasMetaTag(MetaTag_ReadOnlyEditor))
 			{
 				Flags |= ImGuiSliderFlags_ReadOnly;
+				Flags |= ImGuiSliderFlags_NoInput;
 			}
 			SVector4* Vector = Variable.Vector4;
         
@@ -101,6 +104,7 @@ void CUIPresets::RenderVariableField(SSerializableVariable& Variable)
 			if (Variable.HasMetaTag(MetaTag_ReadOnlyEditor))
 			{
 				Flags |= ImGuiSliderFlags_ReadOnly;
+				Flags |= ImGuiSliderFlags_NoInput;
 			}
 			
 			STransform& Transform = *Variable.Transform;
